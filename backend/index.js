@@ -107,29 +107,35 @@ app.get("/fetchProfileCards", (req, res) => {
 
 app.get("/fetchChatData", (req, res) => {
 
-    var uid = (new Chat(req.query.from, req.query.to)).uid;
-
-    DatabaseManager.fetchChat(uid).then((chat) => {
-
-        if(chat.length === 1) {
-            res.status(200).send(JSON.stringify(chat.chat));
-        }
-        else {
-            uid = (new Chat(req.query.to, req.query.from)).uid;
-            DatabaseManager.fetchChat(uid).then((chat) => {
-                if(chat.length === 1) {
-                    res.status(200).send(JSON.stringify(chat.chat));
+    const MSG_TO = req.query.to;
+    DatabaseManager.fetchUsers({ email: req.query.from }).then(async (users) => {
+        
+        const user = users[0];
+        var chatFound = false;
+        let chat = null;
+        for (let i = 0; i < user.chats.length && !chatFound; i++) {
+            
+            try {
+                chat = await DatabaseManager.fetchChat(user.chats[i]);
+                if(chat.user1 === MSG_TO || chat.user2 === MSG_TO) {
+                    chatFound = true;
+                    res.status(200).send(JSON.stringify(chat));
                 }
-                else {
-                    res.status(404).send("Couldn't find chat records");
-                }
-            }).catch((err) => {
-                res.status(500).send("Server error");
-            });
+            } catch (err) {
+                console.log('err fetching chats');
+                console.log(err);
+                res.status(500).send("Server Error");
+            }
+            
         }
+
+        if(!chatFound) {
+            res.status(404).send("chat data DNE");
+        }
+
     }).catch((err) => {
-        res.status(500).send("Server error");
-    });
+        res.status(500).send("Server Error");
+    })
 
 });
 
@@ -201,7 +207,8 @@ app.post("/new-user", urlEncodedParser, (req, res) => {
         uni: req.body.uni,
         major: req.body.major,
         age: Number(req.body.age),
-        image: req.body.image
+        image: req.body.image,
+        chats: []
     };
 
 
@@ -247,45 +254,76 @@ app.post("/login", urlEncodedParser, (req, res) => {
     });
 });
 
+// DatabaseManager.fetchUsers({}).then((users) => {
+//     users.forEach((user) => {
+//         user.chats = [];
+//         DatabaseManager.updateUser(user, {email:user.email}).then((res) => {
+//             console.log(`${user.email} updated`);
+//         });
+//     });
+// });
+
 /* Socket Listeners for chat */
 
 io.on('connection', (socket) => {
 
     socket.on('login', (msg) => {
-        DatabaseManager.fetchChat( (new Chat(msg.from, msg.to)).uid ).then((chat) => {
-            if(chat.length < 1) {
-                // chat with id = hash(from, to) doesn't exist, so try reverse order
-                DatabaseManager.fetchChat( (new Chat(msg.to, msg.from)).uid ).then((chat) => {
-                    if(chat.length < 1) {
-                        chat = new Chat(msg.from, msg.to);
-
-                        DatabaseManager.insertChat({ uid: chat.uid, chat }).then((result) => {
-                            socket.join(chat.uid);
-                        })
-                        .catch((err) => {
-                            socket.emit('chat-connection-failed');
-                        });
-
-                    }
-                    else {
-                        socket.join(chat.uid);
-                    }
-
-                }).catch((err) => {
-                    socket.emit('chat-connection-failed');
-                });
-            }
-            else {
-                socket.join(chat.uid);
-            }
-
-        }).catch((err) => {
-            socket.emit('chat-connection-failed');
-        });
+        socket.join(msg.from).emit('joined chat room' + socket.rooms);
     });
 
     socket.on('new msg', (msg) => {
-        // TODO
+        DatabaseManager.fetchUsers({ email: msg.from }).then(async (users) => {
+
+            const user = users[0];
+            let chat = null;
+            var msgHandled = false
+            for(let i = 0; i < user.chats.length && !msgHandled; i++) {
+
+                try {
+                    chat = await DatabaseManager.fetchChat(user.chats[i]);
+                    if(chat.user1 === msg.to || chat.user2 === msg.to) {
+                        chat.newMessage(msg.from, msg.content);
+                        msgHandled = true;
+
+                        try {
+                            await DatabaseManager.updateChat(chat, user.chats[i]);
+                            socket.to(msg.to).emit('new msg', msg);
+                        } catch (err_nested) {
+                            console.log(err_nested);
+                            socket.emit('send failed');
+                        }
+
+                    }
+                } catch (err) {
+                    console.log(err);
+                    socket.emit('server error');
+                    msgHandled = true;
+                }
+            }
+
+            if(!msgHandled) {
+                const chat = new Chat(msg.from, msg.to);
+                DatabaseManager.insertChat(chat).then((result) => {
+
+                    user.chats.append(result._id);
+                    DatabaseManager.updateUser({ chats: user.chats }, user.email).then((value) => {
+                        socket.to(msg.to).emit('new msg', msg);
+
+                    }).catch((reason) => {
+                        socket.emit('send failed');
+                        DatabaseManager.deleteChat(result._id);
+                        console.log(reason);
+                    });
+
+                }).catch((err) => {
+                    socket.emit('send failed');
+                    console.log(err);
+                });
+            }
+
+        }).catch((err) => {
+            socket.emit('server error');
+        });
     });
 });
 

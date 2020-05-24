@@ -202,6 +202,22 @@ function updateUser(updatedUserObject, queryObject) {
     });
 }
 
+function deleteChat(id) {
+
+    return new Promise(function(resolve, reject) {
+        getCollection(COLLECTION_CHATS).then((collection) => {
+            collection.deleteOne({ _id: id }).then((deleteRes) => {
+                resolve(deleteRes);
+            }).catch((err) => {
+                reject(err);
+            });
+
+        }).catch((reason) => {
+            reject(reason);
+        });
+    });
+}
+
 module.exports.insertUser = insertUser;
 module.exports.insertProfileCard = insertProfileCard;
 module.exports.insertChat = insertChat;
@@ -217,3 +233,5 @@ module.exports.fetchProfileCards = fetchProfileCards;
 module.exports.fetchChat = fetchChat;
 
 module.exports.getCollection = getCollection;
+
+module.exports.deleteChat = deleteChat;
