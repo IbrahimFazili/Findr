@@ -22,7 +22,7 @@ class Home extends React.Component {
     try {
       let storedEmail = await AsyncStorage.getItem('storedEmail');
       if(storedEmail === null) {
-        this.props.navigation.navigate('LogIn');
+        this.props.navigation.navigate('SignUp');
       }
     }
     catch(err) {
@@ -60,7 +60,7 @@ class Home extends React.Component {
       >
         <View style={styles.containerHome}>
           <View style={styles.top}>
-            <City />
+            {/* <City /> */}
             <Filters />
           </View>
   

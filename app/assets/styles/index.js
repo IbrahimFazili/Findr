@@ -358,21 +358,44 @@ export default StyleSheet.create({
 	//COMPONENT - SIGNUP
 	logo: {
 		marginLeft: '40%',
-		marginBottom: 40,
-		marginTop: 100,
+		marginTop: 70,
 		width: 100,
 		height: 100
 	},
 
 	slide: {
+		marginTop: 40,
 		flex: 1,
 		justifyContent: 'center',
 		backgroundColor: 'transparent'
 	},
 
+	slide1: {
+		marginTop: 60,
+		flex: 1,
+		justifyContent: 'center',
+		backgroundColor: 'transparent'
+	},
+	
 	wrapper: {
-		// marginTop: "-17%",
-		marginBottom: 100
+		// marginTop: 80
+	},
+
+	signupbutt: {
+		backgroundColor: "#013d38",
+		borderRadius: 20,
+		borderBottomLeftRadius: 10,
+		borderBottomRightRadius: 10,
+		borderTopLeftRadius: 10,
+		borderTopRightRadius: 10,
+		marginTop: 40,
+		width: 150,
+		marginLeft: 110,
+		height: 40
+	},
+	
+	bottomsignup: {
+		marginBottom: 35,
 	},
 
 	//COMPONENT - LOGIN
@@ -381,7 +404,7 @@ export default StyleSheet.create({
 		marginLeft: 150,
 		marginTop: 100,
 		width: 105,
-		height: 100
+		height: 40
 	},
 
 	loginbutt: {
@@ -390,6 +413,17 @@ export default StyleSheet.create({
 		marginTop: 40,
 		width: 150,
 		marginLeft: 110,
-		
-	}
+	},
+
+	signupredirect: {
+		marginTop: 100,
+		marginLeft: 110,
+		width: 150,
+		borderRadius: 10,
+	},
+
+	bottomlogin: {
+		marginTop: 60
+	},
+
 });

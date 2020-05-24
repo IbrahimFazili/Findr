@@ -1,14 +1,8 @@
 import React from 'react';
-import { View, AsyncStorage, Image } from 'react-native';
+import { View, AsyncStorage, AppRegistry, Image, Text } from 'react-native';
 import styles from '../assets/styles';
 import { DefaultTheme, Provider as PaperProvider, TextInput, RadioButton, Dialog, Button } from 'react-native-paper';
 import Fetcher from '../assets/data/Fetcher';
-
-// const labelStyle = { 
-//     colors: { 
-        
-//     } 
-// };
 
 const theme = {
     colors: {
@@ -48,8 +42,10 @@ class LogIn extends React.Component {
         this.state = { 
             email: "",
             password: "",
+
             emailLabel: "Email",
             passLabel: "Password", 
+
             isEmailValid: false,
             isPasswordValid: false,
         };
@@ -130,7 +126,13 @@ class LogIn extends React.Component {
                 <Button mode="contained" onPress={this.handleSubmit.bind(this)} style={styles.loginbutt}>
                     Log in
                 </Button>
+                <View style={styles.bottomlogin}>
+                    <Button transparent='true' labelStyle={{color: "#FFF"}} style={styles.signupredirect}>
+                        Sign Up
+                    </Button>
+                </View>    
             </View>
+            
         );
     }
 }

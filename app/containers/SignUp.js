@@ -6,25 +6,26 @@ import DatePicker from 'react-native-datepicker';
 import Swiper from 'react-native-swiper'
 import Fetcher from '../assets/data/Fetcher';
 
-const labelStyle = { 
-    colors: { 
+const theme = {
+    colors: {
+        ...DefaultTheme.colors,
+        primary: "transparent",
         text: 'white', 
-        placeholder: 'darkgrey',
-        label: '#2c9c91'
-    } 
+        placeholder: 'lightgrey',
+        labelColor: 'black',
+    },
 };
 
-// const theme = {
-//     colors: {
-//         ...DefaultTheme.colors,
-//         accent: "#FFFFFF"
-//     },
-// };
-
 const textBoxStyle = { 
-    width: '75%', 
+    width: '75%',
+    height: 50,
+    borderBottomLeftRadius: 30,
+    borderBottomRightRadius: 30,
+    borderTopLeftRadius: 30,
+    borderTopRightRadius: 30,
     alignSelf: 'center',
-    backgroundColor: 'transparent',
+    backgroundColor: "#5EA39D",
+    opacity: 0.5,
     marginBottom: "8%"
 };
 
@@ -42,12 +43,6 @@ class SignUp extends React.Component {
     constructor(props) {
         super(props);
         this.state = { 
-            nameMode: 'outlined',
-            emailMode: 'outlined',
-            passMode: 'outlined',
-            uniMode: 'outlined',
-            majorMode: 'outlined',
-            courseMode: 'outlined',
 
             date: null,
             name: "",
@@ -55,6 +50,12 @@ class SignUp extends React.Component {
             password: "",
             uni: "",
             major: "",
+
+            nameLabel: "Name",
+            emailLabel: "Email",
+            passLabel: "Password",
+            uniLabeL: "University",
+            majorLabel: "Major",
 
             isNameValid: false,
             isEmailValid: false,
@@ -136,7 +137,7 @@ class SignUp extends React.Component {
                 <Image style={styles.logo} source={require('../assets/images/Findr_white2x.png')}/>
                 <Swiper
                     style={styles.wrapper}
-                    height={240}
+                    height={350}
                     onMomentumScrollEnd={(e, state, context) =>
                         console.log('index:', state.index)
                     }
@@ -147,9 +148,7 @@ class SignUp extends React.Component {
                             width: 10,
                             height: 10,
                             borderRadius: 10,
-                            marginLeft: 0,
-                            marginRight: 130,
-                            marginTop: 3,
+                            marginRight: 110,
                             marginBottom: 10
                         }}/>
                     }
@@ -157,12 +156,10 @@ class SignUp extends React.Component {
                         <View
                         style={{
                             backgroundColor: '#FFF',
-                            width: 15,
-                            height: 15,
+                            width: 12,
+                            height: 12,
                             borderRadius: 10,
-                            marginLeft: 0,
-                            marginRight: 130,
-                            marginTop: 3,
+                            marginRight: 110,
                             marginBottom: 10
                         }}/>
                     }
@@ -175,44 +172,47 @@ class SignUp extends React.Component {
                     >
                     <View style={styles.slide}>
                         <TextInput
-                            mode={this.state.nameMode}
+                            underlineColor="transparent"
+                            mode={"flat"}
                             value={this.state.name}
                             label='Name'
                             placeholder="Enter your full name"
-                            onFocus={() => this.setState({ nameMode: 'flat' })}
-                            onBlur={() => { if(this.state.name.length === 0) { this.setState({ nameMode: 'outlined' }); } }}
+                            onFocus={() => this.setState({ nameLabel: "" })}
+                            onBlur={() => this.setState({ nameLabel: this.state.name.length === 0 ? "Name" : "" })}
                             onChangeText={this.handleNameChange.bind(this)}
-                            theme={labelStyle}
+                            theme={theme}
                             style={textBoxStyle}
                         />
 
                         <TextInput
-                            mode={this.state.emailMode}
+                            underlineColor="transparent"
+                            mode={"flat"}
                             value={this.state.email}
                             label='Email'
                             placeholder="email@example.com"
-                            onFocus={() => this.setState({ emailMode: 'flat' })}
-                            onBlur={() => { if(this.state.email.length === 0) { this.setState({ emailMode: 'outlined' }); } }}
+                            onFocus={() => this.setState({ emailLabel: "" })}
+                            onBlur={() => this.setState({ emailLabel: this.state.email.length === 0 ? "Email" : "" })}
                             onChangeText={this.handleEmailChange.bind(this)}
-                            theme={labelStyle}
+                            theme={theme}
                             style={textBoxStyle}
                         />
 
                         <TextInput
+                            underlineColor="transparent"
                             secureTextEntry={true}
-                            mode={this.state.passMode}
+                            mode={"flat"}
                             value={this.state.password}
                             label='Password'
                             placeholder="Enter your new password"
-                            onFocus={() => this.setState({ passMode: 'flat' })}
-                            onBlur={() => { if(this.state.password.length === 0) { this.setState({ passMode: 'outlined' }); } }}
+                            onFocus={() => this.setState({ passLabel: "" })}
+                            onBlur={() => this.setState({ passLabel: this.state.password.length === 0 ? "Password" : "" })}
                             onChangeText={this.handlePasswordChange.bind(this)}
-                            theme={labelStyle}
+                            theme={theme}
                             style={textBoxStyle}
                         />
 
                     </View>
-                    <View style={styles.slide}>
+                    <View style={styles.slide1}>
                         <DatePicker
                             date={this.state.date}
                             mode="date"
@@ -222,8 +222,12 @@ class SignUp extends React.Component {
                             cancelBtnText="Cancel"
                             customStyles={{
                                 dateInput: {
-                                marginLeft: 36,
-                                borderRadius: 6
+                                    marginLeft: 36,
+                                    borderBottomLeftRadius: 30,
+                                    borderBottomRightRadius: 30,
+                                    borderTopLeftRadius: 30,
+                                    borderTopRightRadius: 30,
+                                    height: 50
                                 }
                             }}
                             showIcon={false}
@@ -233,36 +237,41 @@ class SignUp extends React.Component {
                         />
 
                         <TextInput
-                            mode={this.state.uniMode}
+                            underlineColor="transparent"
+                            mode={"flat"}
                             value={this.state.uni}
                             label='University'
                             placeholder="Enter your university"
-                            onFocus={() => this.setState({ uniMode: 'flat' })}
-                            onBlur={() => { if(this.state.uni.length === 0) { this.setState({ uniMode: 'outlined' }); } }}
+                            onFocus={() => this.setState({ uniLabel: "" })}
+                            onBlur={() => this.setState({ uniLabel: this.state.uni.length === 0 ? "University" : "" })}
                             onChangeText={this.handleUniChange.bind(this)}
-                            theme={labelStyle}
+                            theme={theme}
                             style={textBoxStyle}
                         />
 
                         <TextInput
-                            mode={this.state.majorMode}
+                            underlineColor="transparent"
+                            mode={"flat"}
                             value={this.state.major}
                             label='Major'
                             placeholder="Enter your major"
-                            onFocus={() => this.setState({ majorMode: 'flat' })}
-                            onBlur={() => { if(this.state.major.length === 0) { this.setState({ majorMode: 'outlined' }); } }}
+                            onFocus={() => this.setState({ majorLabel: "" })}
+                            onBlur={() => this.setState({ majorLabel: this.state.major.length === 0 ? "Major" : "" })}
                             onChangeText={this.handleMajorChange.bind(this)}
-                            theme={labelStyle}
+                            theme={theme}
                             style={textBoxStyle}
                         />
-
-                        {/* <Button color='white' onPress={this.handleSubmit.bind(this)}>
-                            Submit
-                        </Button> */}
-
+                        <Button mode="contained" style={styles.signupbutt}>
+                            Sign Up
+                        </Button>
+                        <View style={styles.bottomsignup}>
+                            <Button transparent='true' labelStyle={{color: "#FFF"}} style={styles.signupredirect}>
+                                Log in
+                            </Button>
+                        </View>   
                     </View>
                 </Swiper>
-
+                
             </View>
         );
     }
