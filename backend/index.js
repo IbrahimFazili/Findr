@@ -201,14 +201,16 @@ app.post("/new-user", urlEncodedParser, (req, res) => {
         uni: req.body.uni,
         major: req.body.major,
         age: Number(req.body.age),
-        image: req.body.image
+        image: bcrypt.hashSync(req.body.email, 10)
     };
 
 
-    DatabaseManager.insertUser(requestData).then((result) => {
+    DatabaseManager.insertUser(requestData).then(async (result) => {
         // sendEmail(requestData);
         // reply with success response code
-        res.status(201).send("Success");
+        res.status(201).send(JSON.stringify({ 
+            signedPutUrl: await AWS_Presigner.generateSignedPutUrl("user_images/" + requestData.image)
+        }));
 
     }).catch((err) => {
         // unsuccessful insert, reply back with unsuccess response code
