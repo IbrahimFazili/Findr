@@ -140,7 +140,7 @@ function fetchChat(chat_id) {
 
     return new Promise(function(resolve, reject) {
         getCollection(COLLECTION_CHATS).then((collection) => {
-            collection.find({ uid: chat_id }).toArray(function(err, result) {
+            collection.find({ _id: chat_id }).toArray(function(err, result) {
                 if(err) { reject(err); }
 
                 resolve(result);

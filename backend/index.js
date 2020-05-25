@@ -113,10 +113,12 @@ app.get("/fetchChatData", (req, res) => {
         const user = users[0];
         var chatFound = false;
         let chat = null;
+        
         for (let i = 0; i < user.chats.length && !chatFound; i++) {
             
             try {
-                chat = await DatabaseManager.fetchChat(user.chats[i]);
+                chat = (await DatabaseManager.fetchChat( user.chats[i] ))[0].chat;
+                
                 if(chat.user1 === MSG_TO || chat.user2 === MSG_TO) {
                     chatFound = true;
                     res.status(200).send(JSON.stringify(chat));
@@ -266,10 +268,8 @@ app.post("/login", urlEncodedParser, (req, res) => {
 /* Socket Listeners for chat */
 
 io.on('connection', (socket) => {
-
-    socket.on('login', (msg) => {
-        socket.join(msg.from).emit('joined chat room' + socket.rooms);
-    });
+    socket.join(socket.handshake.query.name).to(socket.handshake.query.name).emit('joined chat room' + socket.rooms);
+    console.log(`${socket.handshake.query.name} Connected`);
 
     socket.on('new msg', (msg) => {
         DatabaseManager.fetchUsers({ email: msg.from }).then(async (users) => {
@@ -280,13 +280,16 @@ io.on('connection', (socket) => {
             for(let i = 0; i < user.chats.length && !msgHandled; i++) {
 
                 try {
-                    chat = await DatabaseManager.fetchChat(user.chats[i]);
+                    chat = (await DatabaseManager.fetchChat( user.chats[i] ))[0].chat;
                     if(chat.user1 === msg.to || chat.user2 === msg.to) {
-                        chat.newMessage(msg.from, msg.content);
+
+                        chat = Chat.parseJSON(chat);
+
+                        chat.newMessage(msg.from, msg.content, msg.time);
                         msgHandled = true;
 
                         try {
-                            await DatabaseManager.updateChat(chat, user.chats[i]);
+                            await DatabaseManager.updateChat(chat, { _id: user.chats[i] });
                             socket.to(msg.to).emit('new msg', msg);
                         } catch (err_nested) {
                             console.log(err_nested);
@@ -303,16 +306,38 @@ io.on('connection', (socket) => {
 
             if(!msgHandled) {
                 const chat = new Chat(msg.from, msg.to);
-                DatabaseManager.insertChat(chat).then((result) => {
+                chat.newMessage(msg.from, msg.content, msg.time);
 
-                    user.chats.append(result._id);
-                    DatabaseManager.updateUser({ chats: user.chats }, user.email).then((value) => {
+                DatabaseManager.insertChat({ chat }).then((result) => {
+                    console.log('new chat created');
+                    console.log(result.ops[0]);
+                    
+                    user.chats.push(result.ops[0]._id);
+                    DatabaseManager.updateUser({ chats: user.chats }, { email: user.email }).then((value) => {
+                        console.log('user1 updated');
                         socket.to(msg.to).emit('new msg', msg);
 
                     }).catch((reason) => {
                         socket.emit('send failed');
-                        DatabaseManager.deleteChat(result._id);
+                        DatabaseManager.deleteChat(result.ops[0]._id);
                         console.log(reason);
+                    });
+
+                    DatabaseManager.fetchUsers({ email: msg.to }).then((res) => {
+
+                        let user = res[0];
+                        user.chats.push(result.ops[0]._id);
+                        console.log('user2 fetched');
+                        DatabaseManager.updateUser({ chats: user.chats }, { email: user.email }).then((value) => {
+                            console.log('user2 updated');
+                            socket.to(msg.to).emit('new msg', msg);
+    
+                        }).catch((reason) => {
+                            console.log(reason);
+                        });
+
+                    }).catch((err) => {
+                        console.log(err);
                     });
 
                 }).catch((err) => {

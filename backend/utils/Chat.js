@@ -1,7 +1,8 @@
 class Message {
-    constructor(user, msg) {
+    constructor(user, msg, timestamp) {
         this.user = user;
         this.msg = msg;
+        this.timestamp = timestamp;
     }
 }
 
@@ -14,8 +15,15 @@ class Chat {
         this.messages = [];
     }
 
-    newMessage(user, msg) {
-        this.messages.push(new Message(user, msg));
+    static parseJSON(obj) {
+        const chat = new Chat(obj.user1, obj.user2);
+        chat.messages = obj.messages;
+
+        return chat;
+    }
+
+    newMessage(user, msg, timestamp) {
+        this.messages.push(new Message(user, msg, timestamp));
     }
 }
 
