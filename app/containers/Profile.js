@@ -6,7 +6,8 @@ import {
   View,
   Text,
   ImageBackground,
-  TouchableOpacity
+  TouchableOpacity,
+  AsyncStorage
 } from 'react-native';
 import ProfileItem from '../components/ProfileItem';
 import Icon from '../components/Icon';
@@ -20,8 +21,8 @@ class Profile extends React.Component {
   }
 
   async componentDidMount() {
-    let user = await this.state.fetcher.loadSelfProfile('harsh@gmail.com');
-    this.setState({ profile: user });
+    let user = await this.state.fetcher.fetchUser(await AsyncStorage.getItem('storedEmail'));
+    this.setState({ profile: user[0] });
   }
 
   render() {
@@ -72,7 +73,7 @@ class Profile extends React.Component {
               </Text>
             </TouchableOpacity>
   
-            <TouchableOpacity style={styles.roundedButton}>
+            <TouchableOpacity style={styles.roundedButton} onPress={()=>AsyncStorage.removeItem("storedEmail")}>
               <Text style={styles.iconButton}>
                 <Icon name="chat" />
               </Text>
