@@ -31,8 +31,10 @@ export default StyleSheet.create({
 		shadowOpacity: 0.05,
 		shadowRadius: 10,
 		shadowColor: BLACK,
-		shadowOffset: { height: 0, width: 0 }
+		shadowOffset: { height: 0, width: 0 },
+		// height: DIMENSION_HEIGHT-240,
 	},
+	
 	matchesCardItem: {
 		marginTop: -35,
 		backgroundColor: PRIMARY_COLOR,
@@ -76,10 +78,14 @@ export default StyleSheet.create({
 		marginRight: 4
 	},
 	actionsCardItem: {
+		flex: 1,
+    	justifyContent: "flex-end",
 		flexDirection: "row",
 		alignItems: "center",
 		paddingVertical: 20,
-		alignSelf: "center"
+		alignSelf: "center",
+		position: "absolute",
+		bottom: 0,
 	},
 	button: {
 		width: 60,
@@ -311,7 +317,7 @@ export default StyleSheet.create({
 	actionsProfile: {
 		justifyContent: "center",
 		flexDirection: "row",
-		alignItems: "center"
+		alignItems: "center",
 	},
 	iconButton: { fontFamily: ICON_FONT, fontSize: 20, color: WHITE },
 	textButton: {
