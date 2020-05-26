@@ -10,14 +10,15 @@ class Fetcher {
     }
 
     async requestSignUp(data) {
-        return (await fetch(this.ENDPOINT + ":" + String(this.PORT) + "/new-user", {
+        let signUpRequest =  await (await fetch(this.ENDPOINT + ":" + String(this.PORT) + "/new-user", {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',
             },
             body: JSON.stringify(data)
-        })).status;
+        }).json());
 
+        // signUpRequest.signedPutUrl
     }
 
     async logIn(data) {

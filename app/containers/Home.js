@@ -1,7 +1,6 @@
 import React from 'react';
 import { View, ImageBackground, AsyncStorage } from 'react-native';
 import CardStack, { Card } from 'react-native-card-stack-swiper';
-import City from '../components/City';
 import Filters from '../components/Filters';
 import CardItem from '../components/CardItem';
 import styles from '../assets/styles';
@@ -22,7 +21,7 @@ class Home extends React.Component {
     try {
       let storedEmail = await AsyncStorage.getItem('storedEmail');
       if(storedEmail === null) {
-        this.props.navigation.navigate('SignUp');
+        this.props.navigation.navigate('LogIn');
       }
     }
     catch(err) {
@@ -59,11 +58,6 @@ class Home extends React.Component {
         style={styles.bg}
       >
         <View style={styles.containerHome}>
-          <View style={styles.top}>
-            {/* <City /> */}
-            <Filters />
-          </View>
-  
           <CardStack
             loop={true}
             verticalSwipe={false}
@@ -84,6 +78,9 @@ class Home extends React.Component {
               </Card>
             ))}
           </CardStack>
+          <View style={styles.top}>
+            <Filters />
+          </View>
         </View>
       </ImageBackground>
     );

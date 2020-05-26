@@ -23,8 +23,9 @@ const DIMENSION_HEIGHT = Dimensions.get("window").height;
 export default StyleSheet.create({
 	// COMPONENT - CARD ITEM
 	containerCardItem: {
+		marginTop: 100,
 		backgroundColor: WHITE,
-		borderRadius: 8,
+		borderRadius: 40,
 		// alignItems: "center",
 		margin: 10,
 		shadowOpacity: 0.05,
@@ -151,16 +152,17 @@ export default StyleSheet.create({
 		backgroundColor: WHITE,
 		padding: 10,
 		borderRadius: 20,
-		width: 70,
+		width: 100,
 		shadowOpacity: 0.05,
 		shadowRadius: 10,
 		shadowColor: BLACK,
-		shadowOffset: { height: 0, width: 0 }
+		shadowOffset: {height: 0, width: 0 },
 	},
 	filtersText: {
 		fontFamily: ICON_FONT,
-		color: DARK_GRAY,
-		fontSize: 13
+		color: "#1a5d57",
+		fontSize: 13,
+		marginLeft: 20
 	},
 
 	// COMPONENT - MESSAGE
@@ -249,7 +251,9 @@ export default StyleSheet.create({
 		height: DIMENSION_HEIGHT
 	},
 	top: {
-		paddingTop: 50,
+		// paddingTop: 50,
+		marginTop: 650,
+		marginLeft: 160,
 		marginHorizontal: 10,
 		flexDirection: "row",
 		justifyContent: "space-between",
