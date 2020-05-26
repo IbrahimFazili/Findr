@@ -18,6 +18,8 @@ const CardItem = ({
 }) => {
   // Custom styling
   const fullWidth = Dimensions.get('window').width;
+  const fullHeight = Dimensions.get('window').height;
+
   const imageStyle = [
     {
       borderRadius: 8,
@@ -47,8 +49,14 @@ const CardItem = ({
     }
   ];
 
+  const theHeight = [
+    {
+      height: variant ? fullHeight-600: fullHeight - 240,
+    }
+  ]
+
   return (
-    <View style={styles.containerCardItem}>
+    <View style={[styles.containerCardItem, theHeight]}>
       {/* IMAGE */}
       <Image source={image} style={imageStyle} />
 
@@ -91,18 +99,18 @@ const CardItem = ({
       {actions && (
         <View style={styles.actionsCardItem}>
 
-          <TouchableOpacity style={styles.button} onPress={() => onPressRight()}>
-            <Text style={styles.like}>
-              <Icon name="like" />
-            </Text>
-          </TouchableOpacity>
-
           <TouchableOpacity
             style={styles.button}
             onPress={() => onPressLeft()}
           >
             <Text style={styles.dislike}>
               <Icon name="dislike" />
+            </Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity style={styles.button} onPress={() => onPressRight()}>
+            <Text style={styles.like}>
+              <Icon name="like" />
             </Text>
           </TouchableOpacity>
 
