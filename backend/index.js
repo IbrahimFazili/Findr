@@ -14,20 +14,7 @@ const Chat = require('./utils/Chat').Chat;
 app.use(bodyParser.json());
 
 app.get("/", (req, res) => {
-    res.status(200).sendFile(__dirname + "/test_html_files/user.html");
-});
-
-app.get("/search", (req, res) => {
-    res.status(200).sendFile(__dirname + "/test_html_files/search.html");
-});
-
-app.get("/pcard", (req, res) => {
-    res.status(200).sendFile(__dirname + "/test_html_files/profile-card.html");
-});
-
-app.get("/close", (req, res) => {
-    DatabaseManager.closeConnection();
-    res.status(200).redirect("/");
+    res.status(200).send("Server is Alive");
 });
 
 app.get("/fetchUsers", (req, res) => {
