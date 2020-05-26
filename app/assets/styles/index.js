@@ -31,8 +31,9 @@ export default StyleSheet.create({
 		shadowRadius: 10,
 		shadowColor: BLACK,
 		shadowOffset: { height: 0, width: 0 },
-		height: DIMENSION_HEIGHT-240,
+		// height: DIMENSION_HEIGHT-240,
 	},
+	
 	matchesCardItem: {
 		marginTop: -35,
 		backgroundColor: PRIMARY_COLOR,
