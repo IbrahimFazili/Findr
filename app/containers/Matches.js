@@ -49,7 +49,7 @@ class Matches extends React.Component {
               keyExtractor={(item, index) => index.toString()}
               renderItem={({ item }) => (
                 <TouchableOpacity>
-                  <CardItem
+                  <CardItem 
                     image={ { uri: item.image } }
                     name={item.name}
                     status={'Online'}
