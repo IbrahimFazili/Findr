@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, ImageBackground, AsyncStorage } from 'react-native';
+import { View, ImageBackground, AsyncStorage, Image} from 'react-native';
 import CardStack, { Card } from 'react-native-card-stack-swiper';
 import Filters from '../components/Filters';
 import CardItem from '../components/CardItem';
@@ -51,38 +51,38 @@ class Home extends React.Component {
     }).catch((err) => {
       console.log(er);
     });
-    
+
     return (
-      <ImageBackground
-        source={require('../assets/images/bg.png')}
-        style={styles.bg}
-      >
+      <View style={{backgroundColor: 'rgba(26, 93, 87, 0.15)'}}>
+        <Image style={styles.homeLogo} source={require('../assets/images/Findr_logo2x.png')}/>
         <View style={styles.containerHome}>
-          <CardStack
-            loop={true}
-            verticalSwipe={false}
-            renderNoMoreCards={() => null}
-            ref={swiper => (this.swiper = swiper)}
-          >
-            {this.state.cards.map((item, index) => (
-              <Card key={index}>
-                <CardItem
-                  image={{ uri: item.image }}
-                  name={item.name}
-                  courses={item.crscodes}
-                  description={item.addinfo.length > MAX_LENGTH ? (item.addinfo.substring(0,MAX_LENGTH) + "...") : item.addinfo}
-                  actions
-                  onPressRight={() => this.swiper.swipeRight()}
-                  onPressLeft={() => this.swiper.swipeLeft()}
-                />
-              </Card>
-            ))}
-          </CardStack>
+          <View style={styles.homeCards}>
+            <CardStack
+              loop={true}
+              verticalSwipe={false}
+              renderNoMoreCards={() => null}
+              ref={swiper => (this.swiper = swiper)}
+            >
+              {this.state.cards.map((item, index) => (
+                <Card key={index}>
+                  <CardItem
+                    image={{ uri: item.image }}
+                    name={item.name}
+                    courses={item.crscodes}
+                    description={item.addinfo.length > MAX_LENGTH ? (item.addinfo.substring(0,MAX_LENGTH) + "...") : item.addinfo}
+                    actions
+                    onPressRight={() => this.swiper.swipeRight()}
+                    onPressLeft={() => this.swiper.swipeLeft()}
+                  />
+                </Card>
+              ))}
+            </CardStack>
+          </View>
           <View style={styles.top}>
             <Filters />
           </View>
         </View>
-      </ImageBackground>
+      </View>
     );
   }
 }

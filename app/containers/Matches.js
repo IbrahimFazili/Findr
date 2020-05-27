@@ -34,7 +34,7 @@ class Matches extends React.Component {
       >
         <View style={styles.containerMatches}>
           <ScrollView>
-            <View style={styles.top}>
+            <View style={styles.matchTop}>
               <Text style={styles.title}>Matches</Text>
               <TouchableOpacity>
                 <Text style={styles.icon}>

@@ -23,6 +23,7 @@ const DIMENSION_HEIGHT = Dimensions.get("window").height;
 export default StyleSheet.create({
 	// COMPONENT - CARD ITEM
 	containerCardItem: {
+		width: DIMENSION_WIDTH - 70,
 		marginTop: 100,
 		backgroundColor: WHITE,
 		borderRadius: 40,
@@ -256,15 +257,7 @@ export default StyleSheet.create({
 		width: DIMENSION_WIDTH,
 		height: DIMENSION_HEIGHT
 	},
-	top: {
-		// paddingTop: 50,
-		marginTop: 650,
-		marginLeft: 160,
-		marginHorizontal: 10,
-		flexDirection: "row",
-		justifyContent: "space-between",
-		alignItems: "center"
-	},
+	
 	title: { 
 		paddingBottom: 10, 
 		fontSize: 22, 
@@ -278,13 +271,51 @@ export default StyleSheet.create({
 	},
 
 	// CONTAINER - HOME
-	containerHome: { marginHorizontal: 10 },
+	containerHome: {
+		alignSelf: "center",
+		marginTop: -50
+	},
+
+	homeCards: {
+		alignSelf: "center",
+		marginRight: 360,
+		marginTop: -25,
+		marginBottom: 40,
+	},
+
+	homeLogo: {
+		width: 65,
+		height: 60,
+		// padding: 3,
+		marginLeft: 180,
+		marginTop: 20,
+		marginBottom: -20,
+	},
+
+	top: {
+		// paddingTop: 50,
+		marginTop: 637,
+		marginBottom: 60,
+		marginLeft: 135,
+		marginHorizontal: 10,
+		flexDirection: "row",
+		justifyContent: "space-between",
+		alignItems: "center"
+	},
 
 	// CONTAINER - MATCHES
 	containerMatches: {
 		justifyContent: "space-between",
 		flex: 1,
 		paddingHorizontal: 10
+	},
+
+	matchTop: {
+		paddingTop: 50,
+		marginHorizontal: 10,
+		flexDirection: 'row',
+		justifyContent: 'space-between',
+		alignItems: 'center',
 	},
 
 	// CONTAINER - MESSAGES
@@ -435,5 +466,29 @@ export default StyleSheet.create({
 	bottomlogin: {
 		marginTop: 60
 	},
+
+	//COMPONENT - SIDE MENU
+	sidemenucontainer: {
+		paddingTop: 20,
+		flex: 1
+	},
+	  
+	navItemStyle: {
+		padding: 10
+	},
+	  
+	navSectionStyle: {
+		backgroundColor: 'lightgrey'
+	},
+
+	sectionHeadingStyle: {
+		paddingVertical: 10,
+		paddingHorizontal: 5
+	},
+
+	footerContainer: {
+		padding: 20,
+		backgroundColor: 'lightgrey'
+	}
 
 });

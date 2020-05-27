@@ -1,5 +1,5 @@
-const ENDPOINT = "http://10.0.2.2"; // goes to localhost from avd
-const PORT = 3000;
+const ENDPOINT = "http://dev.findrapp.ca"; // goes to localhost from avd
+const PORT = 80;
 
 class Fetcher {
 

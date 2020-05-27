@@ -21,10 +21,14 @@ const CardItem = ({
 
   const imageStyle = [
     {
-      borderRadius: 8,
-      width: variant ? fullWidth / 2 - 30 : fullWidth - 80,
-      height: variant ? 120 : 200,
-      margin: variant ? 0 : 20
+      width: variant ? fullWidth / 2 - 30 : styles.containerCardItem.width, //-80 
+      height: variant ? 120 : 250,
+      // margin: variant ? 0 : 20
+      margin: 0,
+      borderTopLeftRadius: 40,
+      borderTopRightRadius: 40,
+      borderBottomLeftRadius: 0,
+      borderBottomRightRadius: 0
     }
   ];
 
@@ -32,9 +36,10 @@ const CardItem = ({
     {
       paddingTop: variant ? 10 : 15,
       paddingBottom: variant ? 5 : 7,
-      color: '#363636',
+      color: '#1a5d57',
       fontSize: variant ? 15 : 30,
-      alignSelf: 'center'
+      alignSelf: 'center',
+      fontWeight: "300",
     }
   ];
 
@@ -50,7 +55,7 @@ const CardItem = ({
 
   const theHeight = [
     {
-      height: variant ? fullHeight-600: fullHeight - 240,
+      height: variant ? fullHeight-600: fullHeight - 210,
     }
   ]
 
