@@ -21,12 +21,12 @@ const CardItem = ({
 
   const imageStyle = [
     {
-      width: variant ? fullWidth / 2 - 30 : styles.containerCardItem.width, //-80 
+      width: variant ? fullWidth / 2 - 30 : styles.containerCardItem.width, 
       height: variant ? 120 : 250,
-      // margin: variant ? 0 : 20
+      // margin: variant ? 0 : 20 
       margin: 0,
-      borderTopLeftRadius: 40,
-      borderTopRightRadius: 40,
+      borderTopLeftRadius: variant ? 0 : 40,
+      borderTopRightRadius: variant ? 0 : 40,
       borderBottomLeftRadius: 0,
       borderBottomRightRadius: 0
     }
@@ -55,12 +55,12 @@ const CardItem = ({
 
   const theHeight = [
     {
-      height: variant ? fullHeight-600: fullHeight - 210,
+      height: variant ? fullHeight - 600: fullHeight - 210,
     }
   ]
 
   return (
-    <View style={[styles.containerCardItem, theHeight]}>
+    <View style={[variant ? styles.matchContainerCardItem : styles.containerCardItem, theHeight]}>
       {/* IMAGE */}
       <Image source={image} style={imageStyle} />
 

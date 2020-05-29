@@ -36,6 +36,16 @@ export default StyleSheet.create({
 		// height: DIMENSION_HEIGHT-240,
 	},
 	
+	matchContainerCardItem: {
+		backgroundColor: WHITE,
+		borderRadius: 8,
+		margin: 10,
+		shadowOpacity: 0.05,
+		shadowRadius: 10,
+		shadowColor: BLACK,
+		shadowOffset: {height: 0, width: 0},
+	},
+
 	matchesCardItem: {
 		marginTop: -35,
 		backgroundColor: PRIMARY_COLOR,
@@ -43,10 +53,34 @@ export default StyleSheet.create({
 		paddingHorizontal: 20,
 		borderRadius: 20
 	},
+
+	matchLogo: {
+		width: 65,
+		height: 60,
+		marginLeft: 170,
+		marginTop: 20,
+	},
+
+	seeAllicon: {
+		fontFamily: ICON_FONT,
+		fontSize: 12,
+		color: DARK_GRAY,
+		paddingRight: 10
+	},
+
+	matchTitle: {
+		marginLeft: 100,
+		paddingBottom: 10, 
+		fontSize: 20, 
+		color: "#1a5d57" ,
+		fontWeight: "bold",
+	},
+
 	matchesTextCardItem: {
 		fontFamily: ICON_FONT,
 		color: WHITE
 	},
+
 	descriptionCardItem: {
 		color: GRAY,
 		textAlign: "center",
@@ -54,16 +88,19 @@ export default StyleSheet.create({
 		marginTop: 10,
 		marginBottom: 0,
 	},
+
 	status: {
 		paddingBottom: 10,
 		flexDirection: "row",
 		alignItems: "center",
 		alignSelf: 'center',
 	},
+
 	statusText: {
 		color: GRAY,
 		fontSize: 12
 	},
+
 	online: {
 		width: 6,
 		height: 6,
@@ -71,6 +108,7 @@ export default StyleSheet.create({
 		borderRadius: 3,
 		marginRight: 4
 	},
+
 	offline: {
 		width: 6,
 		height: 6,
@@ -78,6 +116,7 @@ export default StyleSheet.create({
 		borderRadius: 3,
 		marginRight: 4
 	},
+
 	actionsCardItem: {
 		flex: 1,
     	justifyContent: "flex-end",
@@ -88,6 +127,7 @@ export default StyleSheet.create({
 		position: "absolute",
 		bottom: 0,
 	},
+
 	button: {
 		width: 60,
 		height: 60,
@@ -101,6 +141,7 @@ export default StyleSheet.create({
 		shadowColor: DARK_GRAY,
 		shadowOffset: { height: 10, width: 0 }
 	},
+
 	miniButton: {
 		width: 40,
 		height: 40,
@@ -114,6 +155,7 @@ export default StyleSheet.create({
 		shadowColor: DARK_GRAY,
 		shadowOffset: { height: 10, width: 0 }
 	},
+
 	star: {
 		fontFamily: ICON_FONT,
 		color: STAR_ACTIONS
@@ -123,15 +165,18 @@ export default StyleSheet.create({
 		fontFamily: ICON_FONT,
 		color: LIKE_ACTIONS
 	},
+
 	dislike: {
 		fontSize: 25,
 		fontFamily: ICON_FONT,
 		color: DISLIKE_ACTIONS
 	},
+
 	flash: {
 		fontFamily: ICON_FONT,
 		color: FLASH_ACTIONS
 	},
+
 	popupCard: {
 		backgroundColor: WHITE,
 		borderRadius: 20
@@ -255,7 +300,7 @@ export default StyleSheet.create({
 		flex: 1,
 		resizeMode: "cover",
 		width: DIMENSION_WIDTH,
-		height: DIMENSION_HEIGHT
+		height: DIMENSION_HEIGHT,
 	},
 	
 	title: { 
@@ -311,7 +356,7 @@ export default StyleSheet.create({
 	},
 
 	matchTop: {
-		paddingTop: 50,
+		paddingTop: 20,
 		marginHorizontal: 10,
 		flexDirection: 'row',
 		justifyContent: 'space-between',

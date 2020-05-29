@@ -53,7 +53,10 @@ class Home extends React.Component {
     });
 
     return (
-      <View style={{backgroundColor: 'rgba(26, 93, 87, 0.15)'}}>
+      <ImageBackground
+        source={require('../assets/images/15.png')}
+        style={styles.bg}
+      >
         <Image style={styles.homeLogo} source={require('../assets/images/Findr_logo2x.png')}/>
         <View style={styles.containerHome}>
           <View style={styles.homeCards}>
@@ -82,7 +85,7 @@ class Home extends React.Component {
             <Filters />
           </View>
         </View>
-      </View>
+      </ImageBackground>
     );
   }
 }
