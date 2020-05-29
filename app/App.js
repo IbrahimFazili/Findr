@@ -82,7 +82,8 @@ const App = createBottomTabNavigator(
 				shadowOpacity: 0.3,
 				shadowRadius: 10,
 				shadowColor: "#000",
-				shadowOffset: { height: 0, width: 0 }
+				shadowOffset: { height: 0, width: 0 },
+				elevation: 25
 			}
 		}
 	}

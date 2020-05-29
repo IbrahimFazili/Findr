@@ -32,7 +32,8 @@ export default StyleSheet.create({
 		shadowOpacity: 0.05,
 		shadowRadius: 10,
 		shadowColor: BLACK,
-		shadowOffset: { height: 0, width: 0 },
+    shadowOffset: { height: 0, width: 0 },
+    elevation: 10
 		// height: DIMENSION_HEIGHT-240,
 	},
 	
@@ -163,7 +164,8 @@ export default StyleSheet.create({
 		shadowOpacity: 0.05,
 		shadowRadius: 10,
 		shadowColor: BLACK,
-		shadowOffset: {height: 0, width: 0 },
+    shadowOffset: {height: 0, width: 0 },
+    elevation: 10
 	},
 	filtersText: {
 		fontFamily: ICON_FONT,
