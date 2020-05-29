@@ -20,7 +20,7 @@ app.get("/", (req, res) => {
 app.get("/fetchUsers", (req, res) => {
     DatabaseManager.fetchUsers({ email: req.query.email }).then(async function(result) {
         for(var i = 0; i < result.length; i++) {
-            result[i].image = await AWS_Presigner.generateSignedGetUrl("user_images/" + result[i].image);
+            result[i].image = await AWS_Presigner.generateSignedGetUrl("user_images/" + result[i].email);
         }
 
         res.send(result);
@@ -37,7 +37,7 @@ app.post("/fetchUsers_id", urlEncodedParser, (req, res) => {
 
     DatabaseManager.fetchUsers({ _id: { $in: ids } }).then(async function(result) {
         for(var i = 0; i < result.length; i++) {
-            result[i].image = await AWS_Presigner.generateSignedGetUrl("user_images/" + result[i].image);
+            result[i].image = await AWS_Presigner.generateSignedGetUrl("user_images/" + result[i].email);
         }
 
         res.status(200).send(result);
@@ -196,7 +196,6 @@ app.post("/new-user", urlEncodedParser, (req, res) => {
         uni: req.body.uni,
         major: req.body.major,
         age: Number(req.body.age),
-        image: bcrypt.hashSync(req.body.email, 10),
         chats: []
     };
 
@@ -205,7 +204,7 @@ app.post("/new-user", urlEncodedParser, (req, res) => {
         // sendEmail(requestData);
         // reply with success response code
         res.status(201).send(JSON.stringify({ 
-            signedPutUrl: await AWS_Presigner.generateSignedPutUrl("user_images/" + requestData.image)
+            signedPutUrl: await AWS_Presigner.generateSignedPutUrl("user_images/" + requestData.email)
         }));
 
     }).catch((err) => {
