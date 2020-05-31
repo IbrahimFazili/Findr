@@ -12,7 +12,7 @@ import {
 } from 'react-native';
 import ProfileItem from '../components/ProfileItem';
 import Icon from '../components/Icon';
-import Fetcher from '../assets/data/Fetcher';
+import APIConnection from '../assets/data/APIConnection';
 
 const PRIMARY_COLOR = '#7444C0';
 const SECONDARY_COLOR = '#5636B8';
@@ -37,13 +37,11 @@ const DIMENSION_HEIGHT = Dimensions.get('window').height;
 class Profile extends React.Component {
   constructor(props) {
     super(props);
-    this.state = { fetcher: new Fetcher(), profile: null };
+    this.state = { API: new APIConnection(), profile: null };
   }
 
   async componentDidMount() {
-    let user = await this.state.fetcher.fetchUser(
-      await AsyncStorage.getItem('storedEmail')
-    );
+    let user = await this.state.API.fetchUser(await AsyncStorage.getItem('storedEmail'));
     this.setState({ profile: user[0] });
   }
 

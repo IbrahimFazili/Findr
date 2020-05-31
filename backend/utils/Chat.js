@@ -1,9 +1,8 @@
-const crypto = require('crypto');
-
 class Message {
-    constructor(user, msg) {
+    constructor(user, msg, timestamp) {
         this.user = user;
         this.msg = msg;
+        this.timestamp = timestamp;
     }
 }
 
@@ -12,13 +11,19 @@ class Chat {
     constructor(user1, user2) {
         this.user1 = user1;
         this.user2 = user2;
-        this.uid = crypto.createHash('sha256').update(user1).update(user2).digest('hex');
 
         this.messages = [];
     }
 
-    newMessage(user, msg) {
-        this.messages.push(new Message(user, msg));
+    static parseJSON(obj) {
+        const chat = new Chat(obj.user1, obj.user2);
+        chat.messages = obj.messages;
+
+        return chat;
+    }
+
+    newMessage(user, msg, timestamp) {
+        this.messages.push(new Message(user, msg, timestamp));
     }
 }
 
