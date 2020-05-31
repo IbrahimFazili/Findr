@@ -364,6 +364,14 @@ export default StyleSheet.create({
 		justifyContent: 'space-between',
 		alignItems: 'center',
 	},
+	matchTopSub: {
+		paddingTop: 10,
+		marginHorizontal: 50,
+		flexDirection: 'row',
+		justifyContent: 'space-between',
+		alignItems: 'center',
+	},
+
 
 	// CONTAINER - MESSAGES
 	containerMessages: {

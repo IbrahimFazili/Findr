@@ -1,6 +1,6 @@
 import React from 'react';
 import styles from '../assets/styles';
-
+import {Thumbnail} from 'native-base';
 import {
   ScrollView,
   View,
@@ -44,7 +44,54 @@ class Matches extends React.Component {
                 </Text>
               </TouchableOpacity>
             </View>
-  
+
+            <View style={{flex:3, height:100}}>
+              <ScrollView
+              horizontal={true}
+              showsHorizontalScrollIndicator={false}
+              contentContainerStyle={{
+                alignItems:'center',
+                paddingStart: 5,
+                paddingEnd: 5,
+              }}
+              >
+                <Thumbnail name="mike"
+                style={{marginHorizontal: 10, borderColor: '#1a5d57', borderWidth: 2.7}} 
+                source={require('../assets/images/01.jpg')}/>
+                <Thumbnail 
+                style={{marginHorizontal: 10, borderColor: '#1a5d57', borderWidth: 2.7}}
+                source={require('../assets/images/02.jpg')}/>
+                <Thumbnail 
+                style={{marginHorizontal: 10, borderColor: '#1a5d57', borderWidth: 2.7}}
+                source={require('../assets/images/03.jpg')}/>
+                <Thumbnail 
+                style={{marginHorizontal: 10, borderColor: '#1a5d57', borderWidth: 2.7}}
+                source={require('../assets/images/04.jpg')}/>
+                <Thumbnail 
+                style={{marginHorizontal: 10, borderColor: '#1a5d57', borderWidth: 2.7}}
+                source={require('../assets/images/05.jpg')}/>
+                <Thumbnail 
+                style={{marginHorizontal: 10, borderColor: '#1a5d57', borderWidth: 2.7}}
+                source={require('../assets/images/06.jpg')}/>
+                <Thumbnail 
+                style={{marginHorizontal: 10, borderColor: '#1a5d57', borderWidth: 2.7}}
+                source={require('../assets/images/07.jpg')}/>
+                <Thumbnail 
+                style={{marginHorizontal: 10, borderColor: '#1a5d57', borderWidth: 2.7}}
+                source={require('../assets/images/08.jpg')}/>
+                <Thumbnail 
+                style={{marginHorizontal: 10, borderColor: '#1a5d57', borderWidth: 2.7}}
+                source={require('../assets/images/09.jpg')}/>
+                <Thumbnail 
+                style={{marginHorizontal: 10, borderColor: '#1a5d57', borderWidth: 2.7}}
+                source={require('../assets/images/10.jpg')}/>
+              </ScrollView>
+            </View>
+
+            <View style={styles.matchTopSub}>
+              <Text style={styles.matchTitle}>Matches</Text>
+            </View>
+
             <FlatList
               numColumns={2}
               data={this.state.cards}
