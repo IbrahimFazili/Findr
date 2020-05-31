@@ -22,7 +22,7 @@ class Home extends React.Component {
     try {
       let storedEmail = await AsyncStorage.getItem('storedEmail');
       if(storedEmail === null) {
-        this.props.navigation.navigate('SignUp');
+        this.props.navigation.navigate('LogIn');
       }
     }
     catch(err) {
