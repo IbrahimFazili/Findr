@@ -11,17 +11,17 @@ import {
 } from 'react-native';
 import ProfileItem from '../components/ProfileItem';
 import Icon from '../components/Icon';
-import Fetcher from '../assets/data/Fetcher';
+import APIConnection from '../assets/data/APIConnection';
 
 class Profile extends React.Component {
 
   constructor(props) {
     super(props);
-    this.state = { fetcher: new Fetcher(), profile: null };
+    this.state = { API: new APIConnection(), profile: null };
   }
 
   async componentDidMount() {
-    let user = await this.state.fetcher.fetchUser(await AsyncStorage.getItem('storedEmail'));
+    let user = await this.state.API.fetchUser(await AsyncStorage.getItem('storedEmail'));
     this.setState({ profile: user[0] });
   }
 
