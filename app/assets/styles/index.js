@@ -39,12 +39,13 @@ export default StyleSheet.create({
 	
 	matchContainerCardItem: {
 		backgroundColor: WHITE,
-		borderRadius: 8,
+		borderRadius: 10,
 		margin: 10,
 		shadowOpacity: 0.05,
 		shadowRadius: 10,
 		shadowColor: BLACK,
 		shadowOffset: {height: 0, width: 0},
+		marginLeft: 30,
 	},
 
 	matchesCardItem: {
@@ -75,6 +76,7 @@ export default StyleSheet.create({
 		fontSize: 20, 
 		color: "#1a5d57" ,
 		fontWeight: "bold",
+		letterSpacing: 1
 	},
 
 	matchesTextCardItem: {

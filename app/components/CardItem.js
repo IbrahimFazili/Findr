@@ -21,14 +21,15 @@ const CardItem = ({
 
   const imageStyle = [
     {
-      width: variant ? fullWidth / 2 - 30 : styles.containerCardItem.width, 
+      width: variant ? fullWidth / 2 - 60 : styles.containerCardItem.width, 
       height: variant ? 120 : 250,
       // margin: variant ? 0 : 20 
       margin: 0,
-      borderTopLeftRadius: variant ? 0 : 40,
-      borderTopRightRadius: variant ? 0 : 40,
+      borderTopLeftRadius: variant ? 10: 40,
+      borderTopRightRadius: variant ? 10 : 40,
       borderBottomLeftRadius: 0,
-      borderBottomRightRadius: 0
+      borderBottomRightRadius: 0,
+      flex: variant? 1 : 0,
     }
   ];
 
@@ -40,6 +41,7 @@ const CardItem = ({
       fontSize: variant ? 15 : 30,
       alignSelf: 'center',
       fontWeight: "300",
+      fontWeight: variant ? 'bold' : 'normal'
     }
   ];
 
