@@ -75,8 +75,8 @@ class Home extends React.Component {
                 <CardItem
                   image={{ uri: item.image }}
                   name={item.name}
-                  courses={item.crscodes}
-                  description={item.addinfo.length > MAX_LENGTH ? (item.addinfo.substring(0,MAX_LENGTH) + "...") : item.addinfo}
+                  courses={item.courses}
+                  description={item.bio.length > MAX_LENGTH ? (item.bio.substring(0,MAX_LENGTH) + "...") : item.bio}
                   actions
                   onPressRight={() => this.swiper.swipeRight()}
                   onPressLeft={() => this.swiper.swipeLeft()}
