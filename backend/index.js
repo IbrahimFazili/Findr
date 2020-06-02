@@ -6,10 +6,11 @@ const bodyParser = require("body-parser");
 const bcrypt = require('bcrypt');
 const urlEncodedParser = bodyParser.urlencoded({ extended: false });
 // const sendEmail = require("./utils/emailer").sendEmail;
-const DatabaseManager = require("./utils/DatabaseManager");
+const DB = require("./utils/DatabaseManager");
 const ObjectId = require("objectid");
 const AWS_Presigner = require('./utils/AWSPresigner');
 const Chat = require('./utils/Chat').Chat;
+const Matcher = require('./utils/Matcher').Matcher;
 
 app.use(bodyParser.json());
 
@@ -18,7 +19,7 @@ app.get("/", (req, res) => {
 });
 
 app.get("/fetchUsers", (req, res) => {
-    DatabaseManager.fetchUsers({ email: req.query.email }).then(async function(result) {
+    DB.fetchUsers({ email: req.query.email }).then(async function(result) {
         for(var i = 0; i < result.length; i++) {
             result[i].image = await AWS_Presigner.generateSignedGetUrl("user_images/" + result[i].email);
         }
@@ -33,7 +34,7 @@ app.get("/fetchUsers", (req, res) => {
 
 app.get("/fetchMatches", (req, res) => {
     
-    DatabaseManager.fetchUsers({ email: req.query.email }).then((result) => {
+    DB.fetchUsers({ email: req.query.email }).then((result) => {
 
         if(result.length === 0) {
             console.log(`No user with email ${req.body.email}`);
@@ -47,7 +48,7 @@ app.get("/fetchMatches", (req, res) => {
             crs_regexes.push(new RegExp("^" + course + "$", "i"));
         }
 
-        DatabaseManager.fetchUsers({ courses: { $in: crs_regexes } }).then(async (users) => {
+        DB.fetchUsers({ courses: { $in: crs_regexes } }).then(async (users) => {
 
             users = users.filter((value, index, arr) => { return !(value["_id"].equals(user._id)); });
 
@@ -73,7 +74,7 @@ app.get("/fetchMatches", (req, res) => {
 app.get("/fetchChatData", (req, res) => {
 
     const MSG_TO = req.query.to;
-    DatabaseManager.fetchUsers({ email: req.query.from }).then(async (users) => {
+    DB.fetchUsers({ email: req.query.from }).then(async (users) => {
         
         const user = users[0];
         var chatFound = false;
@@ -82,7 +83,7 @@ app.get("/fetchChatData", (req, res) => {
         for (let i = 0; i < user.chats.length && !chatFound; i++) {
             
             try {
-                chat = (await DatabaseManager.fetchChat( user.chats[i] ))[0].chat;
+                chat = (await DB.fetchChat( user.chats[i] ))[0].chat;
                 
                 if(chat.user1 === MSG_TO || chat.user2 === MSG_TO) {
                     chatFound = true;
@@ -107,7 +108,7 @@ app.get("/fetchChatData", (req, res) => {
 });
 
 app.post("/updateCourses", urlEncodedParser, (req, res) => {
-    DatabaseManager.fetchUsers({ email: req.body.email }).then((result) => {
+    DB.fetchUsers({ email: req.body.email }).then((result) => {
         if(result.length === 0) {
             console.log(`No user with email ${req.body.email}`);
             res.status(404).send("404: User with email " + req.body.email + " couldn't be found");
@@ -116,7 +117,7 @@ app.post("/updateCourses", urlEncodedParser, (req, res) => {
         user = result[0];
         user.courses = req.body.updatedCourses;
 
-        DatabaseManager.updateUser({ courses: user.courses }, { email: user.email }).then((value) => {
+        DB.updateUser({ courses: user.courses }, { email: user.email }).then((value) => {
             res.status(201).send(JSON.stringify({ success: true }));
         }).catch((err) => {
             res.status(500).send("Server Error");
@@ -145,7 +146,7 @@ app.post("/new-user", urlEncodedParser, (req, res) => {
     };
 
 
-    DatabaseManager.insertUser(requestData).then(async (result) => {
+    DB.insertUser(requestData).then(async (result) => {
         // sendEmail(requestData);
         // reply with success response code
         res.status(201).send(JSON.stringify({ 
@@ -166,7 +167,7 @@ app.post("/login", urlEncodedParser, (req, res) => {
         password: req.body.password
     }
 
-    DatabaseManager.fetchUsers({ email: requestData.email }).then((users) => {
+    DB.fetchUsers({ email: requestData.email }).then((users) => {
         if(users.length < 1) {
             res.status(401).send('Invalid Email');
             return;
@@ -187,14 +188,48 @@ app.post("/login", urlEncodedParser, (req, res) => {
     });
 });
 
-// DatabaseManager.fetchUsers({}).then((users) => {
-//     users.forEach((user) => {
-//         user.chats = [];
-//         DatabaseManager.updateUser(user, {email:user.email}).then((res) => {
-//             console.log(`${user.email} updated`);
-//         });
-//     });
-// });
+DB.fetchUsers({}).then((users) => {
+    // users.forEach((user) => {
+    //     user.blueConnections = [];
+    //     user.greenConnections = [];
+    //     DB.updateUser(user, {email:user.email}).then((res) => {
+    //         console.log(`${user.email} updated`);
+    //     });
+    // });
+
+    const matcher = new Matcher();
+
+    users.forEach(async (user) => {
+        const result = await matcher.generateGraph(user.email);
+        console.log(`Graph generation for ${user.name} ${result ? "successful" : "failed"}`);
+    });
+});
+
+function addDummyUser() {
+    const requestData = {
+        name: "Michael Scott",
+        email: "michael.scott@dundermifflin.com",
+        password: bcrypt.hashSync("Ftoby69", 10),
+        gender: "M",
+        uni: "Penn State University",
+        major: "Business Management",
+        age: 56,
+        chats: [],
+        courses: ["ECO100"],
+        bio: "If I had a gun with two bullets and I was in a room with Hitler, Bin Laden, and Toby, I would shoot Toby twice"
+    };
+
+
+    DB.insertUser(requestData).then(async (result) => {
+        // sendEmail(requestData);
+        // reply with success response code
+        console.log("success");
+
+    }).catch((err) => {
+        // unsuccessful insert, reply back with unsuccess response code
+        console.log(err);
+    });
+}
 
 /* Socket Listeners for chat */
 
@@ -203,7 +238,7 @@ io.on('connection', (socket) => {
     console.log(`${socket.handshake.query.name} Connected`);
 
     socket.on('new msg', (msg) => {
-        DatabaseManager.fetchUsers({ email: msg.from }).then(async (users) => {
+        DB.fetchUsers({ email: msg.from }).then(async (users) => {
 
             const user = users[0];
             let chat = null;
@@ -211,7 +246,7 @@ io.on('connection', (socket) => {
             for(let i = 0; i < user.chats.length && !msgHandled; i++) {
 
                 try {
-                    chat = (await DatabaseManager.fetchChat( user.chats[i] ))[0].chat;
+                    chat = (await DB.fetchChat( user.chats[i] ))[0].chat;
                     if(chat.user1 === msg.to || chat.user2 === msg.to) {
 
                         chat = Chat.parseJSON(chat);
@@ -220,7 +255,7 @@ io.on('connection', (socket) => {
                         msgHandled = true;
 
                         try {
-                            await DatabaseManager.updateChat(chat, { _id: user.chats[i] });
+                            await DB.updateChat(chat, { _id: user.chats[i] });
                             socket.to(msg.to).emit('new msg', msg);
                         } catch (err_nested) {
                             console.log(err_nested);
@@ -239,27 +274,27 @@ io.on('connection', (socket) => {
                 const chat = new Chat(msg.from, msg.to);
                 chat.newMessage(msg.from, msg.content, msg.time);
 
-                DatabaseManager.insertChat({ chat }).then((result) => {
+                DB.insertChat({ chat }).then((result) => {
                     console.log('new chat created');
                     console.log(result.ops[0]);
                     
                     user.chats.push(result.ops[0]._id);
-                    DatabaseManager.updateUser({ chats: user.chats }, { email: user.email }).then((value) => {
+                    DB.updateUser({ chats: user.chats }, { email: user.email }).then((value) => {
                         console.log('user1 updated');
                         socket.to(msg.to).emit('new msg', msg);
 
                     }).catch((reason) => {
                         socket.emit('send failed');
-                        DatabaseManager.deleteChat(result.ops[0]._id);
+                        DB.deleteChat(result.ops[0]._id);
                         console.log(reason);
                     });
 
-                    DatabaseManager.fetchUsers({ email: msg.to }).then((res) => {
+                    DB.fetchUsers({ email: msg.to }).then((res) => {
 
                         let user = res[0];
                         user.chats.push(result.ops[0]._id);
                         console.log('user2 fetched');
-                        DatabaseManager.updateUser({ chats: user.chats }, { email: user.email }).then((value) => {
+                        DB.updateUser({ chats: user.chats }, { email: user.email }).then((value) => {
                             console.log('user2 updated');
                             socket.to(msg.to).emit('new msg', msg);
     
