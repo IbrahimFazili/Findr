@@ -69,44 +69,6 @@ function insertUser(profile) {
     });
 }
 
-function insertProfileCard(profileCard) {
-    
-    return new Promise(function(resolve, reject) {
-        getCollection(COLLECTION_PROFILE_CARDS).then((collection) => {
-            collection.insertOne(profileCard).then((result) => {
-                resolve(result);
-            }).catch((err) => {
-                reject(err);
-            });
-        }).catch((reason) => {
-            reject(reason);
-        });
-    });
-}
-
-/**
- * Update Profile Card in the data base with new crscodes
- * @param {JSON} updatedCard 
- * @param {JSON} queryObject
- * @returns {Promise<JSON>} Promise which resolves to update result (or error reason if rejected)
- */
-function updateProfileCard(updatedCard, queryObject) {
-    
-    return new Promise(function(resolve, reject) {
-        getCollection(COLLECTION_PROFILE_CARDS).then((collection) => {
-            updateDoc = { $set: { crscodes: updatedCard.crscodes } }
-            collection.updateOne(queryObject, updateDoc, function(err, updateResult) {
-                if(err) reject(err);
-
-                resolve(updateResult);
-            });
-
-        }).catch((reason) => {
-            reject(reason);
-        });
-    });
-}
-
 function fetchUsers(params) {
 
     return new Promise(function(resolve, reject) {
@@ -122,25 +84,11 @@ function fetchUsers(params) {
     });
 }
 
-function fetchProfileCards(params) {
-    return new Promise(function(resolve, reject) {
-        getCollection(COLLECTION_PROFILE_CARDS).then((collection) => {
-            collection.find(params).toArray(function(err, result) {
-                if(err) { reject(err); }
-
-                resolve(result);
-            });
-        }).catch((reason) => {
-            reject(reason);
-        });
-    });
-}
-
 function fetchChat(chat_id) {
 
     return new Promise(function(resolve, reject) {
         getCollection(COLLECTION_CHATS).then((collection) => {
-            collection.find({ uid: chat_id }).toArray(function(err, result) {
+            collection.find({ _id: chat_id }).toArray(function(err, result) {
                 if(err) { reject(err); }
 
                 resolve(result);
@@ -202,18 +150,33 @@ function updateUser(updatedUserObject, queryObject) {
     });
 }
 
+function deleteChat(id) {
+
+    return new Promise(function(resolve, reject) {
+        getCollection(COLLECTION_CHATS).then((collection) => {
+            collection.deleteOne({ _id: id }).then((deleteRes) => {
+                resolve(deleteRes);
+            }).catch((err) => {
+                reject(err);
+            });
+
+        }).catch((reason) => {
+            reject(reason);
+        });
+    });
+}
+
 module.exports.insertUser = insertUser;
-module.exports.insertProfileCard = insertProfileCard;
 module.exports.insertChat = insertChat;
 
-module.exports.updateProfileCard = updateProfileCard;
 module.exports.updateChat = updateChat;
 module.exports.updateUser = updateUser;
 
 module.exports.closeConnection = closeConnection;
 
 module.exports.fetchUsers = fetchUsers;
-module.exports.fetchProfileCards = fetchProfileCards;
 module.exports.fetchChat = fetchChat;
 
 module.exports.getCollection = getCollection;
+
+module.exports.deleteChat = deleteChat;

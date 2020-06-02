@@ -14,26 +14,13 @@ const Chat = require('./utils/Chat').Chat;
 app.use(bodyParser.json());
 
 app.get("/", (req, res) => {
-    res.status(200).sendFile(__dirname + "/test_html_files/user.html");
-});
-
-app.get("/search", (req, res) => {
-    res.status(200).sendFile(__dirname + "/test_html_files/search.html");
-});
-
-app.get("/pcard", (req, res) => {
-    res.status(200).sendFile(__dirname + "/test_html_files/profile-card.html");
-});
-
-app.get("/close", (req, res) => {
-    DatabaseManager.closeConnection();
-    res.status(200).redirect("/");
+    res.status(200).send("Server is Alive");
 });
 
 app.get("/fetchUsers", (req, res) => {
     DatabaseManager.fetchUsers({ email: req.query.email }).then(async function(result) {
         for(var i = 0; i < result.length; i++) {
-            result[i].image = await AWS_Presigner.generateSignedGetUrl("user_images/" + result[i].image);
+            result[i].image = await AWS_Presigner.generateSignedGetUrl("user_images/" + result[i].email);
         }
 
         res.send(result);
@@ -44,100 +31,82 @@ app.get("/fetchUsers", (req, res) => {
     });
 });
 
-app.post("/fetchUsers_id", urlEncodedParser, (req, res) => {
-    ids = [];
-    req.body.ids.forEach((value) => { ids.push( ObjectId(value) ); });
-
-    DatabaseManager.fetchUsers({ _id: { $in: ids } }).then(async function(result) {
-        for(var i = 0; i < result.length; i++) {
-            result[i].image = await AWS_Presigner.generateSignedGetUrl("user_images/" + result[i].image);
-        }
-
-        res.status(200).send(result);
-    }).catch((err) => {
-        console.log(err);
-        res.status(500).send("Server error");
-    });
-});
-
-app.get("/fetchProfileCards", (req, res) => {
-
-    // query user profile first for crs codes that are related to this user
+app.get("/fetchMatches", (req, res) => {
+    
     DatabaseManager.fetchUsers({ email: req.query.email }).then((result) => {
+
         if(result.length === 0) {
             console.log(`No user with email ${req.body.email}`);
             res.status(404).send("404: User with email " + req.body.email + " couldn't be found");
         }
 
         user = result[0];
-        DatabaseManager.fetchProfileCards({ user_id: user._id }).then((profileCards) => {
-            if(profileCards.length > 0) {
-                req_card = profileCards[0];
+        crs_regexes = [];
+        for (let i = 0; i < user.courses.length; i++) {
+            const course = user.courses[i];
+            crs_regexes.push(new RegExp("^" + course + "$", "i"));
+        }
 
-                // 2. Fetch cards with same courses
-                crs_regexes = [];
-                for (let i = 0; i < req_card.crscodes.length; i++) {
-                    const course = req_card.crscodes[i];
-                    crs_regexes.push(new RegExp("^" + course + "$", "i"));
+        DatabaseManager.fetchUsers({ courses: { $in: crs_regexes } }).then(async (users) => {
+
+            users = users.filter((value, index, arr) => { return !(value["_id"].equals(user._id)); });
+
+            for (let i = 0; i < users.length; i++) {
+                users[i].image = await AWS_Presigner.generateSignedGetUrl("user_images/" + users[i].email);
+                users[i].password = null;
+                users[i].chats = null;
+            }
+
+            res.status(200).send(JSON.stringify(users));
+
+        }).catch((err) => {
+            console.log(err);
+            res.status(500).send("Server Error");
+        });
+
+    }).catch((err) => {
+        console.log(err);
+        res.status(500).send("Server Error");
+    });
+})
+
+app.get("/fetchChatData", (req, res) => {
+
+    const MSG_TO = req.query.to;
+    DatabaseManager.fetchUsers({ email: req.query.from }).then(async (users) => {
+        
+        const user = users[0];
+        var chatFound = false;
+        let chat = null;
+        
+        for (let i = 0; i < user.chats.length && !chatFound; i++) {
+            
+            try {
+                chat = (await DatabaseManager.fetchChat( user.chats[i] ))[0].chat;
+                
+                if(chat.user1 === MSG_TO || chat.user2 === MSG_TO) {
+                    chatFound = true;
+                    res.status(200).send(JSON.stringify(chat));
                 }
-
-                DatabaseManager.fetchProfileCards({ crscodes: { $in: crs_regexes } }).then((cards) => {
-
-                    cards = cards.filter((value, index, arr) => { return !(value["user_id"].equals(user._id)); });
-                    // 3. Filter according to additional req if necessary (TODO)
-                    res.status(200).send(JSON.stringify(cards));
-
-                }).catch((err) => {
-                    res.status(500).send("Server Error: Couldn't fetch cards");
-                })
-
-                return;
+            } catch (err) {
+                console.log('err fetching chats');
+                console.log(err);
+                res.status(500).send("Server Error");
             }
-            else {
-                res.status(404).send("404: Profile card for this user doesn't exist");
-            }
-        }).catch((reason) => {
+            
+        }
 
-            console.log(reason);
-            res.status(500).send("Servers Error: Couldn't fetch cards");
-        })
+        if(!chatFound) {
+            res.status(404).send("chat data DNE");
+        }
+
+    }).catch((err) => {
+        res.status(500).send("Server Error");
     })
 
 });
 
-app.get("/fetchChatData", (req, res) => {
-
-    var uid = (new Chat(req.query.from, req.query.to)).uid;
-
-    DatabaseManager.fetchChat(uid).then((chat) => {
-
-        if(chat.length === 1) {
-            res.status(200).send(JSON.stringify(chat.chat));
-        }
-        else {
-            uid = (new Chat(req.query.to, req.query.from)).uid;
-            DatabaseManager.fetchChat(uid).then((chat) => {
-                if(chat.length === 1) {
-                    res.status(200).send(JSON.stringify(chat.chat));
-                }
-                else {
-                    res.status(404).send("Couldn't find chat records");
-                }
-            }).catch((err) => {
-                res.status(500).send("Server error");
-            });
-        }
-    }).catch((err) => {
-        res.status(500).send("Server error");
-    });
-
-});
-
-app.post("/newProfileCard", urlEncodedParser, (req, res) => {
-    // 1. Check if a profile card already exists linked to the user : TODO
-    //     a. If it does, add this crs code as well
-    // 2. Otherwise create a new profile card in the database *Profiles* : Done
-    
+app.post("/updateCourses", urlEncodedParser, (req, res) => {
     DatabaseManager.fetchUsers({ email: req.body.email }).then((result) => {
         if(result.length === 0) {
             console.log(`No user with email ${req.body.email}`);
@@ -145,51 +114,20 @@ app.post("/newProfileCard", urlEncodedParser, (req, res) => {
         }
 
         user = result[0];
-        profileCard = {
-            user_id: user._id,
-            crscodes: [ req.body.crscode ],
-            addinfo: req.body.addinfo
-        };
+        user.courses = req.body.updatedCourses;
 
-        DatabaseManager.fetchProfileCards({ user_id: profileCard.user_id }).then((existingCards) => {
-            if(existingCards.length > 0) {
-                
-                existingCard = existingCards[0];
-                if(existingCard.crscodes.findIndex((crs) => { return profileCard.crscodes[0] === crs }) === -1) {
-                    existingCard.crscodes.push(profileCard.crscodes[0]);
-                }
-                // update entry in the database
-                DatabaseManager.updateProfileCard(existingCard, { user_id: profileCard.user_id })
-                .then((updateResult) => {
-                    res.status(201).send("Success");
-                })
-                .catch((err) => {
-                    // unsuccessful insert, reply back with unsuccess response code
-                    console.log(err);
-                    res.status(500).send("Insert Failed");
-                });
-
-                
-                return;
-            }
-            
-            // card doesn't exist
-            DatabaseManager.insertProfileCard(profileCard).then((result) => {
-                res.status(201).send("Success");
-            }).catch((err) => {
-                // unsuccessful insert, reply back with unsuccess response code
-                console.log(err);
-                res.status(500).send("Insert Failed");
-            });
-        })
-
-
+        DatabaseManager.updateUser({ courses: user.courses }, { email: user.email }).then((value) => {
+            res.status(201).send(JSON.stringify({ success: true }));
+        }).catch((err) => {
+            res.status(500).send("Server Error");
+            console.log(err);
+        });
 
     }).catch((err) => {
         console.log(err);
-        res.status(500).send("Can't find the user profile");
+        res.status(500).send("Server Error");
     });
-    
+
 });
 
 app.post("/new-user", urlEncodedParser, (req, res) => {
@@ -201,7 +139,9 @@ app.post("/new-user", urlEncodedParser, (req, res) => {
         uni: req.body.uni,
         major: req.body.major,
         age: Number(req.body.age),
-        image: bcrypt.hashSync(req.body.email, 10)
+        chats: [],
+        courses: [],
+        bio: ""
     };
 
 
@@ -209,7 +149,7 @@ app.post("/new-user", urlEncodedParser, (req, res) => {
         // sendEmail(requestData);
         // reply with success response code
         res.status(201).send(JSON.stringify({ 
-            signedPutUrl: await AWS_Presigner.generateSignedPutUrl("user_images/" + requestData.image)
+            signedPutUrl: await AWS_Presigner.generateSignedPutUrl("user_images/" + requestData.email)
         }));
 
     }).catch((err) => {
@@ -247,45 +187,99 @@ app.post("/login", urlEncodedParser, (req, res) => {
     });
 });
 
+// DatabaseManager.fetchUsers({}).then((users) => {
+//     users.forEach((user) => {
+//         user.chats = [];
+//         DatabaseManager.updateUser(user, {email:user.email}).then((res) => {
+//             console.log(`${user.email} updated`);
+//         });
+//     });
+// });
+
 /* Socket Listeners for chat */
 
 io.on('connection', (socket) => {
+    socket.join(socket.handshake.query.name).to(socket.handshake.query.name).emit('joined chat room' + socket.rooms);
+    console.log(`${socket.handshake.query.name} Connected`);
 
-    socket.on('login', (msg) => {
-        DatabaseManager.fetchChat( (new Chat(msg.from, msg.to)).uid ).then((chat) => {
-            if(chat.length < 1) {
-                // chat with id = hash(from, to) doesn't exist, so try reverse order
-                DatabaseManager.fetchChat( (new Chat(msg.to, msg.from)).uid ).then((chat) => {
-                    if(chat.length < 1) {
-                        chat = new Chat(msg.from, msg.to);
+    socket.on('new msg', (msg) => {
+        DatabaseManager.fetchUsers({ email: msg.from }).then(async (users) => {
 
-                        DatabaseManager.insertChat({ uid: chat.uid, chat }).then((result) => {
-                            socket.join(chat.uid);
-                        })
-                        .catch((err) => {
-                            socket.emit('chat-connection-failed');
+            const user = users[0];
+            let chat = null;
+            var msgHandled = false
+            for(let i = 0; i < user.chats.length && !msgHandled; i++) {
+
+                try {
+                    chat = (await DatabaseManager.fetchChat( user.chats[i] ))[0].chat;
+                    if(chat.user1 === msg.to || chat.user2 === msg.to) {
+
+                        chat = Chat.parseJSON(chat);
+
+                        chat.newMessage(msg.from, msg.content, msg.time);
+                        msgHandled = true;
+
+                        try {
+                            await DatabaseManager.updateChat(chat, { _id: user.chats[i] });
+                            socket.to(msg.to).emit('new msg', msg);
+                        } catch (err_nested) {
+                            console.log(err_nested);
+                            socket.emit('send failed');
+                        }
+
+                    }
+                } catch (err) {
+                    console.log(err);
+                    socket.emit('server error');
+                    msgHandled = true;
+                }
+            }
+
+            if(!msgHandled) {
+                const chat = new Chat(msg.from, msg.to);
+                chat.newMessage(msg.from, msg.content, msg.time);
+
+                DatabaseManager.insertChat({ chat }).then((result) => {
+                    console.log('new chat created');
+                    console.log(result.ops[0]);
+                    
+                    user.chats.push(result.ops[0]._id);
+                    DatabaseManager.updateUser({ chats: user.chats }, { email: user.email }).then((value) => {
+                        console.log('user1 updated');
+                        socket.to(msg.to).emit('new msg', msg);
+
+                    }).catch((reason) => {
+                        socket.emit('send failed');
+                        DatabaseManager.deleteChat(result.ops[0]._id);
+                        console.log(reason);
+                    });
+
+                    DatabaseManager.fetchUsers({ email: msg.to }).then((res) => {
+
+                        let user = res[0];
+                        user.chats.push(result.ops[0]._id);
+                        console.log('user2 fetched');
+                        DatabaseManager.updateUser({ chats: user.chats }, { email: user.email }).then((value) => {
+                            console.log('user2 updated');
+                            socket.to(msg.to).emit('new msg', msg);
+    
+                        }).catch((reason) => {
+                            console.log(reason);
                         });
 
-                    }
-                    else {
-                        socket.join(chat.uid);
-                    }
+                    }).catch((err) => {
+                        console.log(err);
+                    });
 
                 }).catch((err) => {
-                    socket.emit('chat-connection-failed');
+                    socket.emit('send failed');
+                    console.log(err);
                 });
-            }
-            else {
-                socket.join(chat.uid);
             }
 
         }).catch((err) => {
-            socket.emit('chat-connection-failed');
+            socket.emit('server error');
         });
-    });
-
-    socket.on('new msg', (msg) => {
-        // TODO
     });
 });
 

@@ -4,7 +4,7 @@ import CardStack, { Card } from 'react-native-card-stack-swiper';
 import Filters from '../components/Filters';
 import CardItem from '../components/CardItem';
 import styles from '../assets/styles';
-import Fetcher from "../assets/data/Fetcher";
+import APIConnection from '../assets/data/APIConnection';
 // import ProfilePopup from "../components/ProfilePopup";
 
 const MAX_LENGTH = 150;
@@ -14,14 +14,14 @@ class Home extends React.Component {
     super(props);
     this.props.navigation.addListener('didFocus', () => this.render());
     
-    this.state = { cards: [], fetcher: new Fetcher(), dataLoadRequired: true };
+    this.state = { cards: [], API: new APIConnection(), dataLoadRequired: true };
   }
 
   async componentWillMount() {
     try {
       let storedEmail = await AsyncStorage.getItem('storedEmail');
       if(storedEmail === null) {
-        this.props.navigation.navigate('SignUp');
+        this.props.navigation.navigate('LogIn');
       }
     }
     catch(err) {
@@ -33,13 +33,13 @@ class Home extends React.Component {
     let storedEmail = await AsyncStorage.getItem('storedEmail');
 
     if(storedEmail !== null && this.state.dataLoadRequired) {
-      const data = await this.state.fetcher.loadData(storedEmail);
+      const data = await this.state.API.loadData(storedEmail);
       this.setState({ cards: data, dataLoadRequired: false });
     }
   }
 
   async loadData() {
-    const data = await this.state.fetcher.loadData(await AsyncStorage.getItem('storedEmail'));
+    const data = await this.state.API.loadData(await AsyncStorage.getItem('storedEmail'));
     this.setState({ cards: data, dataLoadRequired: false });
   }
 
@@ -60,30 +60,31 @@ class Home extends React.Component {
         <Image style={styles.homeLogo} source={require('../assets/images/Findr_logo2x.png')}/>
         <View style={styles.containerHome}>
           <View style={styles.homeCards}>
-            <CardStack
-              loop={true}
-              verticalSwipe={false}
-              renderNoMoreCards={() => null}
-              ref={swiper => (this.swiper = swiper)}
-            >
-              {this.state.cards.map((item, index) => (
-                <Card key={index}>
-                  <CardItem
-                    image={{ uri: item.image }}
-                    name={item.name}
-                    courses={item.crscodes}
-                    description={item.addinfo.length > MAX_LENGTH ? (item.addinfo.substring(0,MAX_LENGTH) + "...") : item.addinfo}
-                    actions
-                    onPressRight={() => this.swiper.swipeRight()}
-                    onPressLeft={() => this.swiper.swipeLeft()}
-                  />
-                </Card>
-              ))}
-            </CardStack>
+          <CardStack
+            loop={true}
+            verticalSwipe={false}
+            renderNoMoreCards={() => null}
+            ref={swiper => (this.swiper = swiper)}
+          >
+            {this.state.cards.map((item, index) => (
+              <Card key={index}>
+                <CardItem
+                  image={{ uri: item.image }}
+                  name={item.name}
+                  courses={item.courses}
+                  description={item.bio.length > MAX_LENGTH ? (item.bio.substring(0,MAX_LENGTH) + "...") : item.bio}
+                  actions
+                  onPressRight={() => this.swiper.swipeRight()}
+                  onPressLeft={() => this.swiper.swipeLeft()}
+                />
+              </Card>
+            ))}
+          </CardStack>
           </View>
           <View style={styles.top}>
             <Filters />
           </View>
+
         </View>
       </ImageBackground>
     );

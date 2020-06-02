@@ -13,17 +13,17 @@ import {
 } from 'react-native';
 import CardItem from '../components/CardItem';
 import Icon from '../components/Icon';
-import Fetcher from "../assets/data/Fetcher";
+import APIConnection from "../assets/data/APIConnection";
 
 class Matches extends React.Component {
 
   constructor(props) {
     super(props);
-    this.state = { fetcher: new Fetcher(), cards: [] };
+    this.state = { API: new APIConnection(), cards: [] };
   }
 
   async componentDidMount() {
-    const data = await this.state.fetcher.loadData(await AsyncStorage.getItem('storedEmail'));
+    const data = await this.state.API.loadData(await AsyncStorage.getItem('storedEmail'));
     this.setState({ cards: data });
   }
 
@@ -45,7 +45,7 @@ class Matches extends React.Component {
               </TouchableOpacity>
             </View>
 
-            <View style={{flex:3, height:100}}>
+            <View style={{flex:3, height:130}}>
               <ScrollView
               horizontal={true}
               showsHorizontalScrollIndicator={false}
@@ -55,36 +55,36 @@ class Matches extends React.Component {
                 paddingEnd: 5,
               }}
               >
-                <Thumbnail name="mike"
+                <Thumbnail large
                 style={{marginHorizontal: 10, borderColor: '#1a5d57', borderWidth: 2.7}} 
                 source={require('../assets/images/01.jpg')}/>
-                <Thumbnail 
+                <Text style={styles.thumbnailCaption}>Alex</Text>
+
+                <Thumbnail large
                 style={{marginHorizontal: 10, borderColor: '#1a5d57', borderWidth: 2.7}}
                 source={require('../assets/images/02.jpg')}/>
-                <Thumbnail 
+                <Text style={styles.thumbnailCaption}>Haley</Text>
+
+                <Thumbnail large
                 style={{marginHorizontal: 10, borderColor: '#1a5d57', borderWidth: 2.7}}
                 source={require('../assets/images/03.jpg')}/>
-                <Thumbnail 
+                <Text style={styles.thumbnailCaption}>Luke</Text>
+
+                <Thumbnail large
                 style={{marginHorizontal: 10, borderColor: '#1a5d57', borderWidth: 2.7}}
                 source={require('../assets/images/04.jpg')}/>
-                <Thumbnail 
+                <Text style={styles.thumbnailCaption}>Phil</Text>
+
+                <Thumbnail large
                 style={{marginHorizontal: 10, borderColor: '#1a5d57', borderWidth: 2.7}}
                 source={require('../assets/images/05.jpg')}/>
-                <Thumbnail 
+                <Text style={styles.thumbnailCaption}>Jay</Text>
+
+                <Thumbnail large
                 style={{marginHorizontal: 10, borderColor: '#1a5d57', borderWidth: 2.7}}
                 source={require('../assets/images/06.jpg')}/>
-                <Thumbnail 
-                style={{marginHorizontal: 10, borderColor: '#1a5d57', borderWidth: 2.7}}
-                source={require('../assets/images/07.jpg')}/>
-                <Thumbnail 
-                style={{marginHorizontal: 10, borderColor: '#1a5d57', borderWidth: 2.7}}
-                source={require('../assets/images/08.jpg')}/>
-                <Thumbnail 
-                style={{marginHorizontal: 10, borderColor: '#1a5d57', borderWidth: 2.7}}
-                source={require('../assets/images/09.jpg')}/>
-                <Thumbnail 
-                style={{marginHorizontal: 10, borderColor: '#1a5d57', borderWidth: 2.7}}
-                source={require('../assets/images/10.jpg')}/>
+                <Text style={styles.thumbnailCaption}>Cam</Text>
+  
               </ScrollView>
             </View>
 

@@ -1,24 +1,25 @@
-import { StyleSheet, Dimensions } from "react-native";
+import { StyleSheet, Dimensions } from 'react-native';
 
-const PRIMARY_COLOR = "#7444C0";
-const SECONDARY_COLOR = "#5636B8";
-const WHITE = "#FFFFFF";
-const GRAY = "#757E90";
-const DARK_GRAY = "#363636";
-const BLACK = "#000000";
+const PRIMARY_COLOR = '#7444C0';
+const SECONDARY_COLOR = '#5636B8';
+const WHITE = '#FFFFFF';
+const GRAY = '#757E90';
+const DARK_GRAY = '#363636';
+const BLACK = '#000000';
+const TEAL = '#1a5d57';
 
-const ONLINE_STATUS = "#46A575";
-const OFFLINE_STATUS = "#D04949";
+const ONLINE_STATUS = '#46A575';
+const OFFLINE_STATUS = '#D04949';
 
-const STAR_ACTIONS = "#FFA200";
-const LIKE_ACTIONS = "#2c9c91";
-const DISLIKE_ACTIONS = "#363636";
-const FLASH_ACTIONS = "#5028D7";
+const STAR_ACTIONS = '#FFA200';
+const LIKE_ACTIONS = '#2c9c91';
+const DISLIKE_ACTIONS = '#363636';
+const FLASH_ACTIONS = '#5028D7';
 
-const ICON_FONT = "tinderclone";
+const ICON_FONT = 'tinderclone';
 
-const DIMENSION_WIDTH = Dimensions.get("window").width;
-const DIMENSION_HEIGHT = Dimensions.get("window").height;
+const DIMENSION_WIDTH = Dimensions.get('window').width;
+const DIMENSION_HEIGHT = Dimensions.get('window').height;
 
 export default StyleSheet.create({
 	// COMPONENT - CARD ITEM
@@ -77,6 +78,14 @@ export default StyleSheet.create({
 		color: "#1a5d57" ,
 		fontWeight: "bold",
 		letterSpacing: 1
+	},
+
+	thumbnailCaption: {
+		fontWeight: "bold",
+		position: "relative",
+		right: 65,
+		top: 55,
+		marginRight: -20,
 	},
 
 	matchesTextCardItem: {
@@ -185,22 +194,22 @@ export default StyleSheet.create({
 		borderRadius: 20
 	},
 
-	// COMPONENT - CITY
-	city: {
-		backgroundColor: WHITE,
-		padding: 10,
-		borderRadius: 20,
-		width: 90,
-		shadowOpacity: 0.05,
-		shadowRadius: 10,
-		shadowColor: BLACK,
-		shadowOffset: { height: 0, width: 0 }
-	},
-	cityText: {
-		fontFamily: ICON_FONT,
-		color: DARK_GRAY,
-		fontSize: 13
-	},
+  // COMPONENT - CITY
+  city: {
+    backgroundColor: WHITE,
+    padding: 10,
+    borderRadius: 20,
+    width: 90,
+    shadowOpacity: 0.05,
+    shadowRadius: 10,
+    shadowColor: BLACK,
+    shadowOffset: { height: 0, width: 0 },
+  },
+  cityText: {
+    fontFamily: ICON_FONT,
+    color: DARK_GRAY,
+    fontSize: 13,
+  },
 
 	// COMPONENT - FILTERS
 	filters: {
@@ -221,143 +230,127 @@ export default StyleSheet.create({
 		marginLeft: 20
 	},
 
-	// COMPONENT - MESSAGE
-	containerMessage: {
-		flex: 1,
-		alignItems: "center",
-		justifyContent: "flex-start",
-		flexDirection: "row",
-		paddingHorizontal: 10,
-		width: DIMENSION_WIDTH - 100
-	},
-	avatar: {
-		borderRadius: 30,
-		width: 60,
-		height: 60,
-		marginRight: 20,
-		marginVertical: 15
-	},
-	message: {
-		color: GRAY,
-		fontSize: 12,
-		paddingTop: 5
-	},
+  // COMPONENT - MESSAGE
+  containerMessage: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'flex-start',
+    flexDirection: 'row',
+    paddingHorizontal: 10,
+    width: DIMENSION_WIDTH - 100,
+  },
+  avatar: {
+    borderRadius: 30,
+    width: 60,
+    height: 60,
+    marginRight: 20,
+    marginVertical: 15,
+  },
+  message: {
+    color: GRAY,
+    fontSize: 12,
+    paddingTop: 5,
+  },
 
-	// COMPONENT - PROFILE ITEM
-	containerProfileItem: {
-		backgroundColor: WHITE,
-		paddingHorizontal: 10,
-		paddingBottom: 25,
-		margin: 20,
-		borderRadius: 8,
-		marginTop: -65,
-		shadowOpacity: 0.05,
-		shadowRadius: 10,
-		shadowColor: BLACK,
-		shadowOffset: { height: 0, width: 0 }
-	},
-	matchesProfileItem: {
-		width: 131,
-		marginTop: -15,
-		backgroundColor: PRIMARY_COLOR,
-		paddingVertical: 7,
-		paddingHorizontal: 20,
-		borderRadius: 20,
-		textAlign: "center",
-		alignSelf: "center"
-	},
-	matchesTextProfileItem: {
-		fontFamily: ICON_FONT,
-		color: WHITE
-	},
-	name: {
-		paddingTop: 25,
-		paddingBottom: 5,
-		color: DARK_GRAY,
-		fontSize: 15,
-		textAlign: "center"
-	},
-	descriptionProfileItem: {
-		color: GRAY,
-		textAlign: "center",
-		paddingBottom: 20,
-		fontSize: 13
-	},
-	info: {
-		paddingVertical: 8,
-		flexDirection: "row",
-		alignItems: "center"
-	},
-	iconProfile: {
-		fontFamily: ICON_FONT,
-		fontSize: 20,
-		color: DARK_GRAY,
-		paddingHorizontal: 10
-	},
-	infoContent: {
-		color: GRAY,
-		fontSize: 13
-	},
-
-	// CONTAINER - GENERAL
-	bg: {
-		flex: 1,
-		resizeMode: "cover",
-		width: DIMENSION_WIDTH,
-		height: DIMENSION_HEIGHT,
-	},
-	
-	title: { 
-		paddingBottom: 10, 
-		fontSize: 22, 
-		color: DARK_GRAY 
-	},
-	icon: {
-		fontFamily: ICON_FONT,
-		fontSize: 20,
-		color: DARK_GRAY,
-		paddingRight: 10
-	},
-
-	// CONTAINER - HOME
-	containerHome: {
-		alignSelf: "center",
-		marginTop: -50
-	},
-
-	homeCards: {
-		alignSelf: "center",
-		marginRight: 360,
-		marginTop: -25,
-		marginBottom: 40,
-	},
-
-	homeLogo: {
-		width: 65,
-		height: 60,
+  // COMPONENT - PROFILE ITEM
+  containerProfileItem: {
+    backgroundColor: WHITE,
+    paddingHorizontal: 10,
+    paddingBottom: 25,
+    margin: 10,
+    borderRadius: 8,
+    marginTop: -140,
+    shadowOpacity: 0.05,
+    shadowRadius: 10,
+    shadowColor: BLACK,
+    shadowOffset: { height: 0, width: 0 },
+    elevation: 8
+  },
+  matchesProfileItem: {
+    width: 131,
+    marginTop: -15,
+    backgroundColor: PRIMARY_COLOR,
+    paddingVertical: 7,
+    paddingHorizontal: 20,
+    borderRadius: 20,
+    textAlign: 'center',
+    alignSelf: 'center',
+  },
+  matchesTextProfileItem: {
+    fontFamily: ICON_FONT,
+    color: WHITE,
+  },
+  name: {
+    paddingTop: 25,
+    paddingBottom: 5,
+    color: TEAL,
+    fontSize: 15,
+    textAlign: 'center',
+  },
+  descriptionProfileItem: {
+    color: GRAY,
+    textAlign: 'center',
+    paddingBottom: 20,
+    fontSize: 13,
+  },
+  info: {
+    paddingVertical: 8,
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  iconProfile: {
+    fontFamily: ICON_FONT,
+    fontSize: 20,
+    color: DARK_GRAY,
+    paddingHorizontal: 10,
+  },
+  infoContent: {
+    color: GRAY,
+    fontSize: 13,
+  },
+  profileLogo: {
+		width: 75,
+		height: 70,
 		// padding: 3,
 		marginLeft: 180,
 		marginTop: 20,
-		marginBottom: -20,
 	},
 
-	top: {
-		// paddingTop: 50,
-		marginTop: 637,
-		marginBottom: 60,
-		marginLeft: 135,
-		marginHorizontal: 10,
-		flexDirection: "row",
-		justifyContent: "space-between",
-		alignItems: "center"
-	},
+  // CONTAINER - GENERAL
+  bg: {
+    flex: 1,
+    resizeMode: 'cover',
+    width: DIMENSION_WIDTH,
+    height: DIMENSION_HEIGHT,
+  },
+  top: {
+    paddingTop: 50,
+    marginHorizontal: 10,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  },
+  title: {
+    paddingBottom: 10,
+    fontSize: 22,
+    color: DARK_GRAY,
+  },
+  icon: {
+    fontFamily: ICON_FONT,
+    fontSize: 20,
+    color: DARK_GRAY,
+    paddingRight: 10,
+  },
 
-	// CONTAINER - MATCHES
-	containerMatches: {
-		justifyContent: "space-between",
-		flex: 1,
-		paddingHorizontal: 10
-	},
+  // CONTAINER - HOME
+  containerHome: { marginHorizontal: 10 },
+
+  // CONTAINER - MATCHES
+  containerMatches: {
+    justifyContent: 'space-between',
+    flex: 1,
+    paddingHorizontal: 10,
+  },
 
 	matchTop: {
 		paddingTop: 20,
@@ -372,6 +365,7 @@ export default StyleSheet.create({
 		flexDirection: 'row',
 		justifyContent: 'space-between',
 		alignItems: 'center',
+		top: 10,
 	},
 
 
