@@ -42,7 +42,7 @@ class Profile extends React.Component {
 
   async componentDidMount() {
     let user = await this.state.API.fetchUser(await AsyncStorage.getItem('storedEmail'));
-    this.setState({ profile: user[0] });
+    this.setState({ profile: user });
   }
 
   render() {

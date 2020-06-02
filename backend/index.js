@@ -47,13 +47,16 @@ app.get("/fetchMatches", (req, res) => {
             crs_regexes.push(new RegExp("^" + course + "$", "i"));
         }
 
-        DatabaseManager.fetchUsers({ courses: { $in: crs_regexes } }).then((users) => {
-            users.forEach((value) => {
-                value.password = null;
-                value.chats = null;
-            });
+        DatabaseManager.fetchUsers({ courses: { $in: crs_regexes } }).then(async (users) => {
 
             users = users.filter((value, index, arr) => { return !(value["_id"].equals(user._id)); });
+
+            for (let i = 0; i < users.length; i++) {
+                users[i].image = await AWS_Presigner.generateSignedGetUrl("user_images/" + users[i].email);
+                users[i].password = null;
+                users[i].chats = null;
+            }
+
             res.status(200).send(JSON.stringify(users));
 
         }).catch((err) => {
