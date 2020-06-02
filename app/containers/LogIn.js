@@ -2,7 +2,7 @@ import React from 'react';
 import { View, AsyncStorage, AppRegistry, Image, Text } from 'react-native';
 import styles from '../assets/styles';
 import { DefaultTheme, Provider as PaperProvider, TextInput, RadioButton, Dialog, Button } from 'react-native-paper';
-import Fetcher from '../assets/data/Fetcher';
+import APIConnection from '../assets/data/APIConnection';
 
 const theme = {
     colors: {
@@ -73,13 +73,13 @@ class LogIn extends React.Component {
             console.log('invalid inputs');
             return;
         }
-        const requestHandler = new Fetcher();
+        const API = new APIConnection();
         const data = {
             email: this.state.email,
             password: this.state.password,
         }
 
-        const logInAttempt = await requestHandler.logIn(data);
+        const logInAttempt = await API.logIn(data);
         if(logInAttempt.success) {
             // store email
             const credSaveStatus = await AsyncStorage.setItem('storedEmail', logInAttempt.user.email);

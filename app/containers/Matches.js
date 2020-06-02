@@ -13,17 +13,17 @@ import {
 } from 'react-native';
 import CardItem from '../components/CardItem';
 import Icon from '../components/Icon';
-import Fetcher from "../assets/data/Fetcher";
+import APIConnection from "../assets/data/APIConnection";
 
 class Matches extends React.Component {
 
   constructor(props) {
     super(props);
-    this.state = { fetcher: new Fetcher(), cards: [] };
+    this.state = { API: new APIConnection(), cards: [] };
   }
 
   async componentDidMount() {
-    const data = await this.state.fetcher.loadData(await AsyncStorage.getItem('storedEmail'));
+    const data = await this.state.API.loadData(await AsyncStorage.getItem('storedEmail'));
     this.setState({ cards: data });
   }
 

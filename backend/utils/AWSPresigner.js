@@ -42,7 +42,8 @@ function generateSignedPutUrl(Key) {
         const params = {
             Bucket,
             Key,
-            Expires: 30
+            Expires: 30,
+            ContentType: 'image/jpg'
         }
     
         S3.getSignedUrl('putObject', params, (err, url) => {

@@ -1,13 +1,12 @@
 import React from 'react';
 import styles from '../assets/styles';
-
 import {
   ScrollView,
   Text,
   TouchableOpacity,
   ImageBackground,
   View,
-  FlatList
+  FlatList,
 } from 'react-native';
 import Message from '../components/Message';
 import Icon from '../components/Icon';
@@ -27,7 +26,7 @@ const Messages = () => {
             <Text style={styles.title}>Messages</Text>
             <TouchableOpacity>
               <Text style={styles.icon}>
-                <Icon name="optionsV" />
+                <Icon name='optionsV' />
               </Text>
             </TouchableOpacity>
           </View>

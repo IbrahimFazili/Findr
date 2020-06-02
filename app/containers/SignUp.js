@@ -4,7 +4,7 @@ import styles from '../assets/styles';
 import { DefaultTheme, Provider as PaperProvider, TextInput, RadioButton, Dialog, Button } from 'react-native-paper';
 import DatePicker from 'react-native-datepicker';
 import Swiper from 'react-native-swiper'
-import Fetcher from '../assets/data/Fetcher';
+import APIConnection from '../assets/data/APIConnection';
 
 const theme = {
     colors: {
@@ -113,7 +113,7 @@ class SignUp extends React.Component {
             console.log('invalid inputs');
             return;
         }
-        const requestHandler = new Fetcher();
+        const API = new APIConnection();
         const data = {
             name: this.state.name,
             email: this.state.email,
@@ -124,7 +124,7 @@ class SignUp extends React.Component {
             // image: req.body.image
         }
 
-        const signUpStatus = await requestHandler.requestSignUp(data);
+        const signUpStatus = await API.requestSignUp(data);
         if(signUpStatus === 201) {
             await AsyncStorage.setItem('storedEmail', data.email);
             this.props.navigation.navigate('AppScreen');
