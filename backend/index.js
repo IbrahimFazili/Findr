@@ -31,66 +31,41 @@ app.get("/fetchUsers", (req, res) => {
     });
 });
 
-app.post("/fetchUsers_id", urlEncodedParser, (req, res) => {
-    ids = [];
-    req.body.ids.forEach((value) => { ids.push( ObjectId(value) ); });
-
-    DatabaseManager.fetchUsers({ _id: { $in: ids } }).then(async function(result) {
-        for(var i = 0; i < result.length; i++) {
-            result[i].image = await AWS_Presigner.generateSignedGetUrl("user_images/" + result[i].email);
-        }
-
-        res.status(200).send(result);
-    }).catch((err) => {
-        console.log(err);
-        res.status(500).send("Server error");
-    });
-});
-
-app.get("/fetchProfileCards", (req, res) => {
-
-    // query user profile first for crs codes that are related to this user
+app.get("/fetchMatches", (req, res) => {
+    
     DatabaseManager.fetchUsers({ email: req.query.email }).then((result) => {
+
         if(result.length === 0) {
             console.log(`No user with email ${req.body.email}`);
             res.status(404).send("404: User with email " + req.body.email + " couldn't be found");
         }
 
         user = result[0];
-        DatabaseManager.fetchProfileCards({ user_id: user._id }).then((profileCards) => {
-            if(profileCards.length > 0) {
-                req_card = profileCards[0];
+        crs_regexes = [];
+        for (let i = 0; i < user.courses.length; i++) {
+            const course = user.courses[i];
+            crs_regexes.push(new RegExp("^" + course + "$", "i"));
+        }
 
-                // 2. Fetch cards with same courses
-                crs_regexes = [];
-                for (let i = 0; i < req_card.crscodes.length; i++) {
-                    const course = req_card.crscodes[i];
-                    crs_regexes.push(new RegExp("^" + course + "$", "i"));
-                }
+        DatabaseManager.fetchUsers({ courses: { $in: crs_regexes } }).then((users) => {
+            users.forEach((value) => {
+                value.password = null;
+                value.chats = null;
+            });
 
-                DatabaseManager.fetchProfileCards({ crscodes: { $in: crs_regexes } }).then((cards) => {
+            users = users.filter((value, index, arr) => { return !(value["_id"].equals(user._id)); });
+            res.status(200).send(JSON.stringify(users));
 
-                    cards = cards.filter((value, index, arr) => { return !(value["user_id"].equals(user._id)); });
-                    // 3. Filter according to additional req if necessary (TODO)
-                    res.status(200).send(JSON.stringify(cards));
+        }).catch((err) => {
+            console.log(err);
+            res.status(500).send("Server Error");
+        });
 
-                }).catch((err) => {
-                    res.status(500).send("Server Error: Couldn't fetch cards");
-                })
-
-                return;
-            }
-            else {
-                res.status(404).send("404: Profile card for this user doesn't exist");
-            }
-        }).catch((reason) => {
-
-            console.log(reason);
-            res.status(500).send("Servers Error: Couldn't fetch cards");
-        })
-    })
-
-});
+    }).catch((err) => {
+        console.log(err);
+        res.status(500).send("Server Error");
+    });
+})
 
 app.get("/fetchChatData", (req, res) => {
 
@@ -128,11 +103,7 @@ app.get("/fetchChatData", (req, res) => {
 
 });
 
-app.post("/newProfileCard", urlEncodedParser, (req, res) => {
-    // 1. Check if a profile card already exists linked to the user : TODO
-    //     a. If it does, add this crs code as well
-    // 2. Otherwise create a new profile card in the database *Profiles* : Done
-    
+app.post("/updateCourses", urlEncodedParser, (req, res) => {
     DatabaseManager.fetchUsers({ email: req.body.email }).then((result) => {
         if(result.length === 0) {
             console.log(`No user with email ${req.body.email}`);
@@ -140,51 +111,20 @@ app.post("/newProfileCard", urlEncodedParser, (req, res) => {
         }
 
         user = result[0];
-        profileCard = {
-            user_id: user._id,
-            crscodes: [ req.body.crscode ],
-            addinfo: req.body.addinfo
-        };
+        user.courses = req.body.updatedCourses;
 
-        DatabaseManager.fetchProfileCards({ user_id: profileCard.user_id }).then((existingCards) => {
-            if(existingCards.length > 0) {
-                
-                existingCard = existingCards[0];
-                if(existingCard.crscodes.findIndex((crs) => { return profileCard.crscodes[0] === crs }) === -1) {
-                    existingCard.crscodes.push(profileCard.crscodes[0]);
-                }
-                // update entry in the database
-                DatabaseManager.updateProfileCard(existingCard, { user_id: profileCard.user_id })
-                .then((updateResult) => {
-                    res.status(201).send("Success");
-                })
-                .catch((err) => {
-                    // unsuccessful insert, reply back with unsuccess response code
-                    console.log(err);
-                    res.status(500).send("Insert Failed");
-                });
-
-                
-                return;
-            }
-            
-            // card doesn't exist
-            DatabaseManager.insertProfileCard(profileCard).then((result) => {
-                res.status(201).send("Success");
-            }).catch((err) => {
-                // unsuccessful insert, reply back with unsuccess response code
-                console.log(err);
-                res.status(500).send("Insert Failed");
-            });
-        })
-
-
+        DatabaseManager.updateUser({ courses: user.courses }, { email: user.email }).then((value) => {
+            res.status(201).send(JSON.stringify({ success: true }));
+        }).catch((err) => {
+            res.status(500).send("Server Error");
+            console.log(err);
+        });
 
     }).catch((err) => {
         console.log(err);
-        res.status(500).send("Can't find the user profile");
+        res.status(500).send("Server Error");
     });
-    
+
 });
 
 app.post("/new-user", urlEncodedParser, (req, res) => {
@@ -196,7 +136,9 @@ app.post("/new-user", urlEncodedParser, (req, res) => {
         uni: req.body.uni,
         major: req.body.major,
         age: Number(req.body.age),
-        chats: []
+        chats: [],
+        courses: [],
+        bio: ""
     };
 
 
