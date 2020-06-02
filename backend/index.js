@@ -7,7 +7,6 @@ const bcrypt = require('bcrypt');
 const urlEncodedParser = bodyParser.urlencoded({ extended: false });
 // const sendEmail = require("./utils/emailer").sendEmail;
 const DB = require("./utils/DatabaseManager");
-const ObjectId = require("objectid");
 const AWS_Presigner = require('./utils/AWSPresigner');
 const Chat = require('./utils/Chat').Chat;
 const Matcher = require('./utils/Matcher').Matcher;
@@ -188,22 +187,26 @@ app.post("/login", urlEncodedParser, (req, res) => {
     });
 });
 
-DB.fetchUsers({}).then((users) => {
-    // users.forEach((user) => {
-    //     user.blueConnections = [];
-    //     user.greenConnections = [];
-    //     DB.updateUser(user, {email:user.email}).then((res) => {
-    //         console.log(`${user.email} updated`);
-    //     });
-    // });
+// DB.fetchUsers({}).then((users) => {
+//     // users.forEach((user) => {
+//     //     user.blueConnections = [];
+//     //     user.greenConnections = [];
+//     //     DB.updateUser(user, {email:user.email}).then((res) => {
+//     //         console.log(`${user.email} updated`);
+//     //     });
+//     // });
 
-    const matcher = new Matcher();
+//     const matcher = new Matcher();
+//     users.forEach(async (user) => {
+//         const result = await matcher.generateGraph(user.email);
+//         console.log(`Graph generation for ${user.name} ${result ? "successful" : "failed"}`);
+//     });
+// });
 
-    users.forEach(async (user) => {
-        const result = await matcher.generateGraph(user.email);
-        console.log(`Graph generation for ${user.name} ${result ? "successful" : "failed"}`);
-    });
-});
+// const matcher = new Matcher();
+// matcher.handleRightSwipe('harsh@gmail.com', 'michael.scott@dundermifflin.com').then((res) => {
+//     console.log(`Right swipe ${res ? 'successful' : 'failed' }`);
+// }).catch((err) => console.log(err));
 
 function addDummyUser() {
     const requestData = {

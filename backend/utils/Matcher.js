@@ -2,8 +2,29 @@ const DB = require('./DatabaseManager');
 
 class Matcher {
 
-    handleRightSwipe(srcUser, targetUser) {
-        return;
+    async handleRightSwipe(srcUser, targetUser) {
+        try {
+            const user = (await DB.fetchUsers({ email: srcUser }))[0];
+            const rightSwipedUser = (await DB.fetchUsers({ email: targetUser}))[0];
+            user.greenConnections.push((user.blueConnections.splice(
+                user.blueConnections.findIndex((value) => rightSwipedUser._id.equals(value)), 1
+            ))[0]);
+
+
+            try {
+                await DB.updateUser({ blueConnections: user.blueConnections, greenConnections: user.greenConnections }, 
+                    { email: srcUser });
+                
+                return true;
+            } catch (updateErr) {
+                console.log(updateErr);
+                return false;
+            }
+
+        } catch (fetchErr) {
+            console.log(fetchErr);
+            return false;
+        }
     }
 
     handleLeftSwipe(srcUser, targetUser) {
@@ -52,6 +73,10 @@ class Matcher {
             console.log(err);
             return false;
         }
+    }
+
+    async getMatches(userEmail) {
+        return [];
     }
 }
 
