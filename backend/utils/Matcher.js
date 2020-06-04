@@ -6,24 +6,26 @@ class Matcher {
         try {
             const user = (await DB.fetchUsers({ email: srcUser }))[0];
             const rightSwipedUser = (await DB.fetchUsers({ email: targetUser}))[0];
-            user.greenConnections.push((user.blueConnections.splice(
+            const swipedUserId = (user.blueConnections.splice(
                 user.blueConnections.findIndex((value) => rightSwipedUser._id.equals(value)), 1
-            ))[0]);
+            ))[0];
+
+            user.greenConnections.push(swipedUserId);
 
 
             try {
                 await DB.updateUser({ blueConnections: user.blueConnections, greenConnections: user.greenConnections }, 
                     { email: srcUser });
                 
-                return true;
+                return { success: true, isMatch: await this.hasIncomingGreenConnection(user._id, swipedUserId)};
             } catch (updateErr) {
                 console.log(updateErr);
-                return false;
+                return { success: false, isMatch: false};
             }
 
         } catch (fetchErr) {
             console.log(fetchErr);
-            return false;
+            return { success: false, isMatch: false};
         }
     }
 
@@ -31,9 +33,9 @@ class Matcher {
         return;
     }
 
-    async generateGraph(userEmail) {
+    async generateGraph(email) {
         try {
-            const user = (await DB.fetchUsers({ email: userEmail }))[0];
+            const user = (await DB.fetchUsers({ email }))[0];
             let crs_regexes = [];
             for (let i = 0; i < user.courses.length; i++) {
                 const course = user.courses[i];
@@ -56,7 +58,8 @@ class Matcher {
                 });
 
                 try {
-                    await DB.updateUser({ blueConnections: user.blueConnections }, { email: user.email });
+                    potentialConnections.length > 0 ? await DB.updateUser({ blueConnections: user.blueConnections }, 
+                        { email: user.email }) : null;
                     return true;
                 } catch (updateErr) {
                     console.log(updateErr);
@@ -74,9 +77,32 @@ class Matcher {
             return false;
         }
     }
+    
+    async hasIncomingGreenConnection(srcUserId, _id) {
+        try {
+            const user = (await DB.fetchUsers({ _id }))[0];
+            return user.greenConnections.findIndex((id) => id.equals(srcUserId)) !== -1;
+        } catch (fetchErr) {
+            console.log(fetchErr);
+            return false;
+        }
+    }
 
-    async getMatches(userEmail) {
-        return [];
+    async getMatches(email) {
+        try {
+            const user = (await DB.fetchUsers({ email }))[0];
+            let matches = [];
+            for (let i = 0; i < user.greenConnections.length; i++) {
+                if(await this.hasIncomingGreenConnection(user._id, user.greenConnections[i])) {
+                    matches.push(user.greenConnections[i]);
+                }
+            }
+
+            return matches;
+        } catch (fetchErr) {
+            console.log(fetchErr);
+            return [];
+        }
     }
 }
 

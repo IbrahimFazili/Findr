@@ -1,7 +1,7 @@
 {
-  "name": "study-partner-backend",
+  "name": "findr-backend",
   "version": "0.0.1",
-  "description": "Backend for the study partner mobile app",
+  "description": "Backend for the findr mobile app",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
