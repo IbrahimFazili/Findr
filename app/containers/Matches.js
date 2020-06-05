@@ -1,6 +1,6 @@
 import React from 'react';
 import styles from '../assets/styles';
-import {Thumbnail} from 'native-base';
+import { Thumbnail } from 'native-base';
 import {
   ScrollView,
   View,

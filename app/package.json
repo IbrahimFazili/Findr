@@ -13,6 +13,7 @@
 	},
 	"dependencies": {
 		"expo-linear-gradient": "^8.1.0",
+		"native-base": "^2.13.12",
 		"react": "16.6.3",
 		"react-native": "^0.59.9",
 		"react-native-card-stack-swiper": "^1.1.0",
