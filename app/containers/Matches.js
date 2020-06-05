@@ -15,6 +15,14 @@ import CardItem from '../components/CardItem';
 import Icon from '../components/Icon';
 import APIConnection from "../assets/data/APIConnection";
 
+const thumnailStyle = {
+  marginHorizontal: 10,
+  borderColor: '#1a5d57',
+  borderWidth: 2.7,
+};
+
+const dummyData = ['Alex', 'Haley', 'Luke', 'Phil', 'Jay', 'Cam'];
+
 class Matches extends React.Component {
 
   constructor(props) {
@@ -45,7 +53,7 @@ class Matches extends React.Component {
               </TouchableOpacity>
             </View>
 
-            <View style={{flex:3, height:130}}>
+            <View style={{ flex: 3, height: 130 }}>
               <ScrollView
               horizontal={true}
               showsHorizontalScrollIndicator={false}
@@ -56,32 +64,33 @@ class Matches extends React.Component {
               }}
               >
                 <Thumbnail large
-                style={{marginHorizontal: 10, borderColor: '#1a5d57', borderWidth: 2.7}} 
-                source={require('../assets/images/01.jpg')}/>
+                style={thumnailStyle} 
+                source={require('../assets/images/01.jpg')}
+                />
                 <Text style={styles.thumbnailCaption}>Alex</Text>
 
                 <Thumbnail large
-                style={{marginHorizontal: 10, borderColor: '#1a5d57', borderWidth: 2.7}}
+                style={thumnailStyle}
                 source={require('../assets/images/02.jpg')}/>
                 <Text style={styles.thumbnailCaption}>Haley</Text>
 
                 <Thumbnail large
-                style={{marginHorizontal: 10, borderColor: '#1a5d57', borderWidth: 2.7}}
+                style={thumnailStyle}
                 source={require('../assets/images/03.jpg')}/>
                 <Text style={styles.thumbnailCaption}>Luke</Text>
 
                 <Thumbnail large
-                style={{marginHorizontal: 10, borderColor: '#1a5d57', borderWidth: 2.7}}
+                style={thumnailStyle}
                 source={require('../assets/images/04.jpg')}/>
                 <Text style={styles.thumbnailCaption}>Phil</Text>
 
                 <Thumbnail large
-                style={{marginHorizontal: 10, borderColor: '#1a5d57', borderWidth: 2.7}}
+                style={thumnailStyle}
                 source={require('../assets/images/05.jpg')}/>
                 <Text style={styles.thumbnailCaption}>Jay</Text>
 
                 <Thumbnail large
-                style={{marginHorizontal: 10, borderColor: '#1a5d57', borderWidth: 2.7}}
+                style={thumnailStyle}
                 source={require('../assets/images/06.jpg')}/>
                 <Text style={styles.thumbnailCaption}>Cam</Text>
   

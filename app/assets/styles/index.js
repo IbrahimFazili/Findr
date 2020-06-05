@@ -47,6 +47,7 @@ export default StyleSheet.create({
 		shadowColor: BLACK,
 		shadowOffset: {height: 0, width: 0},
 		marginLeft: 30,
+		elevation: 10
 	},
 
 	matchesCardItem: {
