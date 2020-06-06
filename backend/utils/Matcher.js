@@ -33,6 +33,25 @@ class Matcher {
         return;
     }
 
+    updateOutgoingConnection(connection, srcId) {
+
+        return new Promise(function(resolve, reject) {
+            if(connection.blueConnections.findIndex((id) => id.equals(srcId)) === -1 
+            && connection.greenConnections.findIndex((id) => id.equals(srcId)) === -1) {
+
+                connection.blueConnections.push(srcId);
+                DB.updateUser({ blueConnections: connection.blueConnections}, { _id: connection._id }).then((result) => {
+                    resolve(true);
+                }).catch((err) => {
+                    console.log(err);
+                    reject(false);
+                });
+            } else {
+                resolve(true);
+            }
+        });
+    }
+
     async generateGraph(email) {
         try {
             const user = (await DB.fetchUsers({ email }))[0];
@@ -50,6 +69,7 @@ class Matcher {
                 });
 
                 for (let i = 0; i < potentialConnections.length; i++) {
+                    this.updateOutgoingConnection(potentialConnections[i], user._id);
                     potentialConnections[i] = potentialConnections[i]._id;
                 }
 

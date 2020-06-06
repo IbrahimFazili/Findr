@@ -9,7 +9,7 @@ const urlEncodedParser = bodyParser.urlencoded({ extended: false });
 const DB = require("./utils/DatabaseManager");
 const AWS_Presigner = require('./utils/AWSPresigner');
 const Chat = require('./utils/Chat').Chat;
-const Matcher = require('./utils/Matcher').Matcher;
+const matcher = new (require('./utils/Matcher').Matcher);
 
 app.use(bodyParser.json());
 
@@ -68,7 +68,43 @@ app.get("/fetchMatches", (req, res) => {
         console.log(err);
         res.status(500).send("Server Error");
     });
-})
+
+    matcher.getMatches(req.query.email).then((matches) => {
+
+    }).catch((err) => {
+        console.log(err);
+        res.status(500).send("Server Error");
+    })
+});
+
+app.get("/fetchConnections", (req, res) => {
+    DB.fetchUsers({ email: req.query.email }).then((result) => {
+        if(result.length === 0) {
+            console.log(`No user with email ${req.body.email}`);
+            res.status(404).send("404: User with email " + req.body.email + " couldn't be found");
+            return;
+        }
+
+        const user = result[0];
+        DB.fetchUsers({ _id: { $in: user.blueConnections } }).then((connections) => {
+            connections.forEach((element) => {
+                element.password = null;
+                element.chats = null;
+                element.blueConnections = null;
+                element.greenConnections = null;
+            });
+
+            res.status(200).send(JSON.stringify(connections));
+
+        }).catch((err) => {
+            console.log(err);
+            res.status(500).send("Server Error");
+        })
+    }).catch((err) => {
+        console.log(err);
+        res.status(500).send("Server Error");
+    });
+});
 
 app.get("/fetchChatData", (req, res) => {
 
@@ -147,7 +183,8 @@ app.post("/new-user", urlEncodedParser, (req, res) => {
 
     DB.insertUser(requestData).then(async (result) => {
         // sendEmail(requestData);
-        // reply with success response code
+        matcher.generateGraph(requestData.email);
+
         res.status(201).send(JSON.stringify({ 
             signedPutUrl: await AWS_Presigner.generateSignedPutUrl("user_images/" + requestData.email)
         }));
@@ -210,29 +247,34 @@ app.post("/login", urlEncodedParser, (req, res) => {
 
 function addDummyUser() {
     const requestData = {
-        name: "Michael Scott",
-        email: "michael.scott@dundermifflin.com",
-        password: bcrypt.hashSync("Ftoby69", 10),
+        name: "Raymond Reddington",
+        email: "reddington@gmail.com",
+        password: bcrypt.hashSync("Red0", 10),
         gender: "M",
-        uni: "Penn State University",
-        major: "Business Management",
-        age: 56,
+        uni: "Dartmouth College",
+        major: "Life Science",
+        age: 60,
         chats: [],
-        courses: ["ECO100"],
-        bio: "If I had a gun with two bullets and I was in a room with Hitler, Bin Laden, and Toby, I would shoot Toby twice"
+        courses: ["ECO100", "LIN101", "SOC100"],
+        bio: "Value Loyalty Above All Else",
+        blueConnections: [],
+        greenConnections: []
     };
 
 
     DB.insertUser(requestData).then(async (result) => {
         // sendEmail(requestData);
-        // reply with success response code
-        console.log("success");
+        matcher.generateGraph(requestData.email).then((res) => {
+            console.log(`${requestData.name} ${res ? 'added' : 'failed'}`);
+        });
 
     }).catch((err) => {
         // unsuccessful insert, reply back with unsuccess response code
         console.log(err);
     });
 }
+
+addDummyUser();
 
 /* Socket Listeners for chat */
 
