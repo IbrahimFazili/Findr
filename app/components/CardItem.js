@@ -28,7 +28,7 @@ const CardItem = ({
       borderTopLeftRadius: variant ? 0 : 40,
       borderTopRightRadius: variant ? 0 : 40,
       borderBottomLeftRadius: 0,
-      borderBottomRightRadius: 0
+      borderBottomRightRadius: 0,
     }
   ];
 
@@ -40,6 +40,7 @@ const CardItem = ({
       fontSize: variant ? 15 : 30,
       alignSelf: 'center',
       fontWeight: "300",
+      overflow: 'visible'
     }
   ];
 
@@ -62,7 +63,7 @@ const CardItem = ({
   return (
     <View style={[variant ? styles.matchContainerCardItem : styles.containerCardItem, theHeight]}>
       {/* IMAGE */}
-      <Image source={image} style={imageStyle} />
+      <Image source={image} style={imageStyle} resizeMode='cover'/>
 
       {/* MATCHES */}
       {/* {matches && (

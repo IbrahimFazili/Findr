@@ -24,7 +24,7 @@ const DIMENSION_HEIGHT = Dimensions.get('window').height;
 export default StyleSheet.create({
 	// COMPONENT - CARD ITEM
 	containerCardItem: {
-		width: DIMENSION_WIDTH - 70,
+		width: DIMENSION_WIDTH * 0.8,
 		marginTop: 100,
 		backgroundColor: WHITE,
 		borderRadius: 40,
@@ -33,8 +33,8 @@ export default StyleSheet.create({
 		shadowOpacity: 0.05,
 		shadowRadius: 10,
 		shadowColor: BLACK,
-    shadowOffset: { height: 0, width: 0 },
-    elevation: 10
+    	shadowOffset: { height: 0, width: 0 },
+    	elevation: 10
 		// height: DIMENSION_HEIGHT-240,
 	},
 	
@@ -349,14 +349,8 @@ export default StyleSheet.create({
 	},
 
 	top: {
-		// paddingTop: 50,
-		marginTop: 637,
-		marginBottom: 60,
-		marginLeft: 135,
-		marginHorizontal: 10,
-		flexDirection: "row",
-		justifyContent: "space-between",
-		alignItems: "center"
+		alignItems: "center",
+		marginTop: DIMENSION_HEIGHT * 0.81
 	},
 
   // CONTAINER - MATCHES
