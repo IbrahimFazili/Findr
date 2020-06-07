@@ -21,8 +21,6 @@ const thumnailStyle = {
   borderWidth: 2.7,
 };
 
-const dummyData = ['Alex', 'Haley', 'Luke', 'Phil', 'Jay', 'Cam'];
-
 class Matches extends React.Component {
 
   constructor(props) {
@@ -63,7 +61,13 @@ class Matches extends React.Component {
                 paddingEnd: 5,
               }}
               >
-                <Thumbnail large
+                {this.state.cards.map((user) => (
+                  <Thumbnail large
+                  style={thumnailStyle} 
+                  source={{ uri: user.image }}
+                  />
+                ))}
+                {/* <Thumbnail large
                 style={thumnailStyle} 
                 source={require('../assets/images/01.jpg')}
                 />
@@ -92,7 +96,7 @@ class Matches extends React.Component {
                 <Thumbnail large
                 style={thumnailStyle}
                 source={require('../assets/images/06.jpg')}/>
-                <Text style={styles.thumbnailCaption}>Cam</Text>
+                <Text style={styles.thumbnailCaption}>Cam</Text> */}
   
               </ScrollView>
             </View>
