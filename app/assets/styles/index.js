@@ -82,11 +82,8 @@ export default StyleSheet.create({
 	},
 
 	thumbnailCaption: {
-		fontWeight: "bold",
-		position: "relative",
-		right: 65,
-		top: 55,
-		marginRight: -20,
+		alignSelf: 'center',
+		marginTop: 5
 	},
 
 	matchesTextCardItem: {

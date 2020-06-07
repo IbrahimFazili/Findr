@@ -62,10 +62,16 @@ class Matches extends React.Component {
               }}
               >
                 {this.state.cards.map((user) => (
-                  <Thumbnail large
-                  style={thumnailStyle} 
-                  source={{ uri: user.image }}
-                  />
+                  <View>
+                    <Thumbnail large
+                    style={thumnailStyle} 
+                    source={{ uri: user.image }}
+                    key={user.name}
+                    />
+                    <Text style={styles.thumbnailCaption}>
+                      {user.name.substring(0, user.name.search(' '))}
+                    </Text>
+                  </View>
                 ))}
                 {/* <Thumbnail large
                 style={thumnailStyle} 
