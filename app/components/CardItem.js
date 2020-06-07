@@ -1,8 +1,8 @@
-import React from 'react';
-import styles from '../assets/styles';
+import React from "react";
+import styles from "../assets/styles";
 
-import { Text, View, Image, Dimensions, TouchableOpacity } from 'react-native';
-import Icon from './Icon';
+import { Text, View, Image, Dimensions, TouchableOpacity } from "react-native";
+import Icon from "./Icon";
 
 const CardItem = ({
   actions,
@@ -13,56 +13,72 @@ const CardItem = ({
   onPressLeft,
   onPressRight,
   status,
-  variant
+  variant,
 }) => {
   // Custom styling
-  const fullWidth = Dimensions.get('window').width;
-  const fullHeight = Dimensions.get('window').height;
+  const fullWidth = Dimensions.get("window").width;
+  const fullHeight = Dimensions.get("window").height;
+
+  const imageWrapperStyle = [
+    {
+      width: variant ? fullWidth / 2 - 60 : styles.containerCardItem.width,
+      height: variant ? 120 : 250,
+      // margin: variant ? 0 : 20
+      margin: 0,
+      borderBottomLeftRadius: 0,
+      borderBottomRightRadius: 0,
+      borderRadius: variant ? 10 : 40,
+      flex: variant ? 1 : 0,
+      overflow: "hidden",
+    },
+  ];
 
   const imageStyle = [
     {
-      width: variant ? fullWidth / 2 - 60 : styles.containerCardItem.width, 
+      width: variant ? fullWidth / 2 - 60 : styles.containerCardItem.width,
       height: variant ? 120 : 250,
-      // margin: variant ? 0 : 20 
       margin: 0,
-      borderTopLeftRadius: variant ? 10: 40,
-      borderTopRightRadius: variant ? 10 : 40,
-      borderBottomLeftRadius: 0,
-      borderBottomRightRadius: 0,
-      flex: variant? 1 : 0,
-    }
+      flex: variant ? 1 : 0,
+    },
   ];
 
   const nameStyle = [
     {
       paddingTop: variant ? 10 : 15,
       paddingBottom: variant ? 5 : 7,
-      color: '#1a5d57',
+      color: "#1a5d57",
       fontSize: variant ? 15 : 30,
-      alignSelf: 'center',
-    }
+      alignSelf: "center",
+    },
   ];
 
   const CourseHeaderStyle = [
     {
       paddingTop: variant ? 10 : 15,
       paddingBottom: variant ? 5 : 7,
-      color: '#757E90',
+      color: "#757E90",
       fontSize: variant ? 5 : 19,
-      alignSelf: 'center'
-    }
+      alignSelf: "center",
+    },
   ];
 
   const theHeight = [
     {
-      height: variant ? fullHeight - 600: fullHeight - 210,
-    }
-  ]
+      height: variant ? fullHeight * 0.2 : fullHeight * 0.7,
+    },
+  ];
 
   return (
-    <View style={[variant ? styles.matchContainerCardItem : styles.containerCardItem, theHeight]}>
+    <View
+      style={[
+        variant ? styles.matchContainerCardItem : styles.containerCardItem,
+        theHeight,
+      ]}
+    >
       {/* IMAGE */}
-      <Image source={image} style={imageStyle} />
+      <View style={imageWrapperStyle}>
+        <Image source={image} style={imageStyle} />
+      </View>
 
       {/* MATCHES */}
       {/* {matches && (
@@ -77,14 +93,15 @@ const CardItem = ({
       <Text style={nameStyle}>{name}</Text>
 
       {/* Courses */}
-      {courses && <Text style={CourseHeaderStyle}>
-        {courses.map((item, index) => (
-          <Text key={String(index)} >
-            {index === courses.length - 1 ? " " + item : " " + item + ","}
-          </Text>
-        ))}
-      </Text>}
-      
+      {courses && (
+        <Text style={CourseHeaderStyle}>
+          {courses.map((item, index) => (
+            <Text key={String(index)}>
+              {index === courses.length - 1 ? " " + item : " " + item + ","}
+            </Text>
+          ))}
+        </Text>
+      )}
 
       {/* DESCRIPTION */}
       {description && (
@@ -94,7 +111,7 @@ const CardItem = ({
       {/* STATUS */}
       {status && (
         <View style={styles.status}>
-          <View style={status === 'Online' ? styles.online : styles.offline} />
+          <View style={status === "Online" ? styles.online : styles.offline} />
           <Text style={styles.statusText}>{status}</Text>
         </View>
       )}
@@ -102,22 +119,20 @@ const CardItem = ({
       {/* ACTIONS */}
       {actions && (
         <View style={styles.actionsCardItem}>
-
-          <TouchableOpacity
-            style={styles.button}
-            onPress={() => onPressLeft()}
-          >
+          <TouchableOpacity style={styles.button} onPress={() => onPressLeft()}>
             <Text style={styles.dislike}>
               <Icon name="dislike" />
             </Text>
           </TouchableOpacity>
 
-          <TouchableOpacity style={styles.button} onPress={() => onPressRight()}>
+          <TouchableOpacity
+            style={styles.button}
+            onPress={() => onPressRight()}
+          >
             <Text style={styles.like}>
               <Icon name="like" />
             </Text>
           </TouchableOpacity>
-
         </View>
       )}
     </View>
