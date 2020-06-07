@@ -1,4 +1,4 @@
-import { StyleSheet, Dimensions } from "react-native";
+import { StyleSheet, Dimensions, Platform } from "react-native";
 
 const PRIMARY_COLOR = "#7444C0";
 const SECONDARY_COLOR = "#5636B8";
@@ -305,7 +305,7 @@ export default StyleSheet.create({
     flex: 1,
     resizeMode: "cover",
     width: DIMENSION_WIDTH,
-    height: DIMENSION_HEIGHT,
+	height: DIMENSION_HEIGHT,
   },
 
   title: {
@@ -347,13 +347,13 @@ export default StyleSheet.create({
     alignSelf: "center",
     flex: 1,
     justifyContent: "flex-end",
-    marginBottom: DIMENSION_HEIGHT * 0.16,
+    marginBottom: Platform.OS === 'ios' ? DIMENSION_HEIGHT * 0.16 : DIMENSION_HEIGHT * 0.17,
     marginTop: 0,
     shadowOpacity: 0.3,
     shadowRadius: 10,
     shadowColor: BLACK,
     shadowOffset: { height: 0, width: 0 },
-    zIndex: -1,
+    zIndex: 0,
   },
 
   // CONTAINER - MATCHES

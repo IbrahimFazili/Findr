@@ -1,5 +1,5 @@
 import React from "react";
-import { Text, Dimensions } from "react-native";
+import { Text, Dimensions, Platform } from "react-native";
 import {
   createBottomTabNavigator,
   createAppContainer,
@@ -94,7 +94,6 @@ const App = createBottomTabNavigator(
       activeTintColor: "#7444C0",
       inactiveTintColor: "#363636",
       labelStyle: {
-        fontSize: 0,
         paddingTop: 0,
         margin: 0,
         opacity: 0,
@@ -103,7 +102,7 @@ const App = createBottomTabNavigator(
         backgroundColor: "#FFF",
         borderTopWidth: 0,
         paddingVertical: 20,
-        height: Dimensions.get("window").height * 0.04,
+        height: Platform.OS === 'ios' ? Dimensions.get("window").height * 0.04 : Dimensions.get('window').height * 0.065,
         shadowOpacity: 0.3,
         shadowRadius: 10,
         shadowColor: "#000",

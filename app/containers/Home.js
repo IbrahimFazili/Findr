@@ -88,10 +88,7 @@ class Home extends React.Component {
                         : item.bio
                     }
                     actions
-                    onPressRight={() => {
-                      console.log("clicked");
-                      this.swiper.swipeRight();
-                    }}
+                    onPressRight={() => this.swiper.swipeRight()}
                     onPressLeft={() => this.swiper.swipeLeft()}
                   />
                 </Card>
