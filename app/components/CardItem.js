@@ -39,8 +39,6 @@ const CardItem = ({
       color: '#1a5d57',
       fontSize: variant ? 15 : 30,
       alignSelf: 'center',
-      fontWeight: "300",
-      overflow: 'visible'
     }
   ];
 

@@ -349,8 +349,9 @@ export default StyleSheet.create({
 	},
 
 	top: {
-		alignItems: "center",
-		marginTop: DIMENSION_HEIGHT * 0.81
+		alignSelf: "center",
+		position: "absolute",
+		bottom: -0.885 * DIMENSION_HEIGHT,
 	},
 
   // CONTAINER - MATCHES
