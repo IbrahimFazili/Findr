@@ -5,6 +5,7 @@ import {
   ScrollView,
   View,
   Text,
+  Image,
   TouchableOpacity,
   ImageBackground,
   FlatList,
@@ -29,16 +30,17 @@ class Matches extends React.Component {
   render() {
     return (
       <ImageBackground
-        source={require('../assets/images/bg.png')}
+        source={require('../assets/images/Home.png')}
         style={styles.bg}
       >
         <View style={styles.containerMatches}>
+          <Image style={styles.matchLogo} source={require('../assets/images/Findr_logo2x.png')}/>
           <ScrollView>
-            <View style={styles.top}>
-              <Text style={styles.title}>Matches</Text>
+            <View style={styles.matchTop}>
+              <Text style={styles.matchTitle}>Pending Matches</Text>
               <TouchableOpacity>
-                <Text style={styles.icon}>
-                  <Icon name="optionsV" />
+                <Text style={styles.seeAllicon}>
+                  See all<Icon name="arrow"/>
                 </Text>
               </TouchableOpacity>
             </View>
