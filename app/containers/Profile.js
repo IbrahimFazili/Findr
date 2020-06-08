@@ -61,7 +61,6 @@ class Profile extends React.Component {
         <Image
           source={require("../assets/images/Findr_logo2x.png")}
           style={globalStyles.profileLogo}
-          resizeMode="contain"
         />
         <View style={styles.header}>
           <View style={styles.profilepicWrap}>

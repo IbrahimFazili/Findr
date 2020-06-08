@@ -38,12 +38,14 @@ export default StyleSheet.create({
 
   matchContainerCardItem: {
     backgroundColor: WHITE,
-    borderRadius: 8,
+    borderRadius: 10,
     margin: 10,
     shadowOpacity: 0.05,
     shadowRadius: 10,
     shadowColor: BLACK,
     shadowOffset: { height: 0, width: 0 },
+    marginLeft: 30,
+    elevation: 10,
   },
 
   matchesCardItem: {
@@ -58,7 +60,7 @@ export default StyleSheet.create({
     width: 65,
     height: 60,
     alignSelf: "center",
-    marginTop: DIMENSION_HEIGHT * 0.08,
+    marginTop: DIMENSION_HEIGHT * 0.06,
   },
 
   seeAllicon: {
@@ -73,7 +75,13 @@ export default StyleSheet.create({
     paddingBottom: 10,
     fontSize: 20,
     color: "#1a5d57",
-    fontWeight: "bold",
+    // fontWeight: "bold",
+    letterSpacing: 1,
+  },
+
+  thumbnailCaption: {
+    alignSelf: "center",
+    marginTop: 5,
   },
 
   matchesTextCardItem: {
@@ -293,10 +301,10 @@ export default StyleSheet.create({
     fontSize: 13,
   },
   profileLogo: {
-    width: 75,
-    height: 70,
+    width: 65,
+    height: 60,
     alignSelf: "center",
-    marginTop: DIMENSION_HEIGHT * 0.055,
+    marginTop: DIMENSION_HEIGHT * 0.06,
   },
 
   // CONTAINER - GENERAL
@@ -306,7 +314,13 @@ export default StyleSheet.create({
     width: DIMENSION_WIDTH,
     height: DIMENSION_HEIGHT,
   },
-
+  top: {
+    paddingTop: 50,
+    marginHorizontal: 10,
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+  },
   title: {
     paddingBottom: 10,
     fontSize: 22,
@@ -346,8 +360,7 @@ export default StyleSheet.create({
     alignSelf: "center",
     flex: 1,
     justifyContent: "flex-end",
-    marginBottom:
-      Platform.OS === "ios" ? DIMENSION_HEIGHT * 0.15 : DIMENSION_HEIGHT * 0.17,
+    marginBottom: DIMENSION_HEIGHT * 0.15,
     marginTop: 0,
     shadowOpacity: 0.3,
     shadowRadius: 10,
@@ -369,6 +382,14 @@ export default StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
+  },
+  matchTopSub: {
+    paddingTop: 10,
+    marginHorizontal: 50,
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    top: 10,
   },
 
   // CONTAINER - MESSAGES
