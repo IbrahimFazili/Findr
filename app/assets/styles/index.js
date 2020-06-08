@@ -62,7 +62,7 @@ export default StyleSheet.create({
     width: 65,
     height: 60,
     alignSelf: "center",
-    marginTop: DIMENSION_HEIGHT * 0.08,
+    marginTop: DIMENSION_HEIGHT * 0.06,
   },
 
   seeAllicon: {
@@ -307,11 +307,10 @@ export default StyleSheet.create({
     fontSize: 13,
   },
   profileLogo: {
-    width: 75,
-    height: 70,
-    // padding: 3,
-    marginLeft: 180,
-    marginTop: 20,
+    width: 65,
+    height: 60,
+    alignSelf: "center",
+    marginTop: DIMENSION_HEIGHT * 0.055,
   },
 
   // CONTAINER - GENERAL
