@@ -295,9 +295,8 @@ export default StyleSheet.create({
   profileLogo: {
     width: 75,
     height: 70,
-    // padding: 3,
-    marginLeft: 180,
-    marginTop: 20,
+    alignSelf: "center",
+    marginTop: DIMENSION_HEIGHT * 0.055,
   },
 
   // CONTAINER - GENERAL
@@ -305,7 +304,7 @@ export default StyleSheet.create({
     flex: 1,
     resizeMode: "cover",
     width: DIMENSION_WIDTH,
-	height: DIMENSION_HEIGHT,
+    height: DIMENSION_HEIGHT,
   },
 
   title: {
@@ -337,7 +336,7 @@ export default StyleSheet.create({
     width: 65,
     height: 60,
     alignSelf: "center",
-    marginTop: DIMENSION_HEIGHT * 0.08,
+    marginTop: DIMENSION_HEIGHT * 0.06,
   },
 
   top: {
@@ -347,13 +346,14 @@ export default StyleSheet.create({
     alignSelf: "center",
     flex: 1,
     justifyContent: "flex-end",
-    marginBottom: Platform.OS === 'ios' ? DIMENSION_HEIGHT * 0.16 : DIMENSION_HEIGHT * 0.17,
+    marginBottom:
+      Platform.OS === "ios" ? DIMENSION_HEIGHT * 0.15 : DIMENSION_HEIGHT * 0.17,
     marginTop: 0,
     shadowOpacity: 0.3,
     shadowRadius: 10,
     shadowColor: BLACK,
     shadowOffset: { height: 0, width: 0 },
-    zIndex: 0,
+    zIndex: Platform.OS === "ios" ? -1 : 0,
   },
 
   // CONTAINER - MATCHES
