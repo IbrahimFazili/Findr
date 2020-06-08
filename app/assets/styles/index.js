@@ -1,4 +1,4 @@
-import { StyleSheet, Dimensions } from "react-native";
+import { StyleSheet, Dimensions, Platform } from "react-native";
 
 const PRIMARY_COLOR = "#7444C0";
 const SECONDARY_COLOR = "#5636B8";
@@ -24,18 +24,16 @@ const DIMENSION_HEIGHT = Dimensions.get("window").height;
 export default StyleSheet.create({
   // COMPONENT - CARD ITEM
   containerCardItem: {
-    width: DIMENSION_WIDTH - 70,
-    marginTop: 100,
+    width: DIMENSION_WIDTH * 0.8,
+    marginTop: DIMENSION_HEIGHT * 0.11,
+    marginLeft: DIMENSION_WIDTH * 0.04,
     backgroundColor: WHITE,
     borderRadius: 40,
-    // alignItems: "center",
-    margin: 10,
-    shadowOpacity: 0.05,
+    shadowOpacity: 0.3,
     shadowRadius: 10,
     shadowColor: BLACK,
     shadowOffset: { height: 0, width: 0 },
     elevation: 10,
-    // height: DIMENSION_HEIGHT-240,
   },
 
   matchContainerCardItem: {
@@ -142,14 +140,10 @@ export default StyleSheet.create({
     width: 60,
     height: 60,
     borderRadius: 30,
-    backgroundColor: WHITE,
+    backgroundColor: "transparent",
     marginHorizontal: 7,
     alignItems: "center",
     justifyContent: "center",
-    shadowOpacity: 0.15,
-    shadowRadius: 20,
-    shadowColor: DARK_GRAY,
-    shadowOffset: { height: 10, width: 0 },
   },
 
   miniButton: {
@@ -310,7 +304,7 @@ export default StyleSheet.create({
     width: 65,
     height: 60,
     alignSelf: "center",
-    marginTop: DIMENSION_HEIGHT * 0.055,
+    marginTop: DIMENSION_HEIGHT * 0.06,
   },
 
   // CONTAINER - GENERAL
@@ -340,7 +334,40 @@ export default StyleSheet.create({
   },
 
   // CONTAINER - HOME
-  containerHome: { marginHorizontal: 10 },
+  containerHome: {
+    alignSelf: "center",
+    marginTop: -50,
+  },
+
+  homeCards: {
+    alignSelf: "center",
+    marginRight: 360,
+    marginTop: -25,
+    marginBottom: 40,
+  },
+
+  homeLogo: {
+    width: 65,
+    height: 60,
+    alignSelf: "center",
+    marginTop: DIMENSION_HEIGHT * 0.06,
+  },
+
+  top: {
+    alignSelf: "center",
+  },
+  filterStyle: {
+    alignSelf: "center",
+    flex: 1,
+    justifyContent: "flex-end",
+    marginBottom: DIMENSION_HEIGHT * 0.15,
+    marginTop: 0,
+    shadowOpacity: 0.3,
+    shadowRadius: 10,
+    shadowColor: BLACK,
+    shadowOffset: { height: 0, width: 0 },
+    zIndex: Platform.OS === "ios" ? -1 : 0,
+  },
 
   // CONTAINER - MATCHES
   containerMatches: {

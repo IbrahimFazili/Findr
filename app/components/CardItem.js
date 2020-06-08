@@ -22,8 +22,7 @@ const CardItem = ({
   const imageWrapperStyle = [
     {
       width: variant ? fullWidth / 2 - 60 : styles.containerCardItem.width,
-      height: variant ? 120 : 250,
-      // margin: variant ? 0 : 20
+      height: variant ? (fullHeight * 0.2) / 2 : (fullHeight * 0.685) / 2,
       margin: 0,
       borderBottomLeftRadius: 0,
       borderBottomRightRadius: 0,
@@ -36,7 +35,7 @@ const CardItem = ({
   const imageStyle = [
     {
       width: variant ? fullWidth / 2 - 60 : styles.containerCardItem.width,
-      height: variant ? 120 : 250,
+      height: variant ? (fullHeight * 0.2) / 2 : (fullHeight * 0.685) / 2,
       margin: 0,
       flex: variant ? 1 : 0,
     },
@@ -64,7 +63,7 @@ const CardItem = ({
 
   const theHeight = [
     {
-      height: variant ? fullHeight * 0.2 : fullHeight * 0.7,
+      height: variant ? fullHeight * 0.2 : fullHeight * 0.685,
     },
   ];
 
