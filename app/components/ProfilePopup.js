@@ -16,14 +16,14 @@ const nameStyle = [
 class ProfilePopup extends React.Component {
     constructor(props) {
         super(props);
-        this.state = { isVisible: true };
+        this.state = { isVisible:  this.props.visible};
+        console.log("state = ".concat(this.state.isVisible));
     }
 
     render() {
-
         return (
             <Modal 
-            isVisible={this.state.isVisible} 
+            visible={this.state.isVisible} 
             onBackdropPress={() => this.setState({ isVisible: false })}
             style={styles.popupCard}
             >

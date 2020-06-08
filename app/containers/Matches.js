@@ -14,6 +14,7 @@ import {
 import CardItem from "../components/CardItem";
 import Icon from "../components/Icon";
 import APIConnection from "../assets/data/APIConnection";
+import ProfilePopup from "../components/ProfilePopup";
 
 const thumnailStyle = {
   marginHorizontal: 10,
@@ -24,7 +25,7 @@ const thumnailStyle = {
 class Matches extends React.Component {
   constructor(props) {
     super(props);
-    this.state = { API: new APIConnection(), cards: [] };
+    this.state = { API: new APIConnection(), cards: [], visible: false};
   }
 
   async componentDidMount() {
@@ -33,6 +34,7 @@ class Matches extends React.Component {
     );
     this.setState({ cards: data });
   }
+
 
   render() {
     return (
@@ -121,7 +123,7 @@ class Matches extends React.Component {
               data={this.state.cards}
               keyExtractor={(item, index) => index.toString()}
               renderItem={({ item }) => (
-                <TouchableOpacity>
+                <TouchableOpacity onPress={()=> this.setState({visible: true})}>
                   <CardItem
                     image={{ uri: item.image }}
                     name={item.name}
