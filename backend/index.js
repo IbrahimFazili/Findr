@@ -32,45 +32,16 @@ app.get("/fetchUsers", (req, res) => {
 });
 
 app.get("/fetchMatches", (req, res) => {
-    
-    DB.fetchUsers({ email: req.query.email }).then((result) => {
-
-        if(result.length === 0) {
-            console.log(`No user with email ${req.body.email}`);
-            res.status(404).send("404: User with email " + req.body.email + " couldn't be found");
-        }
-
-        user = result[0];
-        crs_regexes = [];
-        for (let i = 0; i < user.courses.length; i++) {
-            const course = user.courses[i];
-            crs_regexes.push(new RegExp("^" + course + "$", "i"));
-        }
-
-        DB.fetchUsers({ courses: { $in: crs_regexes } }).then(async (users) => {
-
-            users = users.filter((value, index, arr) => { return !(value["_id"].equals(user._id)); });
-
-            for (let i = 0; i < users.length; i++) {
-                users[i].image = await AWS_Presigner.generateSignedGetUrl("user_images/" + users[i].email);
-                users[i].password = null;
-                users[i].chats = null;
-            }
-
-            res.status(200).send(JSON.stringify(users));
-
-        }).catch((err) => {
-            console.log(err);
-            res.status(500).send("Server Error");
-        });
-
-    }).catch((err) => {
-        console.log(err);
-        res.status(500).send("Server Error");
-    });
 
     matcher.getMatches(req.query.email).then((matches) => {
+        
+        DB.fetchUsers({ _id: { $in: matches } }).then(async (users) => {
+            for(var i = 0; i < users.length; i++) {
+                users[i].image = await AWS_Presigner.generateSignedGetUrl("user_images/" + users[i].email);
+            }
 
+            res.status(200).send(users);
+        })
     }).catch((err) => {
         console.log(err);
         res.status(500).send("Server Error");
@@ -274,7 +245,7 @@ function addDummyUser() {
     });
 }
 
-addDummyUser();
+// addDummyUser();
 
 /* Socket Listeners for chat */
 
