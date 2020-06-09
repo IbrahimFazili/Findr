@@ -37,6 +37,7 @@ export default StyleSheet.create({
   },
 
   matchContainerCardItem: {
+    width: DIMENSION_WIDTH * 0.353,
     backgroundColor: WHITE,
     borderRadius: 10,
     margin: 10,
