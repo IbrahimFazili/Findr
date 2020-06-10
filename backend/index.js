@@ -27,7 +27,7 @@ app.get("/fetchUsers", (req, res) => {
 
     }).catch((err) => {
         console.log(err);
-        res.status(500).send("Server error");
+        res.status(500).send("Database Fetch Error");
     });
 });
 
@@ -41,11 +41,14 @@ app.get("/fetchMatches", (req, res) => {
             }
 
             res.status(200).send(users);
-        })
+        }).catch((err) => {
+            console.log(err);
+            res.status(500).send("Database Fetch Error");
+        });
     }).catch((err) => {
         console.log(err);
         res.status(500).send("Server Error");
-    })
+    });
 });
 
 app.get("/fetchConnections", (req, res) => {
@@ -204,16 +207,14 @@ app.post("/login", urlEncodedParser, (req, res) => {
 //     //     });
 //     // });
 
-//     const matcher = new Matcher();
 //     users.forEach(async (user) => {
 //         const result = await matcher.generateGraph(user.email);
 //         console.log(`Graph generation for ${user.name} ${result ? "successful" : "failed"}`);
 //     });
 // });
 
-// const matcher = new Matcher();
-// matcher.handleRightSwipe('harsh@gmail.com', 'michael.scott@dundermifflin.com').then((res) => {
-//     console.log(`Right swipe ${res ? 'successful' : 'failed' }`);
+// matcher.handleLeftSwipe('harsh@gmail.com', 'michael.scott@dundermifflin.com').then((res) => {
+//     console.log(`Left swipe ${res ? 'successful' : 'failed' }`);
 // }).catch((err) => console.log(err));
 
 function addDummyUser() {
