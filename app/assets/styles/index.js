@@ -479,14 +479,14 @@ export default StyleSheet.create({
     height: 100,
   },
 
-  slide: {
+  slide3: {
     marginTop: 40,
     flex: 1,
     justifyContent: "center",
     backgroundColor: "transparent",
   },
 
-  slide1: {
+  slide4: {
     marginTop: 60,
     flex: 1,
     justifyContent: "center",
