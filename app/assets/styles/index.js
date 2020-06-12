@@ -480,14 +480,12 @@ export default StyleSheet.create({
   },
 
   slide3: {
-    marginTop: 40,
     flex: 1,
     justifyContent: "center",
     backgroundColor: "transparent",
   },
 
   slide4: {
-    marginTop: 60,
     flex: 1,
     justifyContent: "center",
     backgroundColor: "transparent",
@@ -565,4 +563,38 @@ export default StyleSheet.create({
     padding: 20,
     backgroundColor: "lightgrey",
   },
+
+  //CONTAINERS - Onboarding
+  // onboardingWrapper: {
+  //   flex: 1,
+  // },
+  onboardingBg: {
+    flex: 1,
+    resizeMode: "contain",
+    width: DIMENSION_WIDTH,
+    height: DIMENSION_HEIGHT,
+    zIndex: -1
+  },
+  slide3text: {
+    marginTop: DIMENSION_HEIGHT*0.3
+  },
+  slide4text: {
+    marginTop: DIMENSION_HEIGHT*0.25
+  },
+  slideTwoContent:{
+    padding: DIMENSION_HEIGHT*0.15,
+    flexDirection: 'column',
+    alignItems: 'center'
+  },
+  slideTwoHeader: {
+    color: "white",
+    fontSize: 26
+  },
+  slideTwoNormal: {
+    color: "white",
+    marginTop: 10,
+  },
+  // slideoneCarousel: {
+  //   backgroundColor: "black"
+  // }
 });
