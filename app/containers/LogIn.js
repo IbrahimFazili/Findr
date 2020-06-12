@@ -126,11 +126,15 @@ class LogIn extends React.Component {
                 <Button mode="contained" onPress={this.handleSubmit.bind(this)} style={styles.loginbutt}>
                     Log in
                 </Button>
-                <View style={styles.bottomlogin}>
-                    <Button transparent='true' labelStyle={{color: "#FFF"}} style={styles.signupredirect}>
-                        Sign Up
-                    </Button>
-                </View>    
+                
+                <Button 
+                labelStyle={{color: "#FFF"}}
+                style={styles.signupredirect}
+                mode='outlined'
+                onPress={() => this.props.navigation.navigate("SignUp")}
+                >
+                    Sign Up
+                </Button>
             </View>
             
         );

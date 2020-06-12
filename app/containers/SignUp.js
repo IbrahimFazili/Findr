@@ -1,10 +1,12 @@
 import React from 'react';
-import { View, AsyncStorage, Image } from 'react-native';
+import { View, AsyncStorage, Image, Dimensions, ScrollView } from 'react-native';
 import styles from '../assets/styles';
-import { DefaultTheme, Provider as PaperProvider, TextInput, RadioButton, Dialog, Button } from 'react-native-paper';
+import { DefaultTheme, TextInput, Button } from 'react-native-paper';
 import DatePicker from 'react-native-datepicker';
 import Swiper from 'react-native-swiper'
 import APIConnection from '../assets/data/APIConnection';
+
+const DIMENTIONS = Dimensions.get('window');
 
 const theme = {
     colors: {
@@ -18,7 +20,7 @@ const theme = {
 
 const textBoxStyle = { 
     width: '75%',
-    height: 50,
+    height: DIMENTIONS.height * 0.06,
     borderBottomLeftRadius: 30,
     borderBottomRightRadius: 30,
     borderTopLeftRadius: 30,
@@ -51,17 +53,13 @@ class SignUp extends React.Component {
             uni: "",
             major: "",
 
-            nameLabel: "Name",
-            emailLabel: "Email",
-            passLabel: "Password",
-            uniLabeL: "University",
-            majorLabel: "Major",
-
             isNameValid: false,
             isEmailValid: false,
             isPasswordValid: false,
             isUniValid: false,
-            isMajorValid: false
+            isMajorValid: false,
+
+            showDots: true
         };
     }
 
@@ -109,8 +107,6 @@ class SignUp extends React.Component {
     async handleSubmit() {
         if(!this.state.isNameValid || !this.state.isEmailValid || !this.state.isPasswordValid
             || !this.state.date || !this.state.isUniValid || !this.state.isMajorValid) {
-            console.log(this.state);
-            console.log('invalid inputs');
             return;
         }
         const API = new APIConnection();
@@ -136,50 +132,42 @@ class SignUp extends React.Component {
             <View style={{backgroundColor: "#164e48", width: "100%", height: "100%", padding: '3%' }}>
                 <Image style={styles.logo} source={require('../assets/images/Findr_white2x.png')}/>
                 <Swiper
-                    style={styles.wrapper}
-                    height={350}
-                    onMomentumScrollEnd={(e, state, context) =>
-                        console.log('index:', state.index)
-                    }
+                    height={DIMENTIONS.height * 0.6}
                     dot={
                         <View
                         style={{
                             backgroundColor: 'rgba(0,0,0,.3)',
-                            width: 10,
-                            height: 10,
+                            width: DIMENTIONS.width * 0.02,
+                            height: DIMENTIONS.width * 0.02,
                             borderRadius: 10,
-                            marginRight: 110,
-                            marginBottom: 10
+                            marginBottom: DIMENTIONS.height * 0.01,
+                            marginHorizontal: DIMENTIONS.width * 0.025
                         }}/>
                     }
                     activeDot={
                         <View
                         style={{
                             backgroundColor: '#FFF',
-                            width: 12,
-                            height: 12,
+                            width: DIMENTIONS.width * 0.02,
+                            height: DIMENTIONS.width * 0.02,
                             borderRadius: 10,
-                            marginRight: 110,
-                            marginBottom: 10
+                            marginBottom: DIMENTIONS.height * 0.01,
+                            marginHorizontal: DIMENTIONS.width * 0.025
                         }}/>
                     }
-                    paginationStyle={{
-                        bottom: -23,
-                        left: null,
-                        right: 10
-                    }}
                     loop={false}
+                    showsPagination={this.state.showDots}
                     >
-                    <View style={styles.slide}>
+                    <ScrollView style={styles.slide0}>
                         <TextInput
                             underlineColor="transparent"
                             mode={"flat"}
                             value={this.state.name}
-                            label='Name'
+                            label={"Name"}
                             placeholder="Enter your full name"
-                            onFocus={() => this.setState({ nameLabel: "" })}
-                            onBlur={() => this.setState({ nameLabel: this.state.name.length === 0 ? "Name" : "" })}
                             onChangeText={this.handleNameChange.bind(this)}
+                            onFocus={() => this.setState({ showDots: false })}
+                            onBlur={() => this.setState({ showDots: true })}
                             theme={theme}
                             style={textBoxStyle}
                         />
@@ -188,11 +176,11 @@ class SignUp extends React.Component {
                             underlineColor="transparent"
                             mode={"flat"}
                             value={this.state.email}
-                            label='Email'
+                            label={"E-Mail"}
                             placeholder="email@example.com"
-                            onFocus={() => this.setState({ emailLabel: "" })}
-                            onBlur={() => this.setState({ emailLabel: this.state.email.length === 0 ? "Email" : "" })}
                             onChangeText={this.handleEmailChange.bind(this)}
+                            onFocus={() => this.setState({ showDots: false })}
+                            onBlur={() => this.setState({ showDots: true })}
                             theme={theme}
                             style={textBoxStyle}
                         />
@@ -202,17 +190,17 @@ class SignUp extends React.Component {
                             secureTextEntry={true}
                             mode={"flat"}
                             value={this.state.password}
-                            label='Password'
+                            label={"Password"}
                             placeholder="Enter your new password"
-                            onFocus={() => this.setState({ passLabel: "" })}
-                            onBlur={() => this.setState({ passLabel: this.state.password.length === 0 ? "Password" : "" })}
                             onChangeText={this.handlePasswordChange.bind(this)}
+                            onFocus={() => this.setState({ showDots: false })}
+                            onBlur={() => this.setState({ showDots: true })}
                             theme={theme}
                             style={textBoxStyle}
                         />
 
-                    </View>
-                    <View style={styles.slide1}>
+                    </ScrollView>
+                    <ScrollView style={styles.slide1}>
                         <DatePicker
                             date={this.state.date}
                             mode="date"
@@ -222,16 +210,23 @@ class SignUp extends React.Component {
                             cancelBtnText="Cancel"
                             customStyles={{
                                 dateInput: {
-                                    marginLeft: 36,
+                                    marginTop: DIMENTIONS.height * 0.02,
                                     borderBottomLeftRadius: 30,
                                     borderBottomRightRadius: 30,
                                     borderTopLeftRadius: 30,
                                     borderTopRightRadius: 30,
-                                    height: 50
+                                    height: DIMENTIONS.height * 0.06,
+                                },
+                                dateText: {
+                                    color: '#FFFFFF'
                                 }
                             }}
+                            style={{ 
+                                width: DIMENTIONS.width * 0.7,
+                                marginBottom: DIMENTIONS.height * 0.05,
+                                alignSelf: 'center',
+                            }}
                             showIcon={false}
-                            style={{ marginLeft: '4%', marginBottom: "8%", width: "83%"}}
                             onDateChange={(date) => {this.setState({date: date})}}
                             androidMode='spinner'
                         />
@@ -240,11 +235,11 @@ class SignUp extends React.Component {
                             underlineColor="transparent"
                             mode={"flat"}
                             value={this.state.uni}
-                            label='University'
+                            label={"University"}
                             placeholder="Enter your university"
-                            onFocus={() => this.setState({ uniLabel: "" })}
-                            onBlur={() => this.setState({ uniLabel: this.state.uni.length === 0 ? "University" : "" })}
                             onChangeText={this.handleUniChange.bind(this)}
+                            onFocus={() => this.setState({ showDots: false })}
+                            onBlur={() => this.setState({ showDots: true })}
                             theme={theme}
                             style={textBoxStyle}
                         />
@@ -253,23 +248,26 @@ class SignUp extends React.Component {
                             underlineColor="transparent"
                             mode={"flat"}
                             value={this.state.major}
-                            label='Major'
+                            label={"Major"}
                             placeholder="Enter your major"
-                            onFocus={() => this.setState({ majorLabel: "" })}
-                            onBlur={() => this.setState({ majorLabel: this.state.major.length === 0 ? "Major" : "" })}
                             onChangeText={this.handleMajorChange.bind(this)}
+                            onFocus={() => this.setState({ showDots: false })}
+                            onBlur={() => this.setState({ showDots: true })}
                             theme={theme}
                             style={textBoxStyle}
                         />
-                        <Button mode="contained" style={styles.signupbutt}>
-                            Sign Up
+
+                        <Button mode="contained" style={styles.signupbutt}>Sign Up</Button>
+                        
+                        <Button 
+                        labelStyle={{color: "#FFF"}}
+                        style={styles.loginRedirect}
+                        onPress={() => this.props.navigation.navigate("LogIn")}
+                        mode='outlined'
+                        >
+                            Log in
                         </Button>
-                        <View style={styles.bottomsignup}>
-                            <Button transparent='true' labelStyle={{color: "#FFF"}} style={styles.signupredirect}>
-                                Log in
-                            </Button>
-                        </View>   
-                    </View>
+                    </ScrollView>
                 </Swiper>
                 
             </View>
