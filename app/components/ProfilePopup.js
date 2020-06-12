@@ -16,11 +16,15 @@ const nameStyle = [
 class ProfilePopup extends React.Component {
     constructor(props) {
         super(props);
-        this.state = { isVisible:  this.props.visible};
-        console.log("state = ".concat(this.state.isVisible));
+        this.state = { isVisible: props.visible};
     }
 
+    // componentWillReceiveProps(updatedProp){
+    //     this.setState({isVisible: updatedProp.visible})
+    // }
+
     render() {
+        console.log(this.state)
         return (
             <Modal 
             visible={this.state.isVisible} 

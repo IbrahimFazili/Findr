@@ -35,7 +35,7 @@ class Matches extends React.Component {
     this.setState({ cards: data });
   }
 
-
+  
   render() {
     return (
       <ImageBackground
@@ -124,12 +124,15 @@ class Matches extends React.Component {
               keyExtractor={(item, index) => index.toString()}
               renderItem={({ item }) => (
                 <TouchableOpacity onPress={()=> this.setState({visible: true})}>
+                  {/* maybe create a Popup on press?
+                  onPress={()=> <ProfilePopup visible={true}>} */}
                   <CardItem
                     image={{ uri: item.image }}
                     name={item.name}
                     status={"Online"}
                     variant
                   />
+                  <ProfilePopup visible={this.state.visible} />
                 </TouchableOpacity>
               )}
             />
