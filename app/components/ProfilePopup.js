@@ -3,7 +3,23 @@ import { Text, View, Image, Dimensions } from 'react-native';
 import Modal from 'react-native-modal';
 import styles from "../assets/styles";
 
+const DIMENTIONS = Dimensions.get('window');
+
 const nameStyle = [
+    /* 
+    @Ibby
+    
+    Use Relative CSS. DO NOT USE ABSOLUTE CSS
+    
+    Absolute CSS example: { paddingBottom: 7 }
+    Relative CSS example: { paddingBottom: DIMENTIONS.height * 0.1 }
+
+    DIMENTIONS.height * 0.1 implies a padding of 10% of the total window size.
+
+    Use relative CSS otherwise we have to redo CSS to phones of different sizes
+
+    ~ Lakshya
+    */
     {
       paddingBottom: 7,
       marginTop: 0,
@@ -19,14 +35,13 @@ class ProfilePopup extends React.Component {
         this.state = { isVisible: props.visible};
     }
 
-    componentWillReceiveProps({ isVisible }) {
-        if(isVisible !== this.state.isVisible) {
-            this.setState({...this.state, isVisible })
+    componentWillReceiveProps(props) {
+        if(props.visible !== this.state.isVisible) {
+            this.setState({ isVisible: props.visible })
         }
     }
 
     render() {
-        console.log(this.state)
         return (
             <Modal 
             visible={this.state.isVisible} 

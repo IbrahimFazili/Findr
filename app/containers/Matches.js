@@ -25,7 +25,7 @@ const thumnailStyle = {
 class Matches extends React.Component {
   constructor(props) {
     super(props);
-    this.state = { API: new APIConnection(), cards: [], visible: false};
+    this.state = { API: new APIConnection(), cards: [], visible: false };
   }
 
   async componentDidMount() {
@@ -101,11 +101,13 @@ class Matches extends React.Component {
                     status={"Online"}
                     variant
                   />
-                  <ProfilePopup visible={this.state.visible} />
                 </TouchableOpacity>
               )}
             />
           </ScrollView>
+
+          <ProfilePopup visible={this.state.visible} />
+          
         </View>
       </ImageBackground>
     );
