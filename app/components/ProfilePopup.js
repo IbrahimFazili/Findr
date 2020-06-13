@@ -11,7 +11,7 @@ const nameStyle = [
       fontSize: 35,
       alignSelf: 'center'
     }
-  ];
+];
 
 class ProfilePopup extends React.Component {
     constructor(props) {
@@ -19,9 +19,11 @@ class ProfilePopup extends React.Component {
         this.state = { isVisible: props.visible};
     }
 
-    // componentWillReceiveProps(updatedProp){
-    //     this.setState({isVisible: updatedProp.visible})
-    // }
+    componentWillReceiveProps({ isVisible }) {
+        if(isVisible !== this.state.isVisible) {
+            this.setState({...this.state, isVisible })
+        }
+    }
 
     render() {
         console.log(this.state)

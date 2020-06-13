@@ -37,6 +37,7 @@ class Matches extends React.Component {
 
   
   render() {
+    console.log(this.state);
     return (
       <ImageBackground
         source={require("../assets/images/Home.png")}
@@ -81,36 +82,6 @@ class Matches extends React.Component {
                     </Text>
                   </View>
                 ))}
-                {/* <Thumbnail large
-                style={thumnailStyle} 
-                source={require('../assets/images/01.jpg')}
-                />
-                <Text style={styles.thumbnailCaption}>Alex</Text>
-
-                <Thumbnail large
-                style={thumnailStyle}
-                source={require('../assets/images/02.jpg')}/>
-                <Text style={styles.thumbnailCaption}>Haley</Text>
-
-                <Thumbnail large
-                style={thumnailStyle}
-                source={require('../assets/images/03.jpg')}/>
-                <Text style={styles.thumbnailCaption}>Luke</Text>
-
-                <Thumbnail large
-                style={thumnailStyle}
-                source={require('../assets/images/04.jpg')}/>
-                <Text style={styles.thumbnailCaption}>Phil</Text>
-
-                <Thumbnail large
-                style={thumnailStyle}
-                source={require('../assets/images/05.jpg')}/>
-                <Text style={styles.thumbnailCaption}>Jay</Text>
-
-                <Thumbnail large
-                style={thumnailStyle}
-                source={require('../assets/images/06.jpg')}/>
-                <Text style={styles.thumbnailCaption}>Cam</Text> */}
               </ScrollView>
             </View>
 
@@ -124,8 +95,6 @@ class Matches extends React.Component {
               keyExtractor={(item, index) => index.toString()}
               renderItem={({ item }) => (
                 <TouchableOpacity onPress={()=> this.setState({visible: true})}>
-                  {/* maybe create a Popup on press?
-                  onPress={()=> <ProfilePopup visible={true}>} */}
                   <CardItem
                     image={{ uri: item.image }}
                     name={item.name}
