@@ -488,6 +488,20 @@ export default StyleSheet.create({
     marginTop: DIMENSION_HEIGHT * 0.1
   },
 
+  uniDropDown: {
+    marginTop: DIMENSION_HEIGHT * 0.02,
+    borderBottomLeftRadius: 30,
+    borderBottomRightRadius: 30,
+    borderTopLeftRadius: 30,
+    borderTopRightRadius: 30,
+    height: DIMENSION_HEIGHT * 0.06,
+    width: DIMENSION_WIDTH * 0.7,
+    marginBottom: DIMENSION_HEIGHT * 0.05,
+    alignSelf: 'center',
+    borderColor: WHITE,
+    padding: 5
+  },
+
   signupbutt: {
     backgroundColor: "#013d38",
     borderRadius: 20,
@@ -539,7 +553,7 @@ export default StyleSheet.create({
     alignSelf: 'center',
     borderRadius: 10,
     borderColor: WHITE,
-    marginTop: 0.01
+    marginTop: DIMENSION_HEIGHT * 0.085
   },
 
   bottomlogin: {

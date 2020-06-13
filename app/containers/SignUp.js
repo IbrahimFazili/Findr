@@ -1,7 +1,7 @@
 import React from 'react';
 import { View, AsyncStorage, Image, Dimensions, ScrollView } from 'react-native';
 import styles from '../assets/styles';
-import { DefaultTheme, TextInput, Button } from 'react-native-paper';
+import { DefaultTheme, TextInput, Button, Menu, Provider } from 'react-native-paper';
 import DatePicker from 'react-native-datepicker';
 import Swiper from 'react-native-swiper'
 import APIConnection from '../assets/data/APIConnection';
@@ -59,7 +59,8 @@ class SignUp extends React.Component {
             isUniValid: false,
             isMajorValid: false,
 
-            showDots: true
+            showDots: true,
+            dropdownVisible: false
         };
     }
 
@@ -199,6 +200,15 @@ class SignUp extends React.Component {
                             style={textBoxStyle}
                         />
 
+                        <Button 
+                        labelStyle={{color: "#FFF"}}
+                        style={styles.loginRedirect}
+                        onPress={() => this.props.navigation.navigate("LogIn")}
+                        mode='outlined'
+                        >
+                            Log in
+                        </Button>
+
                     </ScrollView>
                     <ScrollView style={styles.slide1}>
                         <DatePicker
@@ -231,18 +241,25 @@ class SignUp extends React.Component {
                             androidMode='spinner'
                         />
 
-                        <TextInput
-                            underlineColor="transparent"
-                            mode={"flat"}
-                            value={this.state.uni}
-                            label={"University"}
-                            placeholder="Enter your university"
-                            onChangeText={this.handleUniChange.bind(this)}
-                            onFocus={() => this.setState({ showDots: false })}
-                            onBlur={() => this.setState({ showDots: true })}
-                            theme={theme}
-                            style={textBoxStyle}
-                        />
+                        <Provider>
+                            <Menu
+                            visible={this.state.dropdownVisible}
+                            onDismiss={() => this.setState({ dropdownVisible: false })}
+                            anchor={
+                                <Button 
+                                mode='outlined'
+                                style={styles.uniDropDown}
+                                labelStyle={{color: "#FFF"}}
+                                onPress={() => this.setState({ dropdownVisible: true })}
+                                uppercase={false}
+                                >
+                                    University
+                                </Button>
+                            }
+                            >
+                                <Menu.Item onPress={() => {}} title="University of Toronto"/>
+                            </Menu>
+                        </Provider>
 
                         <TextInput
                             underlineColor="transparent"
@@ -259,14 +276,6 @@ class SignUp extends React.Component {
 
                         <Button mode="contained" style={styles.signupbutt}>Sign Up</Button>
                         
-                        <Button 
-                        labelStyle={{color: "#FFF"}}
-                        style={styles.loginRedirect}
-                        onPress={() => this.props.navigation.navigate("LogIn")}
-                        mode='outlined'
-                        >
-                            Log in
-                        </Button>
                     </ScrollView>
                 </Swiper>
                 
