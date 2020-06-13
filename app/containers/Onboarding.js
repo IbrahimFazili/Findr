@@ -1,11 +1,13 @@
 import React from 'react';
-import { View, AsyncStorage, Image, Text, ScrollView, Dimensions, ImageBackground } from 'react-native';
+import { View, AsyncStorage, Image, Text, ScrollView, Dimensions, ImageBackground, Animated } from 'react-native';
 import styles from '../assets/styles';
 import { DefaultTheme, Provider as PaperProvider, TextInput, RadioButton, Dialog, Button } from 'react-native-paper';
 import DatePicker from 'react-native-datepicker';
 import Swiper from 'react-native-swiper'
 import APIConnection from '../assets/data/APIConnection';
 import { Thumbnail } from "native-base";
+import CardItem from '../components/CardItem';
+import SignUp from './SignUp';
 
 const theme = {
     colors: {
@@ -79,52 +81,11 @@ class Onboarding extends React.Component {
         };
     }
 
+    
+
     async componentDidMount() {
-        const data = await this.state.API.loadData(
-          await AsyncStorage.getItem("harsh@gmail.com")
-        );
+        const data = await this.state.API.loadData("meredith.grey@seattlegrace.com");
         this.setState({ cards: data });
-      }
-
-    handleNameChange(text) {
-        if(text.length >= 3 && text.length <= 30) {
-            this.setState({ isNameValid: true, name: text });
-            return;
-        }
-        this.setState({ isNameValid: false, name: text });
-    }
-
-    handleEmailChange(text) {
-        if(validateEmail(text.toLowerCase())) {
-            this.setState({ isEmailValid: true, email: text });
-            return;
-        }
-
-        this.setState({ isEmailValid: false, email: text.toLowerCase() });
-    }
-
-    handlePasswordChange(text) {
-        if(validatePassword(text)) {
-            this.setState({ isPasswordValid: true, password: text });
-            return;
-        }
-        this.setState({ password: text, isPasswordValid: false });
-    }
-
-    handleUniChange(text) {
-        if(text.length >= 6) {
-            this.setState({ isUniValid: true, uni: text });
-            return;
-        }
-        this.setState({ isUniValid: false, uni: text });
-    }
-
-    handleMajorChange(text) {
-        if(text.length >= 6) {
-            this.setState({ isMajorValid: true, major: text });
-            return;
-        }
-        this.setState({ isMajorValid: false, major: text });
     }
 
     async handleSubmit() {
@@ -153,6 +114,7 @@ class Onboarding extends React.Component {
     }
 
     render() {
+        console.log(this.state.cards);
         return (
             <View style={{width: "100%", height: "100%"}}>
                 <Swiper
@@ -191,37 +153,39 @@ class Onboarding extends React.Component {
                         right: 10
                     }}
                     loop={false}
-                    >
+                >
                     <View style={styles.slide1}>
                         <ImageBackground
                             source={require("../assets/images/Page_1.png")}
                             style={styles.onboardingBg}
                         >
                         <View style={styles.slideOneTop}>
-                            <Text>Efficient Work</Text>
-                            <Text>Master the Art of Studying Efficiently</Text> 
+                            <Text style={styles.slideTwoHeader}>Efficient Work</Text>
+                            <Text style={styles.slideTwoNormal}>Master the Art of Studying Efficiently</Text> 
                         </View>
                         <View style={styles.slideoneCarousel}>
                             <ScrollView
+                                ref={ref => this.scrollView = ref}
+                                onLayout={(e) =>
+                                    this.scrollView.scrollToEnd({animated: true})
+                                }
                                 horizontal={true}
                                 showsHorizontalScrollIndicator={false}
                                 contentContainerStyle={{
-                                alignItems: "center",
-                                paddingStart: 5,
-                                paddingEnd: 5,
+                                    alignItems: "center",
+                                    paddingStart: 5,
+                                    paddingEnd: 5,
                                 }}
                             >
                                 {this.state.cards.map((user) => (
                                 <View>
-                                    <Thumbnail
-                                        large
-                                        style={thumbnailStyle}
-                                        source={{ uri: user.image }}
+                                    <CardItem
+                                        variant
                                         key={user.name}
+                                        image={{ uri: user.image }}
+                                        name={user.name}
+                                        status={"Online"}
                                     />
-                                    <Text style={styles.thumbnailCaption}>
-                                        {user.name.substring(0, user.name.search(" "))}
-                                    </Text>
                                 </View>
                                 ))}
                             </ScrollView>
@@ -230,9 +194,9 @@ class Onboarding extends React.Component {
                     </View>
                     <View style={styles.slide2}>
                         <ImageBackground
-                                source={require("../assets/images/Page_2.png")}
-                                style={styles.onboardingBg}
-                            >
+                            source={require("../assets/images/Page_2.png")}
+                            style={styles.onboardingBg}
+                        >
                         <View style={styles.slideTwoContent}>
                             <Text style={styles.slideTwoHeader}>Network Smarter</Text>
                             <Text style={styles.slideTwoNormal}>Get outside your comfort zone!</Text>
@@ -246,47 +210,6 @@ class Onboarding extends React.Component {
                                 source={require("../assets/images/Page_3.png")}
                                 style={styles.onboardingBg}
                         >
-                        <View style={styles.slide3text}>
-                            <TextInput
-                                underlineColor="transparent"
-                                mode={"flat"}
-                                value={this.state.name}
-                                label='Name'
-                                placeholder="Enter your full name"
-                                onFocus={() => this.setState({ nameLabel: "" })}
-                                onBlur={() => this.setState({ nameLabel: this.state.name.length === 0 ? "Name" : "" })}
-                                onChangeText={this.handleNameChange.bind(this)}
-                                theme={theme}
-                                style={textBoxStyle}
-                            />
-
-                            <TextInput
-                                underlineColor="transparent"
-                                mode={"flat"}
-                                value={this.state.email}
-                                label='Email'
-                                placeholder="email@example.com"
-                                onFocus={() => this.setState({ emailLabel: "" })}
-                                onBlur={() => this.setState({ emailLabel: this.state.email.length === 0 ? "Email" : "" })}
-                                onChangeText={this.handleEmailChange.bind(this)}
-                                theme={theme}
-                                style={textBoxStyle}
-                            />
-
-                            <TextInput
-                                underlineColor="transparent"
-                                secureTextEntry={true}
-                                mode={"flat"}
-                                value={this.state.password}
-                                label='Password'
-                                placeholder="Enter your new password"
-                                onFocus={() => this.setState({ passLabel: "" })}
-                                onBlur={() => this.setState({ passLabel: this.state.password.length === 0 ? "Password" : "" })}
-                                onChangeText={this.handlePasswordChange.bind(this)}
-                                theme={theme}
-                                style={textBoxStyle}
-                            />
-                        </View>
                         </ImageBackground>
                     </View>
                     <View style={styles.slide4}>
@@ -294,68 +217,21 @@ class Onboarding extends React.Component {
                             source={require("../assets/images/Page4.png")}
                             style={styles.onboardingBg}
                         >
-                        <View style={styles.slide4text}>
-                            <DatePicker
-                                date={this.state.date}
-                                mode="date"
-                                placeholder="Date of Birth"
-                                format="MM-DD-YYYY"
-                                confirmBtnText="Confirm"
-                                cancelBtnText="Cancel"
-                                customStyles={{
-                                    dateInput: {
-                                        marginLeft: 36,
-                                        borderBottomLeftRadius: 30,
-                                        borderBottomRightRadius: 30,
-                                        borderTopLeftRadius: 30,
-                                        borderTopRightRadius: 30,
-                                        height: 50
-                                    }
-                                }}
-                                showIcon={false}
-                                style={{ marginLeft: '4%', marginBottom: "8%", width: "83%"}}
-                                onDateChange={(date) => {this.setState({date: date})}}
-                                androidMode='spinner'
-                            />
-
-                            <TextInput
-                                underlineColor="transparent"
-                                mode={"flat"}
-                                value={this.state.uni}
-                                label='University'
-                                placeholder="Enter your university"
-                                onFocus={() => this.setState({ uniLabel: "" })}
-                                onBlur={() => this.setState({ uniLabel: this.state.uni.length === 0 ? "University" : "" })}
-                                onChangeText={this.handleUniChange.bind(this)}
-                                theme={theme}
-                                style={textBoxStyle}
-                            />
-
-                            <TextInput
-                                underlineColor="transparent"
-                                mode={"flat"}
-                                value={this.state.major}
-                                label='Major'
-                                placeholder="Enter your major"
-                                onFocus={() => this.setState({ majorLabel: "" })}
-                                onBlur={() => this.setState({ majorLabel: this.state.major.length === 0 ? "Major" : "" })}
-                                onChangeText={this.handleMajorChange.bind(this)}
-                                theme={theme}
-                                style={textBoxStyle}
-                            />
-                            <Button mode="contained" style={styles.signupbutt}>
-                                Sign Up
-                            </Button>
-                            <View style={styles.bottomsignup}>
-                                <Button transparent='true' labelStyle={{color: "#FFF"}} style={styles.signupredirect}>
-                                    Log in
+                        <View style={styles.slide4content}>
+                            <Image style={styles.onboardinglogo} source={require('../assets/images/Findr_white2x.png')}/>
+                            <View style={styles.slide4buttons}>
+                                <Button mode="contained" style={styles.onBoardingButt}>
+                                    Sign Up
                                 </Button>
-                            </View>   
+                                <Image style={styles.onBoardingSep} source={require('../assets/images/OR_photo.png')}/>
+                                <Button mode="contained" style={styles.onBoardingButt}>
+                                    Log in
+                                </Button> 
+                            </View>
                         </View>
                         </ImageBackground>
                     </View>
                 </Swiper>
-                
             </View>
         );
     }

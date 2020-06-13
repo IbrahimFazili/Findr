@@ -137,7 +137,7 @@ class SignUp extends React.Component {
                 <Image style={styles.logo} source={require('../assets/images/Findr_white2x.png')}/>
                 <Swiper
                     style={styles.wrapper}
-                    height={350}
+                    height={300}
                     onMomentumScrollEnd={(e, state, context) =>
                         console.log('index:', state.index)
                     }

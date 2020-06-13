@@ -31,6 +31,7 @@ class Matches extends React.Component {
     const data = await this.state.API.loadData(
       await AsyncStorage.getItem("storedEmail")
     );
+    this.scrollView.scrollToEnd({animated: true, duration: 1000})
     this.setState({ cards: data });
   }
 
@@ -58,6 +59,7 @@ class Matches extends React.Component {
 
             <View style={{ flex: 3, height: 130 }}>
               <ScrollView
+                ref={ref => this.scrollView = ref}
                 horizontal={true}
                 showsHorizontalScrollIndicator={false}
                 contentContainerStyle={{

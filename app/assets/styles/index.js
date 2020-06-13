@@ -473,10 +473,11 @@ export default StyleSheet.create({
 
   //COMPONENT - SIGNUP
   logo: {
-    marginLeft: "40%",
-    marginTop: 70,
-    width: 100,
-    height: 100,
+    alignSelf: 'center',
+    marginTop: DIMENSION_HEIGHT * 0.1,
+    marginLeft: DIMENSION_WIDTH * 0.05,
+    width: DIMENSION_WIDTH * 0.35,
+    height: DIMENSION_HEIGHT * 0.15
   },
 
   slide3: {
@@ -565,15 +566,19 @@ export default StyleSheet.create({
   },
 
   //CONTAINERS - Onboarding
-  // onboardingWrapper: {
-  //   flex: 1,
-  // },
+  onboardingWrapper: {
+    zIndex: -1,
+  },
   onboardingBg: {
     flex: 1,
     resizeMode: "contain",
     width: DIMENSION_WIDTH,
     height: DIMENSION_HEIGHT,
-    zIndex: -1
+  },
+  slideOneTop:{
+    marginTop: DIMENSION_HEIGHT*0.15,
+    flexDirection: 'column',
+    alignItems: 'center'
   },
   slide3text: {
     marginTop: DIMENSION_HEIGHT*0.3
@@ -594,7 +599,48 @@ export default StyleSheet.create({
     color: "white",
     marginTop: 10,
   },
-  // slideoneCarousel: {
-  //   backgroundColor: "black"
-  // }
+  internalWrapper: {
+    position: "absolute",
+    marginTop: DIMENSION_HEIGHT*0.25,
+    zIndex: 5,
+    backgroundColor: 'transparent'
+  },
+  slideoneCarousel: {
+    marginTop: DIMENSION_HEIGHT*0.25,
+    height: 200,
+    zIndex: Number.MAX_VALUE,
+  },
+  onBoardingButt: {
+    backgroundColor: "#1a5d57",
+    borderRadius: 20,
+    borderBottomLeftRadius: 10,
+    borderBottomRightRadius: 10,
+    borderTopLeftRadius: 10,
+    borderTopRightRadius: 10,
+    width: 120,
+    height: 40,
+  },
+  slide4content: {
+    padding: DIMENSION_HEIGHT*0.15,
+    flexDirection: 'column',
+    alignItems: 'center'
+  },
+  slide4buttons: {
+    marginTop: DIMENSION_HEIGHT*0.2,
+    flexDirection: 'column',
+    alignItems: 'center',
+    marginBottom: DIMENSION_HEIGHT * 0.2
+  },
+  onboardinglogo: {
+    alignSelf: 'center',
+    marginTop: DIMENSION_HEIGHT * 0.1,
+    marginLeft: DIMENSION_WIDTH * 0.05,
+    width: DIMENSION_WIDTH * 0.35,
+    height: DIMENSION_HEIGHT * 0.2
+  },
+  onBoardingSep: {
+    marginTop: DIMENSION_HEIGHT*0.05,
+    marginBottom: DIMENSION_HEIGHT*0.02,
+    width: 300,
+  }
 });
