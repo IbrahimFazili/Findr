@@ -116,30 +116,6 @@ app.get("/fetchChatData", (req, res) => {
 
 });
 
-app.post("/updateCourses", urlEncodedParser, (req, res) => {
-    DB.fetchUsers({ email: req.body.email }).then((result) => {
-        if(result.length === 0) {
-            console.log(`No user with email ${req.body.email}`);
-            res.status(404).send("404: User with email " + req.body.email + " couldn't be found");
-        }
-
-        user = result[0];
-        user.courses = req.body.updatedCourses;
-
-        DB.updateUser({ courses: user.courses }, { email: user.email }).then((value) => {
-            res.status(201).send(JSON.stringify({ success: true }));
-        }).catch((err) => {
-            res.status(500).send("Server Error");
-            console.log(err);
-        });
-
-    }).catch((err) => {
-        console.log(err);
-        res.status(500).send("Server Error");
-    });
-
-});
-
 app.post("/new-user", urlEncodedParser, (req, res) => {
     const requestData = {
         name: req.body.name,
@@ -151,7 +127,9 @@ app.post("/new-user", urlEncodedParser, (req, res) => {
         age: Number(req.body.age),
         chats: [],
         courses: [],
-        bio: ""
+        bio: "",
+        blueConnections: [],
+        greenConnections: []
     };
 
 
