@@ -125,6 +125,9 @@ class SignUp extends React.Component {
         const signUpResponse = await API.requestSignUp(data);
         if(signUpResponse.status === 201) {
             // signup successful, store email locally and upload profile picture (if provided)
+            const responseData = await signUpResponse.json();
+
+            API.uploadPicture(responseData.signedPutUrl, null); // need to replace null with the image
             await AsyncStorage.setItem('storedEmail', data.email);
             this.props.navigation.navigate('AppScreen');
         }
