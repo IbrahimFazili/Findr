@@ -25,7 +25,8 @@ const thumnailStyle = {
 class Matches extends React.Component {
   constructor(props) {
     super(props);
-    this.state = { API: new APIConnection(), cards: [], visible: false };
+    this.state = { API: new APIConnection(), cards: [], visible: false, name: "", courses: "",
+  description: ""};
   }
 
   async componentDidMount() {
@@ -94,7 +95,8 @@ class Matches extends React.Component {
               data={this.state.cards}
               keyExtractor={(item, index) => index.toString()}
               renderItem={({ item }) => (
-                <TouchableOpacity onPress={()=> this.setState({visible: true})}>
+                <TouchableOpacity onPress={()=> this.setState({visible: true, name: item.name, courses: item.courses, 
+                description: item.description})}>
                   <CardItem
                     image={{ uri: item.image }}
                     name={item.name}
@@ -106,7 +108,9 @@ class Matches extends React.Component {
             />
           </ScrollView>
 
-          <ProfilePopup visible={this.state.visible} />
+          <ProfilePopup visible={this.state.visible} courses={this.state.courses}
+          name={this.state.name}
+          description={this.state.description}/>
           
         </View>
       </ImageBackground>

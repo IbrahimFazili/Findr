@@ -184,6 +184,34 @@ export default StyleSheet.create({
   popupCard: {
     backgroundColor: WHITE,
     borderRadius: 20,
+    maxHeight: DIMENSION_HEIGHT * 0.7,
+    maxWidth: DIMENSION_WIDTH * 0.7,
+    position: "absolute",
+    left: DIMENSION_WIDTH * 0.1,
+    top: DIMENSION_HEIGHT * 0.1,
+    borderRadius: 30,
+  },
+
+  popupCardTitle:{
+    fontSize: 20,
+    fontWeight: "bold",
+    color: "#1a5d57",
+  },
+
+  popupCardTitlePosition:{
+    flex:1,
+    alignItems:"center",
+    justifyContent:"center",
+    // bottom: DIMENSION_HEIGHT * 0.23,
+    top: DIMENSION_HEIGHT * 0.23
+  },
+
+  biodata: {
+    fontSize: 14,
+    color: "#1a5d57",
+    top: DIMENSION_HEIGHT * 0.3,
+    left: DIMENSION_WIDTH * 0.1,
+    paddingBottom: 30
   },
 
   // COMPONENT - CITY
@@ -314,6 +342,7 @@ export default StyleSheet.create({
     width: DIMENSION_WIDTH,
     height: DIMENSION_HEIGHT,
   },
+
   top: {
     paddingTop: 50,
     marginHorizontal: 10,
@@ -439,6 +468,7 @@ export default StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     marginRight: 10,
+    
   },
   roundedButton: {
     justifyContent: "center",
