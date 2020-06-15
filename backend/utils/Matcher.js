@@ -75,14 +75,14 @@ class Matcher {
     async generateGraph(email) {
         try {
             const user = (await DB.fetchUsers({ email }))[0];
-            let crs_regexes = [];
-            for (let i = 0; i < user.courses.length; i++) {
-                const course = user.courses[i];
-                crs_regexes.push(new RegExp("^" + course + "$", "i"));
+            let keyword_regexes = [];
+            for (let i = 0; i < user.keywords.length; i++) {
+                const keyword = user.keywords[i];
+                keyword_regexes.push(new RegExp("^" + keyword + "$", "i"));
             }
 
             try {
-                let potentialConnections = await DB.fetchUsers({ courses: { $in: crs_regexes } });
+                let potentialConnections = await DB.fetchUsers({ keywords: { $in: keyword_regexes } });
                 potentialConnections = potentialConnections.filter((value) => {
                     return user.blueConnections.findIndex((id) => id.equals(value._id)) === -1 &&
                     !(value._id.equals(user._id));

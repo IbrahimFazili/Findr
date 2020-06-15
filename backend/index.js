@@ -116,6 +116,21 @@ app.get("/fetchChatData", (req, res) => {
 
 });
 
+app.post("/updateKeywords", urlEncodedParser, (req, res) => {
+    let keywords = req.body.keywords;
+    for (let i = 0; i < keywords.length; i++) {
+        keywords[i] = String(keywords[i]).toLowerCase();
+    }
+
+    DB.updateUser({ keywords }, { email: req.body.email }).then((updateRes) => {
+        res.status(201).send("success");
+
+    }).catch((err) => {
+        console.log(err);
+        res.status(500).send("Database Update Error");
+    });
+});
+
 app.post("/new-user", urlEncodedParser, (req, res) => {
     const requestData = {
         name: req.body.name,
@@ -126,7 +141,7 @@ app.post("/new-user", urlEncodedParser, (req, res) => {
         major: req.body.major,
         age: Number(req.body.age),
         chats: [],
-        courses: [],
+        keywords: [],
         bio: "",
         blueConnections: [],
         greenConnections: []
@@ -177,18 +192,20 @@ app.post("/login", urlEncodedParser, (req, res) => {
 });
 
 // DB.fetchUsers({}).then((users) => {
-//     // users.forEach((user) => {
-//     //     user.blueConnections = [];
-//     //     user.greenConnections = [];
-//     //     DB.updateUser(user, {email:user.email}).then((res) => {
-//     //         console.log(`${user.email} updated`);
-//     //     });
-//     // });
+//     users.forEach((user) => {
+//         for (let i = 0; i < user.keywords.length; i++) {
+//             user.keywords[i] = user.keywords[i].toLowerCase();
+//         }
 
-//     users.forEach(async (user) => {
-//         const result = await matcher.generateGraph(user.email);
-//         console.log(`Graph generation for ${user.name} ${result ? "successful" : "failed"}`);
+//         DB.updateUser(user, {email:user.email}).then((res) => {
+//             console.log(`${user.email} updated`);
+//         });
 //     });
+
+//     // users.forEach(async (user) => {
+//     //     const result = await matcher.generateGraph(user.email);
+//     //     console.log(`Graph generation for ${user.name} ${result ? "successful" : "failed"}`);
+//     // });
 // });
 
 // matcher.handleLeftSwipe('harsh@gmail.com', 'michael.scott@dundermifflin.com').then((res) => {
@@ -197,16 +214,16 @@ app.post("/login", urlEncodedParser, (req, res) => {
 
 function addDummyUser() {
     const requestData = {
-        name: "Raymond Reddington",
-        email: "reddington@gmail.com",
-        password: bcrypt.hashSync("Red0", 10),
+        name: "Sheldon Cooper",
+        email: "sheldon.cooper@caltech.edu",
+        password: bcrypt.hashSync("Cooper73", 10),
         gender: "M",
-        uni: "Dartmouth College",
-        major: "Life Science",
-        age: 60,
+        uni: "California Institute of Technology",
+        major: "Physics",
+        age: 40,
         chats: [],
-        courses: ["ECO100", "LIN101", "SOC100"],
-        bio: "Value Loyalty Above All Else",
+        keywords: ["CSC209", "MAT224", "PHY136"],
+        bio: "One cries because one is sad. I cry because others are stupid and that makes me sad",
         blueConnections: [],
         greenConnections: []
     };
