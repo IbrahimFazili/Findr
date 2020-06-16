@@ -191,6 +191,13 @@ app.post("/login", urlEncodedParser, (req, res) => {
     });
 });
 
+app.post("/update", urlEncodedParser, (req, res) => {
+    console.log("Webhook update recieved");
+    console.log(req.body);
+    res.status(200);
+    res.end();
+});
+
 // DB.fetchUsers({}).then((users) => {
 //     users.forEach((user) => {
 //         for (let i = 0; i < user.keywords.length; i++) {
