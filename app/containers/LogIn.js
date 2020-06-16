@@ -82,7 +82,7 @@ class LogIn extends React.Component {
         const logInAttempt = await API.logIn(data);
         if(logInAttempt.success) {
             // store email
-            const credSaveStatus = await AsyncStorage.setItem('storedEmail', logInAttempt.user.email);
+            await AsyncStorage.setItem('storedEmail', logInAttempt.user.email);
             this.props.navigation.navigate('AppScreen');
         }
         else {
