@@ -109,7 +109,6 @@ class SignUp extends React.Component {
     async handleSubmit() {
         if(!this.state.isNameValid || !this.state.isEmailValid || !this.state.isPasswordValid
             || !this.state.date || !this.state.isUniValid || !this.state.isMajorValid) {
-            console.log(this.state);
             console.log('invalid inputs');
             return;
         }
@@ -120,12 +119,15 @@ class SignUp extends React.Component {
             password: this.state.password,
             uni: this.state.uni,
             major: this.state.major,
-            age: this.state.date,
-            // image: req.body.image
+            age: this.state.date
         }
 
-        const signUpStatus = await API.requestSignUp(data);
-        if(signUpStatus === 201) {
+        const signUpResponse = await API.requestSignUp(data);
+        if(signUpResponse.status === 201) {
+            // signup successful, store email locally and upload profile picture (if provided)
+            const responseData = await signUpResponse.json();
+
+            API.uploadPicture(responseData.signedPutUrl, null); // need to replace null with the image
             await AsyncStorage.setItem('storedEmail', data.email);
             this.props.navigation.navigate('AppScreen');
         }

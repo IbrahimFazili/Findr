@@ -45,11 +45,11 @@ class Matches extends React.Component {
         style={styles.bg}
       >
         <View style={styles.containerMatches}>
-          <Image
-            style={styles.matchLogo}
-            source={require("../assets/images/Findr_logo2x.png")}
-          />
           <ScrollView>
+            <Image
+              style={styles.matchLogo}
+              source={require("../assets/images/Findr_logo2x.png")}
+            />
             <View style={styles.matchTop}>
               <Text style={styles.matchTitle}>Pending Matches</Text>
               <TouchableOpacity>

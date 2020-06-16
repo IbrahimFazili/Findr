@@ -48,6 +48,7 @@ const CardItem = ({
       color: "#1a5d57",
       fontSize: variant ? 15 : 30,
       alignSelf: "center",
+      marginLeft: 3,
     },
   ];
 
@@ -89,7 +90,7 @@ const CardItem = ({
       )} */}
 
       {/* NAME */}
-      <Text style={nameStyle}>{name}</Text>
+      <Text style={nameStyle} numberOfLines={1}>{name}</Text>
 
       {/* Courses */}
       {courses && (
