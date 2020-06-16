@@ -9,7 +9,7 @@ const CardItem = ({
   description,
   image,
   name,
-  courses,
+  keywords,
   onPressLeft,
   onPressRight,
   status,
@@ -92,12 +92,12 @@ const CardItem = ({
       {/* NAME */}
       <Text style={nameStyle} numberOfLines={1}>{name}</Text>
 
-      {/* Courses */}
-      {courses && (
+      {/* Keywords */}
+      {keywords && (
         <Text style={CourseHeaderStyle}>
-          {courses.map((item, index) => (
+          {keywords.map((item, index) => (
             <Text key={String(index)}>
-              {index === courses.length - 1 ? " " + item : " " + item + ","}
+              {index === keywords.length - 1 ? " " + item.toUpperCase() : " " + item.toUpperCase() + ","}
             </Text>
           ))}
         </Text>
