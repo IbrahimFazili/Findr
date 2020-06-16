@@ -11,10 +11,16 @@ const AWS_Presigner = require('./utils/AWSPresigner');
 const Chat = require('./utils/Chat').Chat;
 const matcher = new (require('./utils/Matcher').Matcher);
 
+var isServerOutdated = false;
+
 app.use(bodyParser.json());
 
 app.get("/", (req, res) => {
-    res.status(200).send("Server is Alive");
+    if(!isServerOutdated) {
+        res.status(200).send("Server is Alive");
+    } else {
+        res.status(503).send("Server is updating...");
+    }
 });
 
 app.get("/fetchUsers", (req, res) => {
@@ -192,8 +198,11 @@ app.post("/login", urlEncodedParser, (req, res) => {
 });
 
 app.post("/update", urlEncodedParser, (req, res) => {
-    console.log("Webhook update recieved");
-    console.log(req.body);
+    const isMaster = req.body.ref === 'refs/heads/master';
+    if(isMaster) {
+        isServerOutdated = true;
+    }
+
     res.status(200);
     res.end();
 });
