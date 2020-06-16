@@ -473,11 +473,11 @@ export default StyleSheet.create({
 
   //COMPONENT - SIGNUP
   logo: {
-    alignSelf: 'center',
+    alignSelf: "center",
     marginTop: DIMENSION_HEIGHT * 0.1,
     marginLeft: DIMENSION_WIDTH * 0.05,
     width: DIMENSION_WIDTH * 0.35,
-    height: DIMENSION_HEIGHT * 0.15
+    height: DIMENSION_HEIGHT * 0.15,
   },
 
   slide4: {
@@ -569,28 +569,29 @@ export default StyleSheet.create({
     width: DIMENSION_WIDTH,
     height: DIMENSION_HEIGHT,
   },
-  slideOneTop:{
-    flexDirection: 'column',
-    alignItems: 'center'
+  slideOneTop: {
+    marginTop: DIMENSION_HEIGHT * 0.12,
+    flexDirection: "column",
+    alignItems: "center",
   },
-  slideTwoContent:{
-    flexDirection: 'column',
-    alignItems: 'center'
+  slideTwoContent: {
+    flexDirection: "column",
+    alignItems: "center",
   },
   slideTwoHeader: {
-    marginTop: DIMENSION_HEIGHT * 0.17,
+    marginTop: DIMENSION_HEIGHT * 0.05,
     color: "white",
-    fontSize: 30
+    fontSize: 30,
   },
   slideTwoNormal: {
     color: "white",
-    fontSize: 18
+    fontSize: 18,
   },
   internalWrapper: {
     position: "absolute",
     marginTop: DIMENSION_HEIGHT * 0.25,
     zIndex: 5,
-    backgroundColor: 'transparent'
+    backgroundColor: "transparent",
   },
   slideoneCarousel: {
     marginTop: DIMENSION_HEIGHT * 0.2,
@@ -606,24 +607,24 @@ export default StyleSheet.create({
     width: 120,
     height: 40,
     alignItems: "center",
-    textAlignVertical: "center"
+    textAlignVertical: "center",
   },
   slide4content: {
     padding: DIMENSION_HEIGHT * 0.1,
-    flexDirection: 'column',
-    alignItems: 'center'
+    flexDirection: "column",
+    alignItems: "center",
   },
   slide4buttons: {
     marginTop: DIMENSION_HEIGHT * 0.2,
-    flexDirection: 'column',
-    alignItems: 'center',
-    marginBottom: DIMENSION_HEIGHT * 0.2
+    flexDirection: "column",
+    alignItems: "center",
+    marginBottom: DIMENSION_HEIGHT * 0.2,
   },
   onboardinglogo: {
     marginLeft: DIMENSION_WIDTH * 0.11,
     marginTop: DIMENSION_HEIGHT * 0.1,
     width: DIMENSION_WIDTH * 0.45,
-    height: DIMENSION_HEIGHT * 0.2
+    height: DIMENSION_HEIGHT * 0.2,
   },
   onBoardingSep: {
     marginTop: DIMENSION_HEIGHT * 0.035,
@@ -631,30 +632,42 @@ export default StyleSheet.create({
   },
   onBoardingButtText: {
     color: "white",
-    marginTop: 10
+    marginTop: 10,
   },
   slide3content: {
-    flexDirection: 'column',
-    alignItems: 'center',
+    marginLeft: DIMENSION_WIDTH * 0.5,
+    flexDirection: "column",
+    alignItems: "center",
   },
   slide3: {
-    marginHorizontal: DIMENSION_HEIGHT * 0.06
+    // marginHorizontal: DIMENSION_HEIGHT * 0.06,
   },
   slide3Header: {
-    marginTop: DIMENSION_HEIGHT * 0.17,
-    marginLeft: DIMENSION_HEIGHT * 0.1,
+    marginTop: DIMENSION_HEIGHT * 0.05,
+    marginLeft: DIMENSION_WIDTH * 0.32,
     color: "white",
-    fontSize: 30
+    fontSize: 30,
   },
   slide3Normal: {
     color: "white",
     fontSize: 18,
-    marginLeft: DIMENSION_HEIGHT * 0.045,
+    marginLeft: DIMENSION_HEIGHT * 0.09,
   },
   slide3line: {
-    width: 50, 
-    marginLeft: DIMENSION_HEIGHT * 0.16,
-    marginTop: DIMENSION_HEIGHT * 0.015, 
-    marginBottom: DIMENSION_HEIGHT * 0.015
-  }
+    width: 50,
+    marginLeft: DIMENSION_HEIGHT * 0.2,
+    marginTop: DIMENSION_HEIGHT * 0.015,
+    marginBottom: DIMENSION_HEIGHT * 0.015,
+  },
+  OBnext: {
+    backgroundColor: "white",
+    width: 150,
+    height: 50,
+    borderRadius: 40,
+  },
+  OBnextText: {
+    color: "black",
+    marginTop: 15,
+    marginLeft: 57,
+  },
 });
