@@ -207,13 +207,16 @@ export default StyleSheet.create({
     top: DIMENSION_HEIGHT * 0.23
   },
 
+
+
   biodata: {
     fontSize: 14,
     color: "#1a5d57",
     top: DIMENSION_HEIGHT * 0.3,
     left: DIMENSION_WIDTH * 0.1,
-    paddingBottom: 30
+    paddingBottom: 30,
   },
+
 
   // COMPONENT - CITY
   city: {

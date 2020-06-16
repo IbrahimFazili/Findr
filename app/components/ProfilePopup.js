@@ -34,12 +34,23 @@ class ProfilePopup extends React.Component {
     constructor(props) {
         super(props);
         this.state = { isVisible: props.visible, 
-        courses: props.courses, description: props.description};
+        Name: props.name,
+        Courses: props.courses,
+        Description: props.description};
     }
 
     componentWillReceiveProps(props) {
         if(props.visible !== this.state.isVisible) {
             this.setState({ isVisible: props.visible })
+        }
+        if(props.name !== this.state.Name) {
+            this.setState({ Name: props.name })
+        }
+        if(props.courses !== this.state.Courses) {
+            this.setState({ Courses: props.courses })
+        }
+        if(props.description !== this.state.Description) {
+            this.setState({ Description: props.description })
         }
     }
 
@@ -50,7 +61,7 @@ class ProfilePopup extends React.Component {
             onBackdropPress={() => this.setState({ isVisible: false })}
             style={styles.popupCard}
             transparent={true}
-            animationType="fade"
+            animationType={"fade"}
             >
 
             <Swiper
@@ -64,33 +75,53 @@ class ProfilePopup extends React.Component {
                 nextPos: 'right',
                 nextTitle: '>',
             }}
-            paginationStyle={{bottom: DIMENTIONS.height * 0.80}}>
+            paginationStyle={{bottom: DIMENTIONS.height * 0.20}}>
                 
                 <View>
                     <View style={styles.popupCardTitlePosition}>
                         <Text style={styles.popupCardTitle}>Additional Info</Text>
                     </View>
                     <View>
-                        <Text style={styles.biodata}>Courses: {this.props.courses}</Text>
+                        <Text style={styles.biodata}>Name: {this.state.Name}</Text>
+                    </View>
+                    <View>
+                        <Text style={styles.biodata}>University: University of Toronto</Text>
+                    </View>
+                    <View>
+                        <Text style={styles.biodata}>Major: Life Sciences</Text>
+                    </View>
+                    <View>
+                        <Text style={styles.biodata}>Courses: Eco100, ITA101, CSC108, 
+                        MGM101, ANT102</Text>
+                    </View>
+                    <View>
+                        <Text style={styles.biodata}>Bio: {this.state.description}</Text>
+                    </View>
+                </View>
+                <View>
+                    <View style={styles.popupCardTitlePosition}>
+                        <Text style={styles.popupCardTitle}>Additional Info</Text>
                     </View>
                     <View>
                         <Text style={styles.biodata}>Projects: </Text>
                     </View>
                     <View>
-                        <Text style={styles.biodata}>Work Exp: </Text>
+                        <Text style={styles.biodata}>Skills: </Text>
                     </View>
                     <View>
-                        <Text style={styles.biodata}>Courses: </Text>
+                        <Text style={styles.biodata}>Relevant Experience: </Text>
+                    </View>
+                </View>
+                <View>
+                    <View style={styles.popupCardTitlePosition}>
+                        <Text style={styles.popupCardTitle}>Additional Info</Text>
                     </View>
                     <View>
-                        <Text style={styles.biodata}>Projects: </Text>
+                        <Text style={styles.biodata}>Random Stuff: </Text>
                     </View>
-                </View>
-                <View style={styles.popupCardTitlePosition}>
-                    <Text style={styles.popupCardTitle}>Additional Info</Text>
-                </View>
-                <View style={styles.popupCardTitlePosition}>
-                    <Text style={styles.popupCardTitle}>Additional Info</Text>
+                    <View>
+                        <Text style={styles.biodata}>More Information: </Text>
+                    </View>
                 </View>
             </Swiper>
 
