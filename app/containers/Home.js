@@ -24,10 +24,10 @@ class Home extends React.Component {
   async componentWillMount() {
     try {
       let storedEmail = await AsyncStorage.getItem("storedEmail");
-      if (storedEmail === null) {
-        this.props.navigation.navigate("SignUp");
-      }
-      // this.props.navigation.navigate("Onboarding");
+      // if (storedEmail === null) {
+      //   this.props.navigation.navigate("SignUp");
+      // }
+      this.props.navigation.navigate("Onboarding");
     } catch (err) {
       console.log(err);
     }

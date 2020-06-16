@@ -480,12 +480,6 @@ export default StyleSheet.create({
     height: DIMENSION_HEIGHT * 0.15
   },
 
-  slide3: {
-    flex: 1,
-    justifyContent: "center",
-    backgroundColor: "transparent",
-  },
-
   slide4: {
     flex: 1,
     justifyContent: "center",
@@ -576,42 +570,34 @@ export default StyleSheet.create({
     height: DIMENSION_HEIGHT,
   },
   slideOneTop:{
-    marginTop: DIMENSION_HEIGHT*0.15,
     flexDirection: 'column',
     alignItems: 'center'
   },
-  slide3text: {
-    marginTop: DIMENSION_HEIGHT*0.3
-  },
-  slide4text: {
-    marginTop: DIMENSION_HEIGHT*0.25
-  },
   slideTwoContent:{
-    padding: DIMENSION_HEIGHT*0.15,
     flexDirection: 'column',
     alignItems: 'center'
   },
   slideTwoHeader: {
+    marginTop: DIMENSION_HEIGHT * 0.17,
     color: "white",
-    fontSize: 26
+    fontSize: 30
   },
   slideTwoNormal: {
     color: "white",
-    marginTop: 10,
+    fontSize: 18
   },
   internalWrapper: {
     position: "absolute",
-    marginTop: DIMENSION_HEIGHT*0.25,
+    marginTop: DIMENSION_HEIGHT * 0.25,
     zIndex: 5,
     backgroundColor: 'transparent'
   },
   slideoneCarousel: {
-    marginTop: DIMENSION_HEIGHT*0.25,
+    marginTop: DIMENSION_HEIGHT * 0.2,
     height: 200,
-    zIndex: Number.MAX_VALUE,
   },
   onBoardingButt: {
-    backgroundColor: "#1a5d57",
+    backgroundColor: "#1b4a45",
     borderRadius: 20,
     borderBottomLeftRadius: 10,
     borderBottomRightRadius: 10,
@@ -619,28 +605,56 @@ export default StyleSheet.create({
     borderTopRightRadius: 10,
     width: 120,
     height: 40,
+    alignItems: "center",
+    textAlignVertical: "center"
   },
   slide4content: {
-    padding: DIMENSION_HEIGHT*0.15,
+    padding: DIMENSION_HEIGHT * 0.1,
     flexDirection: 'column',
     alignItems: 'center'
   },
   slide4buttons: {
-    marginTop: DIMENSION_HEIGHT*0.2,
+    marginTop: DIMENSION_HEIGHT * 0.2,
     flexDirection: 'column',
     alignItems: 'center',
     marginBottom: DIMENSION_HEIGHT * 0.2
   },
   onboardinglogo: {
-    alignSelf: 'center',
+    marginLeft: DIMENSION_WIDTH * 0.11,
     marginTop: DIMENSION_HEIGHT * 0.1,
-    marginLeft: DIMENSION_WIDTH * 0.05,
-    width: DIMENSION_WIDTH * 0.35,
+    width: DIMENSION_WIDTH * 0.45,
     height: DIMENSION_HEIGHT * 0.2
   },
   onBoardingSep: {
-    marginTop: DIMENSION_HEIGHT*0.05,
-    marginBottom: DIMENSION_HEIGHT*0.02,
-    width: 300,
+    marginTop: DIMENSION_HEIGHT * 0.035,
+    marginBottom: DIMENSION_HEIGHT * 0.035,
+  },
+  onBoardingButtText: {
+    color: "white",
+    marginTop: 10
+  },
+  slide3content: {
+    flexDirection: 'column',
+    alignItems: 'center',
+  },
+  slide3: {
+    marginHorizontal: DIMENSION_HEIGHT * 0.06
+  },
+  slide3Header: {
+    marginTop: DIMENSION_HEIGHT * 0.17,
+    marginLeft: DIMENSION_HEIGHT * 0.1,
+    color: "white",
+    fontSize: 30
+  },
+  slide3Normal: {
+    color: "white",
+    fontSize: 18,
+    marginLeft: DIMENSION_HEIGHT * 0.045,
+  },
+  slide3line: {
+    width: 50, 
+    marginLeft: DIMENSION_HEIGHT * 0.16,
+    marginTop: DIMENSION_HEIGHT * 0.015, 
+    marginBottom: DIMENSION_HEIGHT * 0.015
   }
 });
