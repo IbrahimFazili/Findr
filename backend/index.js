@@ -66,13 +66,18 @@ app.get("/fetchConnections", (req, res) => {
         }
 
         const user = result[0];
-        DB.fetchUsers({ _id: { $in: user.blueConnections } }).then((connections) => {
-            connections.forEach((element) => {
-                element.password = null;
-                element.chats = null;
-                element.blueConnections = null;
-                element.greenConnections = null;
-            });
+        DB.fetchUsers({ _id: { $in: user.blueConnections } }).then(async (connections) => {
+
+            for (let i = 0; i < connections.length; i++) {
+                const element = connections[i];
+
+                delete element.password;
+                delete element.chats;
+                delete element.blueConnections;
+                delete element.greenConnections;
+
+                element.image = await AWS_Presigner.generateSignedGetUrl("user_images/" + element.email);
+            }
 
             res.status(200).send(JSON.stringify(connections));
 
