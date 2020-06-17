@@ -622,7 +622,7 @@ export default StyleSheet.create({
   },
   onboardinglogo: {
     marginLeft: DIMENSION_WIDTH * 0.11,
-    marginTop: DIMENSION_HEIGHT * 0.1,
+    marginTop: DIMENSION_HEIGHT * 0.001,
     width: DIMENSION_WIDTH * 0.45,
     height: DIMENSION_HEIGHT * 0.2,
   },

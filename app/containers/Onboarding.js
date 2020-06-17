@@ -15,7 +15,6 @@ import styles from "../assets/styles";
 import Swiper from "react-native-swiper";
 import APIConnection from "../assets/data/APIConnection";
 import CardItem from "../components/CardItem";
-import Icon from "../components/Icon";
 
 const INPUT_RANGE = [0, 1, 2, 3];
 const OUTPUT_RANGE = ["#8B9EAF", "#4D617C", "#679389", "#1A5D57"];
@@ -70,16 +69,14 @@ class Onboarding extends React.Component {
       <Animated.View style={[styles.onboardingBg, { backgroundColor }]}>
         <View style={{ width: "100%", height: "100%" }}>
           <Swiper
-            showsHorizontalScrollIndicator
             bounces={true}
             style={styles.onboardingWrapper}
             height={FULL_HEIGHT}
+            loop={false}
             onIndexChanged={(newIndex) => {
               this.onIndexChanged(newIndex);
               this.setState({ idxActive: newIndex });
             }}
-            // onIndexChanged={onIndexChanged.bind(this)}
-            // onIndexChanged={idxActive => this.setState({idxActive})}
             ref={"swiper"}
             dot={
               <View
@@ -112,7 +109,6 @@ class Onboarding extends React.Component {
               left: null,
               right: 10,
             }}
-            loop={false}
           >
             <View style={styles.slide1}>
               <View style={styles.slideOneTop}>
@@ -273,7 +269,7 @@ class Onboarding extends React.Component {
                   style={{
                     width: 80,
                     height: 20,
-                    marginTop: FULL_HEIGHT * 0.26,
+                    marginTop: FULL_HEIGHT * 0.16,
                     marginLeft: FULL_WIDTH * 0.06,
                     marginBottom: FULL_HEIGHT * 0.015,
                   }}
@@ -286,14 +282,20 @@ class Onboarding extends React.Component {
                   source={require("../assets/images/Findr_white2x.png")}
                 />
                 <View style={styles.slide4buttons}>
-                  <TouchableOpacity style={styles.onBoardingButt}>
+                  <TouchableOpacity
+                    onPress={() => this.props.navigation.navigate("SignUp")}
+                    style={styles.onBoardingButt}
+                  >
                     <Text style={styles.onBoardingButtText}>Sign Up</Text>
                   </TouchableOpacity>
                   <Image
                     style={styles.onBoardingSep}
                     source={require("../assets/images/OR_photo.png")}
                   />
-                  <TouchableOpacity style={styles.onBoardingButt}>
+                  <TouchableOpacity
+                    onPress={() => this.props.navigation.navigate("LogIn")}
+                    style={styles.onBoardingButt}
+                  >
                     <Text style={styles.onBoardingButtText}>Log In</Text>
                   </TouchableOpacity>
                 </View>
