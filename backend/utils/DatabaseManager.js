@@ -5,7 +5,6 @@ const MONGO_URL =
 var client = new MongoClient(MONGO_URL, { useUnifiedTopology: true, useNewUrlParser: true });
 
 const COLLECTION_USERS = "Users";
-const COLLECTION_PROFILE_CARDS = "ProfileCards";
 const COLLECTION_CHATS = "ChatStorage";
 const DB = "test";
 
