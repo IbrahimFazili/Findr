@@ -121,7 +121,6 @@ class SignUp extends React.Component {
       !this.state.isUniValid ||
       !this.state.isMajorValid
     ) {
-      console.log(this.state);
       console.log("invalid inputs");
       return;
     }
@@ -133,11 +132,14 @@ class SignUp extends React.Component {
       uni: this.state.uni,
       major: this.state.major,
       age: this.state.date,
-      // image: req.body.image
     };
 
-    const signUpStatus = await API.requestSignUp(data);
-    if (signUpStatus === 201) {
+    const signUpResponse = await API.requestSignUp(data);
+    if (signUpResponse.status === 201) {
+      // signup successful, store email locally and upload profile picture (if provided)
+      const responseData = await signUpResponse.json();
+
+      API.uploadPicture(responseData.signedPutUrl, null); // need to replace null with the image
       await AsyncStorage.setItem("storedEmail", data.email);
       this.props.navigation.navigate("AppScreen");
     }

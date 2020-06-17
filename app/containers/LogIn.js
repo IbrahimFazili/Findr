@@ -71,6 +71,13 @@ class LogIn extends React.Component {
       this.setState({ isPasswordValid: true, password: text });
       return;
     }
+  }
+
+  handlePasswordChange(text) {
+    if (validatePassword(text)) {
+      this.setState({ isPasswordValid: true, password: text });
+      return;
+    }
     this.setState({ password: text, isPasswordValid: false });
   }
 
@@ -89,10 +96,7 @@ class LogIn extends React.Component {
     const logInAttempt = await API.logIn(data);
     if (logInAttempt.success) {
       // store email
-      const credSaveStatus = await AsyncStorage.setItem(
-        "storedEmail",
-        logInAttempt.user.email
-      );
+      await AsyncStorage.setItem("storedEmail", logInAttempt.user.email);
       this.props.navigation.navigate("AppScreen");
     } else {
       // let user know they fucked up
