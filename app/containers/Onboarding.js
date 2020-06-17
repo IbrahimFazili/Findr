@@ -167,7 +167,7 @@ class Onboarding extends React.Component {
                   onPress={this.onPressNext}
                   style={styles.OBnext}
                 >
-                  <Text style={styles.OBnextText}>Next</Text>
+                  <Text style={styles.OBnextText1}>Next</Text>
                 </TouchableOpacity>
               </View>
             </View>
@@ -215,7 +215,7 @@ class Onboarding extends React.Component {
                   onPress={this.onPressNext}
                   style={styles.OBnext}
                 >
-                  <Text style={styles.OBnextText}>Next</Text>
+                  <Text style={styles.OBnextText2}>Next</Text>
                 </TouchableOpacity>
               </View>
             </View>
@@ -258,7 +258,7 @@ class Onboarding extends React.Component {
                     onPress={this.onPressNext}
                     style={styles.OBnext}
                   >
-                    <Text style={styles.OBnextText}>Next</Text>
+                    <Text style={styles.OBnextText3}>Next</Text>
                   </TouchableOpacity>
                 </View>
               </View>

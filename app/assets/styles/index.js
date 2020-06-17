@@ -665,8 +665,24 @@ export default StyleSheet.create({
     height: 50,
     borderRadius: 40,
   },
-  OBnextText: {
-    color: "black",
+  OBnextText1: {
+    color: "#8B9EAF",
+    fontWeight: "bold",
+    fontSize: 16,
+    marginTop: 15,
+    marginLeft: 57,
+  },
+  OBnextText2: {
+    color: "#4D617C",
+    fontWeight: "bold",
+    fontSize: 16,
+    marginTop: 15,
+    marginLeft: 57,
+  },
+  OBnextText3: {
+    color: "#679389",
+    fontWeight: "bold",
+    fontSize: 16,
     marginTop: 15,
     marginLeft: 57,
   },
