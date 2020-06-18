@@ -1,7 +1,7 @@
 const MongoClient = require("mongodb").MongoClient;
 
-const MONGO_URL = 
-"mongodb+srv://" + process.env.DATABASE_USER + ":" + process.env.DATABASE_PASS + "@cluster0-hkvsu.mongodb.net/test?retryWrites=true&w=majority";
+const MONGO_URL =
+    "mongodb+srv://" + process.env.DATABASE_USER + ":" + process.env.DATABASE_PASS + "@cluster0-hkvsu.mongodb.net/test?retryWrites=true&w=majority";
 var client = new MongoClient(MONGO_URL, { useUnifiedTopology: true, useNewUrlParser: true });
 
 const COLLECTION_USERS = "Users";
@@ -19,7 +19,7 @@ function connectToDatabse() {
     // close the connection. Timer will be reset upon every request to the database.
     // The time can be used to close the connection if there's no activity for extended
     // period of time
-    return new Promise(function(resolve, reject) {
+    return new Promise(function (resolve, reject) {
         client.connect().then((connection) => {
             resolve(connection);
         }).catch((reason) => {
@@ -38,8 +38,8 @@ function closeConnection() { client.close(); }
  * @returns {Promise} Promise which resolves to a reference to the collection
  */
 function getCollection(collectionName) {
-    return new Promise(function(resolve, reject) {
-        if(client.isConnected()) {
+    return new Promise(function (resolve, reject) {
+        if (client.isConnected()) {
             resolve(client.db(DB).collection(collectionName));
         }
         else {
@@ -53,15 +53,15 @@ function getCollection(collectionName) {
 }
 
 function insertUser(profile) {
-    
-    return new Promise(function(resolve, reject) {
+
+    return new Promise(function (resolve, reject) {
         getCollection(COLLECTION_USERS).then((collection) => {
             collection.insertOne(profile).then((result) => {
                 resolve(result);
             }).catch((err) => {
                 reject(err);
             })
-    
+
         }).catch((reason) => {
             reject(err);
         });
@@ -70,10 +70,10 @@ function insertUser(profile) {
 
 function fetchUsers(params) {
 
-    return new Promise(function(resolve, reject) {
+    return new Promise(function (resolve, reject) {
         getCollection(COLLECTION_USERS).then((collection) => {
-            collection.find(params).toArray(function(err, result) {
-                if(err) { reject(err); }
+            collection.find(params).toArray(function (err, result) {
+                if (err) { reject(err); }
 
                 resolve(result);
             });
@@ -85,10 +85,10 @@ function fetchUsers(params) {
 
 function fetchChat(chat_id) {
 
-    return new Promise(function(resolve, reject) {
+    return new Promise(function (resolve, reject) {
         getCollection(COLLECTION_CHATS).then((collection) => {
-            collection.find({ _id: chat_id }).toArray(function(err, result) {
-                if(err) { reject(err); }
+            collection.find({ _id: chat_id }).toArray(function (err, result) {
+                if (err) { reject(err); }
 
                 resolve(result);
             });
@@ -100,8 +100,8 @@ function fetchChat(chat_id) {
 }
 
 function insertChat(chat) {
-    
-    return new Promise(function(resolve, reject) {
+
+    return new Promise(function (resolve, reject) {
         getCollection(COLLECTION_CHATS).then((collection) => {
             collection.insertOne(chat).then((result) => {
                 resolve(result);
@@ -115,12 +115,12 @@ function insertChat(chat) {
 }
 
 function updateChat(updatedChatObject, queryObject) {
-    
-    return new Promise(function(resolve, reject) {
+
+    return new Promise(function (resolve, reject) {
         getCollection(COLLECTION_CHATS).then((collection) => {
             updateDoc = { $set: { chat: updatedChatObject } }
-            collection.updateOne(queryObject, updateDoc, function(err, updateResult) {
-                if(err) reject(err);
+            collection.updateOne(queryObject, updateDoc, function (err, updateResult) {
+                if (err) reject(err);
 
                 resolve(updateResult);
             });
@@ -133,11 +133,11 @@ function updateChat(updatedChatObject, queryObject) {
 
 function updateUser(updatedUserObject, queryObject) {
 
-    return new Promise(function(resolve, reject) {
+    return new Promise(function (resolve, reject) {
         getCollection(COLLECTION_USERS).then((collection) => {
             updateDoc = { $set: updatedUserObject }
-            collection.updateOne(queryObject, updateDoc, function(err, updateResult) {
-                if(err) reject(err);
+            collection.updateOne(queryObject, updateDoc, function (err, updateResult) {
+                if (err) reject(err);
 
                 resolve(updateResult);
             });
@@ -151,7 +151,7 @@ function updateUser(updatedUserObject, queryObject) {
 
 function deleteChat(id) {
 
-    return new Promise(function(resolve, reject) {
+    return new Promise(function (resolve, reject) {
         getCollection(COLLECTION_CHATS).then((collection) => {
             collection.deleteOne({ _id: id }).then((deleteRes) => {
                 resolve(deleteRes);
