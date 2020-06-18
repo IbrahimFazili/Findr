@@ -206,7 +206,7 @@ export default StyleSheet.create({
 
   popupCardTitle:{
     fontSize: 20,
-    fontWeight: "bold",
+    // fontWeight: "bold",
     color: "#1a5d57",
     bottom: DIMENSION_HEIGHT * 0.1,
   },

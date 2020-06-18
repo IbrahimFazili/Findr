@@ -66,13 +66,15 @@ class ProfilePopup extends React.Component {
             animationType={"fade"}
             >
             <BlurView
-            blurType="xlight"
+            blurType="chromeMaterialDark"
             style={styles.blurredView}
             >
             <Swiper
             onBackdropPress={()=> this.setState({isVisible: false})}
             activeDotColor="#1A5D57"
             from={1}
+            loop={false}
+            bounces={true}
             minDistanceForAction={0.1}
             controlsProps={{
                 dotsTouchable: true,
