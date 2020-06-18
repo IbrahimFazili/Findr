@@ -110,7 +110,10 @@ class Onboarding extends React.Component {
               right: 10,
             }}
           >
-            <View style={styles.slide1}>
+            <View style={styles.slide1} onLayout={this.scrollView.scrollToEnd({
+      animated: true,
+      duration: 5000,
+    })}>
               <View style={styles.slideOneTop}>
                 <Text style={styles.slideTwoHeader}>Efficient Work</Text>
                 <Image
@@ -129,12 +132,6 @@ class Onboarding extends React.Component {
                 <ScrollView
                   style={{ zIndex: Number.MAX_VALUE }}
                   ref={(ref) => (this.scrollView = ref)}
-                  onLayout={() =>
-                    this.scrollView.scrollToEnd({
-                      animated: true,
-                      duration: 5000,
-                    })
-                  }
                   loop={true}
                   horizontal={true}
                   showsHorizontalScrollIndicator={false}
