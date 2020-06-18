@@ -79,36 +79,6 @@ class Matches extends React.Component {
                     </Text>
                   </View>
                 ))}
-                {/* <Thumbnail large
-                style={thumnailStyle} 
-                source={require('../assets/images/01.jpg')}
-                />
-                <Text style={styles.thumbnailCaption}>Alex</Text>
-
-                <Thumbnail large
-                style={thumnailStyle}
-                source={require('../assets/images/02.jpg')}/>
-                <Text style={styles.thumbnailCaption}>Haley</Text>
-
-                <Thumbnail large
-                style={thumnailStyle}
-                source={require('../assets/images/03.jpg')}/>
-                <Text style={styles.thumbnailCaption}>Luke</Text>
-
-                <Thumbnail large
-                style={thumnailStyle}
-                source={require('../assets/images/04.jpg')}/>
-                <Text style={styles.thumbnailCaption}>Phil</Text>
-
-                <Thumbnail large
-                style={thumnailStyle}
-                source={require('../assets/images/05.jpg')}/>
-                <Text style={styles.thumbnailCaption}>Jay</Text>
-
-                <Thumbnail large
-                style={thumnailStyle}
-                source={require('../assets/images/06.jpg')}/>
-                <Text style={styles.thumbnailCaption}>Cam</Text> */}
               </ScrollView>
             </View>
 
