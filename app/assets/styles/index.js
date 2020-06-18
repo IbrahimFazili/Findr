@@ -191,12 +191,24 @@ export default StyleSheet.create({
     left: DIMENSION_WIDTH * 0.1,
     top: DIMENSION_HEIGHT * 0.1,
     borderRadius: 30,
+    // overflow: "hidden",
+  },
+
+  blurredView: {
+    flex: 1, 
+    justifyContent: "center", 
+    alignItems: "center", 
+    backgroundColor: "white",
+    maxHeight: DIMENSION_HEIGHT * 0.7,
+    maxWidth: DIMENSION_WIDTH * 0.7,
+    borderRadius: 20,
   },
 
   popupCardTitle:{
     fontSize: 20,
     fontWeight: "bold",
     color: "#1a5d57",
+    bottom: DIMENSION_HEIGHT * 0.1,
   },
 
   popupCardTitlePosition:{
@@ -204,15 +216,14 @@ export default StyleSheet.create({
     alignItems:"center",
     justifyContent:"center",
     // bottom: DIMENSION_HEIGHT * 0.23,
-    top: DIMENSION_HEIGHT * 0.23
+    top: DIMENSION_HEIGHT * 0.18
   },
-
 
 
   biodata: {
     fontSize: 14,
     color: "#1a5d57",
-    top: DIMENSION_HEIGHT * 0.3,
+    top: DIMENSION_HEIGHT * 0.15,
     left: DIMENSION_WIDTH * 0.1,
     paddingBottom: 30,
   },

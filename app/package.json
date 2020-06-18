@@ -12,6 +12,7 @@
 		"test": "jest"
 	},
 	"dependencies": {
+		"@react-native-community/blur": "^3.6.0",
 		"expo-linear-gradient": "^8.1.0",
 		"native-base": "^2.13.12",
 		"react": "16.6.3",

@@ -15,6 +15,7 @@ import CardItem from "../components/CardItem";
 import Icon from "../components/Icon";
 import APIConnection from "../assets/data/APIConnection";
 import ProfilePopup from "../components/ProfilePopup";
+import {BlurView} from '@react-native-community/blur';
 
 const thumnailStyle = {
   marginHorizontal: 10,
@@ -38,7 +39,6 @@ class Matches extends React.Component {
 
   
   render() {
-    console.log(this.state);
     return (
       <ImageBackground
         source={require("../assets/images/Home.png")}
@@ -52,16 +52,10 @@ class Matches extends React.Component {
             />
             <View style={styles.matchTop}>
               <Text style={styles.matchTitle}>Pending Matches</Text>
-              <TouchableOpacity>
-                <Text style={styles.seeAllicon}>
-                  See all
-                  <Icon name="arrow" />
-                </Text>
-              </TouchableOpacity>
             </View>
 
             <View style={{ flex: 3, height: 130 }}>
-              <ScrollView
+              <ScrollView 
                 horizontal={true}
                 showsHorizontalScrollIndicator={false}
                 contentContainerStyle={{
@@ -107,10 +101,11 @@ class Matches extends React.Component {
               )}
             />
           </ScrollView>
-
+          
           <ProfilePopup visible={this.state.visible} name={this.state.name}
           courses={this.state.courses}
-          description={this.state.description}/>
+          description={this.state.description}
+          />
           
         </View>
       </ImageBackground>

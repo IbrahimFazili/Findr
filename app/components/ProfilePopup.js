@@ -3,6 +3,8 @@ import { Text, View, Image, Dimensions } from 'react-native';
 import Modal from 'react-native-modal';
 import styles from "../assets/styles";
 import Swiper from 'react-native-swiper';
+import { BlurView } from '@react-native-community/blur';
+
 
 const DIMENTIONS = Dimensions.get('window');
 
@@ -63,7 +65,10 @@ class ProfilePopup extends React.Component {
             transparent={true}
             animationType={"fade"}
             >
-
+            <BlurView
+            blurType="xlight"
+            style={styles.blurredView}
+            >
             <Swiper
             onBackdropPress={()=> this.setState({isVisible: false})}
             activeDotColor="#1A5D57"
@@ -75,7 +80,7 @@ class ProfilePopup extends React.Component {
                 nextPos: 'right',
                 nextTitle: '>',
             }}
-            paginationStyle={{bottom: DIMENTIONS.height * 0.20}}>
+            paginationStyle={{bottom: DIMENTIONS.height * 0.05}}>
                 
                 <View>
                     <View style={styles.popupCardTitlePosition}>
@@ -124,7 +129,7 @@ class ProfilePopup extends React.Component {
                     </View>
                 </View>
             </Swiper>
-
+            </BlurView>
             </Modal>
         );
     }
