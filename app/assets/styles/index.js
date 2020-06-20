@@ -502,6 +502,12 @@ export default StyleSheet.create({
     padding: 5
   },
 
+  uniList: {
+    bottom: DIMENSION_HEIGHT * 0.3, 
+    left: DIMENSION_WIDTH * 0.09,
+    width: DIMENSION_WIDTH * 0.7
+  },
+
   signupbutt: {
     backgroundColor: "#013d38",
     borderRadius: 20,
@@ -543,9 +549,9 @@ export default StyleSheet.create({
     alignSelf: 'center',
     borderRadius: 10,
     borderColor: WHITE,
-    flex: 1,
     justifyContent: 'flex-end',
-    marginTop: DIMENSION_HEIGHT * 0.225
+    marginTop: DIMENSION_HEIGHT * 0.225,
+    bottom: DIMENSION_HEIGHT * 0.025,
   },
 
   loginRedirect: {

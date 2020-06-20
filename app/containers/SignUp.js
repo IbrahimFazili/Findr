@@ -5,6 +5,8 @@ import { DefaultTheme, TextInput, Button, Menu, Provider } from 'react-native-pa
 import DatePicker from 'react-native-datepicker';
 import Swiper from 'react-native-swiper'
 import APIConnection from '../assets/data/APIConnection';
+import DropDownPicker from 'react-native-dropdown-picker';
+
 
 const DIMENTIONS = Dimensions.get('window');
 
@@ -28,7 +30,9 @@ const textBoxStyle = {
     alignSelf: 'center',
     backgroundColor: "#5EA39D",
     opacity: 0.5,
-    marginBottom: "8%"
+    marginBottom: "8%",
+    zIndex: 2,
+    
 };
 
 function validateEmail(email) {
@@ -249,6 +253,8 @@ class SignUp extends React.Component {
                             <Menu
                             visible={this.state.dropdownVisible}
                             onDismiss={() => this.setState({ dropdownVisible: false })}
+                            contentStyle={styles.uniList}
+                            
                             anchor={
                                 <Button 
                                 mode='outlined'
@@ -262,6 +268,8 @@ class SignUp extends React.Component {
                             }
                             >
                                 <Menu.Item onPress={() => {}} title="University of Toronto"/>
+                                <Menu.Item onPress={()=> {}} title="University of Waterloo"/>
+                                <Menu.Item onPress={()=> {}} title="Ryerson University"/>
                             </Menu>
                         </Provider>
 
