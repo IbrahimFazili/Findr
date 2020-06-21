@@ -75,7 +75,7 @@ const CardItem = ({
         theHeight,
       ]}
     >
-      {/* IMAGE */}
+      {/* IMAGE */} 
       <View style={imageWrapperStyle}>
         <Image source={image} style={imageStyle} />
       </View>

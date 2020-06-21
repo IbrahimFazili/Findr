@@ -5,7 +5,6 @@ import { DefaultTheme, TextInput, Button, Menu, Provider } from 'react-native-pa
 import DatePicker from 'react-native-datepicker';
 import Swiper from 'react-native-swiper'
 import APIConnection from '../assets/data/APIConnection';
-import DropDownPicker from 'react-native-dropdown-picker';
 
 
 const DIMENTIONS = Dimensions.get('window');
@@ -18,6 +17,7 @@ const theme = {
         placeholder: 'lightgrey',
         labelColor: 'black',
     },
+    
 };
 
 const textBoxStyle = { 
@@ -31,7 +31,7 @@ const textBoxStyle = {
     backgroundColor: "#5EA39D",
     opacity: 0.5,
     marginBottom: "8%",
-    zIndex: 2,
+    zIndex: -1,
     
 };
 
@@ -270,6 +270,10 @@ class SignUp extends React.Component {
                                 <Menu.Item onPress={() => {}} title="University of Toronto"/>
                                 <Menu.Item onPress={()=> {}} title="University of Waterloo"/>
                                 <Menu.Item onPress={()=> {}} title="Ryerson University"/>
+                                <Menu.Item onPress={()=> {}} title="York University"/>
+                                <Menu.Item onPress={()=> {}} title="Lakehead University"/>
+                                
+
                             </Menu>
                         </Provider>
 

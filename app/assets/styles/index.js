@@ -505,7 +505,7 @@ export default StyleSheet.create({
   uniList: {
     bottom: DIMENSION_HEIGHT * 0.3, 
     left: DIMENSION_WIDTH * 0.09,
-    width: DIMENSION_WIDTH * 0.7
+    width: DIMENSION_WIDTH * 0.7,
   },
 
   signupbutt: {
@@ -518,7 +518,7 @@ export default StyleSheet.create({
     marginTop: DIMENSION_HEIGHT * 0.05,
     marginBottom: DIMENSION_HEIGHT * 0.05,
     width: DIMENSION_WIDTH * 0.35,
-    alignSelf: 'center'
+    alignSelf: 'center',
   },
 
   bottomsignup: {
