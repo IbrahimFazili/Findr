@@ -5,9 +5,20 @@ import { DefaultTheme, TextInput, Button, Menu, Provider } from 'react-native-pa
 import DatePicker from 'react-native-datepicker';
 import Swiper from 'react-native-swiper'
 import APIConnection from '../assets/data/APIConnection';
+import {Dropdown} from 'react-native-material-dropdown'
 
 
 const DIMENTIONS = Dimensions.get('window');
+
+let universities=[
+    {value: "University of Toronto",},
+    {value: "University of Waterloo",},
+    {value: "University of British Columbia",},
+    {value: "University of Ottawa",},
+    {value: "York University",},
+    {value: "McGill University",},
+    {value: "Trent University",},
+];
 
 const theme = {
     colors: {
@@ -249,7 +260,7 @@ class SignUp extends React.Component {
                             androidMode='spinner'
                         />
 
-                        <Provider>
+                        {/* <Provider>
                             <Menu
                             visible={this.state.dropdownVisible}
                             onDismiss={() => this.setState({ dropdownVisible: false })}
@@ -275,7 +286,16 @@ class SignUp extends React.Component {
                                 
 
                             </Menu>
-                        </Provider>
+                        </Provider> */}
+                            <Dropdown label="Universities" data={universities}
+                            dropdownPosition={-7}
+                            containerStyle={{width: DIMENTIONS.width * 0.7, left: DIMENTIONS.width * 0.12,
+                            marginBottom:30,}}
+                            itemCount={6}
+                            textColor="white"
+                            itemColor="black"
+                            selectedItemColor="black"
+                            disabledItemColor="black"/>
 
                         <TextInput
                             underlineColor="transparent"
