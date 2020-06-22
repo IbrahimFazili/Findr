@@ -290,10 +290,14 @@ class SignUp extends React.Component {
                             <Dropdown label="Universities" data={universities}
                             dropdownPosition={-7}
                             containerStyle={{width: DIMENTIONS.width * 0.7, left: DIMENTIONS.width * 0.12,
-                            marginBottom:30,}}
+                            marginBottom:30, borderColor: "white", borderWidth: 0.8, borderRadius: 35,
+                            paddingLeft: 20, paddingRight: 20, paddingTop: -20,
+                        alignContent: "space-between"}}
+                            pickerStyle={{borderRadius: 30}}
                             itemCount={6}
                             textColor="white"
                             itemColor="black"
+                            baseColor="white"
                             selectedItemColor="black"
                             disabledItemColor="black"/>
 
