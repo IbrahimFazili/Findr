@@ -25,6 +25,7 @@ app.get("/", (req, res) => {
 app.get("/fetchUsers", (req, res) => {
 	DB.fetchUsers({ email: req.query.email })
 		.then(async function (result) {
+
 			for (var i = 0; i < result.length; i++) {
 				result[i].image = await AWS_Presigner.generateSignedGetUrl(
 					"user_images/" + result[i].email
@@ -67,6 +68,7 @@ app.get("/fetchMatches", (req, res) => {
 app.get("/fetchConnections", (req, res) => {
 	DB.fetchUsers({ email: req.query.email })
 		.then((result) => {
+			
 			if (result.length === 0) {
 				console.log(`No user with email ${req.body.email}`);
 				res.status(404).send(
@@ -78,7 +80,11 @@ app.get("/fetchConnections", (req, res) => {
 			}
 
 			const user = result[0];
-			DB.fetchUsers({ _id: { $in: user.blueConnections } })
+			let ids = [];
+			user.blueConnections.forEach(element => {
+				ids.push(element._id);
+			});
+			DB.fetchUsers({ _id: { $in: ids } })
 				.then(async (connections) => {
 					for (let i = 0; i < connections.length; i++) {
 						const element = connections[i];
@@ -138,20 +144,32 @@ app.get("/fetchChatData", (req, res) => {
 		});
 });
 
-app.post("/updateKeywords", urlEncodedParser, (req, res) => {
+app.post("/updateKeywords", (req, res) => {
 	let keywords = req.body.keywords;
 	for (let i = 0; i < keywords.length; i++) {
 		keywords[i] = String(keywords[i]).toLowerCase();
 	}
 
-	DB.updateUser({ keywords }, { email: req.body.email })
-		.then((updateRes) => {
-			res.status(201).send("success");
-		})
-		.catch((err) => {
-			console.log(err);
-			res.status(500).send("Database Update Error");
-		});
+	DB.fetchUsers({ email: req.body.email }).then((users) => {
+		const oldKeywords = users[0].keywords;
+
+		DB.updateUser({ keywords }, { email: req.body.email })
+			.then((updateRes) => {
+				matcher.updateGraph(req.body.email, oldKeywords).then((value) => {
+					value ? res.status(201).send("success") : res.status(500).send("Server Error");
+				}).catch((err) => {
+					console.log(err);
+					res.status(500).send("Server Error");
+				})
+			})
+			.catch((err) => {
+				console.log(err);
+				res.status(500).send("Database Update Error");
+			});
+	}).catch((err) => {
+		console.log(err);
+		res.status(500).send("Database Fetch Error");
+	})
 });
 
 app.post("/new-user", urlEncodedParser, (req, res) => {
@@ -177,9 +195,7 @@ app.post("/new-user", urlEncodedParser, (req, res) => {
 
 			res.status(201).send(
 				JSON.stringify({
-					signedPutUrl: await AWS_Presigner.generateSignedPutUrl(
-						"user_images/" + requestData.email
-					),
+					signedPutUrl: await AWS_Presigner.generateSignedPutUrl("user_images/" + requestData.email),
 				})
 			);
 		})
@@ -228,21 +244,19 @@ app.post("/update", urlEncodedParser, (req, res) => {
 	res.end();
 });
 
-// DB.fetchUsers({}).then((users) => {
-//     users.forEach((user) => {
-//         for (let i = 0; i < user.keywords.length; i++) {
-//             user.keywords[i] = user.keywords[i].toLowerCase();
-//         }
+// DB.fetchUsers({}).then(async (users) => {
+//     // users.forEach((user) => {
+// 	// 	user.blueConnections = [];
+// 	// 	user.greenConnections = [];
 
-//         DB.updateUser(user, {email:user.email}).then((res) => {
-//             console.log(`${user.email} updated`);
-//         });
-//     });
-
-//     // users.forEach(async (user) => {
-//     //     const result = await matcher.generateGraph(user.email);
-//     //     console.log(`Graph generation for ${user.name} ${result ? "successful" : "failed"}`);
+//     //     DB.updateUser(user, {email:user.email}).then((res) => {
+//     //         console.log(`${user.email} updated`);
+//     //     });
 //     // });
+// 	for (let i = 0; i < users.length; i++) {
+// 		const result = await matcher.generateGraph(users[i].email);
+//         console.log(`Graph generation for ${users[i].name} ${result ? "successful" : "failed"}`);
+// 	}
 // });
 
 // matcher.handleLeftSwipe('harsh@gmail.com', 'michael.scott@dundermifflin.com').then((res) => {
@@ -278,7 +292,6 @@ function addDummyUser() {
 			console.log(err);
 		});
 }
-
 // addDummyUser();
 
 /* Socket Listeners for chat */
@@ -296,9 +309,11 @@ io.on("connection", (socket) => {
 				const user = users[0];
 				let chat = null;
 				var msgHandled = false;
+
 				for (let i = 0; i < user.chats.length && !msgHandled; i++) {
 					try {
 						chat = (await DB.fetchChat(user.chats[i]))[0].chat;
+						
 						if (chat.user1 === msg.to || chat.user2 === msg.to) {
 							chat = Chat.parseJSON(chat);
 
@@ -328,7 +343,6 @@ io.on("connection", (socket) => {
 
 					DB.insertChat({ chat })
 						.then((result) => {
-							console.log("new chat created");
 							console.log(result.ops[0]);
 
 							user.chats.push(result.ops[0]._id);
@@ -337,7 +351,6 @@ io.on("connection", (socket) => {
 								{ email: user.email }
 							)
 								.then((value) => {
-									console.log("user1 updated");
 									socket.to(msg.to).emit("new msg", msg);
 								})
 								.catch((reason) => {
@@ -350,13 +363,12 @@ io.on("connection", (socket) => {
 								.then((res) => {
 									let user = res[0];
 									user.chats.push(result.ops[0]._id);
-									console.log("user2 fetched");
+
 									DB.updateUser(
 										{ chats: user.chats },
 										{ email: user.email }
 									)
 										.then((value) => {
-											console.log("user2 updated");
 											socket
 												.to(msg.to)
 												.emit("new msg", msg);
