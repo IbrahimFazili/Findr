@@ -219,6 +219,9 @@ class SignUp extends React.Component {
                             style={textBoxStyle}
                         />
 
+                        <Image source={require('../assets/images/or.png')} 
+                        style={{marginLeft: DIMENTIONS.width * 0.2, marginTop: DIMENTIONS.width * 0.04}}/>
+
                         <Button 
                         labelStyle={{color: "#FFF"}}
                         style={styles.loginRedirect}
@@ -260,40 +263,10 @@ class SignUp extends React.Component {
                             androidMode='spinner'
                         />
 
-                        {/* <Provider>
-                            <Menu
-                            visible={this.state.dropdownVisible}
-                            onDismiss={() => this.setState({ dropdownVisible: false })}
-                            contentStyle={styles.uniList}
-                            
-                            anchor={
-                                <Button 
-                                mode='outlined'
-                                style={styles.uniDropDown}
-                                labelStyle={{color: "#FFF"}}
-                                onPress={() => this.setState({ dropdownVisible: true })}
-                                uppercase={false}
-                                >
-                                    University
-                                </Button>
-                            }
-                            >
-                                <Menu.Item onPress={() => {}} title="University of Toronto"/>
-                                <Menu.Item onPress={()=> {}} title="University of Waterloo"/>
-                                <Menu.Item onPress={()=> {}} title="Ryerson University"/>
-                                <Menu.Item onPress={()=> {}} title="York University"/>
-                                <Menu.Item onPress={()=> {}} title="Lakehead University"/>
-                                
-
-                            </Menu>
-                        </Provider> */}
-                            <Dropdown label="Universities" data={universities}
+                            <Dropdown label="University" data={universities}
                             dropdownPosition={-7}
-                            containerStyle={{width: DIMENTIONS.width * 0.7, left: DIMENTIONS.width * 0.12,
-                            marginBottom:30, borderColor: "white", borderWidth: 0.8, borderRadius: 35,
-                            paddingLeft: 20, paddingRight: 20, paddingTop: -20,
-                        alignContent: "space-between"}}
-                            pickerStyle={{borderRadius: 30}}
+                            containerStyle={styles.uniDropDown}
+                            pickerStyle={{borderRadius: 35}}
                             itemCount={6}
                             textColor="white"
                             itemColor="black"

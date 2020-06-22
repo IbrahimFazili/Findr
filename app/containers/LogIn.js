@@ -1,8 +1,10 @@
 import React from 'react';
-import { View, AsyncStorage, AppRegistry, Image, Text } from 'react-native';
+import { View, AsyncStorage, AppRegistry, Image, Text, Dimensions } from 'react-native';
 import styles from '../assets/styles';
 import { DefaultTheme, Provider as PaperProvider, TextInput, RadioButton, Dialog, Button } from 'react-native-paper';
 import APIConnection from '../assets/data/APIConnection';
+
+const DIMENSION = Dimensions.get('window')
 
 const theme = {
     colors: {
@@ -126,6 +128,9 @@ class LogIn extends React.Component {
                 <Button mode="contained" onPress={this.handleSubmit.bind(this)} style={styles.loginbutt}>
                     Log in
                 </Button>
+
+                <Image source={require('../assets/images/or.png')} 
+                style={{marginLeft: DIMENSION.width * 0.19, marginTop: DIMENSION.height * 0.06}}/>
                 
                 <Button 
                 labelStyle={{color: "#FFF"}}

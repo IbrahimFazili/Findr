@@ -489,17 +489,15 @@ export default StyleSheet.create({
   },
 
   uniDropDown: {
-    marginTop: DIMENSION_HEIGHT * 0.02,
-    borderBottomLeftRadius: 30,
-    borderBottomRightRadius: 30,
-    borderTopLeftRadius: 30,
-    borderTopRightRadius: 30,
-    height: DIMENSION_HEIGHT * 0.06,
-    width: DIMENSION_WIDTH * 0.7,
-    marginBottom: DIMENSION_HEIGHT * 0.05,
-    alignSelf: 'center',
-    borderColor: WHITE,
-    padding: 5
+    width: DIMENSION_WIDTH * 0.7, 
+    left: DIMENSION_WIDTH * 0.12,
+    marginBottom:30, 
+    borderColor: "white", 
+    borderWidth: 0.8, 
+    borderRadius: 35,
+    paddingLeft: 20, 
+    paddingRight: 20, 
+    paddingTop: -30,
   },
 
   uniList: {
@@ -550,7 +548,7 @@ export default StyleSheet.create({
     borderRadius: 10,
     borderColor: WHITE,
     justifyContent: 'flex-end',
-    marginTop: DIMENSION_HEIGHT * 0.225,
+    marginTop: DIMENSION_HEIGHT * 0.08,
     bottom: DIMENSION_HEIGHT * 0.025,
   },
 
@@ -559,7 +557,7 @@ export default StyleSheet.create({
     alignSelf: 'center',
     borderRadius: 10,
     borderColor: WHITE,
-    marginTop: DIMENSION_HEIGHT * 0.085
+    marginTop: DIMENSION_HEIGHT * 0.055
   },
 
   bottomlogin: {
