@@ -186,12 +186,11 @@ class Matcher {
 
                     if (user.blueConnections[j].commonKeywords.includes(removedKeywords[i])) {
 
-                        const newCommonKeywords = user.blueConnections[j].commonKeywords.filter((value) => value === removedKeywords[i])
-                        const user2 = (await DB.fetchUsers({ _id : conn }))[0];
+                        const newCommonKeywords = user.blueConnections[j].commonKeywords.filter((value) => value !== removedKeywords[i])
+                        const user2 = (await DB.fetchUsers({ _id : user.blueConnections[j]._id }))[0];
                         const id_index = user2.blueConnections.findIndex((value) => value._id.equals(user._id));
 
                         if (newCommonKeywords.length === 0){
-                            conn = user.blueConnections.commonKeywords[j]._id
                             user.blueConnections.splice(j, 1);
                             j--;
 
@@ -211,11 +210,13 @@ class Matcher {
                 }
             } 
 
-            await DB.updateUser({blueConnections: user.blueConnections}, { email });
+            await DB.updateUser({ blueConnections: user.blueConnections }, { email });
 
             if (addedKeywords.length > 0){
-                return this.generateGraph(email, addedkeywords)
+                return this.generateGraph(email, addedKeywords)
             }
+
+            return true;
                
         } catch (error) {
             console.log(error);

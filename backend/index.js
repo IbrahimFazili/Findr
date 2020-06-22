@@ -259,10 +259,6 @@ app.post("/update", urlEncodedParser, (req, res) => {
 // 	}
 // });
 
-// matcher.handleLeftSwipe('harsh@gmail.com', 'michael.scott@dundermifflin.com').then((res) => {
-//     console.log(`Left swipe ${res ? 'successful' : 'failed' }`);
-// }).catch((err) => console.log(err));
-
 function addDummyUser() {
 	const requestData = {
 		name: "Sheldon Cooper",
