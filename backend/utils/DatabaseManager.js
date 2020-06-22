@@ -149,6 +149,22 @@ function updateUser(updatedUserObject, queryObject) {
     });
 }
 
+function bulkUpdateUsers(updatedUserObjects, queryObject) {
+
+    return new Promise(function(resolve, reject) {
+        getCollection(COLLECTION_USERS).then((collection) => {
+            let updateDoc = { $set: updatedUserObjects }
+            collection.updateMany(queryObject, updateDoc, function(err, updateResult) {
+                if (err) reject(false);
+
+                resolve(true);
+            })
+        }).catch((reason) => {
+            reject(false);
+        })
+    });
+}
+
 function deleteChat(id) {
 
     return new Promise(function (resolve, reject) {
@@ -170,6 +186,7 @@ module.exports.insertChat = insertChat;
 
 module.exports.updateChat = updateChat;
 module.exports.updateUser = updateUser;
+module.exports.bulkUpdateUsers = bulkUpdateUsers;
 
 module.exports.closeConnection = closeConnection;
 
