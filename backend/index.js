@@ -9,6 +9,7 @@ const DB = require("./utils/DatabaseManager");
 const AWS_Presigner = require("./utils/AWSPresigner");
 const Chat = require("./utils/Chat").Chat;
 const matcher = new (require("./utils/Matcher").Matcher)();
+const { EventQueue, Event } = require('./utils/Events');
 
 var isServerOutdated = false;
 
@@ -144,6 +145,22 @@ app.get("/fetchChatData", (req, res) => {
 		});
 });
 
+app.get("/fetchNotifications", (req, res) => {
+	DB.fetchUsers({ email: req.query.email })
+		.then(async (users) => {
+			const user = users[0];
+			const userEventQueue = new EventQueue(user.eventQueue.events);
+
+			res.status(200).send(userEventQueue.dequeueAll());
+			
+			DB.updateUser({ eventQueue: userEventQueue }, { email: req.query.email });
+		})
+		.catch((err) => {
+			console.log(err);
+			res.status(500).send("Database Fetch Error");
+		});
+})
+
 app.post("/updateKeywords", (req, res) => {
 	let keywords = req.body.keywords;
 	for (let i = 0; i < keywords.length; i++) {
@@ -248,6 +265,7 @@ app.post("/update", urlEncodedParser, (req, res) => {
 //     // users.forEach((user) => {
 // 	// 	user.blueConnections = [];
 // 	// 	user.greenConnections = [];
+// 	// 	user.eventQueue = new EventQueue();
 
 //     //     DB.updateUser(user, {email:user.email}).then((res) => {
 //     //         console.log(`${user.email} updated`);
@@ -262,6 +280,17 @@ app.post("/update", urlEncodedParser, (req, res) => {
 // matcher.handleLeftSwipe('harsh@gmail.com', 'michael.scott@dundermifflin.com').then((res) => {
 //     console.log(`Left swipe ${res ? 'successful' : 'failed' }`);
 // }).catch((err) => console.log(err));
+
+// matcher.handleRightSwipe('harsh@gmail.com', 'michael.scott@dundermifflin.com').then((res) => {
+// 	if (res.success) {
+// 		matcher.handleRightSwipe('michael.scott@dundermifflin.com', 'harsh@gmail.com').then((res2) => {
+// 			if (res2) {
+// 				console.log('second right swipe successful');
+// 				console.log(`It is ${res2.isMatch ? 'a match' : 'not a match'}`);
+// 			}
+// 		})
+// 	}
+// })
 
 function addDummyUser() {
 	const requestData = {
@@ -324,7 +353,12 @@ io.on("connection", (socket) => {
 								await DB.updateChat(chat, {
 									_id: user.chats[i],
 								});
-								socket.to(msg.to).emit("new msg", msg);
+
+								if (io.sockets.adapter.rooms[socket.handshake.query.name].length > 0) {
+									socket.to(msg.to).emit("new msg", msg);
+								} else {
+									// store event in eventQueue
+								}
 							} catch (err_nested) {
 								console.log(err_nested);
 								socket.emit("send failed");

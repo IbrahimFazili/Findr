@@ -1,4 +1,5 @@
 const DB = require('./DatabaseManager');
+const { EventQueue, Event, MATCH_EVENT } = require('./Events');
 
 class Matcher {
 
@@ -10,14 +11,24 @@ class Matcher {
 
             if (swipedUserIndex === -1) return { success: false, isMatch: false };
 
-            const swipedUserId = (user.blueConnections.splice(swipedUserIndex, 1))[0];
-            user.greenConnections.push(swipedUserId);
+            const swipedUserConnection = ((user.blueConnections.splice(swipedUserIndex, 1))[0]);
+            user.greenConnections.push(swipedUserConnection);
 
             try {
                 await DB.updateUser({ blueConnections: user.blueConnections, greenConnections: user.greenConnections },
                     { email: srcUser });
 
-                return { success: true, isMatch: await this.hasIncomingGreenConnection(user._id, swipedUserId) };
+                const isMatch = await this.hasIncomingGreenConnection(user._id, swipedUserConnection._id);
+                if (isMatch){
+                    rightSwipedUser.eventQueue = new EventQueue(rightSwipedUser.eventQueue.events);
+                    rightSwipedUser.eventQueue.enqueue(
+                        new Event(MATCH_EVENT, { _id : user._id})
+                    )
+
+                    DB.updateUser({ eventQueue: rightSwipedUser.eventQueue }, { email: rightSwipedUser.email });
+                }
+
+                return { success: true, isMatch };
             } catch (updateErr) {
                 console.log(updateErr);
                 return { success: false, isMatch: false };
