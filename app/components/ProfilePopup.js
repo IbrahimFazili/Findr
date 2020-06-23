@@ -35,24 +35,33 @@ const nameStyle = [
 class ProfilePopup extends React.Component {
     constructor(props) {
         super(props);
-        this.state = { isVisible: props.visible, 
-        Name: props.name,
-        Courses: props.courses,
-        Description: props.description};
+        this.state = { 
+            isVisible: props.visible, 
+            Name: props.name,
+            keywords: props.keywords,
+            bio: props.bio,
+            uni: props.uni
+        };
     }
 
     componentWillReceiveProps(props) {
         if(props.visible !== this.state.isVisible) {
-            this.setState({ isVisible: props.visible })
+            this.setState({ isVisible: props.visible });
         }
         if(props.name !== this.state.Name) {
-            this.setState({ Name: props.name })
+            this.setState({ Name: props.name });
         }
-        if(props.courses !== this.state.Courses) {
-            this.setState({ Courses: props.courses })
+        if(props.keywords !== this.state.keywords) {
+            for (let i = 0; i < props.keywords.length; i++) {
+                props.keywords[i] = props.keywords[i].toUpperCase();
+            }
+            this.setState({ keywords: props.keywords });
         }
-        if(props.description !== this.state.Description) {
-            this.setState({ Description: props.description })
+        if(props.bio !== this.state.bio) {
+            this.setState({ bio: props.bio });
+        }
+        if(props.uni !== this.state.uni) {
+            this.setState({ uni: props.uni });
         }
     }
 
@@ -96,7 +105,7 @@ class ProfilePopup extends React.Component {
                     </View>
                     <View>
                         <Text style={styles.biodata}>University: 
-                            <Text style={styles.textValues}>University of Toronto</Text>
+                            <Text style={styles.textValues}>{this.state.uni}</Text>
                         </Text>
                     </View>
                     <View>
@@ -105,15 +114,14 @@ class ProfilePopup extends React.Component {
                         </Text>
                     </View>
                     <View style={{paddingRight: 10}}>
-                        <Text style={styles.biodata}>Courses: 
-                            <Text style={styles.textValues}>Eco100, ITA101, CSC108, 
-                            MGM101, ANT102</Text>
+                        <Text style={styles.biodata}>keywords: 
+                            <Text style={styles.textValues}>{this.state.keywords}</Text>
                         </Text>
                     </View>
                     <View style={{paddingRight: 10}}>
                         <Text style={styles.biodata}>Bio: 
                             <Text style={styles.textValues}>
-                                {this.state.description}
+                                {this.state.bio}
                             </Text>
                         </Text>
                     </View>

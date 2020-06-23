@@ -12,10 +12,9 @@ import {
   AsyncStorage,
 } from "react-native";
 import CardItem from "../components/CardItem";
-import Icon from "../components/Icon";
 import APIConnection from "../assets/data/APIConnection";
 import ProfilePopup from "../components/ProfilePopup";
-import {BlurView} from '@react-native-community/blur';
+// import {BlurView} from '@react-native-community/blur';
 
 const thumnailStyle = {
   marginHorizontal: 10,
@@ -26,8 +25,15 @@ const thumnailStyle = {
 class Matches extends React.Component {
   constructor(props) {
     super(props);
-    this.state = { API: new APIConnection(), cards: [], visible: false, name: "", courses: "",
-  description: ""};
+    this.state = { 
+      API: new APIConnection(),
+      cards: [],
+      visible: false,
+      name: "",
+      keywords: "",
+      bio: "",
+      uni: ""
+    };
   }
 
   async componentDidMount() {
@@ -89,8 +95,13 @@ class Matches extends React.Component {
               data={this.state.cards}
               keyExtractor={(item, index) => index.toString()}
               renderItem={({ item }) => (
-                <TouchableOpacity activeOpacity={1} onPress={()=> this.setState({visible: true, name: item.name, courses: item.courses, 
-                description: item.description})}>
+                <TouchableOpacity activeOpacity={1} onPress={() => this.setState({
+                  visible: true,
+                  name: item.name,
+                  keywords: item.keywords, 
+                  bio: item.bio,
+                  uni: item.uni
+                })}>
                   <CardItem
                     image={{ uri: item.image }}
                     name={item.name}
@@ -102,9 +113,12 @@ class Matches extends React.Component {
             />
           </ScrollView>
           
-          <ProfilePopup visible={this.state.visible} name={this.state.name}
-          courses={this.state.courses}
-          description={this.state.description}
+          <ProfilePopup 
+          visible={this.state.visible} 
+          name={this.state.name}
+          keywords={this.state.keywords}
+          bio={this.state.bio}
+          uni={this.state.uni}
           />
           
         </View>
