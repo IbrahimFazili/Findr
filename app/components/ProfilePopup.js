@@ -4,7 +4,7 @@ import Modal from 'react-native-modal';
 import styles from "../assets/styles";
 import Swiper from 'react-native-swiper';
 import { BlurView } from '@react-native-community/blur';
-
+import {Overlay} from 'react-native-elements';
 
 const DIMENTIONS = Dimensions.get('window');
 
@@ -65,10 +65,11 @@ class ProfilePopup extends React.Component {
             transparent={true}
             animationType={"fade"}
             >
-            <BlurView
+            {/* <BlurView
             blurType="chromeMaterialDark"
             style={styles.blurredView}
-            >
+            > */}
+
             <Swiper
             onBackdropPress={()=> this.setState({isVisible: false})}
             activeDotColor="#1A5D57"
@@ -131,7 +132,9 @@ class ProfilePopup extends React.Component {
                     </View>
                 </View>
             </Swiper>
-            </BlurView>
+            {/* </BlurView> */}
+            <Overlay isVisible={true} onBackdropPress={()=>this.setState({isVisible: false})}>
+            </Overlay>
             </Modal>
         );
     }
