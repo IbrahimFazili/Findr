@@ -230,6 +230,9 @@ export default StyleSheet.create({
     paddingRight: 10,
   },
 
+  textValues: {
+    color: "black",
+  },
 
   // COMPONENT - CITY
   city: {
