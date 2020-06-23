@@ -1,15 +1,12 @@
 import * as React from "react";
 import {
   View,
-  AsyncStorage,
   Image,
   Text,
   TouchableOpacity,
   ScrollView,
   Dimensions,
-  ImageBackground,
   Animated,
-  Button,
 } from "react-native";
 import styles from "../assets/styles";
 import Swiper from "react-native-swiper";
@@ -20,6 +17,7 @@ const INPUT_RANGE = [0, 1, 2, 3];
 const OUTPUT_RANGE = ["#8B9EAF", "#4D617C", "#679389", "#1A5D57"];
 const FULL_HEIGHT = Dimensions.get("window").height;
 const FULL_WIDTH = Dimensions.get("window").width;
+const CARDS_NUMBER = 4
 
 class Onboarding extends React.Component {
   constructor(props) {
@@ -51,7 +49,7 @@ class Onboarding extends React.Component {
   onPressNext = () => {
     const { idxActive } = this.state;
     // Probably best set as a constant somewhere vs a hardcoded 5
-    if (idxActive < 4) {
+    if (idxActive < CARDS_NUMBER) {
       this.refs.swiper.scrollBy(1);
     }
   };
@@ -78,47 +76,46 @@ class Onboarding extends React.Component {
               this.setState({ idxActive: newIndex });
             }}
             ref={"swiper"}
-            dot={
-              <View
-                style={{
-                  backgroundColor: "rgba(0,0,0,.3)",
-                  width: 10,
-                  height: 10,
-                  borderRadius: 10,
-                  marginLeft: 7,
-                  marginRight: 7,
-                  marginBottom: 10,
-                }}
-              />
-            }
-            activeDot={
-              <View
-                style={{
-                  backgroundColor: "#FFF",
-                  width: 12,
-                  height: 12,
-                  borderRadius: 10,
-                  marginRight: 7,
-                  marginLeft: 7,
-                  marginBottom: 10,
-                }}
-              />
-            }
+            // dot={
+            //   <View
+            //     style={{
+            //       backgroundColor: "rgba(0,0,0,.3)",
+            //       width: FULL_HEIGHT *0.012,
+            //       height: FULL_HEIGHT * 0.012,
+            //       borderRadius: FULL_HEIGHT * 0.012,
+            //       marginLeft: 7,
+            //       marginRight: 7,
+            //       marginBottom: FULL_HEIGHT * 0.15,
+            //     }}
+            //   />
+            // }
+            // activeDot={
+            //   <View
+            //     style={{
+            //       backgroundColor: "#FFF",
+            //       width: FULL_HEIGHT * 0.013,
+            //       height: FULL_HEIGHT * 0.013,
+            //       borderRadius: FULL_HEIGHT * 0.012,
+            //       marginRight: 7,
+            //       marginLeft: 7,
+            //       marginBottom: FULL_HEIGHT * 0.15,
+            //     }}
+            //   />
+            // }
+            
+            //Ignore the css styling for this, need not be relative. Only used to hide the dots in swiper.
             paginationStyle={{
               bottom: -23,
               left: null,
               right: 10,
             }}
           >
-            <View style={styles.slide1} onLayout={this.scrollView.scrollToEnd({
-      animated: true,
-      duration: 5000,
-    })}>
+            <View style={styles.slide1}>
               <View style={styles.slideOneTop}>
                 <Text style={styles.slideTwoHeader}>Efficient Work</Text>
                 <Image
                   style={{
-                    width: 50,
+                    width: FULL_HEIGHT * 0.06,
                     marginTop: FULL_HEIGHT * 0.015,
                     marginBottom: FULL_HEIGHT * 0.015,
                   }}
@@ -137,8 +134,8 @@ class Onboarding extends React.Component {
                   showsHorizontalScrollIndicator={false}
                   contentContainerStyle={{
                     alignItems: "center",
-                    paddingStart: 5,
-                    paddingEnd: 5,
+                    paddingStart: FULL_HEIGHT * 0.006,
+                    paddingEnd: FULL_HEIGHT * 0.006,
                   }}
                 >
                   {this.state.cards.map((user) => (
@@ -178,8 +175,8 @@ class Onboarding extends React.Component {
                 <TouchableOpacity onPress={this.onPressPrev}>
                   <Image
                     style={{
-                      width: 80,
-                      height: 20,
+                      width: FULL_HEIGHT * 0.096,
+                      height: FULL_HEIGHT * 0.024,
                       marginTop: FULL_HEIGHT * 0.02,
                       marginLeft: FULL_WIDTH * 0.02,
                       marginBottom: FULL_HEIGHT * 0.015,
@@ -192,7 +189,7 @@ class Onboarding extends React.Component {
                 <Text style={styles.slideTwoHeader}>Network Smarter</Text>
                 <Image
                   style={{
-                    width: 50,
+                    width: FULL_HEIGHT * 0.06,
                     marginTop: FULL_HEIGHT * 0.015,
                     marginBottom: FULL_HEIGHT * 0.015,
                   }}
@@ -205,7 +202,7 @@ class Onboarding extends React.Component {
                   Find people in every field
                 </Text>
                 <Image
-                  style={{ marginTop: FULL_HEIGHT * 0.05 }}
+                  style={{ marginTop: FULL_HEIGHT * 0.03 }}
                   source={require("../assets/images/newicn_add.png")}
                 />
                 <TouchableOpacity
@@ -220,8 +217,8 @@ class Onboarding extends React.Component {
               <TouchableOpacity onPress={this.onPressPrev}>
                 <Image
                   style={{
-                    width: 80,
-                    height: 20,
+                    width: FULL_HEIGHT * 0.096,
+                    height: FULL_HEIGHT * 0.024,
                     marginTop: FULL_HEIGHT * 0.07,
                     marginLeft: FULL_WIDTH * 0.07,
                     marginBottom: FULL_HEIGHT * 0.015,
@@ -264,8 +261,8 @@ class Onboarding extends React.Component {
               <TouchableOpacity onPress={this.onPressPrev}>
                 <Image
                   style={{
-                    width: 80,
-                    height: 20,
+                    width: FULL_HEIGHT * 0.096,
+                    height: FULL_HEIGHT * 0.024,
                     marginTop: FULL_HEIGHT * 0.16,
                     marginLeft: FULL_WIDTH * 0.06,
                     marginBottom: FULL_HEIGHT * 0.015,
