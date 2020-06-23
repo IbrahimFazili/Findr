@@ -227,6 +227,7 @@ export default StyleSheet.create({
     left: DIMENSION_WIDTH * 0.1,
     paddingBottom: 30,
     marginBottom: 10,
+    paddingRight: 10,
   },
 
 
