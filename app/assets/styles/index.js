@@ -216,16 +216,17 @@ export default StyleSheet.create({
     alignItems:"center",
     justifyContent:"center",
     // bottom: DIMENSION_HEIGHT * 0.23,
-    top: DIMENSION_HEIGHT * 0.18
+    top: DIMENSION_HEIGHT * 0.33
   },
 
 
   biodata: {
     fontSize: 14,
     color: "#1a5d57",
-    top: DIMENSION_HEIGHT * 0.15,
+    top: DIMENSION_HEIGHT * 0.30,
     left: DIMENSION_WIDTH * 0.1,
     paddingBottom: 30,
+    marginBottom: 10,
   },
 
 

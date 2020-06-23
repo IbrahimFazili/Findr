@@ -83,7 +83,7 @@ class ProfilePopup extends React.Component {
                 nextPos: 'right',
                 nextTitle: '>',
             }}
-            paginationStyle={{bottom: DIMENTIONS.height * 0.05}}>
+            paginationStyle={{bottom: DIMENTIONS.height * 0.20}}>
                 
                 <View>
                     <View style={styles.popupCardTitlePosition}>
