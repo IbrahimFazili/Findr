@@ -89,7 +89,7 @@ class Matches extends React.Component {
               data={this.state.cards}
               keyExtractor={(item, index) => index.toString()}
               renderItem={({ item }) => (
-                <TouchableOpacity onPress={()=> this.setState({visible: true, name: item.name, courses: item.courses, 
+                <TouchableOpacity activeOpacity={1} onPress={()=> this.setState({visible: true, name: item.name, courses: item.courses, 
                 description: item.description})}>
                   <CardItem
                     image={{ uri: item.image }}
