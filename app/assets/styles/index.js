@@ -491,13 +491,14 @@ export default StyleSheet.create({
   uniDropDown: {
     width: DIMENSION_WIDTH * 0.7, 
     left: DIMENSION_WIDTH * 0.12,
-    marginBottom:30, 
+    marginBottom:20, 
     borderColor: "white", 
-    borderWidth: 0.8, 
+    borderWidth: 0.4, 
     borderRadius: 35,
     paddingLeft: 20, 
     paddingRight: 20, 
     paddingTop: -30,
+    height: 50,
   },
 
   uniList: {
@@ -513,7 +514,7 @@ export default StyleSheet.create({
     borderBottomRightRadius: 10,
     borderTopLeftRadius: 10,
     borderTopRightRadius: 10,
-    marginTop: DIMENSION_HEIGHT * 0.05,
+    marginTop: DIMENSION_HEIGHT * 0.09,
     marginBottom: DIMENSION_HEIGHT * 0.05,
     width: DIMENSION_WIDTH * 0.35,
     alignSelf: 'center',
@@ -546,10 +547,10 @@ export default StyleSheet.create({
     width: DIMENSION_WIDTH * 0.35,
     alignSelf: 'center',
     borderRadius: 10,
-    borderColor: WHITE,
     justifyContent: 'flex-end',
     marginTop: DIMENSION_HEIGHT * 0.08,
     bottom: DIMENSION_HEIGHT * 0.025,
+    backgroundColor: "#013d38",
   },
 
   loginRedirect: {
@@ -557,7 +558,8 @@ export default StyleSheet.create({
     alignSelf: 'center',
     borderRadius: 10,
     borderColor: WHITE,
-    marginTop: DIMENSION_HEIGHT * 0.055
+    marginTop: DIMENSION_HEIGHT * 0.050,
+    backgroundColor: "#013d38",
   },
 
   bottomlogin: {

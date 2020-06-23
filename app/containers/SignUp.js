@@ -192,47 +192,18 @@ class SignUp extends React.Component {
                             style={textBoxStyle}
                         />
 
-                        <TextInput
-                            underlineColor="transparent"
-                            mode={"flat"}
-                            value={this.state.email}
-                            label={"E-Mail"}
-                            placeholder="email@example.com"
-                            onChangeText={this.handleEmailChange.bind(this)}
-                            onFocus={() => this.setState({ showDots: false })}
-                            onBlur={() => this.setState({ showDots: true })}
-                            theme={theme}
-                            style={textBoxStyle}
-                        />
+                        <Dropdown label="University" data={universities}
+                            dropdownPosition={-7}
+                            containerStyle={styles.uniDropDown}
+                            pickerStyle={{borderRadius: 35,}}
+                            dropdownOffset={{top: 20, left: 10}}
+                            itemCount={6}
+                            textColor="white"
+                            itemColor="black"
+                            baseColor="white"
+                            selectedItemColor="black"
+                            disabledItemColor="black"/>
 
-                        <TextInput
-                            underlineColor="transparent"
-                            secureTextEntry={true}
-                            mode={"flat"}
-                            value={this.state.password}
-                            label={"Password"}
-                            placeholder="Enter your new password"
-                            onChangeText={this.handlePasswordChange.bind(this)}
-                            onFocus={() => this.setState({ showDots: false })}
-                            onBlur={() => this.setState({ showDots: true })}
-                            theme={theme}
-                            style={textBoxStyle}
-                        />
-
-                        <Image source={require('../assets/images/or.png')} 
-                        style={{marginLeft: DIMENTIONS.width * 0.2, marginTop: DIMENTIONS.width * 0.04}}/>
-
-                        <Button 
-                        labelStyle={{color: "#FFF"}}
-                        style={styles.loginRedirect}
-                        onPress={() => this.props.navigation.navigate("LogIn")}
-                        mode='outlined'
-                        >
-                            Log in
-                        </Button>
-
-                    </ScrollView>
-                    <ScrollView style={styles.slide1}>
                         <DatePicker
                             date={this.state.date}
                             mode="date"
@@ -263,30 +234,62 @@ class SignUp extends React.Component {
                             androidMode='spinner'
                         />
 
-                            <Dropdown label="University" data={universities}
-                            dropdownPosition={-7}
-                            containerStyle={styles.uniDropDown}
-                            pickerStyle={{borderRadius: 35}}
-                            itemCount={6}
-                            textColor="white"
-                            itemColor="black"
-                            baseColor="white"
-                            selectedItemColor="black"
-                            disabledItemColor="black"/>
 
-                        <TextInput
+                        <Image source={require('../assets/images/or.png')} 
+                        style={{marginLeft: DIMENTIONS.width * 0.2, marginTop: DIMENTIONS.width * 0.04}}/>
+
+                        <Button 
+                        labelStyle={{color: "#FFF"}}
+                        style={styles.loginRedirect}
+                        onPress={() => this.props.navigation.navigate("LogIn")}
+                        mode='contained'
+                        >
+                            Log in
+                        </Button>
+
+                    </ScrollView>
+                    <ScrollView style={styles.slide1}>
+
+                    <TextInput
                             underlineColor="transparent"
                             mode={"flat"}
-                            value={this.state.major}
-                            label={"Major"}
-                            placeholder="Enter your major"
-                            onChangeText={this.handleMajorChange.bind(this)}
+                            value={this.state.email}
+                            label={"E-Mail"}
+                            placeholder="email@example.com"
+                            onChangeText={this.handleEmailChange.bind(this)}
+                            onFocus={() => this.setState({ showDots: false })}
+                            onBlur={() => this.setState({ showDots: true })}
+                            theme={theme}
+                            style={textBoxStyle}
+                        />
+                        
+                        <TextInput
+                            underlineColor="transparent"
+                            secureTextEntry={true}
+                            mode={"flat"}
+                            value={this.state.password}
+                            label={"Password"}
+                            placeholder="Enter your new password"
+                            onChangeText={this.handlePasswordChange.bind(this)}
                             onFocus={() => this.setState({ showDots: false })}
                             onBlur={() => this.setState({ showDots: true })}
                             theme={theme}
                             style={textBoxStyle}
                         />
 
+                        <TextInput
+                            underlineColor="transparent"
+                            secureTextEntry={true}
+                            mode={"flat"}
+                            value={this.state.password}
+                            label={"Confirm Password"}
+                            placeholder="Confirm your new password"
+                            onChangeText={this.handlePasswordChange.bind(this)}
+                            onFocus={() => this.setState({ showDots: false })}
+                            onBlur={() => this.setState({ showDots: true })}
+                            theme={theme}
+                            style={textBoxStyle}
+                        />
                         <Button mode="contained" style={styles.signupbutt}>Sign Up</Button>
                         
                     </ScrollView>
