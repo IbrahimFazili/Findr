@@ -98,17 +98,17 @@ class ProfilePopup extends React.Component {
                     <View style={styles.popupCardTitlePosition}>
                         <Text style={styles.popupCardTitle}>Additional Info</Text>
                     </View>
-                    <View>
+                    <View style={styles.popupStyling}>
                         <Text style={styles.biodata}>Name: {" "}
                             <Text style={styles.textValues}>{this.state.Name}</Text>
                         </Text>
                     </View>
-                    <View>
+                    <View style={styles.popupStyling}>
                         <Text style={styles.biodata}>University: {" "} 
                             <Text style={styles.textValues}>{this.state.uni}</Text>
                         </Text>
                     </View>
-                    <View>
+                    <View style={styles.popupStyling}>
                         <Text style={styles.biodata}>Major: {" "}
                             <Text style={styles.textValues}>Life Sciences</Text>
                         </Text>
