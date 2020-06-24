@@ -36,6 +36,10 @@ export default StyleSheet.create({
     elevation: 10,
   },
 
+  popupStyling:{
+    paddingRight: DIMENSION_WIDTH * 0.1,
+  },
+
   matchContainerCardItem: {
     width: DIMENSION_WIDTH * 0.353,
     backgroundColor: WHITE,
@@ -227,7 +231,6 @@ export default StyleSheet.create({
     left: DIMENSION_WIDTH * 0.1,
     paddingBottom: 30,
     marginBottom: 10,
-    paddingRight: 10,
   },
 
   textValues: {

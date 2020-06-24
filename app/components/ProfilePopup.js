@@ -99,27 +99,27 @@ class ProfilePopup extends React.Component {
                         <Text style={styles.popupCardTitle}>Additional Info</Text>
                     </View>
                     <View>
-                        <Text style={styles.biodata}>Name: 
+                        <Text style={styles.biodata}>Name: {" "}
                             <Text style={styles.textValues}>{this.state.Name}</Text>
                         </Text>
                     </View>
                     <View>
-                        <Text style={styles.biodata}>University: 
+                        <Text style={styles.biodata}>University: {" "} 
                             <Text style={styles.textValues}>{this.state.uni}</Text>
                         </Text>
                     </View>
                     <View>
-                        <Text style={styles.biodata}>Major: 
+                        <Text style={styles.biodata}>Major: {" "}
                             <Text style={styles.textValues}>Life Sciences</Text>
                         </Text>
                     </View>
-                    <View style={{paddingRight: 10}}>
-                        <Text style={styles.biodata}>keywords: 
+                    <View style={styles.popupStyling}>
+                        <Text style={styles.biodata}>keywords: {" "}
                             <Text style={styles.textValues}>{this.state.keywords}</Text>
                         </Text>
                     </View>
-                    <View style={{paddingRight: 10}}>
-                        <Text style={styles.biodata}>Bio: 
+                    <View style={styles.popupStyling}>
+                        <Text style={styles.biodata}>Bio: {" "}
                             <Text style={styles.textValues}>
                                 {this.state.bio}
                             </Text>
@@ -130,18 +130,18 @@ class ProfilePopup extends React.Component {
                     <View style={styles.popupCardTitlePosition}>
                         <Text style={styles.popupCardTitle}>Additional Info</Text>
                     </View>
-                    <View style={{paddingRight: 10}}>
-                        <Text style={styles.biodata}>Projects: 
+                    <View style={styles.popupStyling}>
+                        <Text style={styles.biodata}>Projects: {" "}
                         <Text style={styles.textValues}></Text>
                         </Text>
                     </View>
-                    <View style={{paddingRight: 10}}>
-                        <Text style={styles.biodata}>Skills: 
+                    <View style={styles.popupStyling}>
+                        <Text style={styles.biodata}>Skills: {" "}
                             <Text style={styles.textValues}></Text>
                         </Text>
                     </View>
-                    <View style={{paddingRight: 10}}>
-                        <Text style={styles.biodata}>Relevant Experience: 
+                    <View style={styles.popupStyling}>
+                        <Text style={styles.biodata}>Relevant Experience: {" "}
                             <Text style={styles.textValues}></Text>
                         </Text>
                     </View>
@@ -150,13 +150,13 @@ class ProfilePopup extends React.Component {
                     <View style={styles.popupCardTitlePosition}>
                         <Text style={styles.popupCardTitle}>Additional Info</Text>
                     </View>
-                    <View style={{paddingRight: 10}}>
-                        <Text style={styles.biodata}>Random Stuff: 
+                    <View style={styles.popupStyling}>
+                        <Text style={styles.biodata}>Random Stuff: {" "}
                             <Text style={styles.textValues}></Text>
                         </Text>
                     </View>
-                    <View style={{paddingRight: 10}}>
-                        <Text style={styles.biodata}>More Information: 
+                    <View style={styles.popupStyling}>
+                        <Text style={styles.biodata}>More Information: {" "}
                             <Text style={styles.textValues}></Text>
                         </Text>
                     </View>
