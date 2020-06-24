@@ -104,11 +104,30 @@ class Matcher {
 
             try {
                 let potentialConnections = await DB.fetchUsers({ keywords: { $in: keyword_regexes } });
+               
+                let duplicateConnections = potentialConnections.filter((value) => {
+                    return user.blueConnections.findIndex((conn) => conn._id.equals(value._id)) !== -1 &&
+                        !(value._id.equals(user._id));
+                });
+                
                 potentialConnections = potentialConnections.filter((value) => {
                     return user.blueConnections.findIndex((conn) => conn._id.equals(value._id)) === -1 &&
                         !(value._id.equals(user._id));
                 });
 
+                for (var i = 0; i < duplicateConnections.length; i++) {
+                    let commonKeywords = user.keywords.filter(value => duplicateConnections[i].keywords.includes(value))
+                    let index1 = user.blueConnections.findIndex((conn) => conn._id.equals(duplicateConnections[i]._id))
+                    user.blueConnections[index1].commonKeywords = commonKeywords;
+                    let index2 = duplicateConnections[i].blueConnections.findIndex((conn) => conn._id.equals(user._id))
+                    duplicateConnections[i].blueConnections[index2].commonKeywords = commonKeywords;
+                    await DB.updateUser({ blueConnections: user.blueConnections },
+                        { email: user.email })
+
+                    await DB.updateUser({ blueConnections: duplicateConnections[i].blueConnections },
+                        { email: duplicateConnections[i].email })
+                }
+               
                 let blueConn = null;
                 for (let i = 0; i < potentialConnections.length; i++) {
                     blueConn = {
@@ -224,6 +243,7 @@ class Matcher {
             await DB.updateUser({ blueConnections: user.blueConnections }, { email });
 
             if (addedKeywords.length > 0){
+
                 return this.generateGraph(email, addedKeywords)
             }
 
