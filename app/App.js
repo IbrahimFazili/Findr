@@ -12,12 +12,21 @@ import HomeScreen from "./containers/Home";
 import MatchesScreen from "./containers/Matches";
 import MessagesScreen from "./containers/Messages";
 import ProfileScreen from "./containers/Profile";
-import Icon from "./components/Icon";
 import OnboardingScreen from "./containers/Onboarding";
 
-import HomeIcon from './assets/icons/home.svg';
+import HomeIcon_Grey from './assets/icons/home.svg';
+import HomeIcon_Green from './assets/icons/home_g.svg';
+import SearchIcon_Grey from './assets/icons/search.svg';
+import SearchIcon_Green from './assets/icons/search_g.svg';
+import PersonIcon_Grey from './assets/icons/person.svg';
+import PersonIcon_Green from './assets/icons/person_g.svg';
+import ChatIcon_Grey from './assets/icons/chat.svg';
+import ChatIcon_Green from './assets/icons/chat_g.svg';
 
 const DIMENTIONS = Dimensions.get('window');
+
+const ICON_WIDTH = DIMENTIONS.width * 0.05;
+const ICON_HEIGHT = DIMENTIONS.height * 0.03;
 
 const App = createBottomTabNavigator(
   {
@@ -25,14 +34,15 @@ const App = createBottomTabNavigator(
       screen: HomeScreen,
       navigationOptions: {
         tabBarIcon: ({ focused }) => {
-          const iconFocused = focused ? "#2c9c91" : "#4a4949";
           return (
             <View
             style={{
               paddingBottom: DIMENTIONS.height * 0.01
             }}
             >
-              <HomeIcon width={DIMENTIONS.width * 0.1} height={DIMENTIONS.height * 0.03}/>
+              { focused ? 
+              <HomeIcon_Green width={ICON_WIDTH} height={ICON_HEIGHT}/>
+              : <HomeIcon_Grey width={ICON_WIDTH} height={ICON_HEIGHT}/>}
             </View>
           );
         },
@@ -42,16 +52,14 @@ const App = createBottomTabNavigator(
       screen: MatchesScreen,
       navigationOptions: {
         tabBarIcon: ({ focused }) => {
-          const iconFocused = focused ? "#2c9c91" : "#4a4949";
           return (
-            <Text
-              style={[
-                styles.iconMenu,
-                { color: iconFocused, marginTop: "15%" },
-              ]}
+            <View
+              style={{ paddingBottom: DIMENTIONS.height * 0.01 }}
             >
-              <Icon name="heart" />
-            </Text>
+              {focused ? 
+              <SearchIcon_Green width={ICON_WIDTH} height={ICON_HEIGHT} />
+              : <SearchIcon_Grey width={ICON_WIDTH} height={ICON_HEIGHT}/>}
+            </View>
           );
         },
       },
@@ -62,14 +70,13 @@ const App = createBottomTabNavigator(
         tabBarIcon: ({ focused }) => {
           const iconFocused = focused ? "#2c9c91" : "#4a4949";
           return (
-            <Text
-              style={[
-                styles.iconMenu,
-                { color: iconFocused, marginTop: "15%" },
-              ]}
+            <View
+              style={{ paddingBottom: DIMENTIONS.height * 0.01 }}
             >
-              <Icon name="chat" />
-            </Text>
+              {focused ? 
+              <ChatIcon_Green width={ICON_WIDTH} height={ICON_HEIGHT} />
+              : <ChatIcon_Grey width={ICON_WIDTH} height={ICON_HEIGHT}/>}
+            </View>
           );
         },
       },
@@ -80,14 +87,13 @@ const App = createBottomTabNavigator(
         tabBarIcon: ({ focused }) => {
           const iconFocused = focused ? "#2c9c91" : "#4a4949";
           return (
-            <Text
-              style={[
-                styles.iconMenu,
-                { color: iconFocused, marginTop: "15%" },
-              ]}
+            <View
+              style={{ paddingBottom: DIMENTIONS.height * 0.01 }}
             >
-              <Icon name="user" />
-            </Text>
+              {focused ? 
+              <PersonIcon_Green width={ICON_WIDTH} height={ICON_HEIGHT} />
+              : <PersonIcon_Grey width={ICON_WIDTH} height={ICON_HEIGHT}/>}
+            </View>
           );
         },
       },
