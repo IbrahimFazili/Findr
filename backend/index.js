@@ -12,6 +12,11 @@ const matcher = new (require("./utils/Matcher").Matcher)();
 
 var isServerOutdated = false;
 
+function validatePassword(password) {
+    const regex = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])[0-9a-zA-Z]{6,}$/;
+    return regex.test(password);
+}
+
 app.use(bodyParser.json());
 
 app.get("/", (req, res) => {
@@ -172,7 +177,25 @@ app.post("/updateKeywords", (req, res) => {
 	})
 });
 
-app.post("/new-user", urlEncodedParser, (req, res) => {
+app.post("/updateUserInfo", (req, res) => {
+	const user = req.body.user;
+
+	DB.fetchUsers({ email: requestData.email })
+		.then((users) => {
+		})
+		.catch((err) => {
+			console.log(err);
+			res.status(500).send("Server error");
+		});
+
+	if (user.password !== undefined) {
+		
+	}
+	
+	
+});
+
+app.post("/new-user", (req, res) => {
 	const requestData = {
 		name: req.body.name,
 		email: req.body.email,
@@ -206,7 +229,7 @@ app.post("/new-user", urlEncodedParser, (req, res) => {
 		});
 });
 
-app.post("/login", urlEncodedParser, (req, res) => {
+app.post("/login", (req, res) => {
 	const requestData = {
 		email: req.body.email,
 		password: req.body.password,
@@ -234,7 +257,7 @@ app.post("/login", urlEncodedParser, (req, res) => {
 		});
 });
 
-app.post("/update", urlEncodedParser, (req, res) => {
+app.post("/update", (req, res) => {
 	const isMaster = req.body.ref === "refs/heads/master";
 	if (isMaster) {
 		isServerOutdated = true;
