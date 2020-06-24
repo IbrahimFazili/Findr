@@ -262,7 +262,7 @@ function resetGraph() {
 	});
 }
 
-resetGraph();
+//resetGraph();
 
 
 
