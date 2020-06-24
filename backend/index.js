@@ -280,20 +280,27 @@ app.post("/update", (req, res) => {
 	res.end();
 });
 
-// DB.fetchUsers({}).then(async (users) => {
-//     // users.forEach((user) => {
-// 	// 	user.blueConnections = [];
-// 	// 	user.greenConnections = [];
+function resetGraph() {
+	DB.fetchUsers({}).then(async (users) => {
 
-//     //     DB.updateUser(user, {email:user.email}).then((res) => {
-//     //         console.log(`${user.email} updated`);
-//     //     });
-//     // });
-// 	for (let i = 0; i < users.length; i++) {
-// 		const result = await matcher.generateGraph(users[i].email);
-//         console.log(`Graph generation for ${users[i].name} ${result ? "successful" : "failed"}`);
-// 	}
-// });
+		for (let i = 0; i < users.length; i++) {
+			const user = users[i];
+			user.blueConnections = [];
+			user.greenConnections = [];
+	
+			await DB.updateUser(user, {email:user.email});
+		}
+
+		for (let i = 0; i < users.length; i++) {
+			const result = await matcher.generateGraph(users[i].email);
+		    console.log(`Graph generation for ${users[i].name} ${result ? "successful" : "failed"}`);
+		}
+	});
+}
+
+//resetGraph();
+
+
 
 function addDummyUser() {
 	const requestData = {
