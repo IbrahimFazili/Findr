@@ -180,18 +180,31 @@ app.post("/updateKeywords", (req, res) => {
 app.post("/updateUserInfo", (req, res) => {
 	const user = req.body.user;
 
-	DB.fetchUsers({ email: requestData.email })
-		.then((users) => {
-		})
-		.catch((err) => {
-			console.log(err);
-			res.status(500).send("Server error");
-		});
+	DB.fetchUsers({ email: user.email }).then((users) => {
 
-	if (user.password !== undefined) {
-		
-	}
+		if (user.password !== undefined) {
+			if (!validatePassword(user.password) && bcrypt.compareSync(user.oldPassword, users[0].password)) {
+				res.status(406).send("invalid password");
+				return;
+			}
 	
+			user.password = bcrypt.hashSync(user.password, 10);
+		}
+	
+		DB.fetchUsers({ email: user.email })
+			.then((users) => {
+				let user = users[0];
+				await DB.updateUser(user, {email: user.email});
+				res.status(201).send("success")	
+			})
+			.catch((err) => {
+				console.log(err);
+				res.status(500).send("Server error");
+			});
+	}).catch((err) => {
+		console.log(err);
+		res.status(500).send('Database Fetch Error');
+	})
 	
 });
 
