@@ -277,21 +277,6 @@ app.post("/update", urlEncodedParser, (req, res) => {
 // 	}
 // });
 
-// matcher.handleLeftSwipe('harsh@gmail.com', 'michael.scott@dundermifflin.com').then((res) => {
-//     console.log(`Left swipe ${res ? 'successful' : 'failed' }`);
-// }).catch((err) => console.log(err));
-
-// matcher.handleRightSwipe('harsh@gmail.com', 'michael.scott@dundermifflin.com').then((res) => {
-// 	if (res.success) {
-// 		matcher.handleRightSwipe('michael.scott@dundermifflin.com', 'harsh@gmail.com').then((res2) => {
-// 			if (res2) {
-// 				console.log('second right swipe successful');
-// 				console.log(`It is ${res2.isMatch ? 'a match' : 'not a match'}`);
-// 			}
-// 		})
-// 	}
-// })
-
 function addDummyUser() {
 	const requestData = {
 		name: "Sheldon Cooper",
