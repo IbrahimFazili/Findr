@@ -36,6 +36,33 @@ export default StyleSheet.create({
     elevation: 10,
   },
 
+  privacyContainer: {
+    width: DIMENSION_WIDTH * 0.8,
+    marginTop: DIMENSION_HEIGHT * 0.03,
+    marginLeft: DIMENSION_WIDTH * 0.1,
+    backgroundColor: WHITE,
+    borderRadius: 40,
+    shadowOpacity: 0.3,
+    shadowRadius: 10,
+    shadowColor: BLACK,
+    shadowOffset: { height: 0, width: 0 },
+    elevation: 10,
+    height: DIMENSION_HEIGHT * 0.7,
+    marginBottom: DIMENSION_HEIGHT * 0.1
+  },
+
+  privacyHeader: {
+    marginTop: DIMENSION_HEIGHT * 0.02,
+    fontSize: 30,
+    alignSelf: 'center',
+    color: TEAL,
+    marginBottom: DIMENSION_HEIGHT * 0.02
+  },
+
+  scrollPrivacy: {
+    paddingHorizontal: DIMENSION_WIDTH * 0.1
+  },
+
   matchContainerCardItem: {
     width: DIMENSION_WIDTH * 0.353,
     backgroundColor: WHITE,
@@ -478,6 +505,14 @@ export default StyleSheet.create({
     marginLeft: DIMENSION_WIDTH * 0.05,
     width: DIMENSION_WIDTH * 0.35,
     height: DIMENSION_HEIGHT * 0.15,
+  },
+
+  privacyLogo: {
+    alignSelf: "center",
+    marginTop: DIMENSION_HEIGHT * 0.04,
+    marginLeft: DIMENSION_WIDTH * 0.05,
+    width: DIMENSION_WIDTH * 0.2,
+    height: DIMENSION_HEIGHT * 0.1,
   },
 
   slide0: {

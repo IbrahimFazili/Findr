@@ -13,6 +13,7 @@ import MatchesScreen from "./containers/Matches";
 import MessagesScreen from "./containers/Messages";
 import ProfileScreen from "./containers/Profile";
 import Icon from "./components/Icon";
+import PrivacyScreen from "./containers/Privacy";
 
 const App = createBottomTabNavigator(
   {
@@ -123,6 +124,9 @@ const RootStack = createStackNavigator(
     },
     LogIn: {
       screen: LogInScreen,
+    },
+    Privacy :{
+      screen: PrivacyScreen,
     },
   },
   { mode: "modal", headerMode: "none" }

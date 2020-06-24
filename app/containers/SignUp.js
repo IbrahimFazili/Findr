@@ -290,7 +290,8 @@ class SignUp extends React.Component {
                             theme={theme}
                             style={textBoxStyle}
                         />
-                        <Button mode="contained" style={styles.signupbutt}>Sign Up</Button>
+                        <Button mode="contained" style={styles.signupbutt}
+                        onPress={()=> this.props.navigation.navigate("Privacy")}>Sign Up</Button>
                         
                     </ScrollView>
                 </Swiper>
