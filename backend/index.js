@@ -9,10 +9,12 @@ const DB = require("./utils/DatabaseManager");
 const AWS_Presigner = require("./utils/AWSPresigner");
 const Chat = require("./utils/Chat").Chat;
 const matcher = new (require("./utils/Matcher").Matcher)();
-const { EventQueue, Event } = require('./utils/Events');
+const { EventQueue, Event, MESSAGE_EVENT } = require('./utils/Events');
+
 
 var isServerOutdated = false;
 
+app.use(cors());
 app.use(bodyParser.json());
 
 app.get("/", (req, res) => {
@@ -262,35 +264,20 @@ app.post("/update", urlEncodedParser, (req, res) => {
 });
 
 // DB.fetchUsers({}).then(async (users) => {
-//     // users.forEach((user) => {
-// 	// 	user.blueConnections = [];
-// 	// 	user.greenConnections = [];
-// 	// 	user.eventQueue = new EventQueue();
+//     users.forEach((user) => {
+// 		user.blueConnections = [];
+// 		user.greenConnections = [];
+// 		user.eventQueue = new EventQueue();
 
-//     //     DB.updateUser(user, {email:user.email}).then((res) => {
-//     //         console.log(`${user.email} updated`);
-//     //     });
-//     // });
-// 	for (let i = 0; i < users.length; i++) {
-// 		const result = await matcher.generateGraph(users[i].email);
-//         console.log(`Graph generation for ${users[i].name} ${result ? "successful" : "failed"}`);
-// 	}
+//         DB.updateUser(user, {email:user.email}).then((res) => {
+//             console.log(`${user.email} updated`);
+//         });
+//     });
+// 	// for (let i = 0; i < users.length; i++) {
+// 	// 	const result = await matcher.generateGraph(users[i].email);
+//     //     console.log(`Graph generation for ${users[i].name} ${result ? "successful" : "failed"}`);
+// 	// }
 // });
-
-// matcher.handleLeftSwipe('harsh@gmail.com', 'michael.scott@dundermifflin.com').then((res) => {
-//     console.log(`Left swipe ${res ? 'successful' : 'failed' }`);
-// }).catch((err) => console.log(err));
-
-// matcher.handleRightSwipe('harsh@gmail.com', 'michael.scott@dundermifflin.com').then((res) => {
-// 	if (res.success) {
-// 		matcher.handleRightSwipe('michael.scott@dundermifflin.com', 'harsh@gmail.com').then((res2) => {
-// 			if (res2) {
-// 				console.log('second right swipe successful');
-// 				console.log(`It is ${res2.isMatch ? 'a match' : 'not a match'}`);
-// 			}
-// 		})
-// 	}
-// })
 
 function addDummyUser() {
 	const requestData = {
@@ -338,6 +325,7 @@ io.on("connection", (socket) => {
 				const user = users[0];
 				let chat = null;
 				var msgHandled = false;
+				const receiverIsReachable = io.sockets.adapter.rooms[msg.to] && io.sockets.adapter.rooms[msg.to].length > 0;
 
 				for (let i = 0; i < user.chats.length && !msgHandled; i++) {
 					try {
@@ -354,10 +342,24 @@ io.on("connection", (socket) => {
 									_id: user.chats[i],
 								});
 
-								if (io.sockets.adapter.rooms[socket.handshake.query.name].length > 0) {
+								if (receiverIsReachable) {
 									socket.to(msg.to).emit("new msg", msg);
 								} else {
-									// store event in eventQueue
+									// store message event in eventQueue to notify user later
+									DB.fetchUsers({ email: msg.to }).then((receiver) => {
+										receiver = receiver[0];
+										receiver.eventQueue = new EventQueue(receiver.eventQueue.events);
+										receiver.eventQueue.enqueue(new Event(MESSAGE_EVENT, {
+											from: msg.from,
+											content: msg.content,
+											time: msg.time
+										}));
+
+										DB.updateUser({ eventQueue: receiver.eventQueue }, { email: msg.to });
+
+									}).catch((reason) => {
+										console.log(reason);
+									})
 								}
 							} catch (err_nested) {
 								console.log(err_nested);
@@ -371,21 +373,18 @@ io.on("connection", (socket) => {
 					}
 				}
 
+				// no existing chat b/w users, so create a new one
 				if (!msgHandled) {
 					const chat = new Chat(msg.from, msg.to);
 					chat.newMessage(msg.from, msg.content, msg.time);
 
 					DB.insertChat({ chat })
 						.then((result) => {
-							console.log(result.ops[0]);
 
 							user.chats.push(result.ops[0]._id);
-							DB.updateUser(
-								{ chats: user.chats },
-								{ email: user.email }
-							)
+							DB.updateUser({ chats: user.chats }, { email: user.email })
 								.then((value) => {
-									socket.to(msg.to).emit("new msg", msg);
+									// socket.to(msg.to).emit("new msg", msg);
 								})
 								.catch((reason) => {
 									socket.emit("send failed");
@@ -398,14 +397,26 @@ io.on("connection", (socket) => {
 									let user = res[0];
 									user.chats.push(result.ops[0]._id);
 
-									DB.updateUser(
-										{ chats: user.chats },
-										{ email: user.email }
-									)
+									DB.updateUser({ chats: user.chats }, { email: user.email })
 										.then((value) => {
-											socket
-												.to(msg.to)
-												.emit("new msg", msg);
+											if (receiverIsReachable) {
+												socket.to(msg.to).emit("new msg", msg);
+											} else {
+												// store message event in eventQueue to notify user later
+												DB.fetchUsers({ email: msg.to }).then((receiver) => {
+													receiver = receiver[0];
+													receiver.eventQueue = new EventQueue(receiver.eventQueue.events);
+													receiver.eventQueue.enqueue(new Event(MESSAGE_EVENT, {
+														from: msg.from,
+														content: msg.content,
+														time: msg.time
+													}));
+			
+													DB.updateUser({ eventQueue: receiver.eventQueue }, { email: msg.to });
+												}).catch((reason) => {
+													console.log(reason);
+												});
+											}
 										})
 										.catch((reason) => {
 											console.log(reason);
