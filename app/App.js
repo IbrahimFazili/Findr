@@ -1,5 +1,5 @@
 import React from "react";
-import { Text, Dimensions, Platform } from "react-native";
+import { Text, Dimensions, Platform, View } from "react-native";
 import {
   createBottomTabNavigator,
   createAppContainer,
@@ -15,6 +15,10 @@ import ProfileScreen from "./containers/Profile";
 import Icon from "./components/Icon";
 import OnboardingScreen from "./containers/Onboarding";
 
+import HomeIcon from './assets/icons/home.svg';
+
+const DIMENTIONS = Dimensions.get('window');
+
 const App = createBottomTabNavigator(
   {
     Explore: {
@@ -23,14 +27,13 @@ const App = createBottomTabNavigator(
         tabBarIcon: ({ focused }) => {
           const iconFocused = focused ? "#2c9c91" : "#4a4949";
           return (
-            <Text
-              style={[
-                styles.iconMenu,
-                { color: iconFocused, marginTop: "15%" },
-              ]}
+            <View
+            style={{
+              paddingBottom: DIMENTIONS.height * 0.01
+            }}
             >
-              <Icon name="explore" />
-            </Text>
+              <HomeIcon width={DIMENTIONS.width * 0.1} height={DIMENTIONS.height * 0.03}/>
+            </View>
           );
         },
       },
