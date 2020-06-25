@@ -14,7 +14,6 @@ const { EventQueue, Event, MESSAGE_EVENT } = require('./utils/Events');
 
 var isServerOutdated = false;
 
-app.use(cors());
 app.use(bodyParser.json());
 
 app.get("/", (req, res) => {
