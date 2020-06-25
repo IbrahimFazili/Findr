@@ -210,7 +210,7 @@ app.post("/updateUserInfo", (req, res) => {
 		}
 	
 		DB.fetchUsers({ email: user.email })
-			.then((users) => {
+			.then(async (users) => {
 				let user = users[0];
 				await DB.updateUser(user, {email: user.email});
 				res.status(201).send("success")	
