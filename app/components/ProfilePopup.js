@@ -6,6 +6,31 @@ import Swiper from 'react-native-swiper';
 import { BlurView } from '@react-native-community/blur';
 import {Overlay} from 'react-native-elements';
 
+const DIMENTIONS = Dimensions.get('window');
+
+const nameStyle = [
+    /* 
+    @Ibby
+    
+    Use Relative CSS. DO NOT USE ABSOLUTE CSS
+    
+    Absolute CSS example: { paddingBottom: 7 }
+    Relative CSS example: { paddingBottom: DIMENTIONS.height * 0.1 }
+
+    DIMENTIONS.height * 0.1 implies a padding of 10% of the total window size.
+
+    Use relative CSS otherwise we have to redo CSS to phones of different sizes
+
+    ~ Lakshya
+    */
+    {
+      paddingBottom: 7,
+      marginTop: 0,
+      color: '#363636',
+      fontSize: 35,
+      alignSelf: 'center'
+    }
+];
 
 class ProfilePopup extends React.Component {
     constructor(props) {
