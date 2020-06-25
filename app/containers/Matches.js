@@ -30,7 +30,7 @@ class Matches extends React.Component {
       cards: [],
       visible: false,
       name: "",
-      keywords: "",
+      keywords: [],
       bio: "",
       uni: ""
     };

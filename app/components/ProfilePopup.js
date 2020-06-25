@@ -79,6 +79,10 @@ class ProfilePopup extends React.Component {
             style={styles.blurredView}
             > */}
 
+            <View style={styles.popupCardTitlePosition}>
+                <Text style={styles.popupCardTitle}>Additional Info</Text>
+            </View>
+
             <Swiper
             onBackdropPress={()=> this.setState({isVisible: false})}
             activeDotColor="#1A5D57"
@@ -92,12 +96,9 @@ class ProfilePopup extends React.Component {
                 nextPos: 'right',
                 nextTitle: '>',
             }}
-            paginationStyle={{bottom: DIMENTIONS.height * 0.20}}>
+            paginationStyle={{}}>
                 
                 <View>
-                    <View style={styles.popupCardTitlePosition}>
-                        <Text style={styles.popupCardTitle}>Additional Info</Text>
-                    </View>
                     <View style={styles.popupStyling}>
                         <Text style={styles.biodata}>Name: {" "}
                             <Text style={styles.textValues}>{this.state.Name}</Text>
@@ -114,8 +115,8 @@ class ProfilePopup extends React.Component {
                         </Text>
                     </View>
                     <View style={styles.popupStyling}>
-                        <Text style={styles.biodata}>keywords: {" "}
-                            <Text style={styles.textValues}>{this.state.keywords}</Text>
+                        <Text style={styles.biodata}>Keywords: {" "}
+                            <Text style={styles.textValues}>{this.state.keywords.join(", ")}</Text>
                         </Text>
                     </View>
                     <View style={styles.popupStyling}>
@@ -127,9 +128,6 @@ class ProfilePopup extends React.Component {
                     </View>
                 </View>
                 <View>
-                    <View style={styles.popupCardTitlePosition}>
-                        <Text style={styles.popupCardTitle}>Additional Info</Text>
-                    </View>
                     <View style={styles.popupStyling}>
                         <Text style={styles.biodata}>Projects: {" "}
                         <Text style={styles.textValues}></Text>
@@ -147,9 +145,6 @@ class ProfilePopup extends React.Component {
                     </View>
                 </View>
                 <View>
-                    <View style={styles.popupCardTitlePosition}>
-                        <Text style={styles.popupCardTitle}>Additional Info</Text>
-                    </View>
                     <View style={styles.popupStyling}>
                         <Text style={styles.biodata}>Random Stuff: {" "}
                             <Text style={styles.textValues}></Text>

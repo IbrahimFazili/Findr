@@ -190,10 +190,9 @@ export default StyleSheet.create({
     backgroundColor: WHITE,
     borderRadius: 20,
     maxHeight: DIMENSION_HEIGHT * 0.7,
-    maxWidth: DIMENSION_WIDTH * 0.7,
-    position: "absolute",
-    left: DIMENSION_WIDTH * 0.1,
-    top: DIMENSION_HEIGHT * 0.1,
+    maxWidth: DIMENSION_WIDTH * 0.85,
+    alignSelf: "center",
+    marginVertical: DIMENSION_HEIGHT * 0.13,
     borderRadius: 30,
     // overflow: "hidden",
   },
@@ -212,25 +211,20 @@ export default StyleSheet.create({
     fontSize: 20,
     // fontWeight: "bold",
     color: "#1a5d57",
-    bottom: DIMENSION_HEIGHT * 0.1,
   },
 
   popupCardTitlePosition:{
-    flex:1,
-    alignItems:"center",
-    justifyContent:"center",
-    // bottom: DIMENSION_HEIGHT * 0.23,
-    top: DIMENSION_HEIGHT * 0.33
+    alignSelf: "center",
+    marginTop: DIMENSION_HEIGHT * 0.1,
+    marginBottom: DIMENSION_HEIGHT * 0.05
   },
 
 
   biodata: {
     fontSize: 14,
     color: "#1a5d57",
-    top: DIMENSION_HEIGHT * 0.30,
-    left: DIMENSION_WIDTH * 0.1,
-    paddingBottom: 30,
-    marginBottom: 10,
+    marginTop: DIMENSION_HEIGHT * 0.03,
+    marginLeft: DIMENSION_WIDTH * 0.1
   },
 
   textValues: {
