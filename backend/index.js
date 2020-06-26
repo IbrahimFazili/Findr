@@ -198,7 +198,7 @@ app.post("/updateKeywords", (req, res) => {
 app.post("/updateUserInfo", (req, res) => {
 	const user = req.body.user;
 
-	DB.fetchUsers({ email: user.email }).then((users) => {
+	DB.fetchUsers({ email: user.email }).then(async (users) => {
 
 		if (user.password !== undefined) {
 			if (!validatePassword(user.password) && bcrypt.compareSync(user.oldPassword, users[0].password)) {
@@ -208,17 +208,10 @@ app.post("/updateUserInfo", (req, res) => {
 	
 			user.password = bcrypt.hashSync(user.password, 10);
 		}
-	
-		DB.fetchUsers({ email: user.email })
-			.then(async (users) => {
-				let user = users[0];
-				await DB.updateUser(user, {email: user.email});
-				res.status(201).send("success")	
-			})
-			.catch((err) => {
-				console.log(err);
-				res.status(500).send("Server error");
-			});
+
+		await DB.updateUser(user, { email: user.email });
+		res.status(201).send("success");
+
 	}).catch((err) => {
 		console.log(err);
 		res.status(500).send('Database Fetch Error');
