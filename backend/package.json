@@ -4,9 +4,9 @@
   "description": "Backend for the findr mobile app",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "node index.test.js"
   },
-  "author": "Lakshya Gupta, Harsh Jhunjhunwala",
+  "author": "Lakshya Gupta, Aditi Dagar",
   "license": "ISC",
   "dependencies": {
     "aws-sdk": "^2.679.0",
