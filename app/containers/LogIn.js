@@ -1,15 +1,10 @@
-import React from "react";
-import { View, AsyncStorage, AppRegistry, Image, Text } from "react-native";
-import styles from "../assets/styles";
-import {
-  DefaultTheme,
-  Provider as PaperProvider,
-  TextInput,
-  RadioButton,
-  Dialog,
-  Button,
-} from "react-native-paper";
-import APIConnection from "../assets/data/APIConnection";
+import React from 'react';
+import { View, AsyncStorage, AppRegistry, Image, Text, Dimensions } from 'react-native';
+import styles from '../assets/styles';
+import { DefaultTheme, Provider as PaperProvider, TextInput, RadioButton, Dialog, Button } from 'react-native-paper';
+import APIConnection from '../assets/data/APIConnection';
+
+const DIMENSION = Dimensions.get('window')
 
 const theme = {
   colors: {
@@ -87,6 +82,8 @@ class LogIn extends React.Component {
       console.log("invalid inputs");
       return;
     }
+
+    
     const API = new APIConnection();
     const data = {
       email: this.state.email,
@@ -106,71 +103,51 @@ class LogIn extends React.Component {
 
   render() {
     return (
-      <View
-        style={{
-          backgroundColor: "#164e48",
-          width: "100%",
-          height: "100%",
-          padding: "3%",
-        }}
-      >
-        <Image
-          style={styles.loginlogo}
-          source={require("../assets/images/Findr_white2x.png")}
-        />
-        <TextInput
-          underlineColor="transparent"
-          mode={"flat"}
-          value={this.state.email}
-          label={this.state.emailLabel}
-          onFocus={() => this.setState({ emailLabel: "" })}
-          onBlur={() =>
-            this.setState({
-              emailLabel: this.state.email.length === 0 ? "Email" : "",
-            })
-          }
-          placeholder="email@example.com"
-          onChangeText={this.handleEmailChange.bind(this)}
-          theme={theme}
-          style={textBoxStyle}
-        />
+        <View style={{backgroundColor: "#164e48", width: "100%", height: "100%", padding: '3%' }}>
+            <Image style={styles.loginlogo} source={require('../assets/images/Findr_white2x.png')}/>
+            <TextInput
+                underlineColor="transparent"
+                mode={"flat"}
+                value={this.state.email}
+                label={this.state.emailLabel}
+                onFocus={() => this.setState({emailLabel:""})}
+                onBlur={() => this.setState({ emailLabel: this.state.email.length === 0 ? "Email" : "" })}
+                placeholder="email@example.com"
+                onChangeText={this.handleEmailChange.bind(this)}
+                theme={theme}
+                style={textBoxStyle}
+            />
 
-        <TextInput
-          underlineColor="transparent"
-          secureTextEntry={true}
-          mode={"flat"}
-          value={this.state.password}
-          label={this.state.passLabel}
-          onFocus={() => this.setState({ passLabel: "" })}
-          onBlur={() =>
-            this.setState({
-              passLabel: this.state.password.length === 0 ? "Password" : "",
-            })
-          }
-          placeholder="Enter your Password"
-          onChangeText={this.handlePasswordChange.bind(this)}
-          theme={theme}
-          style={textBoxStyle}
-        />
+            <TextInput
+                underlineColor="transparent"
+                secureTextEntry={true}
+                mode={"flat"}
+                value={this.state.password}
+                label={this.state.passLabel}
+                onFocus={() => this.setState({ passLabel: "" })}
+                onBlur={() => this.setState({ passLabel: this.state.password.length === 0 ? "Password" : "" })}
+                placeholder="Enter your Password"
+                onChangeText={this.handlePasswordChange.bind(this)}
+                theme={theme}
+                style={textBoxStyle}
+            />
 
-        <Button
-          mode="contained"
-          onPress={this.handleSubmit.bind(this)}
-          style={styles.loginbutt}
-        >
-          Log in
-        </Button>
-        <View style={styles.bottomlogin}>
-          <Button
-            onPress={() => this.props.navigation.navigate("SignUp")}
-            transparent="true"
-            labelStyle={{ color: "#FFF" }}
+            <Button mode="contained" onPress={this.handleSubmit.bind(this)} style={styles.loginbutt}>
+                Log in
+            </Button>
+
+            <Image source={require('../assets/images/or.png')} 
+            style={{marginLeft: DIMENSION.width * 0.19, marginTop: DIMENSION.height * 0.15}}/>
+            
+            <Button 
+            labelStyle={{color: "#FFF"}}
             style={styles.signupredirect}
-          >
-            Sign Up
-          </Button>
+            mode='contained'
+            onPress={() => this.props.navigation.navigate("SignUp")}
+            >
+                Sign Up
+            </Button>
         </View>
-      </View>
     );
   }
 }

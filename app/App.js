@@ -12,6 +12,8 @@ import HomeScreen from "./containers/Home";
 import MatchesScreen from "./containers/Matches";
 import MessagesScreen from "./containers/Messages";
 import ProfileScreen from "./containers/Profile";
+import Icon from "./components/Icon";
+import PrivacyScreen from "./containers/Privacy";
 import OnboardingScreen from "./containers/Onboarding";
 
 import HomeIcon_Grey from './assets/icons/home.svg';
@@ -133,6 +135,9 @@ const RootStack = createStackNavigator(
     },
     LogIn: {
       screen: LogInScreen,
+    },
+    Privacy :{
+      screen: PrivacyScreen,
     },
     Onboarding: {
       screen: OnboardingScreen,
