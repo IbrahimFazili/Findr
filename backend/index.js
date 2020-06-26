@@ -4,12 +4,12 @@ const http = require("http").createServer(app);
 const io = require("socket.io")(http);
 const bodyParser = require("body-parser");
 const bcrypt = require("bcrypt");
-const urlEncodedParser = bodyParser.urlencoded({ extended: false });
 const DB = require("./utils/DatabaseManager");
 const AWS_Presigner = require("./utils/AWSPresigner");
 const Chat = require("./utils/Chat").Chat;
 const matcher = new (require("./utils/Matcher").Matcher)();
 const { EventQueue, Event, MESSAGE_EVENT } = require('./utils/Events');
+const sendEmail = require("./utils/emailer").sendEmail;
 
 
 var isServerOutdated = false;
@@ -17,6 +17,16 @@ var isServerOutdated = false;
 function validatePassword(password) {
     const regex = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])[0-9a-zA-Z]{6,}$/;
     return regex.test(password);
+}
+
+function generateRandomNumber() {
+	var randomNumber = "";
+	var i = 0;
+	for (i = 0; i < 8; i++){
+		randomDigit = Math.floor(Math.random() * 10);
+		randomNumber = randomNumber + randomDigit;
+	}
+	return randomNumber;
 }
 
 app.use(bodyParser.json());
@@ -235,28 +245,48 @@ app.post("/new-user", (req, res) => {
 		uni: req.body.uni,
 		major: req.body.major,
 		age: Number(req.body.age),
+		clubs: [],
+		projects: [],
+		experience: [],
 		chats: [],
 		keywords: [],
 		bio: "",
 		blueConnections: [],
 		greenConnections: [],
+		active: false,
+		verificationHash: bcrypt.hashSync(req.body.email + generateRandomNumber(), 3)
 	};
 
 	DB.insertUser(requestData)
 		.then(async (result) => {
-			// sendEmail(requestData);
+			sendEmail(requestData.email, requestData.verificationHash);
 			matcher.generateGraph(requestData.email);
 
-			res.status(201).send(
-				JSON.stringify({
-					signedPutUrl: await AWS_Presigner.generateSignedPutUrl("user_images/" + requestData.email),
-				})
-			);
+			res.status(201).send("Success");
 		})
 		.catch((err) => {
 			// unsuccessful insert, reply back with unsuccess response code
 			console.log(err);
 			res.status(500).send("Insert Failed");
+		});
+});
+
+app.get("/verifyUserEmail", (req, res) => {
+	DB.fetchUsers({ verificationHash: req.query.key })
+		.then(async (users) => {
+			if (users.length === 0) {
+				res.status(404).send("User doesn't exist");
+				return;
+			}
+
+			const user = users[0];
+			user.active = true;
+			DB.updateUser({ active: user.active, verificationHash: null }, { email: user.email });
+			res.status(200).send("Email Successfully Verified");
+		})
+		.catch((err) => {
+			console.log(err);
+			res.status(500).send("Database Fetch Error");
 		});
 });
 
@@ -315,7 +345,6 @@ function resetGraph() {
 		}
 	});
 }
-
 //resetGraph();
 
 function addDummyUser() {
