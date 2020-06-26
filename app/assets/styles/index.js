@@ -48,13 +48,12 @@ export default StyleSheet.create({
     shadowOffset: { height: 0, width: 0 },
     elevation: 10,
     height: DIMENSION_HEIGHT * 0.7,
-    marginBottom: DIMENSION_HEIGHT * 0.1
+    marginBottom: DIMENSION_HEIGHT * 0.02
   },
 
   privacyHeader: {
     marginTop: DIMENSION_HEIGHT * 0.02,
-    fontSize: 30,
-    alignSelf: 'center',
+    fontSize: 24,
     color: TEAL,
     marginBottom: DIMENSION_HEIGHT * 0.02
   },
@@ -573,6 +572,14 @@ export default StyleSheet.create({
     backgroundColor: "#013d38",
     borderRadius: 10,
     marginTop: DIMENSION_HEIGHT * 0.05,
+    width: DIMENSION_WIDTH * 0.35,
+    alignSelf: 'center',
+    elevation: 4
+  },
+  
+  acceptButton:{
+    backgroundColor: "#013d38",
+    borderRadius: 10,
     width: DIMENSION_WIDTH * 0.35,
     alignSelf: 'center',
     elevation: 4
