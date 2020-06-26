@@ -12,8 +12,9 @@ import {
   AsyncStorage,
 } from "react-native";
 import CardItem from "../components/CardItem";
-import Icon from "../components/Icon";
 import APIConnection from "../assets/data/APIConnection";
+import ProfilePopup from "../components/ProfilePopup";
+// import {BlurView} from '@react-native-community/blur';
 
 const thumnailStyle = {
   marginHorizontal: 10,
@@ -24,16 +25,26 @@ const thumnailStyle = {
 class Matches extends React.Component {
   constructor(props) {
     super(props);
-    this.state = { API: new APIConnection(), cards: [] };
+    this.state = { 
+      API: new APIConnection(),
+      cards: [],
+      visible: false,
+      name: "",
+      keywords: [],
+      bio: "",
+      uni: ""
+    };
   }
 
   async componentDidMount() {
     const data = await this.state.API.loadData(
       await AsyncStorage.getItem("storedEmail")
     );
+    this.scrollView.scrollToEnd({ animated: true, duration: 1000 });
     this.setState({ cards: data });
   }
 
+  
   render() {
     return (
       <ImageBackground
@@ -48,16 +59,11 @@ class Matches extends React.Component {
             />
             <View style={styles.matchTop}>
               <Text style={styles.matchTitle}>Pending Matches</Text>
-              <TouchableOpacity>
-                <Text style={styles.seeAllicon}>
-                  See all
-                  <Icon name="arrow" />
-                </Text>
-              </TouchableOpacity>
             </View>
 
             <View style={{ flex: 3, height: 130 }}>
               <ScrollView
+                ref={(ref) => (this.scrollView = ref)}
                 horizontal={true}
                 showsHorizontalScrollIndicator={false}
                 contentContainerStyle={{
@@ -79,36 +85,6 @@ class Matches extends React.Component {
                     </Text>
                   </View>
                 ))}
-                {/* <Thumbnail large
-                style={thumnailStyle} 
-                source={require('../assets/images/01.jpg')}
-                />
-                <Text style={styles.thumbnailCaption}>Alex</Text>
-
-                <Thumbnail large
-                style={thumnailStyle}
-                source={require('../assets/images/02.jpg')}/>
-                <Text style={styles.thumbnailCaption}>Haley</Text>
-
-                <Thumbnail large
-                style={thumnailStyle}
-                source={require('../assets/images/03.jpg')}/>
-                <Text style={styles.thumbnailCaption}>Luke</Text>
-
-                <Thumbnail large
-                style={thumnailStyle}
-                source={require('../assets/images/04.jpg')}/>
-                <Text style={styles.thumbnailCaption}>Phil</Text>
-
-                <Thumbnail large
-                style={thumnailStyle}
-                source={require('../assets/images/05.jpg')}/>
-                <Text style={styles.thumbnailCaption}>Jay</Text>
-
-                <Thumbnail large
-                style={thumnailStyle}
-                source={require('../assets/images/06.jpg')}/>
-                <Text style={styles.thumbnailCaption}>Cam</Text> */}
               </ScrollView>
             </View>
 
@@ -121,7 +97,13 @@ class Matches extends React.Component {
               data={this.state.cards}
               keyExtractor={(item, index) => index.toString()}
               renderItem={({ item }) => (
-                <TouchableOpacity>
+                <TouchableOpacity activeOpacity={1} onPress={() => this.setState({
+                  visible: true,
+                  name: item.name,
+                  keywords: item.keywords, 
+                  bio: item.bio,
+                  uni: item.uni
+                })}>
                   <CardItem
                     image={{ uri: item.image }}
                     name={item.name}
@@ -132,6 +114,15 @@ class Matches extends React.Component {
               )}
             />
           </ScrollView>
+          
+          <ProfilePopup 
+          visible={this.state.visible} 
+          name={this.state.name}
+          keywords={this.state.keywords}
+          bio={this.state.bio}
+          uni={this.state.uni}
+          />
+          
         </View>
       </ImageBackground>
     );

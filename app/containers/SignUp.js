@@ -51,105 +51,115 @@ const textBoxStyle = {
 
 
 function validateEmail(email) {
-    const regex = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-    return regex.test(email);
+  const regex = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+  return regex.test(email);
 }
 
 function validatePassword(password) {
-    const regex = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])[0-9a-zA-Z]{6,}$/;
-    return regex.test(password);
+  const regex = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])[0-9a-zA-Z]{6,}$/;
+  return regex.test(password);
 }
 
 class SignUp extends React.Component {
-    constructor(props) {
-        super(props);
-        this.state = { 
+  constructor(props) {
+    super(props);
+    this.state = {
+      date: null,
+      name: "",
+      email: "",
+      password: "",
+      uni: "",
+      major: "",
 
-            date: null,
-            name: "",
-            email: "",
-            password: "",
-            uni: "",
-            major: "",
+      nameLabel: "Name",
+      emailLabel: "Email",
+      passLabel: "Password",
+      uniLabeL: "University",
+      majorLabel: "Major",
 
-            isNameValid: false,
-            isEmailValid: false,
-            isPasswordValid: false,
-            isUniValid: false,
-            isMajorValid: false,
+      isNameValid: false,
+      isEmailValid: false,
+      isPasswordValid: false,
+      isUniValid: false,
+      isMajorValid: false,
+      showDots: true,
+      dropdownVisible: false
+    };
+  }
 
-            showDots: true,
-            dropdownVisible: false
-        };
+  handleNameChange(text) {
+    if (text.length >= 3 && text.length <= 30) {
+      this.setState({ isNameValid: true, name: text });
+      return;
+    }
+    this.setState({ isNameValid: false, name: text });
+  }
+
+  handleEmailChange(text) {
+    if (validateEmail(text.toLowerCase())) {
+      this.setState({ isEmailValid: true, email: text });
+      return;
     }
 
-    handleNameChange(text) {
-        if(text.length >= 3 && text.length <= 30) {
-            this.setState({ isNameValid: true, name: text });
-            return;
-        }
-        this.setState({ isNameValid: false, name: text });
+    this.setState({ isEmailValid: false, email: text.toLowerCase() });
+  }
+
+  handlePasswordChange(text) {
+    if (validatePassword(text)) {
+      this.setState({ isPasswordValid: true, password: text });
+      return;
     }
+    this.setState({ password: text, isPasswordValid: false });
+  }
 
-    handleEmailChange(text) {
-        if(validateEmail(text.toLowerCase())) {
-            this.setState({ isEmailValid: true, email: text });
-            return;
-        }
-
-        this.setState({ isEmailValid: false, email: text.toLowerCase() });
+  handleUniChange(text) {
+    if (text.length >= 6) {
+      this.setState({ isUniValid: true, uni: text });
+      return;
     }
+    this.setState({ isUniValid: false, uni: text });
+  }
 
-    handlePasswordChange(text) {
-        if(validatePassword(text)) {
-            this.setState({ isPasswordValid: true, password: text });
-            return;
-        }
-        this.setState({ password: text, isPasswordValid: false });
+  handleMajorChange(text) {
+    if (text.length >= 6) {
+      this.setState({ isMajorValid: true, major: text });
+      return;
     }
+    this.setState({ isMajorValid: false, major: text });
+  }
 
-    handleUniChange(text) {
-        if(text.length >= 6) {
-            this.setState({ isUniValid: true, uni: text });
-            return;
-        }
-        this.setState({ isUniValid: false, uni: text });
+  async handleSubmit() {
+    if (
+      !this.state.isNameValid ||
+      !this.state.isEmailValid ||
+      !this.state.isPasswordValid ||
+      !this.state.date ||
+      !this.state.isUniValid ||
+      !this.state.isMajorValid
+    ) {
+      console.log("invalid inputs");
+      return;
     }
+    const API = new APIConnection();
+    const data = {
+      name: this.state.name,
+      email: this.state.email,
+      password: this.state.password,
+      uni: this.state.uni,
+      major: this.state.major,
+      age: this.state.date,
+    };
 
-    handleMajorChange(text) {
-        if(text.length >= 6) {
-            this.setState({ isMajorValid: true, major: text });
-            return;
-        }
-        this.setState({ isMajorValid: false, major: text });
+    const signUpResponse = await API.requestSignUp(data);
+    if (signUpResponse.status === 201) {
+      // signup successful, store email locally and upload profile picture (if provided)
+      const responseData = await signUpResponse.json();
+
+      API.uploadPicture(responseData.signedPutUrl, null); // need to replace null with the image
+      await AsyncStorage.setItem("storedEmail", data.email);
+      this.props.navigation.navigate("AppScreen");
     }
-
-    async handleSubmit() {
-        if(!this.state.isNameValid || !this.state.isEmailValid || !this.state.isPasswordValid
-            || !this.state.date || !this.state.isUniValid || !this.state.isMajorValid) {
-            console.log('invalid inputs');
-            return;
-        }
-        const API = new APIConnection();
-        const data = {
-            name: this.state.name,
-            email: this.state.email,
-            password: this.state.password,
-            uni: this.state.uni,
-            major: this.state.major,
-            age: this.state.date
-        }
-
-        const signUpResponse = await API.requestSignUp(data);
-        if(signUpResponse.status === 201) {
-            // signup successful, store email locally and upload profile picture (if provided)
-            const responseData = await signUpResponse.json();
-
-            API.uploadPicture(responseData.signedPutUrl, null); // need to replace null with the image
-            await AsyncStorage.setItem('storedEmail', data.email);
-            this.props.navigation.navigate('AppScreen');
-        }
-    }
+  }
 
     render() {
         return (
@@ -300,10 +310,9 @@ class SignUp extends React.Component {
                         
                     </ScrollView>
                 </Swiper>
-                
             </View>
-        );
-    }
+    );
+  }
 }
 
 export default SignUp;
