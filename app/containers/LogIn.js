@@ -130,12 +130,12 @@ class LogIn extends React.Component {
                 </Button>
 
                 <Image source={require('../assets/images/or.png')} 
-                style={{marginLeft: DIMENSION.width * 0.19, marginTop: DIMENSION.height * 0.06}}/>
+                style={{marginLeft: DIMENSION.width * 0.19, marginTop: DIMENSION.height * 0.15}}/>
                 
                 <Button 
                 labelStyle={{color: "#FFF"}}
                 style={styles.signupredirect}
-                mode='outlined'
+                mode='contained'
                 onPress={() => this.props.navigation.navigate("SignUp")}
                 >
                     Sign Up

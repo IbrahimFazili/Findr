@@ -27,6 +27,7 @@ const theme = {
         text: 'white', 
         placeholder: 'lightgrey',
         labelColor: 'black',
+        underlineColor:  'transparent',
     },
     
 };
@@ -38,13 +39,16 @@ const textBoxStyle = {
     borderBottomRightRadius: 30,
     borderTopLeftRadius: 30,
     borderTopRightRadius: 30,
+    borderWidth: 1,
+    borderRadius: 35,
     alignSelf: 'center',
-    backgroundColor: "#5EA39D",
+    backgroundColor: 'transparent',
+    borderColor: 'white',
     opacity: 0.5,
     marginBottom: "8%",
     zIndex: -1,
-    
 };
+
 
 function validateEmail(email) {
     const regex = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
@@ -200,7 +204,7 @@ class SignUp extends React.Component {
                             itemCount={6}
                             textColor="white"
                             itemColor="black"
-                            baseColor="white"
+                            baseColor='white'
                             selectedItemColor="black"
                             disabledItemColor="black"/>
 
@@ -221,7 +225,7 @@ class SignUp extends React.Component {
                                     height: DIMENTIONS.height * 0.06,
                                 },
                                 dateText: {
-                                    color: '#FFFFFF'
+                                    color: '#FFFFFF',
                                 }
                             }}
                             style={{ 
@@ -234,15 +238,16 @@ class SignUp extends React.Component {
                             androidMode='spinner'
                         />
 
-
-                        <Image source={require('../assets/images/or.png')} 
-                        style={{marginLeft: DIMENTIONS.width * 0.2, marginTop: DIMENTIONS.width * 0.04}}/>
+                        <Image 
+                            source={require('../assets/images/or.png')} 
+                            style={{marginLeft: DIMENTIONS.width * 0.2, marginTop: DIMENTIONS.width * 0.25}}
+                        />
 
                         <Button 
-                        labelStyle={{color: "#FFF"}}
-                        style={styles.loginRedirect}
-                        onPress={() => this.props.navigation.navigate("LogIn")}
-                        mode='contained'
+                            labelStyle={{color: "#FFF"}}
+                            style={styles.loginRedirect}
+                            onPress={() => this.props.navigation.navigate("LogIn")}
+                            mode='contained'
                         >
                             Log in
                         </Button>
