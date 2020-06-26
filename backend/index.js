@@ -328,56 +328,6 @@ app.post("/update", (req, res) => {
 	res.end();
 });
 
-function resetGraph() {
-	DB.fetchUsers({}).then(async (users) => {
-
-		for (let i = 0; i < users.length; i++) {
-			const user = users[i];
-			user.blueConnections = [];
-			user.greenConnections = [];
-	
-			await DB.updateUser(user, {email:user.email});
-		}
-
-		for (let i = 0; i < users.length; i++) {
-			const result = await matcher.generateGraph(users[i].email);
-		    console.log(`Graph generation for ${users[i].name} ${result ? "successful" : "failed"}`);
-		}
-	});
-}
-//resetGraph();
-
-function addDummyUser() {
-	const requestData = {
-		name: "Sheldon Cooper",
-		email: "sheldon.cooper@caltech.edu",
-		password: bcrypt.hashSync("Cooper73", 10),
-		gender: "M",
-		uni: "California Institute of Technology",
-		major: "Physics",
-		age: 40,
-		chats: [],
-		keywords: ["CSC209", "MAT224", "PHY136"],
-		bio:
-			"One cries because one is sad. I cry because others are stupid and that makes me sad",
-		blueConnections: [],
-		greenConnections: [],
-	};
-
-	DB.insertUser(requestData)
-		.then(async (result) => {
-			// sendEmail(requestData);
-			matcher.generateGraph(requestData.email).then((res) => {
-				console.log(`${requestData.name} ${res ? "added" : "failed"}`);
-			});
-		})
-		.catch((err) => {
-			// unsuccessful insert, reply back with unsuccess response code
-			console.log(err);
-		});
-}
-// addDummyUser();
-
 /* Socket Listeners for chat */
 
 io.on("connection", (socket) => {

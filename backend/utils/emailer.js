@@ -14,7 +14,7 @@ function sendEmail(email, hash) {
             to: email
         };
 
-        var customURL = "http://localhost:3000/verifyUserEmail?key=" + hash;
+        var customURL = "http://" + process.env.DOMAIN + "/verifyUserEmail?key=" + hash;
         mailOptions.subject = 'Confirm email for ' + vars.APP_NAME;
         mailOptions.text = 'Please verify your email by clicking on the link below\n' + customURL;
     
