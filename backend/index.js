@@ -229,6 +229,12 @@ app.post("/updateUserInfo", (req, res) => {
 	
 });
 
+app.get("/updateProfilePicture", async (req, res) => {
+	const email = req.query.email;
+	var url = await AWS_Presigner.generateSignedPutUrl("user_images/" + email);
+	res.status(200).send(url);
+});
+
 app.post("/new-user", (req, res) => {
 	const requestData = {
 		name: req.body.name,
