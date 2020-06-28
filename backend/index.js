@@ -42,14 +42,15 @@ app.get("/", (req, res) => {
 app.get("/fetchUsers", (req, res) => {
 	DB.fetchUsers({ email: req.query.email })
 		.then(async function (result) {
-
-			for (var i = 0; i < result.length; i++) {
-				result[i].image = await AWS_Presigner.generateSignedGetUrl(
-					"user_images/" + result[i].email
-				);
+			if (process.env.NODE_ENV !== "test") {
+				for (var i = 0; i < result.length; i++) {
+					result[i].image = await AWS_Presigner.generateSignedGetUrl(
+						"user_images/" + result[i].email
+					);
+				}	
 			}
 
-			res.send(result);
+			res.status(200).send(result);
 		})
 		.catch((err) => {
 			console.log(err);
@@ -63,11 +64,14 @@ app.get("/fetchMatches", (req, res) => {
 		.then((matches) => {
 			DB.fetchUsers({ _id: { $in: matches } })
 				.then(async (users) => {
-					for (var i = 0; i < users.length; i++) {
-						users[i].image = await AWS_Presigner.generateSignedGetUrl(
-							"user_images/" + users[i].email
-						);
+					if (process.env.NODE_ENV !== "test") {
+						for (var i = 0; i < users.length; i++) {
+							users[i].image = await AWS_Presigner.generateSignedGetUrl(
+								"user_images/" + users[i].email
+							);
+						}
 					}
+					
 
 					res.status(200).send(users);
 				})
@@ -111,9 +115,11 @@ app.get("/fetchConnections", (req, res) => {
 						delete element.blueConnections;
 						delete element.greenConnections;
 
-						element.image = await AWS_Presigner.generateSignedGetUrl(
-							"user_images/" + element.email
-						);
+						if (process.env.NODE_ENV !== "test") {
+							element.image = await AWS_Presigner.generateSignedGetUrl(
+								"user_images/" + element.email
+							);
+						}
 					}
 
 					res.status(200).send(JSON.stringify(connections));
