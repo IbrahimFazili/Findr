@@ -252,10 +252,13 @@ app.post("/new-user", (req, res) => {
 
 	DB.insertUser(requestData)
 		.then(async (result) => {
-			sendEmail(requestData.email, requestData.verificationHash);
-			matcher.generateGraph(requestData.email);
+			if (process.env.NODE_ENV !== "test") {
+				sendEmail(requestData.email, requestData.verificationHash);
+			}
 
-			res.status(201).send("Success");
+			matcher.generateGraph(requestData.email);
+			process.env.NODE_ENV === "test" ? res.status(201).send(requestData.verificationHash)
+			: res.status(201).send("success");
 		})
 		.catch((err) => {
 			// unsuccessful insert, reply back with unsuccess response code
