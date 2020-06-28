@@ -4,7 +4,7 @@
   "description": "Backend for the findr mobile app",
   "main": "index.js",
   "scripts": {
-    "test": "mocha",
+    "test": "NODE_ENV=test mocha",
     "start": "node index.js"
   },
   "author": "Lakshya Gupta, Aditi Dagar",
