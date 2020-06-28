@@ -144,23 +144,20 @@
     },
 
     {
-        name: "Mayim bialik",
-        email: "mayim.bialik@ucla.com",
-        password: bcrypt.hashSync("neildiamond", 10),
-        gender: "F",
-        uni: "",
-        major: "",
-        age: 42,
-        chats: [],
-        keywords: ["POL113", "RLG101"],
-        bio:
-            "A Female Sheldon Cooper.",
-        blueConnections: [],
-        greenConnections: [],
-        }
-
-    
-
+    name: "Alex Rennet",
+    email: "alex.rennet@ucla.com",
+    password: bcrypt.hashSync("alex2020", 10),
+    gender: "M",
+    uni: "",
+    major: "",
+    age: 39,
+    chats: [],
+    keywords: ["MAT102", "PHY105", "LIN101"],
+    bio:
+        "Teaching Stream Faculty.",
+    blueConnections: [],
+    greenConnections: [],
+    }
 
 ]
     
