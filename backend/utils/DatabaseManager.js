@@ -4,7 +4,7 @@ const MONGO_URL =
     "mongodb+srv://" + process.env.DATABASE_USER + ":" + process.env.DATABASE_PASS + "@cluster0-hkvsu.mongodb.net/test?retryWrites=true&w=majority";
 var client = new MongoClient(MONGO_URL, { useUnifiedTopology: true, useNewUrlParser: true });
 
-const COLLECTION_USERS = "Users";
+const COLLECTION_USERS = process.env.NODE_ENV === "test" ? "Test_Users" : "Users";
 const COLLECTION_CHATS = "ChatStorage";
 const DB = "test";
 
