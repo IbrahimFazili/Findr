@@ -49,7 +49,7 @@ app.get("/fetchUsers", (req, res) => {
 				);
 			}
 
-			res.send(result);
+			res.status(200).send(result);
 		})
 		.catch((err) => {
 			console.log(err);
