@@ -561,11 +561,11 @@ export default StyleSheet.create({
   },
 
   slide0: {
-    marginTop: DIMENSION_HEIGHT * 0.1
+    marginTop: DIMENSION_HEIGHT * 0.08
   },
 
   slide1: {
-    marginTop: DIMENSION_HEIGHT * 0.1
+    marginTop: DIMENSION_HEIGHT * 0.08
   },
 
   uniDropDown: {

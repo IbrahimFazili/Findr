@@ -250,7 +250,7 @@ class SignUp extends React.Component {
 
                         <Image 
                             source={require('../assets/images/or.png')} 
-                            style={{marginLeft: DIMENTIONS.width * 0.2, marginTop: DIMENTIONS.width * 0.25}}
+                            style={{marginLeft: DIMENTIONS.width * 0.2, marginTop: DIMENTIONS.width * 0.24}}
                         />
 
                         <Button 
