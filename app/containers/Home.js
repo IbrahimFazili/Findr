@@ -5,7 +5,7 @@ import Filters from "../components/Filters";
 import CardItem from "../components/CardItem";
 import styles from "../assets/styles";
 import APIConnection from "../assets/data/APIConnection";
-// import ProfilePopup from "../components/ProfilePopup";
+import OfflinePopup from "./OfflinePop";
 
 const MAX_LENGTH = 150;
 
@@ -70,6 +70,7 @@ class Home extends React.Component {
           source={require("../assets/images/Findr_logo2x.png")}
         />
         <View style={styles.containerHome}>
+          <OfflinePopup />
           <View style={styles.homeCards}>
             <CardStack
               loop={true}

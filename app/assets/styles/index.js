@@ -659,6 +659,18 @@ export default StyleSheet.create({
   bottomlogin: {
     marginTop: 60,
   },
+  offlineText: { 
+    color: '#fff'
+  },
+  offlineContainer: {
+    backgroundColor: '#b52424',
+    height: 30,
+    justifyContent: 'center',
+    alignItems: 'center',
+    flexDirection: 'row',
+    width: DIMENSION_WIDTH,
+    top: DIMENSION_HEIGHT * -0.075
+  },
 
   //COMPONENT - SIDE MENU
   sidemenucontainer: {
