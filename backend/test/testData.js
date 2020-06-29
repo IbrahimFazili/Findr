@@ -1,5 +1,8 @@
- module.exports.testData =
- [  {
+const bcrypt = require("bcrypt");
+
+module.exports.testData =
+[
+    {
     name: "Sheldon Cooper",
     email: "sheldon.cooper@caltech.edu",
     password: bcrypt.hashSync("Cooper73", 10),
@@ -89,8 +92,7 @@
     age: 40,
     chats: [],
     keywords: ["BIO100", "MAT224", "ECO100"],
-    bio:
-        "I got hit by a trailer.",
+    bio: "I got hit by a trailer.",
     blueConnections: [],
     greenConnections: [],
     },
@@ -105,8 +107,7 @@
     age: 41,
     chats: [],
     keywords: ["CSC209", "CSC148", "MAT102"],
-    bio:
-        "Trauma Surgeon, served in Iraq",
+    bio: "Trauma Surgeon, served in Iraq",
     blueConnections: [],
     greenConnections: [],
     },
@@ -158,8 +159,7 @@
     blueConnections: [],
     greenConnections: [],
     }
+];
 
-]
-    
 
 

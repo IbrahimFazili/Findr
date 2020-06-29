@@ -63,7 +63,7 @@ function insertUser(profile) {
             })
 
         }).catch((reason) => {
-            reject(err);
+            reject(reason);
         });
     });
 }
@@ -181,6 +181,22 @@ function deleteChat(id) {
     });
 }
 
+function deleteAllUsers() {
+
+    return new Promise(function (resolve, reject) {
+        getCollection(COLLECTION_USERS).then((collection) => {
+            collection.deleteMany({ }).then((deleteRes) => {
+                resolve(deleteRes);
+            }).catch((err) => {
+                reject(err);
+            });
+
+        }).catch((reason) => {
+            reject(reason);
+        });
+    });
+}
+
 module.exports.insertUser = insertUser;
 module.exports.insertChat = insertChat;
 
@@ -196,3 +212,4 @@ module.exports.fetchChat = fetchChat;
 module.exports.getCollection = getCollection;
 
 module.exports.deleteChat = deleteChat;
+module.exports.deleteAllUsers = process.env.NODE_ENV === "test" ? deleteAllUsers : undefined;
