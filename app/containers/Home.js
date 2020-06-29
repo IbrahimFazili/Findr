@@ -1,5 +1,5 @@
 import React from "react";
-import { View, ImageBackground, AsyncStorage, Image } from "react-native";
+import { View, ImageBackground, AsyncStorage, Image, NetInfo } from "react-native";
 import CardStack, { Card } from "react-native-card-stack-swiper";
 import Filters from "../components/Filters";
 import CardItem from "../components/CardItem";
@@ -18,8 +18,19 @@ class Home extends React.Component {
       cards: [],
       API: new APIConnection(),
       dataLoadRequired: true,
+      isConnected: true,
     };
   }
+
+
+  // async componentWillUnmount() {
+  //   NetInfo.isConnected.removeEventListener('connectionChange', this.handleConnectivityChange);
+  // }
+  // ^^
+
+  handleConnectivityChange = isConnected => {
+      this.setState({ isConnected });
+  };
 
   async componentWillMount() {
     try {
@@ -27,6 +38,7 @@ class Home extends React.Component {
       if (storedEmail === null) {
         this.props.navigation.navigate("LogIn");
       }
+      
       // this.props.navigation.navigate("Onboarding");
     } catch (err) {
       console.log(err);
@@ -35,6 +47,8 @@ class Home extends React.Component {
 
   async componentDidMount() {
     let storedEmail = await AsyncStorage.getItem("storedEmail");
+    // NetInfo.isConnected.addEventListener('connectionChange', this.handleConnectivityChange);
+    // ^^
 
     if (storedEmail !== null && this.state.dataLoadRequired) {
       const data = await this.state.API.loadData(storedEmail);
@@ -60,17 +74,21 @@ class Home extends React.Component {
         console.log(er);
       });
 
+    // if (!this.state.isConnected) {
+    //     this.props.navigation.navigate("Internet");
+    // }
     return (
       <ImageBackground
         source={require("../assets/images/15.png")}
         style={styles.bg}
       >
+        <OfflinePopup />
+        {/* ^^ */}
         <Image
           style={styles.homeLogo}
           source={require("../assets/images/Findr_logo2x.png")}
         />
         <View style={styles.containerHome}>
-          <OfflinePopup />
           <View style={styles.homeCards}>
             <CardStack
               loop={true}

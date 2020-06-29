@@ -1,13 +1,14 @@
 import React, { PureComponent } from 'react';
-import { View, Text, Dimensions, StyleSheet, NetInfo } from 'react-native';
+import { View, Text, Dimensions, StyleSheet, NetInfo, Image, ImageBackground} from 'react-native';
 import styles from "../assets/styles/index";
 // import NetInfo from "@react-native-community/netinfo";
 
 function MiniOfflineSign() {
     return (
-      <View style={styles.offlineContainer}>
-        <Text style={styles.offlineText}>No Internet Connection</Text>
-      </View>
+      <ImageBackground source={require('../assets/images/15.png')} style={styles.internetBG}>
+          <Image style={styles.internetLogo} source={require('../assets/images/Findr_logo2x.png')} />
+          <Text style={styles.internetText}>It seems like your internet is down</Text>
+      </ImageBackground>
     );
   }
   
@@ -33,7 +34,8 @@ function MiniOfflineSign() {
         return <MiniOfflineSign />;
       }
       return null;
-    }
+        // return <MiniOfflineSign />;
   }
+}
 
 export default OfflineNotice;
