@@ -23,9 +23,9 @@ class Home extends React.Component {
   }
 
 
-  // async componentWillUnmount() {
-  //   NetInfo.isConnected.removeEventListener('connectionChange', this.handleConnectivityChange);
-  // }
+  async componentWillUnmount() {
+    NetInfo.isConnected.removeEventListener('connectionChange', this.handleConnectivityChange);
+  }
   // ^^
 
   handleConnectivityChange = isConnected => {
@@ -47,7 +47,7 @@ class Home extends React.Component {
 
   async componentDidMount() {
     let storedEmail = await AsyncStorage.getItem("storedEmail");
-    // NetInfo.isConnected.addEventListener('connectionChange', this.handleConnectivityChange);
+    NetInfo.isConnected.addEventListener('connectionChange', this.handleConnectivityChange);
     // ^^
 
     if (storedEmail !== null && this.state.dataLoadRequired) {
@@ -74,15 +74,15 @@ class Home extends React.Component {
         console.log(er);
       });
 
-    // if (!this.state.isConnected) {
-    //     this.props.navigation.navigate("Internet");
-    // }
+    if (!this.state.isConnected) {
+        this.props.navigation.navigate("Internet");
+    }
     return (
       <ImageBackground
         source={require("../assets/images/15.png")}
         style={styles.bg}
       >
-        <OfflinePopup />
+        {/* <OfflinePopup /> */}
         {/* ^^ */}
         <Image
           style={styles.homeLogo}

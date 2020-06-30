@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, AsyncStorage, Image, Dimensions, ScrollView } from 'react-native';
+import { View, AsyncStorage, Image, Dimensions, ScrollView, NetInfo } from 'react-native';
 import styles from '../assets/styles';
 import { DefaultTheme, TextInput, Button, Menu, Provider } from 'react-native-paper';
 import DatePicker from 'react-native-datepicker';
@@ -83,7 +83,9 @@ class SignUp extends React.Component {
       isUniValid: false,
       isMajorValid: false,
       showDots: true,
-      dropdownVisible: false
+      dropdownVisible: false,
+
+      isConnected: true,
     };
   }
 
@@ -128,6 +130,18 @@ class SignUp extends React.Component {
     this.setState({ isMajorValid: false, major: text });
   }
 
+  async componentDidMount(){
+    NetInfo.isConnected.addEventListener('connectionChange', this.handleConnectivityChange);
+  }
+
+  async componentWillUnmount() {
+    NetInfo.isConnected.removeEventListener('connectionChange', this.handleConnectivityChange);
+  }
+
+  handleConnectivityChange = isConnected => {
+    this.setState({ isConnected });
+  };
+
   async handleSubmit() {
     if (
       !this.state.isNameValid ||
@@ -162,6 +176,9 @@ class SignUp extends React.Component {
   }
 
     render() {
+        if (!this.state.isConnected) {
+          this.props.navigation.navigate("Internet");
+        }
         return (
             <View style={{backgroundColor: "#164e48", width: "100%", height: "100%", padding: '3%' }}>
                 <Image style={styles.logo} source={require('../assets/images/Findr_white2x.png')}/>

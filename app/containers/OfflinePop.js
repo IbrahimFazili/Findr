@@ -14,7 +14,7 @@ function MiniOfflineSign() {
   
   class OfflineNotice extends PureComponent {
     state = {
-      isConnected: true
+      isConnected: false
     };
   
     componentDidMount() {
@@ -30,11 +30,11 @@ function MiniOfflineSign() {
     };
   
     render() {
-      if (!this.state.isConnected) {
-        return <MiniOfflineSign />;
+      if (this.state.isConnected) {
+        this.props.navigation.goBack();
       }
-      return null;
-        // return <MiniOfflineSign />;
+      // return null;
+        return <MiniOfflineSign />;
   }
 }
 
