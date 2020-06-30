@@ -4,7 +4,7 @@
   "description": "Backend for the findr mobile app",
   "main": "index.js",
   "scripts": {
-    "test": "mocha --timeout 7000",
+    "test": "mocha --timeout 0",
     "start": "node index.js"
   },
   "author": "Lakshya Gupta, Aditi Dagar",

@@ -5,7 +5,7 @@ module.exports.testData =
     {
     name: "Sheldon Cooper",
     email: "sheldon.cooper@caltech.edu",
-    password: bcrypt.hashSync("Cooper73", 10),
+    password: "Cooper73",
     gender: "M",
     uni: "California Institute of Technology",
     major: "Physics",
@@ -21,7 +21,7 @@ module.exports.testData =
     {
     name: "Leonard Hofstadter",
     email: "leonard.hofstadter@caltech.edu",
-    password: bcrypt.hashSync("Hofstadter2000", 10),
+    password: "Hofstadter2000",
     gender: "M",
     uni: "Princeton University",
     major: "Physics",
@@ -37,7 +37,7 @@ module.exports.testData =
     {
     name: "Penny Hofstadter",
     email: "penny.hofstadter@communitycollege.edu",
-    password: bcrypt.hashSync("penny200", 10),
+    password: "penny200",
     gender: "F",
     uni: "Some Community College",
     major: "Theatre",
@@ -53,7 +53,7 @@ module.exports.testData =
     {
     name: "Meredith Grey",
     email: "meredith.grey@seattlegrace.com",
-    password: bcrypt.hashSync("darkandtwisted", 10),
+    password: "darkandtwisted",
     gender: "F",
     uni: "Dartmouth College",
     major: "Life Sciences",
@@ -69,7 +69,7 @@ module.exports.testData =
     {
     name: "Cristina Yang",
     email: "cristina.yang@seattlegrace.com",
-    password: bcrypt.hashSync("shark", 10),
+    password: "shark",
     gender: "F",
     uni: "Stanford University",
     major: "Life Sciences",
@@ -85,7 +85,7 @@ module.exports.testData =
     {
     name: "Derek Shepherd",
     email: "derek.shepherd@seattlegrace.com",
-    password: bcrypt.hashSync("mcsteamy", 10),
+    password: "mcsteamy",
     gender: "M",
     uni: "Harvard University",
     major: "Neuroscience",
@@ -100,7 +100,7 @@ module.exports.testData =
     {
     name: "Owen Hunt",
     email: "owen.hunt@seattlegrace.com",
-    password: bcrypt.hashSync("ginger", 10),
+    password: "ginger",
     gender: "M",
     uni: "Brown University",
     major: "Chemistry",
@@ -115,7 +115,7 @@ module.exports.testData =
     {
     name: "Miranda Bailey",
     email: "miranda.bailey@seattlegrace.com",
-    password: bcrypt.hashSync("nazi", 10),
+    password: "nazi",
     gender: "F",
     uni: "",
     major: "",
@@ -131,7 +131,7 @@ module.exports.testData =
     {
     name: "Mayim bialik",
     email: "mayim.bialik@ucla.com",
-    password: bcrypt.hashSync("neildiamond", 10),
+    password: "neildiamond",
     gender: "F",
     uni: "",
     major: "",
@@ -147,7 +147,7 @@ module.exports.testData =
     {
     name: "Alex Rennet",
     email: "alex.rennet@ucla.com",
-    password: bcrypt.hashSync("alex2020", 10),
+    password: "alex2020",
     gender: "M",
     uni: "",
     major: "",

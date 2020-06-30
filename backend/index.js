@@ -213,11 +213,15 @@ app.post("/updateKeywords", (req, res) => {
 
 app.post("/updateUserInfo", (req, res) => {
 	const user = req.body.user;
+	if (user.email === undefined) {
+		res.status(400).send("missing user email");
+		return;
+	}
 
 	DB.fetchUsers({ email: user.email }).then(async (users) => {
 
 		if (user.password !== undefined) {
-			if (!validatePassword(user.password) && bcrypt.compareSync(user.oldPassword, users[0].password)) {
+			if (!validatePassword(user.password) || !bcrypt.compareSync(user.oldPassword, users[0].password)) {
 				res.status(406).send("invalid password");
 				return;
 			}
@@ -236,6 +240,12 @@ app.post("/updateUserInfo", (req, res) => {
 });
 
 app.post("/new-user", (req, res) => {
+	if (process.env.NODE_ENV === "test") {
+		for (let i = 0; i < req.body.keywords.length; i++) {
+			req.body.keywords[i] = req.body.keywords[i].toLowerCase();
+		}
+	}
+	
 	const requestData = {
 		name: req.body.name,
 		email: req.body.email,
@@ -248,7 +258,7 @@ app.post("/new-user", (req, res) => {
 		projects: [],
 		experience: [],
 		chats: [],
-		keywords: [],
+		keywords: process.env.NODE_ENV === "test" ? req.body.keywords : [],
 		bio: "",
 		blueConnections: [],
 		greenConnections: [],
