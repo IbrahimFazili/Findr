@@ -43,7 +43,7 @@ module.exports.testData =
     major: "Theatre",
     age: 35,
     chats: [],
-    keywords: ["ECO 100", "STA107"],
+    keywords: ["ECO100", "STA107"],
     bio:
         "Pharmaceutical Sales Representative.",
     blueConnections: [],

@@ -10,8 +10,9 @@ const Chat = require("./utils/Chat").Chat;
 const matcher = new (require("./utils/Matcher").Matcher)();
 const { EventQueue, Event, MESSAGE_EVENT } = require('./utils/Events');
 const sendEmail = require("./utils/emailer").sendEmail;
+const DataStructures = require("./utils/DataStructures");
 
-
+const callbackQueue = new DataStructures.CallbackQueue();
 var isServerOutdated = false;
 
 function validatePassword(password) {
@@ -27,6 +28,53 @@ function generateRandomNumber() {
 		randomNumber = randomNumber + randomDigit;
 	}
 	return randomNumber;
+}
+
+function signUp(requestData, res, oncomplete){
+	DB.insertUser(requestData)
+		.then(async (result) => {
+			if (process.env.NODE_ENV !== "test") {
+				sendEmail(requestData.email, requestData.verificationHash);
+			}
+
+			matcher.generateGraph(requestData.email);
+			process.env.NODE_ENV === "test" ? res.status(201).send(requestData.verificationHash)
+			: res.status(201).send("success");
+			oncomplete();
+		})
+		.catch((err) => {
+			// unsuccessful insert, reply back with unsuccess response code
+			console.log(err);
+			res.status(500).send("Insert Failed");
+			oncomplete();
+		});
+}
+
+function updateKeywords(email, keywords, res, oncomplete){
+	DB.fetchUsers({ email }).then((users) => {
+		const oldKeywords = users[0].keywords;
+
+		DB.updateUser({ keywords }, { email })
+			.then((updateRes) => {
+				matcher.updateGraph(email, oldKeywords).then((value) => {
+					value ? res.status(201).send("success") : res.status(500).send("Server Error");
+					oncomplete();
+				}).catch((err) => {
+					console.log(err);
+					res.status(500).send("Server Error");
+					oncomplete();
+				})
+			})
+			.catch((err) => {
+				console.log(err);
+				res.status(500).send("Database Update Error");
+				oncomplete();
+			});
+	}).catch((err) => {
+		console.log(err);
+		res.status(500).send("Database Fetch Error");
+		oncomplete();
+	})
 }
 
 app.use(bodyParser.json());
@@ -189,31 +237,12 @@ app.post("/updateKeywords", (req, res) => {
 		keywords[i] = String(keywords[i]).toLowerCase();
 	}
 
-	DB.fetchUsers({ email: req.body.email }).then((users) => {
-		const oldKeywords = users[0].keywords;
-
-		DB.updateUser({ keywords }, { email: req.body.email })
-			.then((updateRes) => {
-				matcher.updateGraph(req.body.email, oldKeywords).then((value) => {
-					value ? res.status(201).send("success") : res.status(500).send("Server Error");
-				}).catch((err) => {
-					console.log(err);
-					res.status(500).send("Server Error");
-				})
-			})
-			.catch((err) => {
-				console.log(err);
-				res.status(500).send("Database Update Error");
-			});
-	}).catch((err) => {
-		console.log(err);
-		res.status(500).send("Database Fetch Error");
-	})
+	callbackQueue.enqueue(updateKeywords, req.body.email, keywords, res);
 });
 
 app.post("/updateUserInfo", (req, res) => {
 	const user = req.body.user;
-	if (user.email === undefined) {
+	if (user.email === undefined || user.email === null) {
 		res.status(400).send("missing user email");
 		return;
 	}
@@ -265,22 +294,9 @@ app.post("/new-user", (req, res) => {
 		active: false,
 		verificationHash: bcrypt.hashSync(req.body.email + generateRandomNumber(), 3)
 	};
-
-	DB.insertUser(requestData)
-		.then(async (result) => {
-			if (process.env.NODE_ENV !== "test") {
-				sendEmail(requestData.email, requestData.verificationHash);
-			}
-
-			matcher.generateGraph(requestData.email);
-			process.env.NODE_ENV === "test" ? res.status(201).send(requestData.verificationHash)
-			: res.status(201).send("success");
-		})
-		.catch((err) => {
-			// unsuccessful insert, reply back with unsuccess response code
-			console.log(err);
-			res.status(500).send("Insert Failed");
-		});
+	
+	callbackQueue.enqueue(signUp, requestData, res);
+	
 });
 
 app.get("/verifyUserEmail", (req, res) => {
