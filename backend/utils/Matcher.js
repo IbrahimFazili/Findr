@@ -116,16 +116,17 @@ class Matcher {
                 });
 
                 for (var i = 0; i < duplicateConnections.length; i++) {
-                    let commonKeywords = user.keywords.filter(value => duplicateConnections[i].keywords.includes(value))
-                    let index1 = user.blueConnections.findIndex((conn) => conn._id.equals(duplicateConnections[i]._id))
+                    let commonKeywords = user.keywords.filter(value => duplicateConnections[i].keywords.includes(value));
+                    let index1 = user.blueConnections.findIndex((conn) => conn._id.equals(duplicateConnections[i]._id));
                     user.blueConnections[index1].commonKeywords = commonKeywords;
-                    let index2 = duplicateConnections[i].blueConnections.findIndex((conn) => conn._id.equals(user._id))
+
+                    let index2 = duplicateConnections[i].blueConnections.findIndex((conn) => conn._id.equals(user._id));
                     duplicateConnections[i].blueConnections[index2].commonKeywords = commonKeywords;
                     await DB.updateUser({ blueConnections: user.blueConnections },
-                        { email: user.email })
+                        { email: user.email });
 
                     await DB.updateUser({ blueConnections: duplicateConnections[i].blueConnections },
-                        { email: duplicateConnections[i].email })
+                        { email: duplicateConnections[i].email });
                 }
                
                 let blueConn = null;

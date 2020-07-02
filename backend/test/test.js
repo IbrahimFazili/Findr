@@ -1,11 +1,13 @@
 const chai = require('chai');
 const chatHttp = require('chai-http');
+const deepEqualInAnyOrder = require('deep-equal-in-any-order');
 const TestData = require('./testData').testData;
 const server = require("../index");
 const DB = require("../utils/DatabaseManager");
 const bcrypt = require("bcrypt");
 
 chai.use(chatHttp);
+chai.use(deepEqualInAnyOrder);
 chai.should();
 
 const SERVER_URL = "http://localhost:3000";
@@ -41,34 +43,8 @@ describe("Test Cases", () => {
             done();
         });
     });
-
+    
     describe("Update User Info Tests", function() {
-
-        it("Update Basic Info", (done) => {
-            const TEST_USER = getRandomEntry(TestData);
-            const NEW_NAME = TEST_USER.name.split(" ")[0];
-            const NEW_UNI = TEST_USER.uni;
-            chai.request(SERVER_URL)
-            .post("/updateUserInfo")
-            .set('content-type', 'application/json')
-            .send({ user: {
-                email: TEST_USER.email,
-                name: NEW_NAME,
-                uni: NEW_UNI
-            }})
-            .end(function (err, res) {
-                res.should.have.status(201);
-                
-                chai.request(SERVER_URL)
-                .get(`/fetchUsers?email=${TEST_USER.email}`)
-                .end(function (err, res) {
-                    res.should.have.status(200);
-                    chai.expect(res.body[0].name).to.be.equal(NEW_NAME);
-                    chai.expect(res.body[0].uni).to.be.equal(NEW_UNI);
-                    done();
-                });
-            });
-        });
 
         it("Update Info without email provided", (done) => {
             const TEST_USER = getRandomEntry(TestData);
@@ -92,17 +68,17 @@ describe("Test Cases", () => {
             });
         });
 
-        it("Update Password", (done) => {
+        it("Update Basic Info", (done) => {
             const TEST_USER = getRandomEntry(TestData);
-            const NEW_PASSWORD = "TestPassword1";
-            const OLD_PASSWORD = TEST_USER.password;
+            const NEW_NAME = TEST_USER.name.split(" ")[0];
+            const NEW_UNI = TEST_USER.uni;
             chai.request(SERVER_URL)
             .post("/updateUserInfo")
             .set('content-type', 'application/json')
             .send({ user: {
                 email: TEST_USER.email,
-                oldPassword: OLD_PASSWORD,
-                password: NEW_PASSWORD
+                name: NEW_NAME,
+                uni: NEW_UNI
             }})
             .end(function (err, res) {
                 res.should.have.status(201);
@@ -111,7 +87,8 @@ describe("Test Cases", () => {
                 .get(`/fetchUsers?email=${TEST_USER.email}`)
                 .end(function (err, res) {
                     res.should.have.status(200);
-                    chai.expect(bcrypt.compareSync(NEW_PASSWORD, res.body[0].password)).to.be.equal(true);
+                    chai.expect(res.body[0].name).to.be.equal(NEW_NAME);
+                    chai.expect(res.body[0].uni).to.be.equal(NEW_UNI);
                     done();
                 });
             });
@@ -166,6 +143,35 @@ describe("Test Cases", () => {
                 });
             });
         });
+
+        it("Update Password", (done) => {
+            const TEST_USER = getRandomEntry(TestData);
+            const NEW_PASSWORD = "TestPassword1";
+            const OLD_PASSWORD = TEST_USER.password;
+            chai.request(SERVER_URL)
+            .post("/updateUserInfo")
+            .set('content-type', 'application/json')
+            .send({ user: {
+                email: TEST_USER.email,
+                oldPassword: OLD_PASSWORD,
+                password: NEW_PASSWORD
+            }})
+            .end(function (err, res) {
+                res.should.have.status(201);
+                
+                chai.request(SERVER_URL)
+                .get(`/fetchUsers?email=${TEST_USER.email}`)
+                .end(function (err, res) {
+                    res.should.have.status(200);
+                    chai.expect(bcrypt.compareSync(NEW_PASSWORD, res.body[0].password)).to.be.equal(true);
+                    done();
+                });
+            });
+        });
+        
+    });
+
+    describe("Right Swipe Tests", function() {
         
     });
 
@@ -215,9 +221,13 @@ describe("Test Cases", () => {
     
                     const index = users.findIndex((usr) => usr.email === TEST_USER.email);
                     chai.expect(users[index].keywords).to.be.eql([]);
+                    userIds = []
+                    for (var i = 0; i < users[index].blueConnections.length; i++){
+                        userIds.push(users[index].blueConnections[i]._id)
+                    }
                     for (var i = 0; i < TestData.length; i++){
                         if (i !== index){
-                            chai.expect(users[i].blueConnections).to.not.include(users[index]._id);
+                            chai.expect(userIds).to.not.include(users[index]._id);
                         }
                     }
     
@@ -249,10 +259,13 @@ describe("Test Cases", () => {
                     const users = await DB.fetchUsers({ email: { $in: emailList } });
     
                     const index = users.findIndex((usr) => usr.email === TEST_USER.email);
-                    chai.expect(users[index].keywords).to.be.eql(["ant102 ", "lin102"]);
+                    chai.expect(users[index].keywords).to.have.members(["ant102 ", "lin102"]);
+                    for (var i = 0; i < users[index].blueConnections.length; i++){
+                        userIds.push(users[index].blueConnections[i]._id)
+                    }
                     for (var i = 0; i < TestData.length; i++){
                         if (i !== index){
-                            chai.expect(users[i].blueConnections).to.not.include(users[index]._id);
+                            chai.expect(userIds).to.not.include(users[index]._id);
                         }
                     }
     
@@ -263,7 +276,7 @@ describe("Test Cases", () => {
             })
         });
 
-        it("Update to remove one common keywords", (done) => {
+        it("Update to remove one common keyword", (done) => {
             chai.request(SERVER_URL)
             .post('/updateKeywords')
             .set('Content-Type', 'application/json')
@@ -282,7 +295,7 @@ describe("Test Cases", () => {
                     const users = await DB.fetchUsers({ email: { $in: emailList } });
     
                     const meredithIndex = users.findIndex((usr) => usr.email === TestData[3].email);
-                    chai.expect(users[meredithIndex].keywords).to.be.eql(["bio100", "chm106"]);
+                    chai.expect(users[meredithIndex].keywords).to.have.members(["bio100", "chm106"]);
                     
                     const cristinaIndex = users.findIndex((usr) => usr.email === TestData[4].email);
                     const derekIndex = users.findIndex((usr) => usr.email === TestData[5].email);
@@ -290,19 +303,51 @@ describe("Test Cases", () => {
                     const sheldonIndex = users.findIndex((usr) => usr.email === TestData[0].email);
                     const pennyIndex = users.findIndex((usr) => usr.email === TestData[2].email);
                     const leonardIndex = users.findIndex((usr) => usr.email === TestData[1].email);
+                    const owenIndex = users.findIndex((usr) => usr.email === TestData[6].email);
 
-                    chai.expect(users[meredithIndex].blueConnections).to.be
-                    .eql([users[cristinaIndex]._id, users[derekIndex]._id]);
+                    chai.expect(users[meredithIndex].blueConnections).to.deep
+                    .equalInAnyOrder([ 
+                        { _id : users[cristinaIndex]._id, 
+                          commonKeywords : ["bio100", "chm106"]},
 
-                    chai.expect(users[cristinaIndex].blueConnections).to.be
-                    .eql([users[meredithIndex]._id, users[derekIndex]._id, users[alexIndex]._id]);
+                        { _id : users[derekIndex]._id,
+                          commonKeywords : ["bio100"]} ]);
+                    
+                    chai.expect(users[cristinaIndex].blueConnections).to.deep
+                    .equalInAnyOrder([
+                        { _id : users[meredithIndex]._id,
+                          commonKeywords : ["bio100", "chm106"]},
+                        
+                        { _id : users[derekIndex]._id,
+                          commonKeywords : ["bio100"]},
 
-                    chai.expect(users[derekIndex].blueConnections).to.be
-                    .eql([users[meredithIndex]._id, users[cristinaIndex]._id, users[sheldonIndex]._id, 
-                        users[pennyIndex]._id]);
+                        { _id : users[alexIndex]._id,
+                          commonKeywords : ["phy105"]} ]);
 
-                    chai.expect(users[alexIndex].blueConnections).to.be
-                    .eql([users[cristinaIndex]._id, users[leonardIndex]._id]);
+                    chai.expect(users[derekIndex].blueConnections).to.deep
+                    .equalInAnyOrder([
+                        { _id : users[meredithIndex]._id,
+                          commonKeywords : ["bio100"]},
+
+                        { _id : users[cristinaIndex]._id,
+                          commonKeywords : ["bio100"]},
+
+                        { _id : users[sheldonIndex]._id,
+                          commonKeywords : ["mat224"]},
+
+                        { _id : users[pennyIndex]._id,
+                          commonKeywords : ["eco100"]} ]);
+
+                    chai.expect(users[alexIndex].blueConnections).to.deep
+                    .equalInAnyOrder([
+                        { _id : users[cristinaIndex]._id,
+                          commonKeywords : ["phy105"]},
+                        
+                        { _id : users[owenIndex]._id,
+                          commonKeywords : ["mat102"]},
+                          
+                        { _id : users[leonardIndex]._id,
+                          commonKeywords : ["mat102"]} ]);
     
                 } catch (error) {
                     console.log(error);
@@ -311,11 +356,10 @@ describe("Test Cases", () => {
             })
         });
        
-    });
-    
+    });     
 
     after((done) => {
-        DB.deleteAllUsers();
+        // DB.deleteAllUsers();
         done();
     });
 
