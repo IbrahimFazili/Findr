@@ -24,6 +24,10 @@ class Queue {
 
 }
 
+/**
+ * Special Type of Queue to execute function calls that need to executed in
+ * a synchronized fashion
+ */
 class CallbackQueue extends Queue {
 
     constructor() {
@@ -38,7 +42,11 @@ class CallbackQueue extends Queue {
     }
 
     /**
-     * [{ func: , args: [] }, ]
+     * 
+     * @param {function} func The function call to enqueue. This function must contain a callable as it's final argument
+     *                        which must be called at the end of the function. Failing to do so would cause the queue to
+     *                        get stuck
+     * @param  {...any} args Arguments for the function in the required order
      */
     enqueue(func, ...args){ 
         const request = {

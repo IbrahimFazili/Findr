@@ -10,9 +10,9 @@ const Chat = require("./utils/Chat").Chat;
 const matcher = new (require("./utils/Matcher").Matcher)();
 const { EventQueue, Event, MESSAGE_EVENT } = require('./utils/Events');
 const sendEmail = require("./utils/emailer").sendEmail;
-const DataStructures = require("./utils/DataStructures");
+const { CallbackQueue } = require("./utils/DataStructures");
 
-const callbackQueue = new DataStructures.CallbackQueue();
+const callbackQueue = new CallbackQueue();
 var isServerOutdated = false;
 
 function validatePassword(password) {
@@ -92,6 +92,12 @@ app.get("/fetchUsers", (req, res) => {
 		.then(async function (result) {
 			if (process.env.NODE_ENV !== "test") {
 				for (var i = 0; i < result.length; i++) {
+					delete result[i].password;
+					delete result[i].chats;
+					delete result[i].blueConnections;
+					delete result[i].greenConnections;
+					delete result[i].verificationHash;
+
 					result[i].image = await AWS_Presigner.generateSignedGetUrl(
 						"user_images/" + result[i].email
 					);
@@ -114,6 +120,12 @@ app.get("/fetchMatches", (req, res) => {
 				.then(async (users) => {
 					if (process.env.NODE_ENV !== "test") {
 						for (var i = 0; i < users.length; i++) {
+							delete users[i].password;
+							delete users[i].chats;
+							delete users[i].blueConnections;
+							delete users[i].greenConnections;
+							delete users[i].verificationHash;
+
 							users[i].image = await AWS_Presigner.generateSignedGetUrl(
 								"user_images/" + users[i].email
 							);
@@ -162,6 +174,7 @@ app.get("/fetchConnections", (req, res) => {
 						delete element.chats;
 						delete element.blueConnections;
 						delete element.greenConnections;
+						delete element.verificationHash;
 
 						if (process.env.NODE_ENV !== "test") {
 							element.image = await AWS_Presigner.generateSignedGetUrl(
