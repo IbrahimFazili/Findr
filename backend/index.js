@@ -37,7 +37,7 @@ function signUp(requestData, res, oncomplete){
 				sendEmail(requestData.email, requestData.verificationHash);
 			}
 
-			matcher.generateGraph(requestData.email);
+			await matcher.generateGraph(requestData.email);
 			process.env.NODE_ENV === "test" ? res.status(201).send(requestData.verificationHash)
 			: res.status(201).send("success");
 			oncomplete();
