@@ -359,7 +359,7 @@ describe("Test Cases", () => {
     });     
 
     after((done) => {
-        // DB.deleteAllUsers();
+        DB.deleteAllUsers();
         done();
     });
 
