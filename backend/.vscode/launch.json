@@ -11,8 +11,10 @@
             "skipFiles": [
                 "<node_internals>/**"
             ],
-            "p
-            "port": 9229,            "env" : {"NODE_ENV" : "test" }
+            "port": 9229,
+            "env" : {
+                "NODE_ENV" : "test"
+            }
         }
-,
+    ]
 }
