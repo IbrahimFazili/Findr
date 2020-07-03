@@ -394,16 +394,12 @@ export default StyleSheet.create({
   internetLogo: {
     width: DIMENSION_WIDTH * 0.35,
     height: DIMENSION_WIDTH * 0.3,
-    top: DIMENSION_HEIGHT * 0.26, 
-    left: DIMENSION_WIDTH * 0.37
+    marginTop: DIMENSION_HEIGHT * 0.2,
+    marginLeft: DIMENSION_WIDTH * 0.05
   },
 
   internetText: {
     fontSize: 27,
-    paddingRight: DIMENSION_WIDTH * 0.3,
-    left: DIMENSION_WIDTH * 0.28,
-    top: DIMENSION_WIDTH * 0.7,
-
   },
 
   top: {
