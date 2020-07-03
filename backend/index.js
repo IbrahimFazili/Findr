@@ -77,6 +77,53 @@ function updateKeywords(email, keywords, res, oncomplete){
 	})
 }
 
+async function rightSwipe(srcUser, targetUser, res, oncomplete) {
+	try {
+		const swipeResult = await matcher.handleRightSwipe(srcUser, targetUser);
+		if (swipeResult.success) res.status(201).send({ isMatch: swipeResult.isMatch });
+		else res.status(500).send("Right Swipe Failed");
+
+		oncomplete();
+
+	} catch (error) {
+		console.log(error);
+		res.status(500).send("Server Error");
+		oncomplete();
+	}
+	
+}
+
+async function leftSwipe(srcUser, targetUser, res, oncomplete) {
+	try {
+		const success = await matcher.handleLeftSwipe(srcUser, targetUser);
+		if (success) res.status(201).end();
+		else res.status(500).send("Left Swipe Failed");
+
+		oncomplete();
+
+	} catch (error) {
+		console.log(error);
+		res.status(500).send("Server Error");
+		oncomplete();
+	}
+	
+}
+
+async function deleteUser(email, res, oncomplete) {
+	try {
+		const success = await matcher.deleteUser(email);
+		if (success) res.status(201).end();
+		else res.status(500).send("Delete User Failed");
+		oncomplete();
+
+	} catch (eror) {
+		console.log(error);
+		res.status(500).send("Server Error");
+		oncomplete();
+	}
+
+}
+
 app.use(bodyParser.json());
 
 app.get("/", (req, res) => {
@@ -279,6 +326,25 @@ app.post("/updateUserInfo", (req, res) => {
 		res.status(500).send('Database Fetch Error');
 	})
 	
+});
+
+app.get("/rightSwipe", (req, res) => {
+	const srcUser = req.query.src;
+	const targetUser = req.query.target;
+
+	callbackQueue.enqueue(rightSwipe, srcUser, targetUser, res);
+});
+
+app.get("/leftSwipe", (req, res) => {
+	const srcUser = req.query.src;
+	const targetUser = req.query.target;
+
+	callbackQueue.enqueue(leftSwipe, srcUser, targetUser, res);
+});
+
+app.get("/deleteUser", (req, res) => {
+	const email = req.query.email;
+	callbackQueue.enqueue(deleteUser, email, res);
 });
 
 app.post("/new-user", (req, res) => {
