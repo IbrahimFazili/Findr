@@ -171,8 +171,103 @@ describe("Test Cases", () => {
         
     });
 
-    describe("Right Swipe Tests", function() {
+    describe("Right & Left Swipe Tests", function() {
         
+        it("Single Right Swipe", (done) => {
+            const penny = TestData[2];
+            const bailey = TestData[7];
+
+            chai.request(SERVER_URL)
+            .get(`/rightSwipe?src=${penny.email}&target=${bailey.email}`)
+            .end((err, res) => {
+                res.should.have.status(201);
+                chai.expect(res.body.isMatch).to.be.equal(false);
+
+                DB.fetchUsers({ email: { $in: [ penny.email, bailey.email] } }).then((users) => {
+                    const penny_DB = users[0].email === penny.email ? users[0] : users[1];
+                    const bailey_DB = users[0].email === bailey.email ? users[0] : users[1];
+                    
+                    chai.expect(penny_DB.greenConnections).to
+                    .deep.equalInAnyOrder([{
+                        _id: bailey_DB._id,
+                        commonKeywords: ['sta107']
+                    }]);
+
+                    var blueIds = [];
+                    penny_DB.blueConnections.forEach((value) => blueIds.push(value._id));
+
+                    chai.expect(blueIds).to.not.include(bailey_DB._id);
+                    done();
+                }).catch((err) => {
+                    console.log(err);
+                    done();
+                });
+
+                
+            });
+        });
+
+        it("Double Right Swipe", (done) => {
+            const sheldon = TestData[0];
+            const leonard = TestData[1];
+
+            chai.request(SERVER_URL)
+            .get(`/rightSwipe?src=${sheldon.email}&target=${leonard.email}`)
+            .end((err, res) => {
+                res.should.have.status(201);
+                chai.expect(res.body.isMatch).to.be.equal(false);
+
+                DB.fetchUsers({}).then((users) => {
+                    const sheldon_DB = users[0].email === sheldon.email ? users[0] : users[1];
+                    const leonard_DB = users[0].email === leonard.email ? users[0] : users[1];
+                    
+                    chai.expect(sheldon_DB.greenConnections).to
+                    .deep.equalInAnyOrder([{
+                        _id: leonard_DB._id,
+                        commonKeywords: ['phy136']
+                    }]);
+
+                    var blueIds = [];
+                    sheldon_DB.blueConnections.forEach((value) => blueIds.push(value._id));
+
+                    chai.expect(blueIds).to.not.include(leonard_DB._id);
+                    
+                    done();
+                }).catch((err) => {
+                    console.log(err);
+                    done();
+                });
+            });
+
+            // chai.request(SERVER_URL)
+            // .get(`/rightSwipe?src=${leonard.email}&target=${sheldon.email}`)
+            // .end((err, res) => {
+            //     res.should.have.status(201);
+            //     chai.expect(res.body.isMatch).to.be.equal(true);
+
+            //     DB.fetchUsers({ email: { $in: [ leonard.email, sheldon.email] } }).then((users) => {
+            //         const sheldon_DB = users[0].email === sheldon.email ? users[0] : users[1];
+            //         const leonard_DB = users[0].email === leonard.email ? users[0] : users[1];
+
+            //         chai.expect(leonard_DB.greenConnections).to
+            //         .deep.equalInAnyOrder([{
+            //             _id: sheldon_DB._id,
+            //             commonKeywords: ['phy136']
+            //         }]);
+
+            //         blueIds = [];
+            //         leonard_DB.blueConnections.forEach((value) => blueIds.push(value._id));
+
+            //         chai.expect(blueIds).to.not.include(sheldon_DB._id);
+
+            //         done();
+            //     }).catch((err) => {
+            //         console.log(err);
+            //         done();
+            //     });
+                
+            // });
+        });
     });
 
     describe("Update keywords tests", function() {
@@ -354,9 +449,249 @@ describe("Test Cases", () => {
                 }
                 done();
             })
+        });    
+
+        it("Update to add one common keyword", (done) => {
+            chai.request(SERVER_URL)
+            .post('/updateKeywords')
+            .set('Content-Type', 'application/json')
+            .send({ 
+                email :  TestData[8].email,
+                keywords : ["POL113", "RLG101", "CSC209"]
+            })
+            .end(async function(err,res){
+                res.should.have.status(201);
+                emailList = [];
+                for (var i = 0; i < TestData.length; i++){
+                    emailList.push(new RegExp("^" + TestData[i].email + "$", "i"));
+                }
+    
+                try {
+                    const users = await DB.fetchUsers({ email: { $in: emailList } });
+    
+                    const mayimIndex = users.findIndex((usr) => usr.email === TestData[8].email);
+                    chai.expect(users[mayimIndex].keywords).to.have.members(["pol113", "rlg101", "csc209"]);
+                    
+                    const sheldonIndex = users.findIndex((usr) => usr.email === TestData[0].email);
+                    const owenIndex = users.findIndex((usr) => usr.email === TestData[6].email);
+                    const leonardIndex = users.findIndex((usr) => usr.email === TestData[1].email);
+                    const derekIndex = users.findIndex((usr) => usr.email === TestData[5].email);
+                    const alexIndex = users.findIndex((usr) => usr.email === TestData[9].email);
+
+                    chai.expect(users[mayimIndex].blueConnections).to.deep
+                    .equalInAnyOrder([ 
+                        { _id : users[sheldonIndex]._id, 
+                            commonKeywords : ["csc209"]},
+
+                        { _id : users[owenIndex]._id,
+                            commonKeywords : ["csc209"]} ]);
+
+                    chai.expect(users[sheldonIndex].blueConnections).to.deep
+                    .equalInAnyOrder([
+                        { _id : users[derekIndex]._id,
+                            commonKeywords : ["mat224"]},
+                        
+                        { _id : users[owenIndex]._id,
+                            commonKeywords : ["csc209"]},
+                            
+                        { _id : users[leonardIndex]._id,
+                            commonKeywords : ["phy136"]},
+
+                        { _id : users[mayimIndex]._id,
+                            commonKeywords : ["csc209"]} ]);
+
+                    chai.expect(users[owenIndex].blueConnections).to.deep
+                    .equalInAnyOrder([
+                        { _id : users[alexIndex]._id,
+                            commonKeywords : ["mat102"]},
+                        
+                        { _id : users[sheldonIndex]._id,
+                            commonKeywords : ["csc209"]},
+                            
+                        { _id : users[leonardIndex]._id,
+                            commonKeywords : ["mat102", "csc148"]},
+                        
+                        { _id : users[mayimIndex]._id,
+                            commonKeywords : ["csc209"]}]);
+    
+                } catch (error) {
+                    console.log(error);
+                }
+                done();
+            })    
+    
+        });
+
+        it("Update to add and remove common keyword", (done) => {
+            chai.request(SERVER_URL)
+            .post('/updateKeywords')
+            .set('Content-Type', 'application/json')
+            .send({ 
+                email :  TestData[7].email,
+                keywords : ["POL113", "MAT135", "CSC207"]
+            })
+            .end(async function(err,res){
+                res.should.have.status(201);
+                emailList = [];
+                for (var i = 0; i < TestData.length; i++){
+                    emailList.push(new RegExp("^" + TestData[i].email + "$", "i"));
+                }
+    
+                try {
+                    const users = await DB.fetchUsers({ email: { $in: emailList } });
+    
+                    const baileyIndex = users.findIndex((usr) => usr.email === TestData[7].email);
+                    chai.expect(users[baileyIndex].keywords).to.have.members(["pol113", "mat135", "csc207"]);
+                    
+                    const pennyIndex = users.findIndex((usr) => usr.email === TestData[2].email);
+                    const mayimIndex = users.findIndex((usr) => usr.email === TestData[8].email);
+                    const derekIndex = users.findIndex((usr) => usr.email === TestData[5].email);
+
+                    chai.expect(users[baileyIndex].blueConnections).to.deep
+                    .equalInAnyOrder([ 
+                        { _id : users[mayimIndex]._id, 
+                            commonKeywords : ["pol113"]} ]);
+
+                    chai.expect(users[mayimIndex].blueConnections).to.deep
+                    .equalInAnyOrder([
+                        { _id : users[baileyIndex]._id,
+                            commonKeywords : ["pol113"]} ]);
+
+                    chai.expect(users[pennyIndex].blueConnections).to.deep
+                    .equalInAnyOrder([
+                        { _id : users[derekIndex]._id,
+                            commonKeywords : ["eco100"]}]);
+                    
+                } catch (error) {
+                    console.log(error);
+                }
+
+                done(); 
+            });    
+    
+        });
+
+        it("Update to add another common keyword", (done) => {
+            chai.request(SERVER_URL)
+            .post('/updateKeywords')
+            .set('Content-Type', 'application/json')
+            .send({ 
+                email :  TestData[1].email,
+                keywords : ["PHY136", "MAT102", "CSC148", "LIN101"]
+            })
+            .end(async function(err,res){
+                res.should.have.status(201);
+                emailList = [];
+                for (var i = 0; i < TestData.length; i++){
+                    emailList.push(new RegExp("^" + TestData[i].email + "$", "i"));
+                }
+    
+                try {
+                    const users = await DB.fetchUsers({ email: { $in: emailList } });
+    
+                    const leonardIndex = users.findIndex((usr) => usr.email === TestData[1].email);
+                    chai.expect(users[leonardIndex].keywords).to.have.members(["phy136", "mat102", "csc148", "lin101"]);
+                    
+                    const sheldonIndex = users.findIndex((usr) => usr.email === TestData[0].email);
+                    const alexIndex = users.findIndex((usr) => usr.email === TestData[9].email);
+                    const owenIndex = users.findIndex((usr) => usr.email === TestData[6].email);
+                    const cristinaIndex = users.findIndex((usr) => usr.email === TestData[4].email);
+                    const meredithIndex = users.findIndex((usr) => usr.email === TestData[3].email);
+                    
+
+                    chai.expect(users[leonardIndex].blueConnections).to.deep
+                    .equalInAnyOrder([ 
+                        { _id : users[sheldonIndex]._id, 
+                            commonKeywords : ["phy136"]},
+                        
+                        { _id : users[alexIndex]._id, 
+                             commonKeywords : ["mat102", "lin101"]},
+
+                        { _id : users[owenIndex]._id, 
+                            commonKeywords : ["csc148", "mat102"]} ]);
+
+                    chai.expect(users[alexIndex].blueConnections).to.deep
+                    .equalInAnyOrder([ 
+                        { _id : users[leonardIndex]._id, 
+                            commonKeywords : ["mat102", "lin101"]},
+                        
+                        { _id : users[cristinaIndex]._id, 
+                            commonKeywords : ["phy105"]},
+                        
+                        { _id : users[meredithIndex]._id, 
+                            commonKeywords : ["phy105"]},
+
+                        { _id : users[owenIndex]._id, 
+                            commonKeywords : ["mat102"]} ]);      
+                    
+                } catch (error) {
+                    console.log(error);
+                }
+
+                done(); 
+            });    
+    
         });
        
     });     
+
+    
+    describe("Delete User tests", function() {
+
+        beforeEach((done) => {
+            DB.deleteAllUsers().then((value) => {
+                var insertCount = 0;
+                for (var i = 0; i < TestData.length; i++) {
+                    chai.request(SERVER_URL).post("/new-user")
+                    .set('content-type', 'application/json')
+                    .send(TestData[i])
+                    .end(function(err, res) {            
+                        res.should.have.status(201);
+                        insertCount++;
+                        if (insertCount === TestData.length) {
+                            done();
+                        }
+                    });
+                }
+            }).catch((err) => {
+                console.log(err);
+                done();
+            })
+            
+        });
+
+        it("Deleting user with one connection", (done) => {
+            chai.request(SERVER_URL)
+            .get(`/deleteUser?email=${TestData[7].email}`)
+            .end(async function(err,res){
+                res.should.have.status(201);
+                emailList = [];
+                for (var i = 0; i < TestData.length; i++){
+                    emailList.push(new RegExp("^" + TestData[i].email + "$", "i"));
+                }
+    
+                try {
+                    const users = await DB.fetchUsers({ email: { $in: emailList } });
+    
+                    const pennyIndex = users.findIndex((usr) => usr.email === TestData[2].email);
+                    const derekIndex = users.findIndex((usr) => usr.email === TestData[5].email);
+                    
+
+                    chai.expect(users[pennyIndex].blueConnections).to.deep
+                    .equalInAnyOrder([ 
+                        { _id : users[derekIndex]._id, 
+                            commonKeywords : ["eco100"]} ]);
+                    
+                } catch (error) {
+                    console.log(error);
+                }
+
+                done(); 
+            });    
+    
+        });
+        
+    }); 
 
     after((done) => {
         DB.deleteAllUsers();
