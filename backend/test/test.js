@@ -690,11 +690,53 @@ describe("Test Cases", () => {
             });    
     
         });
+
+        it("Deleting user with two connections", (done) => {
+            chai.request(SERVER_URL)
+            .get(`/deleteUser?email=${TestData[2].email}`)
+            .end(async function(err,res){
+                res.should.have.status(201);
+                emailList = [];
+                for (var i = 0; i < TestData.length; i++){
+                    emailList.push(new RegExp("^" + TestData[i].email + "$", "i"));
+                }
+    
+                try {
+                    const users = await DB.fetchUsers({ email: { $in: emailList } });
+    
+                    const sheldonIndex = users.findIndex((usr) => usr.email === TestData[0].email);
+                    const cristinaIndex = users.findIndex((usr) => usr.email === TestData[4].email);
+                    const meredithIndex = users.findIndex((usr) => usr.email === TestData[3].email);
+                    const baileyIndex = users.findIndex((usr) => usr.email === TestData[7].email);
+                    const derekIndex = users.findIndex((usr) => usr.email === TestData[5].email);
+                    
+                    chai.expect(users[baileyIndex].blueConnections).to.deep
+                    .equalInAnyOrder([]);
+
+                    chai.expect(users[derekIndex].blueConnections).to.deep
+                    .equalInAnyOrder([
+                        { _id : users[meredithIndex]._id,
+                          commonKeywords : ["bio100"]},
+
+                        { _id : users[cristinaIndex]._id,
+                          commonKeywords : ["bio100"]},
+
+                        { _id : users[sheldonIndex]._id,
+                          commonKeywords : ["mat224"]} ]);
+                    
+                } catch (error) {
+                    console.log(error);
+                }
+
+                done(); 
+            });    
+    
+        });
         
     }); 
 
     after((done) => {
-        DB.deleteAllUsers();
+        //DB.deleteAllUsers();
         done();
     });
 
