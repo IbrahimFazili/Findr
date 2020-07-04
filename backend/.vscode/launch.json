@@ -11,10 +11,8 @@
             "skipFiles": [
                 "<node_internals>/**"
             ],
-            "port": 9229,
-            "env" : {
-                "NODE_ENV" : "test"
-            }
+            "env" : {"NODE_ENV" : "test"},
+            "program": "${workspaceFolder}/index.js"
         }
     ]
 }

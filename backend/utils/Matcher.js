@@ -18,7 +18,7 @@ class Matcher {
                 await DB.updateUser({ blueConnections: user.blueConnections, greenConnections: user.greenConnections },
                     { email: srcUser });
 
-                const isMatch = await this.hasIncomingGreenConnection(user._id, swipedUserConnection._id);
+                const isMatch = await this.hasIncomingGreenConnection(user._id, rightSwipedUser._id);
                 if (isMatch){
                     rightSwipedUser.eventQueue = new EventQueue(rightSwipedUser.eventQueue.events);
                     rightSwipedUser.eventQueue.enqueue(
@@ -176,7 +176,8 @@ class Matcher {
                 
                 let connections = await DB.fetchUsers({ _id: { $in : ids } });
                 connections.forEach((element) => {
-                    const index = element.blueConnections.indexOf(user._id);
+                    
+                    const index = element.blueConnections.findIndex((value) => value._id.equals(user._id));
                     element.blueConnections.splice(index, 1);
                 });
 

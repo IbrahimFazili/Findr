@@ -370,6 +370,7 @@ app.post("/new-user", (req, res) => {
 		bio: "",
 		blueConnections: [],
 		greenConnections: [],
+		eventQueue: { events: [] },
 		active: false,
 		verificationHash: bcrypt.hashSync(req.body.email + generateRandomNumber(), 3)
 	};

@@ -205,7 +205,7 @@ describe("Test Cases", () => {
 
                 
             });
-        });
+        }); 
 
         it("Double Right Swipe", (done) => {
             const sheldon = TestData[0];
@@ -217,7 +217,7 @@ describe("Test Cases", () => {
                 res.should.have.status(201);
                 chai.expect(res.body.isMatch).to.be.equal(false);
 
-                DB.fetchUsers({}).then((users) => {
+                DB.fetchUsers({ email: { $in: [ leonard.email, sheldon.email] } }).then((users) => {
                     const sheldon_DB = users[0].email === sheldon.email ? users[0] : users[1];
                     const leonard_DB = users[0].email === leonard.email ? users[0] : users[1];
                     
@@ -239,34 +239,34 @@ describe("Test Cases", () => {
                 });
             });
 
-            // chai.request(SERVER_URL)
-            // .get(`/rightSwipe?src=${leonard.email}&target=${sheldon.email}`)
-            // .end((err, res) => {
-            //     res.should.have.status(201);
-            //     chai.expect(res.body.isMatch).to.be.equal(true);
+            chai.request(SERVER_URL)
+            .get(`/rightSwipe?src=${leonard.email}&target=${sheldon.email}`)
+            .end((err, res) => {
+                res.should.have.status(201);
+                chai.expect(res.body.isMatch).to.be.equal(true);
 
-            //     DB.fetchUsers({ email: { $in: [ leonard.email, sheldon.email] } }).then((users) => {
-            //         const sheldon_DB = users[0].email === sheldon.email ? users[0] : users[1];
-            //         const leonard_DB = users[0].email === leonard.email ? users[0] : users[1];
+                DB.fetchUsers({ email: { $in: [ leonard.email, sheldon.email] } }).then((users) => {
+                    const sheldon_DB = users[0].email === sheldon.email ? users[0] : users[1];
+                    const leonard_DB = users[0].email === leonard.email ? users[0] : users[1];
 
-            //         chai.expect(leonard_DB.greenConnections).to
-            //         .deep.equalInAnyOrder([{
-            //             _id: sheldon_DB._id,
-            //             commonKeywords: ['phy136']
-            //         }]);
+                    chai.expect(leonard_DB.greenConnections).to
+                    .deep.equalInAnyOrder([{
+                        _id: sheldon_DB._id,
+                        commonKeywords: ['phy136']
+                    }]);
 
-            //         blueIds = [];
-            //         leonard_DB.blueConnections.forEach((value) => blueIds.push(value._id));
+                    var blueIds = [];
+                    leonard_DB.blueConnections.forEach((value) => blueIds.push(value._id));
 
-            //         chai.expect(blueIds).to.not.include(sheldon_DB._id);
+                    chai.expect(blueIds).to.not.include(sheldon_DB._id);
 
-            //         done();
-            //     }).catch((err) => {
-            //         console.log(err);
-            //         done();
-            //     });
+                    done();
+                }).catch((err) => {
+                    console.log(err);
+                    done();
+                });
                 
-            // });
+            });
         });
     });
 
@@ -734,9 +734,15 @@ describe("Test Cases", () => {
         });
         
     }); 
+    
+    /*
+    describe("Update keyword", function() {
+
+    }*/
+
 
     after((done) => {
-        //DB.deleteAllUsers();
+        DB.deleteAllUsers();
         done();
     });
 
