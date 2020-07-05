@@ -8,6 +8,8 @@ import APIConnection from "../assets/data/APIConnection";
 import Pen from '../assets/icons/pen.svg';
 import Check from '../assets/icons/check.svg';
 import Tag from './Tag';
+import Plus from "../assets/icons/Plus.svg";
+import Minus from "../assets/icons/minus_green.svg";
 
 const theme = {
 	colors: {
@@ -358,18 +360,20 @@ class ProfileItem extends React.Component{
 						multiline={true}
 						theme={theme}
 					 />  
+					 {this.state.isEditable3 ? 
 					 <TouchableOpacity disabled={!this.state.isEditable3} onPress={() => 
 					(this.state.isEditable3 ? this.addProjectInput() : null)}
 					style={styles.tick}>
-						 <Pen width={10} height={10}/>
-				     </TouchableOpacity>
+						 <Plus width={10} height={10}/>
+				     </TouchableOpacity> : null }
 
+					{ this.state.isEditable3 ? 
 					 <TouchableOpacity disabled={!this.state.isEditable3} onPress={() => 
 					(this.state.isEditable3 ? 
 					 (this.state.allProjects.length > 1 ? this.removeProjectInput(index) : null) : null)}
 					style={styles.cross}>
-						 <Check width={10} height={10}/>
-					 </TouchableOpacity>
+						 <Minus width={10} height={10}/>
+					 </TouchableOpacity> : null}
 				</View>
 				)
 
@@ -403,18 +407,22 @@ class ProfileItem extends React.Component{
 						multiline={true}
 						theme={theme}
 					 />  
+					{this.state.isEditable4 ? 
 					<TouchableOpacity disabled={!this.state.isEditable4} onPress={() => 
 					(this.state.isEditable4 ? this.addExpInput() : null)}
 					style={styles.tick}>
-						 <Pen width={10} height={10}/>
-				     </TouchableOpacity>
+						 <Plus width={10} height={10}/>
+				     </TouchableOpacity> : null }
 
+					{this.state.isEditable4 ? 
 					 <TouchableOpacity disabled={!this.state.isEditable4} onPress={() => 
 					(this.state.isEditable4 ? 
 					 (this.state.allExp.length > 1 ? this.removeExpInput(index) : null) : null)}
 					 style={styles.cross}>
-						 <Check width={10} height={10}/>
+						 <Minus width={10} height={10}/>
 					 </TouchableOpacity>
+					 : null}
+					 
 				</View>
 				)
 
