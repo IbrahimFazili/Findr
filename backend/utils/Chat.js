@@ -19,8 +19,8 @@ class Message {
 
 		var URLS = {};
 		for (var i = 0; i < this.media.length; i++ ){
-			var url = await AWS_Presigner.generateSignedPutUrl("chat_media/" + mediaToken[i]);
-			URLS[this.media[i]] = url;
+			var url = await AWS_Presigner.generateSignedPutUrl("chat_media/" + mediaToken[i], this.media[i].type);
+			URLS[this.media[i].name] = url;
 		}
 
 		this.media = mediaToken;

@@ -36,13 +36,13 @@ function generateSignedGetUrl(Key) {
  * @param {String} Key Path to the image inside the Bucket
  * @returns {Promise<String>} Signed PUT Url to allow client to upload image to the bucket
  */
-function generateSignedPutUrl(Key) {
+function generateSignedPutUrl(Key, filetype) {
 	return new Promise(function (resolve, reject) {
 		const params = {
 			Bucket,
 			Key,
 			Expires: 30,
-			ContentType: "image/jpg",
+			ContentType: filetype === undefined ? "image/jpeg" : filetype,
 		};
 
 		S3.getSignedUrl("putObject", params, (err, url) => {

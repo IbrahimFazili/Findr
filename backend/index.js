@@ -11,7 +11,6 @@ const matcher = new (require("./utils/Matcher").Matcher)();
 const { EventQueue, Event, MESSAGE_EVENT } = require('./utils/Events');
 const sendEmail = require("./utils/emailer").sendEmail;
 
-
 var isServerOutdated = false;
 
 function validatePassword(password) {
@@ -326,8 +325,7 @@ app.post("/update", (req, res) => {
 io.on("connection", (socket) => {
 	socket
 		.join(socket.handshake.query.name)
-		.to(socket.handshake.query.name)
-		.emit("joined chat room" + socket.rooms);
+		.emit("joined chat room");
 	console.log(`${socket.handshake.query.name} Connected`);
 
 	socket.on("new msg", (msg) => {
@@ -352,8 +350,7 @@ io.on("connection", (socket) => {
 								await DB.updateChat(chat, {
 									_id: user.chats[i],
 								});
-
-								socket.to(msg.from).emit("upload urls", mediaUploadUrls);
+								socket.emit("upload urls", mediaUploadUrls);
 
 								if (receiverIsReachable) {
 									socket.to(msg.to).emit("new msg", msg);
@@ -397,7 +394,7 @@ io.on("connection", (socket) => {
 							user.chats.push(result.ops[0]._id);
 							DB.updateUser({ chats: user.chats }, { email: user.email })
 								.then((value) => {
-									socket.to(msg.from).emit("upload urls", mediaUploadUrls);
+									socket.emit("upload urls", mediaUploadUrls);
 								})
 								.catch((reason) => {
 									socket.emit("send failed");
