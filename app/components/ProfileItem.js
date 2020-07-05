@@ -86,6 +86,10 @@ class ProfileItem extends React.Component{
         this.setState({allProjects: existingProjects})
 	}
 
+	removeExpInput = (targetIndex) => {
+		this.setState({allExp: this.state.allExp.filter((item, index) => index !== targetIndex)})
+	}
+
 	onExpTextChange = (text, index) => {
         const existingExp = this.state.allExp.map(fields => ({...fields}))
         let targetField = {...existingExp[index]}
@@ -187,7 +191,7 @@ class ProfileItem extends React.Component{
 
 	handleEditClick4 = () => {
 		this.setState({isEditable4: true});
-		this.addExpInput()
+		// this.addExpInput()
 	}
 
 	handleUpdateClick4 = () => {
@@ -355,13 +359,15 @@ class ProfileItem extends React.Component{
 						theme={theme}
 					 />  
 					 <TouchableOpacity disabled={!this.state.isEditable3} onPress={() => 
-					(this.state.isEditable3 ? this.addProjectInput() : null)}>
+					(this.state.isEditable3 ? this.addProjectInput() : null)}
+					style={styles.tick}>
 						 <Pen width={10} height={10}/>
 				     </TouchableOpacity>
 
 					 <TouchableOpacity disabled={!this.state.isEditable3} onPress={() => 
 					(this.state.isEditable3 ? 
-					 (this.state.allProjects.length > 1 ? this.removeProjectInput(index) : null) : null)}>
+					 (this.state.allProjects.length > 1 ? this.removeProjectInput(index) : null) : null)}
+					style={styles.cross}>
 						 <Check width={10} height={10}/>
 					 </TouchableOpacity>
 				</View>
@@ -397,6 +403,18 @@ class ProfileItem extends React.Component{
 						multiline={true}
 						theme={theme}
 					 />  
+					<TouchableOpacity disabled={!this.state.isEditable4} onPress={() => 
+					(this.state.isEditable4 ? this.addExpInput() : null)}
+					style={styles.tick}>
+						 <Pen width={10} height={10}/>
+				     </TouchableOpacity>
+
+					 <TouchableOpacity disabled={!this.state.isEditable4} onPress={() => 
+					(this.state.isEditable4 ? 
+					 (this.state.allExp.length > 1 ? this.removeExpInput(index) : null) : null)}
+					 style={styles.cross}>
+						 <Check width={10} height={10}/>
+					 </TouchableOpacity>
 				</View>
 				)
 

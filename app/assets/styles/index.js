@@ -306,6 +306,18 @@ export default StyleSheet.create({
     paddingBottom: 20,
     fontSize: 13,
   },
+
+  tick: {
+    marginLeft: DIMENSION_WIDTH * 0.8,
+    bottom: DIMENSION_WIDTH * 0.12,
+  },
+
+  cross: {
+    marginLeft: DIMENSION_WIDTH * 0.8,
+    bottom: DIMENSION_WIDTH * 0.10,
+    marginBottom: -DIMENSION_WIDTH * 0.05
+  },
+
   info: {
     paddingVertical: 8,
     flexDirection: "row",
