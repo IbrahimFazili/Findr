@@ -53,8 +53,48 @@ class ProfileItem extends React.Component{
 			clubsLabel: "Clubs",
 			coursesLabel: "Courses",
 			keywordsLabel: "Keywords",
+
+			allProjects: [{value: ''}],
+			allExp: [{value: ''}]
 		}
 	}
+
+	addProjectInput = () => {
+        const existingProjects = this.state.allProjects.map(fields => ({...fields}))
+        const newProjects = [...existingProjects, {value: ''}]
+
+        this.setState({allProjects: newProjects})
+	}
+
+	removeProjectInput = (targetIndex) => {
+		this.setState({allProjects: this.state.allProjects.filter((item, index) => index !== targetIndex)})
+	}
+
+	addExpInput = () => {
+        const existingExp = this.state.allExp.map(fields => ({...fields}))
+        const newExp = [...existingExp, {value: ''}]
+
+        this.setState({allExp: newExp})
+	}
+	
+	onProjectTextChange = (text, index) => {
+        const existingProjects = this.state.allProjects.map(fields => ({...fields}))
+        let targetField = {...existingProjects[index]}
+        targetField.value = text
+        existingProjects[index] = targetField
+
+        this.setState({allProjects: existingProjects})
+	}
+
+	onExpTextChange = (text, index) => {
+        const existingExp = this.state.allExp.map(fields => ({...fields}))
+        let targetField = {...existingExp[index]}
+        targetField.value = text
+        existingExp[index] = targetField
+
+        this.setState({allExp: existingExp})
+    }
+
 
 	componentWillReceiveProps(props) {
 		let updatedState = {};
@@ -138,6 +178,7 @@ class ProfileItem extends React.Component{
 
 	handleEditClick3 = () => {
 		this.setState({isEditable3: true});
+		// this.addProjectInput()
 	}
 
 	handleUpdateClick3 = () => {
@@ -146,6 +187,7 @@ class ProfileItem extends React.Component{
 
 	handleEditClick4 = () => {
 		this.setState({isEditable4: true});
+		this.addExpInput()
 	}
 
 	handleUpdateClick4 = () => {
@@ -185,7 +227,7 @@ class ProfileItem extends React.Component{
 	}
 
 	render() {
-		console.log(this.props)
+		console.log(this.state.isEditable3)
 		return (
 		<View>
 		<View style={styles.containerProfileItem}>
@@ -294,16 +336,39 @@ class ProfileItem extends React.Component{
 			}
 		</View>
 
-		<TextInput
-			style={{height: FULL_HEIGHT * 0.15}}
-			placeholder="Show off your Projects here!"
-			editable={this.state.isEditable3}
-			mode='flat'
-			selectionColor="#ACCEF7"
-			underlineColor="#1a5d57"
-			multiline={true}
-			theme={theme}
-		/>
+		<View style={{marginTop: 10}}></View>
+
+		{
+			this.state.allProjects.map((field, index) => {
+				return(
+					<View key={index}>
+					<TextInput  
+						style={{height: FULL_HEIGHT * 0.09}}
+						placeholder="Show off your Projects here!"
+						value={field.value}   
+						onChangeText={(text)=> this.onProjectTextChange(text, index)} 
+						editable={this.state.isEditable3}
+						mode='flat'
+						selectionColor="#ACCEF7"
+						underlineColor="#1a5d57"
+						multiline={true}
+						theme={theme}
+					 />  
+					 <TouchableOpacity disabled={!this.state.isEditable3} onPress={() => 
+					(this.state.isEditable3 ? this.addProjectInput() : null)}>
+						 <Pen width={10} height={10}/>
+				     </TouchableOpacity>
+
+					 <TouchableOpacity disabled={!this.state.isEditable3} onPress={() => 
+					(this.state.isEditable3 ? 
+					 (this.state.allProjects.length > 1 ? this.removeProjectInput(index) : null) : null)}>
+						 <Check width={10} height={10}/>
+					 </TouchableOpacity>
+				</View>
+				)
+
+			})
+		}
 		</View>
 
 		<View style={styles.containerProfileItem2}>
@@ -314,16 +379,29 @@ class ProfileItem extends React.Component{
 				: (<TouchableOpacity style={styles.profileButtons4} onPress={this.handleEditClick4}><Pen width={20} height={20}/></TouchableOpacity>)
 			}
 		</View>
-		<TextInput
-			style={{height: FULL_HEIGHT * 0.15}}
-			placeholder="Work or Volunteering Experience"
-			editable={this.state.isEditable4}
-			mode='flat'
-			selectionColor="#ACCEF7"
-			underlineColor="#1a5d57"
-			multiline={true}
-			theme={theme}
-		/>
+		<View style={{marginTop: 10}}></View>
+
+		{
+			this.state.allExp.map((field, index) => {
+				return(
+					<View key={index}>
+					<TextInput  
+						style={{height: FULL_HEIGHT * 0.09}}
+						placeholder="Work or Volunteering Experience!"
+						value={field.value}   
+						onChangeText={(text)=> this.onExpTextChange(text, index)} 
+						editable={this.state.isEditable4}
+						mode='flat'
+						selectionColor="#ACCEF7"
+						underlineColor="#1a5d57"
+						multiline={true}
+						theme={theme}
+					 />  
+				</View>
+				)
+
+			})
+		}
 		</View>
 		</View>
 		);
