@@ -232,6 +232,10 @@ class ProfileItem extends React.Component{
 		this.setState({ isMajorValid: false, major: text });
 	}
 
+	handleKeywordChange(text){
+		this.setState({keywords: [...this.state.keywords, text]})
+	}
+
 	render() {
 		console.log(this.state.isEditable3)
 		return (
@@ -278,12 +282,12 @@ class ProfileItem extends React.Component{
 				? (<TextInput
 					underlineColor="transparent"
 					mode={"flat"}
-					value={this.state.major}
+					// value={this.state.major}
 					label='Keywords'
 					placeholder="Enter your keywords"
 					onFocus={() => this.setState({ keywordsLabel: "" })}
-					onBlur={() => this.setState({ keywordsLabel: this.state.keywords.length === 0 ? "Major" : "" })}
-					onChangeText={this.handleMajorChange.bind(this)}
+					onBlur={() => this.setState({ keywordsLabel: this.state.keywords.length === 0 ? "Keyword" : "" })}
+					onChangeText={this.handleKeywordChange.bind(this)}
 					theme={theme}
 					style={textBoxStyle}
 					/>)
