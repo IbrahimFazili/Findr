@@ -231,8 +231,6 @@ describe("Test Cases", () => {
                     sheldon_DB.blueConnections.forEach((value) => blueIds.push(value._id));
 
                     chai.expect(blueIds).to.not.include(leonard_DB._id);
-                    
-                    done();
                 }).catch((err) => {
                     console.log(err);
                     done();
@@ -270,7 +268,7 @@ describe("Test Cases", () => {
             });
         });
     });
-/*
+
     describe("Update keywords tests", function() {
 
         beforeEach((done) => {
