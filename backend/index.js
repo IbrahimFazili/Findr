@@ -356,6 +356,7 @@ io.on("connection", (socket) => {
 							chat = Chat.parseJSON(chat);
 
 							const mediaUploadUrls = await chat.newMessage(msg.from, msg.content, msg.time, msg.media);
+							msg.media = chat.messages[chat.messages.length - 1].media;
 							msgHandled = true;
 
 							try {
@@ -365,7 +366,6 @@ io.on("connection", (socket) => {
 								socket.emit("upload urls", mediaUploadUrls);
 
 								if (receiverIsReachable) {
-									msg.media = chat.messages[chat.messages.length - 1].media;
 									socket.to(msg.to).emit("new msg", msg);
 								} else {
 									// store message event in eventQueue to notify user later
@@ -375,7 +375,8 @@ io.on("connection", (socket) => {
 										receiver.eventQueue.enqueue(new Event(MESSAGE_EVENT, {
 											from: msg.from,
 											content: msg.content,
-											time: msg.time
+											time: msg.time,
+											media: msg.media
 										}));
 
 										DB.updateUser({ eventQueue: receiver.eventQueue }, { email: msg.to });
@@ -400,6 +401,7 @@ io.on("connection", (socket) => {
 				if (!msgHandled) {
 					const chat = new Chat(msg.from, msg.to);
 					const mediaUploadUrls = await chat.newMessage(msg.from, msg.content, msg.time, msg.media);
+					msg.media = chat.messages[chat.messages.length - 1].media;
 
 					DB.insertChat({ chat })
 						.then((result) => {
