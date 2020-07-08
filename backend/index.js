@@ -10,6 +10,7 @@ const Chat = require("./utils/Chat").Chat;
 const matcher = new (require("./utils/Matcher").Matcher)();
 const { EventQueue, Event, MESSAGE_EVENT } = require('./utils/Events');
 const sendEmail = require("./utils/emailer").sendEmail;
+const cors = require("cors");
 
 var isServerOutdated = false;
 
@@ -28,6 +29,7 @@ function generateRandomNumber() {
 	return randomNumber;
 }
 
+app.use(cors());
 app.use(bodyParser.json());
 
 app.get("/", (req, res) => {
