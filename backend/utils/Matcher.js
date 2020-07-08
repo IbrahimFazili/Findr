@@ -18,14 +18,14 @@ class Matcher {
                 await DB.updateUser({ blueConnections: user.blueConnections, greenConnections: user.greenConnections },
                     { email: srcUser });
 
-                const isMatch = await this.hasIncomingGreenConnection(user._id, rightSwipedUser._id);
-                if (isMatch){
+                const isMatch = await this.hasIncomingGreenConnection(user._id, rightSwipedUser);
+                if (isMatch) {
                     rightSwipedUser.eventQueue = new EventQueue(rightSwipedUser.eventQueue.events);
                     rightSwipedUser.eventQueue.enqueue(
                         new Event(MATCH_EVENT, { _id : user._id})
                     )
 
-                    DB.updateUser({ eventQueue: rightSwipedUser.eventQueue }, { email: rightSwipedUser.email });
+                    await DB.updateUser({ eventQueue: rightSwipedUser.eventQueue }, { email: rightSwipedUser.email });
                 }
 
                 return { success: true, isMatch };
@@ -258,9 +258,8 @@ class Matcher {
         }
     }
 
-    async hasIncomingGreenConnection(srcUserId, _id) {
+    async hasIncomingGreenConnection(srcUserId, user) {
         try {
-            const user = (await DB.fetchUsers({ _id }))[0];
             return user.greenConnections.findIndex((id) => id._id.equals(srcUserId)) !== -1;
         } catch (fetchErr) {
             console.log(fetchErr);

@@ -8,6 +8,9 @@ const COLLECTION_USERS = process.env.NODE_ENV === "test" ? "Test_Users" : "Users
 const COLLECTION_CHATS = "ChatStorage";
 const DB = "test";
 
+var USERS_COLLECTION_LOCAL = null;
+var CHATS_COLLECTION_LOCAL = null;
+
 /**
  * Connect the client to database at the specified URL
  * @returns {Promise} A promise is returned which resolves to the connected client. 
@@ -40,11 +43,22 @@ function closeConnection() { client.close(); }
 function getCollection(collectionName) {
     return new Promise(function (resolve, reject) {
         if (client.isConnected()) {
-            resolve(client.db(DB).collection(collectionName));
+            if (collectionName === COLLECTION_USERS) {
+                resolve(USERS_COLLECTION_LOCAL ? USERS_COLLECTION_LOCAL : client.db(DB).collection(collectionName))
+            } else if (collectionName === COLLECTION_CHATS) {
+                resolve(CHATS_COLLECTION_LOCAL ? CHATS_COLLECTION_LOCAL : client.db(DB).collection(collectionName))
+            } else throw Error("Invalid Collection Name");
         }
         else {
             connectToDatabse().then((connection) => {
-                resolve(connection.db(DB).collection(collectionName));
+                if (collectionName === COLLECTION_USERS) {
+                    USERS_COLLECTION_LOCAL = connection.db(DB).collection(collectionName);
+                    resolve(USERS_COLLECTION_LOCAL);
+                } else if (collectionName === COLLECTION_CHATS) {
+                    CHATS_COLLECTION_LOCAL = connection.db(DB).collection(collectionName);
+                    resolve(CHATS_COLLECTION_LOCAL);
+                } else throw Error("Invalid Collection Name");
+                
             }).catch((reason) => {
                 reject(reason);
             })
