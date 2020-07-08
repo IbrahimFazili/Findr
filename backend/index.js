@@ -162,6 +162,16 @@ app.get("/fetchChatData", (req, res) => {
 		});
 });
 
+app.get("/fetchChatMedia", async (req, res) => {
+	try {
+		const downUrl = await AWS_Presigner.generateSignedGetUrl("chat_media/" + req.query.name, 30);
+		res.status(200).send(downUrl);
+	} catch (error) {
+		console.log(error);
+		res.status(404).send("media not found");
+	}
+});
+
 app.get("/fetchNotifications", (req, res) => {
 	DB.fetchUsers({ email: req.query.email })
 		.then(async (users) => {
@@ -355,6 +365,7 @@ io.on("connection", (socket) => {
 								socket.emit("upload urls", mediaUploadUrls);
 
 								if (receiverIsReachable) {
+									msg.media = chat.messages[chat.messages.length - 1].media;
 									socket.to(msg.to).emit("new msg", msg);
 								} else {
 									// store message event in eventQueue to notify user later

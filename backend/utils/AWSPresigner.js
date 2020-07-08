@@ -15,12 +15,12 @@ const S3 = new AWS.S3();
  * @param {String} Key Path to the image inside the Bucket
  * @returns {Promise<String>} Signed GET Url to allow client to download image from the bucket
  */
-function generateSignedGetUrl(Key) {
+function generateSignedGetUrl(Key, timeout=10) {
 	return new Promise(function (resolve, reject) {
 		const params = {
 			Bucket,
 			Key,
-			Expires: 10,
+			Expires: timeout,
 		};
 
 		S3.getSignedUrl("getObject", params, (err, url) => {
