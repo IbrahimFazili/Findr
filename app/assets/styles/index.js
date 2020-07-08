@@ -285,12 +285,21 @@ export default StyleSheet.create({
     color: WHITE,
   },
   name: {
-    marginLeft: DIMENSION_WIDTH * 0.15,
+    marginLeft: DIMENSION_WIDTH * 0.22,
     paddingTop: 25,
     paddingBottom: 5,
+    paddingRight: 10,
     color: TEAL,
     fontSize: 24,
     textAlign: "center",
+  },
+
+  textBoxStyle: {
+    width: '75%',
+    height: 50,
+    alignSelf: 'center',
+    backgroundColor: "transparent",
+    left: DIMENSION_WIDTH * 0.22
   },
   name_secondary: {
     marginLeft: DIMENSION_WIDTH * 0.33,

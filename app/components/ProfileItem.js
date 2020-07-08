@@ -8,6 +8,7 @@ import APIConnection from "../assets/data/APIConnection";
 import Pen from '../assets/icons/pen.svg';
 import Check from '../assets/icons/check.svg';
 import Tag from './Tag';
+import TagEducation from "./TagEducation"
 import Plus from "../assets/icons/Plus.svg";
 import Minus from "../assets/icons/minus_green.svg";
 
@@ -253,7 +254,7 @@ class ProfileItem extends React.Component{
 					onBlur={() => this.setState({ nameLabel: this.state.name.length === 0 ? "Name" : "" })}
 					onChangeText={this.handleNameChange.bind(this)}
 					theme={theme}
-					style={textBoxStyle}
+					style={styles.textBoxStyle}
 					/>)
 				: (<Text style={styles.name}>{this.state.name}</Text>)
 				}
@@ -278,7 +279,7 @@ class ProfileItem extends React.Component{
 
 			<View style={styles.info}>
 				<Text style={styles.profileTitle}>Keywords: </Text>
-				{this.state.isEditable1
+				{/* {this.state.isEditable1
 				? (<TextInput
 					underlineColor="transparent"
 					mode={"flat"}
@@ -291,11 +292,13 @@ class ProfileItem extends React.Component{
 					theme={theme}
 					style={textBoxStyle}
 					/>)
-				: (<Text style={styles.infoContent}>{this.state.keywords.join(", ")}</Text>)
-				}
-				{/* <Tag 
-					keywords={this.state.keywords}
-				/> */}
+				: 
+				(<Text style={styles.infoContent}>{this.state.keywords.join(", ")}</Text>)
+				} */}
+				<Tag 
+					keywords={this.state.keywords} editable={this.state.isEditable1}
+					type="keyword"
+				/>
 			</View>
 		</View>
 
@@ -328,12 +331,12 @@ class ProfileItem extends React.Component{
 
 			<View style={styles.info}>
 				<Text style={styles.profileTitle}>Courses: </Text>
-				<Tag/>
+				<TagEducation keywords={[]} editable={this.state.isEditable2} type="course"/>
 			</View>
 
 			<View style={styles.info}>
 				<Text style={styles.profileTitle}>Clubs: </Text>
-				<Tag/>
+				<TagEducation keywords={[]} editable={this.state.isEditable2} type="club"/>
 			</View>
 		</View>
 
