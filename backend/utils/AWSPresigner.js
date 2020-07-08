@@ -52,5 +52,20 @@ function generateSignedPutUrl(Key, filetype) {
 	});
 }
 
+function deleteMedia(Key) {
+	return new Promise(function (resolve, reject) {
+		const params = {
+			Bucket,
+			Key
+		};
+
+		S3.deleteObject(params, (err, data) => {
+			if (err) reject(err, err.stack); // an error occurred
+   			else resolve(data);           // successful response
+		});
+	});
+}
+
 module.exports.generateSignedGetUrl = generateSignedGetUrl;
 module.exports.generateSignedPutUrl = generateSignedPutUrl;
+module.exports.deleteMedia = deleteMedia;

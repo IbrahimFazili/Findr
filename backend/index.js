@@ -462,6 +462,15 @@ io.on("connection", (socket) => {
 				socket.emit("server error");
 			});
 	});
+
+	socket.on("delete media", (mediaArray) => {
+		for (var i = 0; i < mediaArray.length; i++){
+			const path = "chat_media/" + mediaArray[i];
+			AWS_Presigner.deleteMedia(path);
+		}
+
+	});
+
 });
 
 http.listen(3000, () => {
