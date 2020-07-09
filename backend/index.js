@@ -10,7 +10,22 @@ const Chat = require("./utils/Chat").Chat;
 const matcher = new (require("./utils/Matcher").Matcher)();
 const { EventQueue, Event, MESSAGE_EVENT } = require('./utils/Events');
 const sendEmail = require("./utils/emailer").sendEmail;
+const jwt = require('express-jwt');
+const jwks = require('jwks-rsa');
+const jwtCheck = jwt({
+      secret: jwks.expressJwtSecret({
+          cache: true,
+          rateLimit: true,
+          jwksRequestsPerMinute: 5,
+          jwksUri: 'https://findrapp.us.auth0.com/.well-known/jwks.json'
+    }),
+    audience: 'api.findrapp.ca',
+    issuer: 'https://findrapp.us.auth0.com/',
+	algorithms: ['RS256']
+});
 
+app.use(jwtCheck);
+app.use(bodyParser.json());
 
 var isServerOutdated = false;
 
@@ -28,8 +43,6 @@ function generateRandomNumber() {
 	}
 	return randomNumber;
 }
-
-app.use(bodyParser.json());
 
 app.get("/", (req, res) => {
 	if (!isServerOutdated) {

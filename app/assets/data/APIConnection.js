@@ -1,7 +1,6 @@
 const ENDPOINT = "http://dev.findrapp.ca"; // goes to localhost from avd
 const PORT = 80;
 
-
 /**
  * This class provides methods to interact with our API. If no endpoint or port is provided,
  * it points to the API server on findr domain on port 80
@@ -14,6 +13,14 @@ class APIConnection {
     constructor(customEndpoint, customPort) {
         this.ENDPOINT = customEndpoint ? customEndpoint : ENDPOINT;
         this.PORT = customPort ? customPort : PORT;
+    }
+
+    getCodeVerifier() {
+        const str = crypto.randomBytes(32);
+        return str.toString('base64')
+            .replace(/\+/g, '-')
+            .replace(/\//g, '_')
+            .replace(/=/g, '');
     }
 
     /**
