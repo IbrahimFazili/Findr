@@ -1,5 +1,5 @@
 const DB = require('./DatabaseManager');
-const { EventQueue, Event, MESSAGE_EVENT } = require('./utils/Events');
+const { EventQueue, Event, MESSAGE_EVENT } = require('./Events');
 
 const MAX_N = 1024;
 const MIN_N = 512;
@@ -112,61 +112,7 @@ function bindSocketListeners(io) {
 	
 					// no existing chat b/w users, so create a new one
 					if (!msgHandled) {
-						const chat = new Chat(msg.from, msg.to);
-						chat.newMessage(msg.from, msg.content, msg.time, msg.public_key);
-	
-						DB.insertChat({ chat })
-							.then((result) => {
-	
-								user.chats.push(result.ops[0]._id);
-								DB.updateUser({ chats: user.chats }, { email: user.email })
-									.then((value) => {
-										// socket.to(msg.to).emit("new msg", msg);
-									})
-									.catch((reason) => {
-										socket.emit("send failed");
-										DB.deleteChat(result.ops[0]._id);
-										console.log(reason);
-									});
-	
-								DB.fetchUsers({ email: msg.to })
-									.then((res) => {
-										let user = res[0];
-										user.chats.push(result.ops[0]._id);
-	
-										DB.updateUser({ chats: user.chats }, { email: user.email })
-											.then((value) => {
-												if (receiverIsReachable) {
-													socket.to(msg.to).emit("new msg", msg);
-												} else {
-													// store message event in eventQueue to notify user later
-													DB.fetchUsers({ email: msg.to }).then((receiver) => {
-														receiver = receiver[0];
-														receiver.eventQueue = new EventQueue(receiver.eventQueue.events);
-														receiver.eventQueue.enqueue(new Event(MESSAGE_EVENT, {
-															from: msg.from,
-															content: msg.content,
-															time: msg.time
-														}));
-				
-														DB.updateUser({ eventQueue: receiver.eventQueue }, { email: msg.to });
-													}).catch((reason) => {
-														console.log(reason);
-													});
-												}
-											})
-											.catch((reason) => {
-												console.log(reason);
-											});
-									})
-									.catch((err) => {
-										console.log(err);
-									});
-							})
-							.catch((err) => {
-								socket.emit("send failed");
-								console.log(err);
-							});
+						initNewChat(socket, user, msg, receiverIsReachable);
 					}
 				})
 				.catch((err) => {
@@ -174,6 +120,64 @@ function bindSocketListeners(io) {
 				});
 		});
 	});
+}
+
+function initNewChat(socket, user, msg, receiverIsReachable) {
+	const chat = new Chat(msg.from, msg.to);
+	chat.newMessage(msg.from, msg.content, msg.time, msg.public_key);
+
+	DB.insertChat({ chat })
+		.then((result) => {
+
+			user.chats.push(result.ops[0]._id);
+			DB.updateUser({ chats: user.chats }, { email: user.email })
+				.then((value) => {
+					// socket.to(msg.to).emit("new msg", msg);
+				})
+				.catch((reason) => {
+					socket.emit("send failed");
+					DB.deleteChat(result.ops[0]._id);
+					console.log(reason);
+				});
+
+			DB.fetchUsers({ email: msg.to })
+				.then((res) => {
+					let user = res[0];
+					user.chats.push(result.ops[0]._id);
+
+					DB.updateUser({ chats: user.chats }, { email: user.email })
+						.then((value) => {
+							if (receiverIsReachable) {
+								socket.to(msg.to).emit("new msg", msg);
+							} else {
+								// store message event in eventQueue to notify user later
+								DB.fetchUsers({ email: msg.to }).then((receiver) => {
+									receiver = receiver[0];
+									receiver.eventQueue = new EventQueue(receiver.eventQueue.events);
+									receiver.eventQueue.enqueue(new Event(MESSAGE_EVENT, {
+										from: msg.from,
+										content: msg.content,
+										time: msg.time
+									}));
+
+									DB.updateUser({ eventQueue: receiver.eventQueue }, { email: msg.to });
+								}).catch((reason) => {
+									console.log(reason);
+								});
+							}
+						})
+						.catch((reason) => {
+							console.log(reason);
+						});
+				})
+				.catch((err) => {
+					console.log(err);
+				});
+		})
+		.catch((err) => {
+			socket.emit("send failed");
+			console.log(err);
+		});
 }
 
 module.exports.Chat = Chat;
