@@ -1,5 +1,6 @@
 const MATCH_EVENT = 'match';
 const MESSAGE_EVENT = 'message';
+const BLOCK_EVENT = 'block';
 
 class Event {
     /**
@@ -57,3 +58,4 @@ module.exports.Event = Event;
 module.exports.EventQueue = EventQueue;
 module.exports.MATCH_EVENT = MATCH_EVENT;
 module.exports.MESSAGE_EVENT = MESSAGE_EVENT;
+module.exports.BLOCK_EVENT = BLOCK_EVENT;

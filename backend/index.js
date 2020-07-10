@@ -356,11 +356,26 @@ app.get("/leftSwipe", (req, res) => {
 	callbackQueue.enqueue(leftSwipe, srcUser, targetUser, res);
 });
 
-app.get("/blockUser", (req, res) => {
+app.get("/blockUser", async (req, res) => {
 	const srcUser = req.query.src;
 	const targetUser = req.query.target;
 
 	callbackQueue.enqueue(blockUser, srcUser, targetUser, res);
+
+	try {
+		const user = await DB.fetchUsers({ email: srcUser });
+
+		for (let i = 0; i < user.chats.length; i++) {
+			const chat = (await DB.fetchChat(user.chats[i]))[0].chat;
+			if (chat.user1 === targetUser || chat.user2 === targetUser) {
+				chat = Chat.parseJSON(chat);
+				chat.disableChat(targetUser);
+				break;
+			}
+		}
+	} catch (error) {
+		console.log(error);
+	}
 });
 
 app.get("/deleteUser", (req, res) => {
