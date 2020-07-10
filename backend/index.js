@@ -124,6 +124,20 @@ async function deleteUser(email, res, oncomplete) {
 
 }
 
+async function blockUser(srcUser, targetUser, res, oncomplete) {
+	try {
+		const success = await matcher.blockUser(srcUser, targetUser);
+		if (success) res.status(201).end();
+		else res.status(500).send("block user failed");
+
+		oncomplete();
+	} catch (error) {
+		console.log(error);
+		res.status(500).send("Server error");
+		oncomplete();
+	}
+}
+
 app.use(bodyParser.json());
 
 app.get("/", (req, res) => {
@@ -342,6 +356,13 @@ app.get("/leftSwipe", (req, res) => {
 	callbackQueue.enqueue(leftSwipe, srcUser, targetUser, res);
 });
 
+app.get("/blockUser", (req, res) => {
+	const srcUser = req.query.src;
+	const targetUser = req.query.target;
+
+	callbackQueue.enqueue(blockUser, srcUser, targetUser, res);
+});
+
 app.get("/deleteUser", (req, res) => {
 	const email = req.query.email;
 	callbackQueue.enqueue(deleteUser, email, res);
@@ -376,6 +397,7 @@ app.post("/new-user", (req, res) => {
 		bio: "",
 		blueConnections: [],
 		greenConnections: [],
+		blockedUsers: [],
 		eventQueue: { events: [] },
 		active: false,
 		verificationHash: bcrypt.hashSync(req.body.email + generateRandomNumber(), 3)
