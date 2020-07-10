@@ -24,7 +24,7 @@ const thumnailStyle = {
 class Matches extends React.Component {
   constructor(props) {
     super(props);
-    this.state = { API: new APIConnection(), cards: [] };
+    this.state = { API: new APIConnection("http://api.findrapp.ca", 80), cards: [] };
   }
 
   async componentDidMount() {

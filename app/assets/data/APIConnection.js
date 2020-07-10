@@ -1,4 +1,4 @@
-const ENDPOINT = 'http://localhost'; // goes to localhost from avd
+const ENDPOINT = 'http://192.168.8.21'; // goes to localhost from avd
 const PORT = 3000;
 
 /**

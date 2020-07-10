@@ -16,7 +16,7 @@ class Chat extends React.Component {
 
     this.state = {
       cards: [],
-      API: new APIConnection(),
+      API: new APIConnection("http://api.findrapp.ca", 80),
       dataLoadRequired: true,
     };
   }

@@ -186,9 +186,9 @@ class MessageBubble extends Component {
   render() {
     //These spacers make the message bubble stay to the left or the right, depending on who is speaking, even if the message is multiple lines.
     var rightSpacer =
-      this.props.direction === 'left' ? null : <View style={{ width: 160 }} />;
+      this.props.direction === 'left' ? null : <View style={{ width: '40%' }} />;
     var leftSpacer =
-      this.props.direction === 'left' ? <View style={{ width: 160 }} /> : null;
+      this.props.direction === 'left' ? <View style={{ width: '40%' }} /> : null;
 
     var bubbleStyles =
       this.props.direction === 'left'
@@ -199,17 +199,6 @@ class MessageBubble extends Component {
       this.props.direction === 'left'
         ? styles.messageBubbleTextLeft
         : styles.messageBubbleTextRight;
-
-    var arrowDirection =
-      this.props.direction == 'left'
-        ? styles.arrowLeftContainer
-        : styles.arrowRightContainer;
-
-    var arrowIcon =
-      this.props.direction == 'left' ? styles.arrowLeft : styles.arrowRight;
-
-    var messageDirection =
-      this.props.direction == 'left' ? styles.itemOut : styles.itemIn;
 
     return (
       <View style={{ justifyContent: 'space-between', flexDirection: 'row' }}>
@@ -270,7 +259,10 @@ class InputBar extends Component {
   render() {
     return (
       <View style={styles.inputBar}>
-        <TouchableHighlight onPress={() => this.chooseImage()}>
+        <TouchableHighlight
+        style={styles.mediaButton}
+        onPress={() => this.chooseImage()}
+        >
           <Text style={styles.iconButton2}>
             <Icon name='explore' />
           </Text>
@@ -281,7 +273,7 @@ class InputBar extends Component {
             this.autogrowInput = ref;
           }}
           multiline={true}
-          defaultHeight={30}
+          defaultHeight={DIMENSION_HEIGHT * 0.07}
           onChangeText={(text) => this.props.onChangeText(text)}
           onContentSizeChange={this.props.onSizeChange}
           value={this.props.text}
@@ -320,27 +312,41 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     paddingHorizontal: 5,
     paddingVertical: 3,
+    elevation: 50
   },
 
   textBox: {
-    borderRadius: 5,
+    borderRadius: 28,
     borderWidth: 1,
     borderColor: 'gray',
     flex: 1,
     fontSize: 16,
     paddingHorizontal: 10,
+    marginBottom: DIMENSION_HEIGHT * 0.02,
+    maxWidth: DIMENSION_WIDTH * 0.8
   },
 
   sendButton: {
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: '#1a5d57',
-    marginBottom: 10,
-    marginRight: 5,
-    height: 35,
-    width: 35,
-    borderRadius: 17.5,
-    marginLeft: 5,
+    height: 45,
+    width: 45,
+    borderRadius: 22.5,
+    position: 'absolute',
+    right: DIMENSION_WIDTH * 0.025,
+    bottom: DIMENSION_HEIGHT * 0.034,
+    elevation: 6
+  },
+
+  mediaButton: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#1a5d57',
+    height: 45,
+    width: 45,
+    borderRadius: 22.5,
+    elevation: 6
   },
 
   //MessageBubble
@@ -351,15 +357,14 @@ const styles = StyleSheet.create({
     paddingTop: moderateScale(5, 2),
     paddingBottom: moderateScale(7, 2),
     borderRadius: 20,
-    marginBottom: 10,
-    marginTop: 5,
+    marginTop: DIMENSION_HEIGHT * 0.015,
     flexDirection: 'row',
     flex: 1,
-    marginLeft: 10,
   },
 
   messageBubbleLeft: {
     backgroundColor: '#d5d8d4',
+    marginRight: DIMENSION_WIDTH * 0.025,
   },
 
   messageBubbleTextLeft: {
@@ -368,6 +373,7 @@ const styles = StyleSheet.create({
 
   messageBubbleRight: {
     backgroundColor: '#1a5d57',
+    marginLeft: DIMENSION_WIDTH * 0.025,
   },
 
   messageBubbleTextRight: {
