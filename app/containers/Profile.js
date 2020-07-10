@@ -13,6 +13,7 @@ import {
 import ProfileItem from "../components/ProfileItem";
 import Icon from "../components/Icon";
 import APIConnection from "../assets/data/APIConnection";
+import CachedImage from "../components/CachedImage";
 
 const PRIMARY_COLOR = "#7444C0";
 const SECONDARY_COLOR = "#5636B8";
@@ -58,13 +59,13 @@ class Profile extends React.Component {
 
     return (
       <View style={styles.headerBackground}>
-        <Image
+        <CachedImage
           source={require("../assets/images/Findr_logo2x.png")}
           style={globalStyles.profileLogo}
         />
         <View style={styles.header}>
           <View style={styles.profilepicWrap}>
-            <Image style={styles.profilepic} source={image} />
+            <CachedImage style={styles.profilepic} source={image} />
           </View>
         </View>
 

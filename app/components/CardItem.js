@@ -3,6 +3,7 @@ import styles from "../assets/styles";
 
 import { Text, View, Image, Dimensions, TouchableOpacity } from "react-native";
 import Icon from "./Icon";
+import CachedImage from "./CachedImage";
 
 const CardItem = ({
   actions,
@@ -77,7 +78,7 @@ const CardItem = ({
     >
       {/* IMAGE */} 
       <View style={imageWrapperStyle}>
-        <Image source={image} style={imageStyle} />
+        <CachedImage source={image} style={imageStyle} />
       </View>
 
       {/* MATCHES */}
