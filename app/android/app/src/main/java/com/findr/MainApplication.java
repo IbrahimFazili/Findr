@@ -5,6 +5,7 @@ import android.app.Application;
 import com.facebook.react.ReactApplication;
 import com.horcrux.svg.SvgPackage;
 import com.imagepicker.ImagePickerPackage;
+import com.cmcewen.blurview.BlurViewPackage;
 import com.oblador.vectoricons.VectorIconsPackage;
 import com.BV.LinearGradient.LinearGradientPackage;
 import com.swmansion.gesturehandler.react.RNGestureHandlerPackage;
@@ -30,6 +31,7 @@ public class MainApplication extends Application implements ReactApplication {
           new MainReactPackage(),
             new SvgPackage(),
             new ImagePickerPackage(),
+            new BlurViewPackage(),
             new VectorIconsPackage(),
             new LinearGradientPackage(),
             new RNGestureHandlerPackage()

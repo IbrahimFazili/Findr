@@ -36,6 +36,36 @@ export default StyleSheet.create({
     elevation: 10,
   },
 
+  privacyContainer: {
+    width: DIMENSION_WIDTH * 0.8,
+    marginTop: DIMENSION_HEIGHT * 0.03,
+    marginLeft: DIMENSION_WIDTH * 0.1,
+    backgroundColor: WHITE,
+    borderRadius: 40,
+    shadowOpacity: 0.3,
+    shadowRadius: 10,
+    shadowColor: BLACK,
+    shadowOffset: { height: 0, width: 0 },
+    elevation: 10,
+    height: DIMENSION_HEIGHT * 0.7,
+    marginBottom: DIMENSION_HEIGHT * 0.02
+  },
+
+  privacyHeader: {
+    marginTop: DIMENSION_HEIGHT * 0.02,
+    fontSize: 24,
+    color: TEAL,
+    marginBottom: DIMENSION_HEIGHT * 0.02
+  },
+
+  scrollPrivacy: {
+    paddingHorizontal: DIMENSION_WIDTH * 0.1
+  },
+  
+  popupStyling:{
+    paddingRight: DIMENSION_WIDTH * 0.1,
+  },
+
   matchContainerCardItem: {
     width: DIMENSION_WIDTH * 0.353,
     backgroundColor: WHITE,
@@ -185,6 +215,46 @@ export default StyleSheet.create({
   popupCard: {
     backgroundColor: WHITE,
     borderRadius: 20,
+    maxHeight: DIMENSION_HEIGHT * 0.7,
+    maxWidth: DIMENSION_WIDTH * 0.85,
+    alignSelf: "center",
+    marginVertical: DIMENSION_HEIGHT * 0.13,
+    borderRadius: 30,
+    // overflow: "hidden",
+  },
+
+  blurredView: {
+    flex: 1, 
+    justifyContent: "center", 
+    alignItems: "center", 
+    backgroundColor: "white",
+    maxHeight: DIMENSION_HEIGHT * 0.7,
+    maxWidth: DIMENSION_WIDTH * 0.7,
+    borderRadius: 20,
+  },
+
+  popupCardTitle:{
+    fontSize: 20,
+    // fontWeight: "bold",
+    color: "#1a5d57",
+  },
+
+  popupCardTitlePosition:{
+    alignSelf: "center",
+    marginTop: DIMENSION_HEIGHT * 0.1,
+    marginBottom: DIMENSION_HEIGHT * 0.05
+  },
+
+
+  biodata: {
+    fontSize: 14,
+    color: "#1a5d57",
+    marginTop: DIMENSION_HEIGHT * 0.03,
+    marginLeft: DIMENSION_WIDTH * 0.1
+  },
+
+  textValues: {
+    color: "black",
   },
 
   // COMPONENT - CITY
@@ -315,6 +385,7 @@ export default StyleSheet.create({
     width: DIMENSION_WIDTH,
     height: DIMENSION_HEIGHT,
   },
+
   top: {
     paddingTop: 50,
     marginHorizontal: 10,
@@ -440,6 +511,7 @@ export default StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     marginRight: 10,
+    
   },
   roundedButton: {
     justifyContent: "center",
@@ -473,28 +545,52 @@ export default StyleSheet.create({
 
   //COMPONENT - SIGNUP
   logo: {
-    marginLeft: "40%",
-    marginTop: 70,
-    width: 100,
-    height: 100,
+    alignSelf: "center",
+    marginTop: DIMENSION_HEIGHT * 0.1,
+    marginLeft: DIMENSION_WIDTH * 0.05,
+    width: DIMENSION_WIDTH * 0.35,
+    height: DIMENSION_HEIGHT * 0.15,
   },
 
-  slide: {
-    marginTop: 40,
-    flex: 1,
-    justifyContent: "center",
-    backgroundColor: "transparent",
+  privacyLogo: {
+    alignSelf: "center",
+    marginTop: DIMENSION_HEIGHT * 0.04,
+    marginLeft: DIMENSION_WIDTH * 0.05,
+    width: DIMENSION_WIDTH * 0.2,
+    height: DIMENSION_HEIGHT * 0.1,
+  },
+
+  slide0: {
+    marginTop: DIMENSION_HEIGHT * 0.1
   },
 
   slide1: {
-    marginTop: 60,
+    marginTop: DIMENSION_HEIGHT * 0.1
+  },
+
+  uniDropDown: {
+    width: DIMENSION_WIDTH * 0.7, 
+    left: DIMENSION_WIDTH * 0.12,
+    marginBottom:20, 
+    borderColor: "white", 
+    borderWidth: 0.4, 
+    borderRadius: 35,
+    paddingLeft: 20, 
+    paddingRight: 20, 
+    paddingTop: -30,
+    height: 50,
+  },
+
+  slide4: {
     flex: 1,
     justifyContent: "center",
     backgroundColor: "transparent",
   },
 
-  wrapper: {
-    // marginTop: 80
+  uniList: {
+    bottom: DIMENSION_HEIGHT * 0.3, 
+    left: DIMENSION_WIDTH * 0.09,
+    width: DIMENSION_WIDTH * 0.7,
   },
 
   signupbutt: {
@@ -504,10 +600,10 @@ export default StyleSheet.create({
     borderBottomRightRadius: 10,
     borderTopLeftRadius: 10,
     borderTopRightRadius: 10,
-    marginTop: 40,
-    width: 150,
-    marginLeft: 110,
-    height: 40,
+    marginTop: DIMENSION_HEIGHT * 0.16,
+    marginBottom: DIMENSION_HEIGHT * 0.05,
+    width: DIMENSION_WIDTH * 0.35,
+    alignSelf: 'center',
   },
 
   bottomsignup: {
@@ -516,26 +612,48 @@ export default StyleSheet.create({
 
   //COMPONENT - LOGIN
   loginlogo: {
-    marginBottom: 80,
-    marginLeft: 150,
-    marginTop: 100,
-    width: 105,
-    height: 40,
+    alignSelf: "center",
+    marginTop: DIMENSION_HEIGHT * 0.1,
+    marginLeft: DIMENSION_WIDTH * 0.05,
+    marginBottom: DIMENSION_HEIGHT * 0.13,
+    width: DIMENSION_WIDTH * 0.35,
+    height: DIMENSION_HEIGHT * 0.15,
   },
 
   loginbutt: {
     backgroundColor: "#013d38",
     borderRadius: 10,
-    marginTop: 40,
-    width: 150,
-    marginLeft: 110,
+    marginTop: DIMENSION_HEIGHT * 0.05,
+    width: DIMENSION_WIDTH * 0.35,
+    alignSelf: 'center',
+    elevation: 4
+  },
+  
+  acceptButton:{
+    backgroundColor: "#013d38",
+    borderRadius: 10,
+    width: DIMENSION_WIDTH * 0.35,
+    alignSelf: 'center',
+    elevation: 4
   },
 
   signupredirect: {
-    marginTop: 100,
-    marginLeft: 110,
-    width: 150,
+    width: DIMENSION_WIDTH * 0.35,
+    alignSelf: 'center',
     borderRadius: 10,
+    justifyContent: 'flex-end',
+    marginTop: DIMENSION_HEIGHT * 0.05,
+    bottom: DIMENSION_HEIGHT * 0.025,
+    backgroundColor: "#013d38",
+  },
+
+  loginRedirect: {
+    width: DIMENSION_WIDTH * 0.35,
+    alignSelf: 'center',
+    borderRadius: 10,
+    borderColor: WHITE,
+    marginTop: DIMENSION_HEIGHT * 0.02,
+    backgroundColor: "#013d38",
   },
 
   bottomlogin: {
@@ -564,5 +682,133 @@ export default StyleSheet.create({
   footerContainer: {
     padding: 20,
     backgroundColor: "lightgrey",
+  },
+
+  //CONTAINERS - Onboarding
+  onboardingWrapper: {
+    zIndex: -1,
+  },
+  onboardingBg: {
+    flex: 1,
+    resizeMode: "contain",
+    width: DIMENSION_WIDTH,
+    height: DIMENSION_HEIGHT,
+  },
+  slideOneTop: {
+    marginTop: DIMENSION_HEIGHT * 0.12,
+    flexDirection: "column",
+    alignItems: "center",
+  },
+  slideTwoContent: {
+    flexDirection: "column",
+    alignItems: "center",
+  },
+  slideTwoHeader: {
+    marginTop: DIMENSION_HEIGHT * 0.05,
+    color: "white",
+    fontSize: 30,
+  },
+  slideTwoNormal: {
+    color: "white",
+    fontSize: 18,
+  },
+  internalWrapper: {
+    position: "absolute",
+    marginTop: DIMENSION_HEIGHT * 0.25,
+    zIndex: 5,
+    backgroundColor: "transparent",
+  },
+  slideoneCarousel: {
+    marginTop: DIMENSION_HEIGHT * 0.2,
+    height: 200,
+  },
+  onBoardingButt: {
+    backgroundColor: "#1b4a45",
+    borderRadius: 20,
+    borderBottomLeftRadius: 10,
+    borderBottomRightRadius: 10,
+    borderTopLeftRadius: 10,
+    borderTopRightRadius: 10,
+    width: 120,
+    height: 40,
+    alignItems: "center",
+    textAlignVertical: "center",
+  },
+  slide4content: {
+    padding: DIMENSION_HEIGHT * 0.1,
+    flexDirection: "column",
+    alignItems: "center",
+  },
+  slide4buttons: {
+    marginTop: DIMENSION_HEIGHT * 0.2,
+    flexDirection: "column",
+    alignItems: "center",
+    marginBottom: DIMENSION_HEIGHT * 0.2,
+  },
+  onboardinglogo: {
+    marginLeft: DIMENSION_WIDTH * 0.11,
+    marginTop: DIMENSION_HEIGHT * 0.001,
+    width: DIMENSION_WIDTH * 0.45,
+    height: DIMENSION_HEIGHT * 0.2,
+  },
+  onBoardingSep: {
+    marginTop: DIMENSION_HEIGHT * 0.035,
+    marginBottom: DIMENSION_HEIGHT * 0.035,
+  },
+  onBoardingButtText: {
+    color: "white",
+    marginTop: 10,
+  },
+  slide3content: {
+    marginLeft: DIMENSION_WIDTH * 0.5,
+    flexDirection: "column",
+    alignItems: "center",
+  },
+  slide3: {
+    // marginHorizontal: DIMENSION_HEIGHT * 0.06,
+  },
+  slide3Header: {
+    marginTop: DIMENSION_HEIGHT * 0.05,
+    marginLeft: DIMENSION_WIDTH * 0.32,
+    color: "white",
+    fontSize: 30,
+  },
+  slide3Normal: {
+    color: "white",
+    fontSize: 18,
+    marginLeft: DIMENSION_HEIGHT * 0.09,
+  },
+  slide3line: {
+    width: DIMENSION_HEIGHT * 0.06,
+    marginLeft: DIMENSION_HEIGHT * 0.22,
+    marginTop: DIMENSION_HEIGHT * 0.015,
+    marginBottom: DIMENSION_HEIGHT * 0.015,
+  },
+  OBnext: {
+    backgroundColor: "white",
+    width: DIMENSION_HEIGHT * 0.18,
+    height: DIMENSION_HEIGHT * 0.06,
+    borderRadius: DIMENSION_HEIGHT * 0.048,
+  },
+  OBnextText1: {
+    color: "#8B9EAF",
+    fontWeight: "bold",
+    fontSize: 16,
+    marginTop: DIMENSION_HEIGHT * 0.015,
+    marginLeft: DIMENSION_WIDTH * 0.14,
+  },
+  OBnextText2: {
+    color: "#4D617C",
+    fontWeight: "bold",
+    fontSize: 16,
+    marginTop: DIMENSION_HEIGHT * 0.015,
+    marginLeft: DIMENSION_WIDTH * 0.14,
+  },
+  OBnextText3: {
+    color: "#679389",
+    fontWeight: "bold",
+    fontSize: 16,
+    marginTop: DIMENSION_HEIGHT * 0.015,
+    marginLeft: DIMENSION_WIDTH * 0.14,
   },
 });
