@@ -1,13 +1,4 @@
 import React from 'react';
-import styles from '../assets/styles';
-import {
-  ScrollView,
-  Text,
-  TouchableOpacity,
-  ImageBackground,
-  View,
-  FlatList,
-} from 'react-native';
 import { createStackNavigator, createAppContainer } from 'react-navigation';
 import Chat from './Chat';
 import Messages from './Messages';

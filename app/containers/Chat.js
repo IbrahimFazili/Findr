@@ -4,19 +4,20 @@ import {
   View,
   StyleSheet,
   ScrollView,
-  TouchableHighlight,
+  TouchableOpacity,
   Keyboard,
   ImageBackground,
-  TouchableOpacity,
   Dimensions,
-  Alert,
 } from 'react-native';
 import { Header, Image } from 'react-native-elements';
 import KeyboardSpacer from 'react-native-keyboard-spacer';
 import AutogrowInput from 'react-native-autogrow-input';
-import Icon from '../components/Icon';
 import { moderateScale } from 'react-native-size-matters';
 import ImagePicker from 'react-native-image-picker';
+import { Thumbnail } from "native-base";
+
+import AttachIcon from '../assets/icons/attach.svg';
+import SendIcon from '../assets/icons/send_icon.svg';
 
 const DIMENSION_WIDTH = Dimensions.get('window').width;
 const DIMENSION_HEIGHT = Dimensions.get('window').height;
@@ -96,8 +97,8 @@ export default class Chat extends Component {
 
   _sendMessage() {
     this.state.messages.push({
-      direction: 'right',
-      text: this.state.inputBarText,
+      user: this.state.own_email,
+      msg: this.state.inputBarText,
     });
 
     this.setState({
@@ -132,7 +133,7 @@ export default class Chat extends Component {
       messages.push(
         <MessageBubble
           key={index}
-          direction={message.user === own_email ? 'right' : 'left'}
+          direction={message.user === own_email ? 'left' : 'right'}
           text={message.msg}
         />
       );
@@ -141,7 +142,7 @@ export default class Chat extends Component {
     return (
       <View style={styles.outer}>
         <ImageBackground
-          source={require('../assets/images/Home.png')}
+          source={require('../assets/images/15.png')}
           style={styles.bg}
         >
           <Header
@@ -155,8 +156,9 @@ export default class Chat extends Component {
               );
             }}
             containerStyle={{
-              backgroundColor: '#008080',
+              backgroundColor: 'white',
               justifyContent: 'space-around',
+              elevation: 15
             }}
           />
 
@@ -259,14 +261,12 @@ class InputBar extends Component {
   render() {
     return (
       <View style={styles.inputBar}>
-        <TouchableHighlight
+        <TouchableOpacity
         style={styles.mediaButton}
         onPress={() => this.chooseImage()}
         >
-          <Text style={styles.iconButton2}>
-            <Icon name='explore' />
-          </Text>
-        </TouchableHighlight>
+          <AttachIcon width={DIMENSION_WIDTH * 0.07} height={DIMENSION_HEIGHT * 0.07}/>
+        </TouchableOpacity>
         <AutogrowInput
           style={styles.textBox}
           ref={(ref) => {
@@ -277,15 +277,14 @@ class InputBar extends Component {
           onChangeText={(text) => this.props.onChangeText(text)}
           onContentSizeChange={this.props.onSizeChange}
           value={this.props.text}
+          placeholder={"Type a message"}
         />
-        <TouchableHighlight
+        <TouchableOpacity
           style={styles.sendButton}
           onPress={() => this.props.onSendPressed()}
         >
-          <Text style={styles.iconButton}>
-            <Icon name='arrow' />
-          </Text>
-        </TouchableHighlight>
+          <SendIcon width={DIMENSION_WIDTH * 0.1} height={DIMENSION_HEIGHT * 0.1}/>
+        </TouchableOpacity>
       </View>
     );
   }
@@ -303,6 +302,7 @@ const styles = StyleSheet.create({
 
   messages: {
     flex: 1,
+    marginBottom: DIMENSION_HEIGHT * 0.01
   },
 
   //InputBar
@@ -311,14 +311,16 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     paddingHorizontal: 5,
-    paddingVertical: 3,
-    elevation: 50
+    paddingTop: DIMENSION_HEIGHT * 0.019,
+    height: DIMENSION_HEIGHT * 0.11,
+    elevation: 20,
+    backgroundColor: 'white'
   },
 
   textBox: {
     borderRadius: 28,
     borderWidth: 1,
-    borderColor: 'gray',
+    borderColor: 'lightgrey',
     flex: 1,
     fontSize: 16,
     paddingHorizontal: 10,
@@ -328,25 +330,16 @@ const styles = StyleSheet.create({
 
   sendButton: {
     justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#1a5d57',
-    height: 45,
-    width: 45,
-    borderRadius: 22.5,
+    backgroundColor: 'transparent',
     position: 'absolute',
     right: DIMENSION_WIDTH * 0.025,
-    bottom: DIMENSION_HEIGHT * 0.034,
-    elevation: 6
+    bottom: DIMENSION_HEIGHT * 0.008,
+    elevation: 8
   },
 
   mediaButton: {
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#1a5d57',
-    height: 45,
-    width: 45,
-    borderRadius: 22.5,
-    elevation: 6
+    backgroundColor: 'transparent',
+    marginLeft: DIMENSION_WIDTH * 0.05,
   },
 
   //MessageBubble
@@ -395,7 +388,7 @@ const styles = StyleSheet.create({
     marginRight: 5,
   },
   headerTest: {
-    color: '#ffff',
+    color: '#334856',
   },
   profilepic: {
     flex: 1,

@@ -5,14 +5,13 @@ import {
   createAppContainer,
   createStackNavigator,
 } from "react-navigation";
-import styles from "./assets/styles";
 import SignUpScreen from "./containers/SignUp";
 import LogInScreen from "./containers/LogIn";
 import HomeScreen from "./containers/Home";
 import MatchesScreen from "./containers/Matches";
 import MessagesScreen from "./containers/Messages";
+import Chat from "./containers/Chat";
 import ProfileScreen from "./containers/Profile";
-import Icon from "./components/Icon";
 import PrivacyScreen from "./containers/Privacy";
 import OnboardingScreen from "./containers/Onboarding";
 
@@ -142,9 +141,9 @@ const RootStack = createStackNavigator(
     Messages: {
       screen: MessagesScreen,
     },
-    // ChatPage: {
-    //   screen: Chat,
-    // },
+    ChatPage: {
+      screen: Chat,
+    },
     Privacy :{
       screen: PrivacyScreen,
     },
