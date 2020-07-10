@@ -202,7 +202,7 @@ class Onboarding extends React.Component {
                   Find people in every field
                 </Text>
                 <Image
-                  style={{ marginTop: FULL_HEIGHT * 0.03 }}
+                  style={{ marginTop: FULL_HEIGHT * 0.025, marginBottom: FULL_HEIGHT * 0.018}}
                   source={require("../assets/images/newicn_add.png")}
                 />
                 <TouchableOpacity
@@ -245,7 +245,7 @@ class Onboarding extends React.Component {
                 <View
                   style={{
                     marginLeft: FULL_WIDTH * 0.32,
-                    marginTop: FULL_HEIGHT * 0.115,
+                    marginTop: FULL_HEIGHT * 0.14,
                   }}
                 >
                   <TouchableOpacity

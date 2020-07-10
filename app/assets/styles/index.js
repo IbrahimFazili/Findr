@@ -582,6 +582,7 @@ export default StyleSheet.create({
     marginTop: 100,
     width: 105,
     height: 40,
+    padding: 50
   },
 
   loginbutt: {
@@ -589,12 +590,12 @@ export default StyleSheet.create({
     borderRadius: 10,
     marginTop: 40,
     width: 150,
-    marginLeft: 110,
+    marginLeft: DIMENSION_WIDTH * 0.275,
   },
 
   signupredirect: {
-    marginTop: 100,
-    marginLeft: 110,
+    marginTop: 40,
+    marginLeft: DIMENSION_WIDTH * 0.285,
     width: 150,
     borderRadius: 10,
   },
@@ -651,6 +652,10 @@ export default StyleSheet.create({
     color: "white",
     fontSize: 30,
   },
+
+  slideSignUp: {
+    marginTop: DIMENSION_HEIGHT * 0.02
+  },
   slideTwoNormal: {
     color: "white",
     fontSize: 18,
@@ -663,7 +668,8 @@ export default StyleSheet.create({
   },
   slideoneCarousel: {
     marginTop: DIMENSION_HEIGHT * 0.2,
-    height: 200,
+    height: DIMENSION_HEIGHT * 0.2,
+    marginBottom: DIMENSION_HEIGHT * 0.1
   },
   onBoardingButt: {
     backgroundColor: "#1b4a45",
@@ -732,6 +738,7 @@ export default StyleSheet.create({
     width: DIMENSION_HEIGHT * 0.18,
     height: DIMENSION_HEIGHT * 0.06,
     borderRadius: DIMENSION_HEIGHT * 0.048,
+    bottom: DIMENSION_HEIGHT * 0.1
   },
   OBnextText1: {
     color: "#8B9EAF",

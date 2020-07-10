@@ -196,7 +196,7 @@ class SignUp extends React.Component {
           }}
           loop={false}
         >
-          <View style={styles.slide}>
+          <View style={styles.slideSignUp}>
             <TextInput
               underlineColor="transparent"
               mode={"flat"}
@@ -249,7 +249,7 @@ class SignUp extends React.Component {
               style={textBoxStyle}
             />
           </View>
-          <View style={styles.slide1}>
+          <View style={styles.slideSignUp}>
             <DatePicker
               date={this.state.date}
               mode="date"
