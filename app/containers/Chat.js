@@ -40,7 +40,7 @@ export default class Chat extends Component {
       messages: props.navigation.state.params.messages,
       inputBarText: '',
       other_user: props.navigation.state.params.user_name,
-      other_user_image: { uri: props.navigation.state.params.user_image },
+      other_user_image: props.navigation.state.params.user_image,
     };
   }
 
@@ -135,6 +135,7 @@ export default class Chat extends Component {
           key={index}
           direction={message.user === own_email ? 'left' : 'right'}
           text={message.msg}
+          time={message.timestamp}
         />
       );
     });
@@ -151,6 +152,12 @@ export default class Chat extends Component {
             centerComponent={() => {
               return (
                 <View>
+                  <Thumbnail
+                  small
+                  style={{ alignSelf: "center", marginTop: 0 }}
+                  source={this.state.other_user_image}
+                  key={this.state.own_email}
+                  />
                   <Text style={styles.headerTest}>{this.state.other_user}</Text>
                 </View>
               );
@@ -158,7 +165,8 @@ export default class Chat extends Component {
             containerStyle={{
               backgroundColor: 'white',
               justifyContent: 'space-around',
-              elevation: 15
+              elevation: 15,
+              paddingBottom: DIMENSION_HEIGHT * 0.03
             }}
           />
 
@@ -201,9 +209,9 @@ class MessageBubble extends Component {
       this.props.direction === 'left'
         ? styles.messageBubbleTextLeft
         : styles.messageBubbleTextRight;
-
+    
     return (
-      <View style={{ justifyContent: 'space-between', flexDirection: 'row' }}>
+      <View style={{ justifyContent: 'space-between', flexDirection: 'row'}}>
         {leftSpacer}
         <View style={bubbleStyles}>
           <Text style={bubbleTextStyle}>{this.props.text}</Text>
@@ -313,7 +321,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 5,
     paddingTop: DIMENSION_HEIGHT * 0.019,
     height: DIMENSION_HEIGHT * 0.11,
-    elevation: 20,
+    elevation: 15,
     backgroundColor: 'white'
   },
 
@@ -353,24 +361,27 @@ const styles = StyleSheet.create({
     marginTop: DIMENSION_HEIGHT * 0.015,
     flexDirection: 'row',
     flex: 1,
+    elevation: 5
   },
 
   messageBubbleLeft: {
-    backgroundColor: '#d5d8d4',
+    backgroundColor: '#1a5d57',
     marginRight: DIMENSION_WIDTH * 0.025,
+    borderBottomRightRadius: 0
   },
 
   messageBubbleTextLeft: {
-    color: 'black',
+    color: 'white',
   },
 
   messageBubbleRight: {
-    backgroundColor: '#1a5d57',
+    backgroundColor: 'white',
     marginLeft: DIMENSION_WIDTH * 0.025,
+    borderBottomLeftRadius: 0,
   },
 
   messageBubbleTextRight: {
-    color: 'white',
+    color: '#334856',
   },
   bg: {
     flex: 1,
