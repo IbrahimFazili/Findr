@@ -4,6 +4,8 @@ import styles from '../assets/styles';
 import { Text, View, Image, Button, Dimensions, TouchableOpacity, AsyncStorage} from 'react-native';
 import { DefaultTheme, Provider as PaperProvider, TextInput, RadioButton, Dialog} from 'react-native-paper';
 const FULL_HEIGHT = Dimensions.get('window').height;
+const FULL_WIDTH = Dimensions.get('window').width;
+
 import APIConnection from "../assets/data/APIConnection";
 import Pen from '../assets/icons/pen.svg';
 import Check from '../assets/icons/check.svg';
@@ -259,8 +261,19 @@ class ProfileItem extends React.Component{
 				: (<Text style={styles.name}>{this.state.name}</Text>)
 				}
 				{this.state.isEditable1 
-				? (<TouchableOpacity style={styles.profileButtons} onPress={this.handleUpdateClick1.bind(this)}><Check width={20} height={20}/></TouchableOpacity>) 
-				: (<TouchableOpacity style={styles.profileButtons} onPress={this.handleEditClick1.bind(this)}><Pen width={20} height={20}/></TouchableOpacity>)
+				? (
+					<View style={{right: FULL_WIDTH * - 0.04}}>
+						<TouchableOpacity style={styles.profileButtons} onPress={this.handleUpdateClick1.bind(this)}>
+							<Check width={20} height={20}/>
+							</TouchableOpacity>
+					</View>
+					) 
+				: (
+					<View style={{right: FULL_WIDTH * 0.1}}>
+						<TouchableOpacity style={styles.profileButtons} onPress={this.handleEditClick1.bind(this)}>
+							<Pen width={20} height={20}/>
+							</TouchableOpacity>
+					</View>)
 				}
 			</View>
 			<Text style={styles.descriptionProfileItem}>
