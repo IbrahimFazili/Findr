@@ -48,7 +48,6 @@ class Tag extends React.Component {
     return (
       <View style={styles.container}>
         <TagInput
-          
           editable={this.state.edit}
           updateState={this.updateTagState}
           tags={this.state.tags}

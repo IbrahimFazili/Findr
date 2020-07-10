@@ -285,10 +285,9 @@ export default StyleSheet.create({
     color: WHITE,
   },
   name: {
-    marginLeft: DIMENSION_WIDTH * 0.22,
+    marginLeft: DIMENSION_WIDTH * 0.20,
     paddingTop: 25,
     paddingBottom: 5,
-    paddingRight: 10,
     color: TEAL,
     fontSize: 24,
     textAlign: "center",

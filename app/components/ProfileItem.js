@@ -4,6 +4,8 @@ import styles from '../assets/styles';
 import { Text, View, Image, Button, Dimensions, TouchableOpacity, AsyncStorage} from 'react-native';
 import { DefaultTheme, Provider as PaperProvider, TextInput, RadioButton, Dialog} from 'react-native-paper';
 const FULL_HEIGHT = Dimensions.get('window').height;
+const FULL_WIDTH = Dimensions.get('window').width;
+
 import APIConnection from "../assets/data/APIConnection";
 import Pen from '../assets/icons/pen.svg';
 import Check from '../assets/icons/check.svg';
@@ -141,19 +143,26 @@ class ProfileItem extends React.Component{
 		const data = {
 			email: await AsyncStorage.getItem("storedEmail"),
 		};
-		if(this.state.name.length !== 0 && this.state.name === this.props.name){
+		if(this.state.name.length !== 0){
 			data.name = this.state.name
+		}
+		if(this.state.keywords.length !== 0){
+			data.keywords = this.state.keywords
+			console.log(this.state.keywords)
+			console.log(data.keywords)
 		}
 		if(this.state.gender.length !== 0 && this.state.gender === this.props.gender){
 			data.gender = this.state.gender[0].toUpperCase()
 		}
 		if(Object.keys(data).length > 1){
 			const update = await API.updateUserInfo(data);
+			console.log(data)
 			if (update == 500) {
 				console.log("Server Error");
 			}
 			if (update == 201) {
 				this.setState({
+					keywords: this.state.keywords,
 					name: this.state.name, 
 					gender: this.state.gender[0].toUpperCase() + this.state.gender.substring(1,this.state.gender.length)
 				})
@@ -171,25 +180,47 @@ class ProfileItem extends React.Component{
 		const data = {
 			email: await AsyncStorage.getItem("storedEmail"),
 		}
+		
 		if(this.state.major.length !== 0){
 			data.major = this.state.major
+		}
+
+		if(this.state.clubs.length !== 0){
+			data.clubs = this.state.clubs
+		}
+		//same for courses
+
+		const update = await API.updateUserInfo(data);
+		if (update == 500) {
+			console.log("Server Error");
+		}
+		if(update == 201) {
+			this.setState({major: this.state.major, clubs: this.state.clubs})
+		}
+	}
+
+	handleEditClick3 = async() => {
+		this.setState({isEditable3: true});
+		// this.addProjectInput()
+	}
+
+	handleUpdateClick3 = async() => {
+		this.setState({isEditable3: false});
+		const API = new APIConnection();
+		const data = {
+			email: await AsyncStorage.getItem("storedEmail"),
+		}
+		
+		if(this.state.allProjects.length !== 0){
+			data.projects = this.state.allProjects.map(fields => ({...fields}['value'])) //projects
 		}
 		const update = await API.updateUserInfo(data);
 		if (update == 500) {
 			console.log("Server Error");
 		}
 		if(update == 201) {
-			this.setState({major: this.state.major})
+			this.setState({allProjects: this.state.allProjects}) //projects
 		}
-	}
-
-	handleEditClick3 = () => {
-		this.setState({isEditable3: true});
-		// this.addProjectInput()
-	}
-
-	handleUpdateClick3 = () => {
-		this.setState({isEditable3: false});
 	}
 
 	handleEditClick4 = () => {
@@ -197,8 +228,23 @@ class ProfileItem extends React.Component{
 		// this.addExpInput()
 	}
 
-	handleUpdateClick4 = () => {
+	handleUpdateClick4 = async() => {
 		this.setState({isEditable4: false});
+		const API = new APIConnection();
+		const data = {
+			email: await AsyncStorage.getItem("storedEmail"),
+		}
+		
+		if(this.state.allExp.length !== 0){
+			data.experience = this.state.allExp.map(fields => ({...fields}['value'])) //experience
+		}
+		const update = await API.updateUserInfo(data);
+		if (update == 500) {
+			console.log("Server Error");
+		}
+		if(update == 201) {
+			this.setState({allExp: this.state.allExp}) //experience
+		}
 	}
 
 	handleNameChange(text) {
@@ -259,8 +305,19 @@ class ProfileItem extends React.Component{
 				: (<Text style={styles.name}>{this.state.name}</Text>)
 				}
 				{this.state.isEditable1 
-				? (<TouchableOpacity style={styles.profileButtons} onPress={this.handleUpdateClick1.bind(this)}><Check width={20} height={20}/></TouchableOpacity>) 
-				: (<TouchableOpacity style={styles.profileButtons} onPress={this.handleEditClick1.bind(this)}><Pen width={20} height={20}/></TouchableOpacity>)
+				? (
+					<View style={{right: FULL_WIDTH * -0.03}}>
+						<TouchableOpacity style={styles.profileButtons} onPress={this.handleUpdateClick1.bind(this)}>
+							<Check width={20} height={20}/>
+							</TouchableOpacity>
+					</View>
+					) 
+				: (
+					<View style={{right: FULL_WIDTH * 0.05}}>
+						<TouchableOpacity style={styles.profileButtons} onPress={this.handleEditClick1.bind(this)}>
+							<Pen width={20} height={20}/>
+							</TouchableOpacity>
+					</View>)
 				}
 			</View>
 			<Text style={styles.descriptionProfileItem}>
@@ -279,22 +336,6 @@ class ProfileItem extends React.Component{
 
 			<View style={styles.info}>
 				<Text style={styles.profileTitle}>Keywords: </Text>
-				{/* {this.state.isEditable1
-				? (<TextInput
-					underlineColor="transparent"
-					mode={"flat"}
-					// value={this.state.major}
-					label='Keywords'
-					placeholder="Enter your keywords"
-					onFocus={() => this.setState({ keywordsLabel: "" })}
-					onBlur={() => this.setState({ keywordsLabel: this.state.keywords.length === 0 ? "Keyword" : "" })}
-					onChangeText={this.handleKeywordChange.bind(this)}
-					theme={theme}
-					style={textBoxStyle}
-					/>)
-				: 
-				(<Text style={styles.infoContent}>{this.state.keywords.join(", ")}</Text>)
-				} */}
 				<Tag 
 					keywords={this.state.keywords} editable={this.state.isEditable1}
 					type="keyword"
