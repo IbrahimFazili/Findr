@@ -147,7 +147,7 @@ class ProfileItem extends React.Component{
 			data.name = this.state.name
 		}
 		if(this.state.keywords.length !== 0){
-			// data.keywords = this.state.keywords
+			data.keywords = this.state.keywords
 		}
 		if(this.state.gender.length !== 0 && this.state.gender === this.props.gender){
 			data.gender = this.state.gender[0].toUpperCase()
@@ -276,9 +276,13 @@ class ProfileItem extends React.Component{
 		this.setState({ isMajorValid: false, major: text });
 	}
 
-	handleKeywordChange(arrayTag){
-		this.setState({keywords: arrayTag})
-		console.log("KEYWORKDS")
+	handleKeywordChange(tag, arrayTag){
+		if (tag.length > 0){
+		this.setState({keywords: arrayTag.concat([tag])})
+		}
+		else{
+			this.setState({keywords: arrayTag})
+		}
 	}
 
 	render() {

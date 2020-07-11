@@ -41,8 +41,9 @@ class Tag extends React.Component {
       this.setState({
         tags: state
       })
+      console.log(this.state.tags.tag)
       let {wordChange} = this.props;
-      wordChange(this.state.tags.tagsArray)
+      wordChange(this.state.tags.tag , this.state.tags.tagsArray)
     };
  
   render() {
