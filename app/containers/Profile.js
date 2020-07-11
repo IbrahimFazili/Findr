@@ -58,6 +58,7 @@ class Profile extends React.Component {
     const major = this.state.profile ? this.state.profile.major : "";
     const email = this.state.profile ? this.state.profile.email : "";
     const keywords = this.state.profile ? this.state.profile.keywords : [];
+    const clubs = this.state.profile ? this.state.profile.clubs : []
 
     return (
       <ImageBackground
@@ -86,6 +87,7 @@ class Profile extends React.Component {
                   major={major}
                   email={email}
                   keywords={keywords}
+                  clubs={clubs}
                 />
               </View>
             </View>

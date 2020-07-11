@@ -10,7 +10,8 @@ import APIConnection from "../assets/data/APIConnection";
 import Pen from '../assets/icons/pen.svg';
 import Check from '../assets/icons/check.svg';
 import Tag from './Tag';
-import TagEducation from "./TagEducation"
+import TagCourses from "./TagCourses"
+import TagClubs from "./TagClubs"
 import Plus from "../assets/icons/Plus.svg";
 import Minus from "../assets/icons/minus_green.svg";
 
@@ -45,7 +46,7 @@ class ProfileItem extends React.Component{
 			uni: props.uni,
 			major: props.major,
 			gender: props.gender,
-			clubs: "",
+			clubs: [],
 			courses: "",
 			keywords: [],
 
@@ -126,6 +127,9 @@ class ProfileItem extends React.Component{
 			}
 			updatedState.keywords = props.keywords;
 		}
+		if (props.clubs !== this.state.clubs) {
+			updatedState.clubs = props.clubs;
+		}
 
 		if (Object.keys(updatedState).length > 0) {
 			this.setState(updatedState);
@@ -182,9 +186,9 @@ class ProfileItem extends React.Component{
 			data.major = this.state.major
 		}
 
-		if(this.state.clubs.length !== 0){
+		// if(this.state.clubs.length !== 0){
 			data.clubs = this.state.clubs
-		}
+		// }
 		//same for courses
 
 		const update = await API.updateUserInfo(data);
@@ -285,8 +289,17 @@ class ProfileItem extends React.Component{
 		}
 	}
 
+	handleClubChange(tag, clubArray){
+		if (tag.length > 0){
+			this.setState({clubs: clubArray.concat([tag])})
+			}
+		else{
+			this.setState({clubs: clubArray})
+		}
+	}
+
 	render() {
-		console.log(this.state.keywords)
+		console.log(this.state.clubs)
 		return (
 		<View>
 		<View style={styles.containerProfileItem}>
@@ -375,12 +388,13 @@ class ProfileItem extends React.Component{
 
 			<View style={styles.info}>
 				<Text style={styles.profileTitle}>Courses: </Text>
-				<TagEducation keywords={[]} editable={this.state.isEditable2} type="course"/>
+				<TagCourses keywords={[]} editable={this.state.isEditable2} type="course"/>
 			</View>
 
 			<View style={styles.info}>
 				<Text style={styles.profileTitle}>Clubs: </Text>
-				<TagEducation keywords={[]} editable={this.state.isEditable2} type="club"/>
+				<TagClubs keywords={this.state.clubs} editable={this.state.isEditable2} type="club"
+				clubChange={this.handleClubChange.bind(this)}/>
 			</View>
 		</View>
 
