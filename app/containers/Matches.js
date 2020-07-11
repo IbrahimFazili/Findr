@@ -14,8 +14,6 @@ import {
 import CardItem from "../components/CardItem";
 import APIConnection from "../assets/data/APIConnection";
 import ProfilePopup from "../components/ProfilePopup";
-import CachedImage from "../components/CachedImage";
-// import {BlurView} from '@react-native-community/blur';
 
 const thumnailStyle = {
   marginHorizontal: 10,
@@ -54,7 +52,7 @@ class Matches extends React.Component {
       >
         <View style={styles.containerMatches}>
           <ScrollView>
-            <CachedImage
+            <Image
               style={styles.matchLogo}
               source={require("../assets/images/Findr_logo2x.png")}
             />
@@ -108,6 +106,7 @@ class Matches extends React.Component {
                   <CardItem
                     image={{ uri: item.image }}
                     name={item.name}
+                    email={item.email}
                     status={"Online"}
                     variant
                   />

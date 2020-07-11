@@ -82,6 +82,7 @@ class Home extends React.Component {
                   <CardItem
                     image={{ uri: item.image }}
                     name={item.name}
+                    email={item.email}
                     keywords={item.keywords}
                     description={
                       item.bio.length > MAX_LENGTH

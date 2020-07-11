@@ -59,13 +59,13 @@ class Profile extends React.Component {
 
     return (
       <View style={styles.headerBackground}>
-        <CachedImage
+        <Image
           source={require("../assets/images/Findr_logo2x.png")}
           style={globalStyles.profileLogo}
         />
         <View style={styles.header}>
           <View style={styles.profilepicWrap}>
-            <CachedImage style={styles.profilepic} source={image} />
+            {image ? <CachedImage style={styles.profilepic} uri={image.uri} uid={email} /> : null}
           </View>
         </View>
 

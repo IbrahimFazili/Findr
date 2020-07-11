@@ -1,4 +1,4 @@
-const ENDPOINT = "http://dev.findrapp.ca"; // goes to localhost from avd
+const ENDPOINT = "http://api.findrapp.ca"; // goes to localhost from avd
 const PORT = 80;
 
 

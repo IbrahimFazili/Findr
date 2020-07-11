@@ -10,6 +10,7 @@ const CardItem = ({
   description,
   image,
   name,
+  email,
   keywords,
   onPressLeft,
   onPressRight,
@@ -78,7 +79,7 @@ const CardItem = ({
     >
       {/* IMAGE */} 
       <View style={imageWrapperStyle}>
-        <CachedImage source={image} style={imageStyle} />
+        <CachedImage uri={image.uri} uid={email} style={imageStyle} />
       </View>
 
       {/* MATCHES */}
