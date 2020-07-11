@@ -41,10 +41,11 @@ class Tag extends React.Component {
       this.setState({
         tags: state
       })
+      let {wordChange} = this.props;
+      wordChange(this.state.tags.tagsArray)
     };
  
   render() {
-    console.log(this.state)
     return (
       <View style={styles.container}>
         <TagInput

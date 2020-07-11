@@ -147,16 +147,13 @@ class ProfileItem extends React.Component{
 			data.name = this.state.name
 		}
 		if(this.state.keywords.length !== 0){
-			data.keywords = this.state.keywords
-			console.log(this.state.keywords)
-			console.log(data.keywords)
+			// data.keywords = this.state.keywords
 		}
 		if(this.state.gender.length !== 0 && this.state.gender === this.props.gender){
 			data.gender = this.state.gender[0].toUpperCase()
 		}
 		if(Object.keys(data).length > 1){
 			const update = await API.updateUserInfo(data);
-			console.log(data)
 			if (update == 500) {
 				console.log("Server Error");
 			}
@@ -279,12 +276,13 @@ class ProfileItem extends React.Component{
 		this.setState({ isMajorValid: false, major: text });
 	}
 
-	handleKeywordChange(text){
-		this.setState({keywords: [...this.state.keywords, text]})
+	handleKeywordChange(arrayTag){
+		this.setState({keywords: arrayTag})
+		console.log("KEYWORKDS")
 	}
 
 	render() {
-		console.log(this.state.isEditable3)
+		console.log(this.state.keywords)
 		return (
 		<View>
 		<View style={styles.containerProfileItem}>
@@ -339,6 +337,7 @@ class ProfileItem extends React.Component{
 				<Tag 
 					keywords={this.state.keywords} editable={this.state.isEditable1}
 					type="keyword"
+					wordChange={this.handleKeywordChange.bind(this)}
 				/>
 			</View>
 		</View>
