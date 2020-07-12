@@ -58,8 +58,8 @@ class Profile extends React.Component {
     const major = this.state.profile ? this.state.profile.major : "";
     const email = this.state.profile ? this.state.profile.email : "";
     const keywords = this.state.profile ? this.state.profile.keywords : [];
-    const clubs = this.state.profile ? this.state.profile.clubs : [],
-    const courses = this.state.profile ? this.state.profile.courses : []
+    const clubs = this.state.profile ? this.state.profile.clubs : [];
+    const courses = this.state.profile ? this.state.profile.courses : [];
 
     return (
       <ImageBackground

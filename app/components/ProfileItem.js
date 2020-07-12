@@ -161,7 +161,8 @@ class ProfileItem extends React.Component{
 			data.gender = this.state.gender[0].toUpperCase()
 		}
 		if(Object.keys(data).length > 1){
-			const update = await API.updateUserInfo(data);
+			var update = await API.updateUserInfo(data);
+			if (data.keywords) update = await API.updateKeywords(data);
 			if (update == 500) {
 				console.log("Server Error");
 			}
@@ -190,10 +191,8 @@ class ProfileItem extends React.Component{
 			data.major = this.state.major
 		}
 
-		// if(this.state.clubs.length !== 0){
-			data.clubs = this.state.clubs
-		// }
-		//same for courses
+		data.clubs = this.state.clubs
+		data.courses = this.state.courses
 
 		const update = await API.updateUserInfo(data);
 		if (update == 500) {
