@@ -38,6 +38,8 @@ class TagEducation extends React.Component {
       this.setState({
         tags: state
       })
+      let {courseChange} = this.props;
+      courseChange(this.state.tags.tag , this.state.tags.tagsArray)
     };
  
   render() {

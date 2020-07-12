@@ -47,7 +47,7 @@ class ProfileItem extends React.Component{
 			major: props.major,
 			gender: props.gender,
 			clubs: [],
-			courses: "",
+			courses: [],
 			keywords: [],
 
 			nameLabel: "Name",
@@ -129,6 +129,10 @@ class ProfileItem extends React.Component{
 		}
 		if (props.clubs !== this.state.clubs) {
 			updatedState.clubs = props.clubs;
+		}
+
+		if (props.courses !== this.state.courses) {
+			updatedState.courses = props.courses;
 		}
 
 		if (Object.keys(updatedState).length > 0) {
@@ -298,6 +302,15 @@ class ProfileItem extends React.Component{
 		}
 	}
 
+	handleCourseChange(tag, courseArray){
+		if (tag.length > 0){
+			this.setState({courses: courseArray.concat([tag])})
+		}
+		else{
+			this.setState({courses: courseArray})
+		}
+	}
+
 	render() {
 		console.log(this.state.clubs)
 		return (
@@ -388,7 +401,8 @@ class ProfileItem extends React.Component{
 
 			<View style={styles.info}>
 				<Text style={styles.profileTitle}>Courses: </Text>
-				<TagCourses keywords={[]} editable={this.state.isEditable2} type="course"/>
+				<TagCourses keywords={this.state.courses} editable={this.state.isEditable2} 
+			    courseChange={this.handleCourseChange.bind(this)} type="course"/>
 			</View>
 
 			<View style={styles.info}>
