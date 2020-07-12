@@ -1,11 +1,34 @@
 import React from 'react';
-import { Text, View, AsyncStorage, Image, Dimensions, ScrollView } from 'react-native';
+import { Text, View, AsyncStorage, Image, Dimensions, ScrollView, NetInfo } from 'react-native';
 import styles from '../assets/styles';
 import Unorderedlist from 'react-native-unordered-list';
 import {Button} from 'react-native-paper';
 
+
 class Privacy extends React.Component{
+    constructor(props){
+        super(props);
+        
+        this.state={
+            isConnected: true,
+        }
+    }
+
+    async componentWillUnmount() {
+        NetInfo.isConnected.removeEventListener('connectionChange', this.handleConnectivityChange);
+      }
+    
+      handleConnectivityChange = isConnected => {
+        this.setState({ isConnected });
+    };
+
+    async componentDidMount(){
+        NetInfo.isConnected.addEventListener('connectionChange', this.handleConnectivityChange);
+    }
     render(){
+        if (!this.state.isConnected) {
+            this.props.navigation.navigate("Internet");
+        }
         return(
             <View style={{backgroundColor: "rgba(26, 93, 87, 0.15)", width: "100%", height: "100%",}}>
                 <Image style={styles.privacyLogo} source={require('../assets/images/Findr_logo2x.png')}/>
