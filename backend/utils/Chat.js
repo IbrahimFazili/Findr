@@ -1,4 +1,5 @@
 const { EventQueue, Event, BLOCK_EVENT } = require('./Events');
+const DB = require("./DatabaseManager");
 
 class Message {
 	constructor(user, msg, timestamp) {
