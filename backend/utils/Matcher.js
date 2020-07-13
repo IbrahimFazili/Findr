@@ -182,7 +182,6 @@ class Matcher {
                 });
 
                 try {
-                    // await DB.bulkUpdateUsers(connections, { _id: { $in : user.blueConnections } })
                     connections.forEach((element) => {
                         DB.updateUser({ blueConnections: element.blueConnections }, { email: element.email })
                     });

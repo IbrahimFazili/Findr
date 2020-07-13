@@ -6,9 +6,9 @@ const bodyParser = require("body-parser");
 const bcrypt = require("bcrypt");
 const DB = require("./utils/DatabaseManager");
 const AWS_Presigner = require("./utils/AWSPresigner");
-const Chat = require("./utils/Chat").Chat;
+const { bindSocketListeners } = require("./utils/Chat");
 const matcher = new (require("./utils/Matcher").Matcher)();
-const { EventQueue, Event, MESSAGE_EVENT } = require('./utils/Events');
+const { EventQueue } = require('./utils/Events');
 const sendEmail = require("./utils/emailer").sendEmail;
 const { CallbackQueue } = require("./utils/DataStructures");
 
@@ -443,132 +443,7 @@ app.post("/update", (req, res) => {
 });
 
 /* Socket Listeners for chat */
-
-io.on("connection", (socket) => {
-	socket
-		.join(socket.handshake.query.name)
-		.to(socket.handshake.query.name)
-		.emit("joined chat room" + socket.rooms);
-	console.log(`${socket.handshake.query.name} Connected`);
-
-	socket.on("new msg", (msg) => {
-		DB.fetchUsers({ email: msg.from })
-			.then(async (users) => {
-				const user = users[0];
-				let chat = null;
-				var msgHandled = false;
-				const receiverIsReachable = io.sockets.adapter.rooms[msg.to] && io.sockets.adapter.rooms[msg.to].length > 0;
-
-				for (let i = 0; i < user.chats.length && !msgHandled; i++) {
-					try {
-						chat = (await DB.fetchChat(user.chats[i]))[0].chat;
-						
-						if (chat.user1 === msg.to || chat.user2 === msg.to) {
-							chat = Chat.parseJSON(chat);
-
-							chat.newMessage(msg.from, msg.content, msg.time);
-							msgHandled = true;
-
-							try {
-								await DB.updateChat(chat, {
-									_id: user.chats[i],
-								});
-
-								if (receiverIsReachable) {
-									socket.to(msg.to).emit("new msg", msg);
-								} else {
-									// store message event in eventQueue to notify user later
-									DB.fetchUsers({ email: msg.to }).then((receiver) => {
-										receiver = receiver[0];
-										receiver.eventQueue = new EventQueue(receiver.eventQueue.events);
-										receiver.eventQueue.enqueue(new Event(MESSAGE_EVENT, {
-											from: msg.from,
-											content: msg.content,
-											time: msg.time
-										}));
-
-										DB.updateUser({ eventQueue: receiver.eventQueue }, { email: msg.to });
-
-									}).catch((reason) => {
-										console.log(reason);
-									})
-								}
-							} catch (err_nested) {
-								console.log(err_nested);
-								socket.emit("send failed");
-							}
-						}
-					} catch (err) {
-						console.log(err);
-						socket.emit("server error");
-						msgHandled = true;
-					}
-				}
-
-				// no existing chat b/w users, so create a new one
-				if (!msgHandled) {
-					const chat = new Chat(msg.from, msg.to);
-					chat.newMessage(msg.from, msg.content, msg.time);
-
-					DB.insertChat({ chat })
-						.then((result) => {
-
-							user.chats.push(result.ops[0]._id);
-							DB.updateUser({ chats: user.chats }, { email: user.email })
-								.then((value) => {
-									// socket.to(msg.to).emit("new msg", msg);
-								})
-								.catch((reason) => {
-									socket.emit("send failed");
-									DB.deleteChat(result.ops[0]._id);
-									console.log(reason);
-								});
-
-							DB.fetchUsers({ email: msg.to })
-								.then((res) => {
-									let user = res[0];
-									user.chats.push(result.ops[0]._id);
-
-									DB.updateUser({ chats: user.chats }, { email: user.email })
-										.then((value) => {
-											if (receiverIsReachable) {
-												socket.to(msg.to).emit("new msg", msg);
-											} else {
-												// store message event in eventQueue to notify user later
-												DB.fetchUsers({ email: msg.to }).then((receiver) => {
-													receiver = receiver[0];
-													receiver.eventQueue = new EventQueue(receiver.eventQueue.events);
-													receiver.eventQueue.enqueue(new Event(MESSAGE_EVENT, {
-														from: msg.from,
-														content: msg.content,
-														time: msg.time
-													}));
-			
-													DB.updateUser({ eventQueue: receiver.eventQueue }, { email: msg.to });
-												}).catch((reason) => {
-													console.log(reason);
-												});
-											}
-										})
-										.catch((reason) => {
-											console.log(reason);
-										});
-								})
-								.catch((err) => {
-									console.log(err);
-								});
-						})
-						.catch((err) => {
-							socket.emit("send failed");
-							console.log(err);
-						});
-				}
-			})
-			.catch((err) => {
-				socket.emit("server error");
-			});
-	});
-});
+bindSocketListeners(io);
 
 http.listen(3000, () => {
 	console.log("Server is running");
