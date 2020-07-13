@@ -18,14 +18,14 @@ class Matcher {
                 await DB.updateUser({ blueConnections: user.blueConnections, greenConnections: user.greenConnections },
                     { email: srcUser });
 
-                const isMatch = await this.hasIncomingGreenConnection(user._id, swipedUserConnection._id);
-                if (isMatch){
+                const isMatch = await this.hasIncomingGreenConnection(user._id, rightSwipedUser);
+                if (isMatch) {
                     rightSwipedUser.eventQueue = new EventQueue(rightSwipedUser.eventQueue.events);
                     rightSwipedUser.eventQueue.enqueue(
                         new Event(MATCH_EVENT, { _id : user._id})
                     )
 
-                    DB.updateUser({ eventQueue: rightSwipedUser.eventQueue }, { email: rightSwipedUser.email });
+                    await DB.updateUser({ eventQueue: rightSwipedUser.eventQueue }, { email: rightSwipedUser.email });
                 }
 
                 return { success: true, isMatch };
@@ -116,16 +116,17 @@ class Matcher {
                 });
 
                 for (var i = 0; i < duplicateConnections.length; i++) {
-                    let commonKeywords = user.keywords.filter(value => duplicateConnections[i].keywords.includes(value))
-                    let index1 = user.blueConnections.findIndex((conn) => conn._id.equals(duplicateConnections[i]._id))
+                    let commonKeywords = user.keywords.filter(value => duplicateConnections[i].keywords.includes(value));
+                    let index1 = user.blueConnections.findIndex((conn) => conn._id.equals(duplicateConnections[i]._id));
                     user.blueConnections[index1].commonKeywords = commonKeywords;
-                    let index2 = duplicateConnections[i].blueConnections.findIndex((conn) => conn._id.equals(user._id))
+
+                    let index2 = duplicateConnections[i].blueConnections.findIndex((conn) => conn._id.equals(user._id));
                     duplicateConnections[i].blueConnections[index2].commonKeywords = commonKeywords;
                     await DB.updateUser({ blueConnections: user.blueConnections },
-                        { email: user.email })
+                        { email: user.email });
 
                     await DB.updateUser({ blueConnections: duplicateConnections[i].blueConnections },
-                        { email: duplicateConnections[i].email })
+                        { email: duplicateConnections[i].email });
                 }
                
                 let blueConn = null;
@@ -175,12 +176,12 @@ class Matcher {
                 
                 let connections = await DB.fetchUsers({ _id: { $in : ids } });
                 connections.forEach((element) => {
-                    const index = element.blueConnections.indexOf(user._id);
+                    
+                    const index = element.blueConnections.findIndex((value) => value._id.equals(user._id));
                     element.blueConnections.splice(index, 1);
                 });
 
                 try {
-                    // await DB.bulkUpdateUsers(connections, { _id: { $in : user.blueConnections } })
                     connections.forEach((element) => {
                         DB.updateUser({ blueConnections: element.blueConnections }, { email: element.email })
                     });
@@ -256,9 +257,8 @@ class Matcher {
         }
     }
 
-    async hasIncomingGreenConnection(srcUserId, _id) {
+    async hasIncomingGreenConnection(srcUserId, user) {
         try {
-            const user = (await DB.fetchUsers({ _id }))[0];
             return user.greenConnections.findIndex((id) => id._id.equals(srcUserId)) !== -1;
         } catch (fetchErr) {
             console.log(fetchErr);

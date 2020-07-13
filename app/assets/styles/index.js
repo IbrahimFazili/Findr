@@ -386,6 +386,22 @@ export default StyleSheet.create({
     height: DIMENSION_HEIGHT,
   },
 
+  internetBG: {
+    width: DIMENSION_WIDTH,
+    height: DIMENSION_HEIGHT,
+  },
+
+  internetLogo: {
+    width: DIMENSION_WIDTH * 0.35,
+    height: DIMENSION_WIDTH * 0.3,
+    marginTop: DIMENSION_HEIGHT * 0.2,
+    marginLeft: DIMENSION_WIDTH * 0.05
+  },
+
+  internetText: {
+    fontSize: 27,
+  },
+
   top: {
     paddingTop: 50,
     marginHorizontal: 10,
@@ -561,11 +577,11 @@ export default StyleSheet.create({
   },
 
   slide0: {
-    marginTop: DIMENSION_HEIGHT * 0.1
+    marginTop: DIMENSION_HEIGHT * 0.08
   },
 
   slide1: {
-    marginTop: DIMENSION_HEIGHT * 0.1
+    marginTop: DIMENSION_HEIGHT * 0.08
   },
 
   uniDropDown: {
