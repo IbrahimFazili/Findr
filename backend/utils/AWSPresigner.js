@@ -15,12 +15,12 @@ const S3 = new AWS.S3();
  * @param {String} Key Path to the image inside the Bucket
  * @returns {Promise<String>} Signed GET Url to allow client to download image from the bucket
  */
-function generateSignedGetUrl(Key) {
+function generateSignedGetUrl(Key, timeout=10) {
 	return new Promise(function (resolve, reject) {
 		const params = {
 			Bucket,
 			Key,
-			Expires: 10,
+			Expires: timeout,
 		};
 
 		S3.getSignedUrl("getObject", params, (err, url) => {
@@ -36,13 +36,13 @@ function generateSignedGetUrl(Key) {
  * @param {String} Key Path to the image inside the Bucket
  * @returns {Promise<String>} Signed PUT Url to allow client to upload image to the bucket
  */
-function generateSignedPutUrl(Key) {
+function generateSignedPutUrl(Key, filetype) {
 	return new Promise(function (resolve, reject) {
 		const params = {
 			Bucket,
 			Key,
 			Expires: 30,
-			ContentType: "image/jpg",
+			ContentType: filetype === undefined ? "image/jpeg" : filetype,
 		};
 
 		S3.getSignedUrl("putObject", params, (err, url) => {
@@ -52,5 +52,20 @@ function generateSignedPutUrl(Key) {
 	});
 }
 
+function deleteMedia(Key) {
+	return new Promise(function (resolve, reject) {
+		const params = {
+			Bucket,
+			Key
+		};
+
+		S3.deleteObject(params, (err, data) => {
+			if (err) reject(err, err.stack); // an error occurred
+   			else resolve(data);           // successful response
+		});
+	});
+}
+
 module.exports.generateSignedGetUrl = generateSignedGetUrl;
 module.exports.generateSignedPutUrl = generateSignedPutUrl;
+module.exports.deleteMedia = deleteMedia;

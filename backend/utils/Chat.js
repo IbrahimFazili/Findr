@@ -1,12 +1,34 @@
+const AWS_Presigner = require("./AWSPresigner");
 const DB = require('./DatabaseManager');
 const { EventQueue, Event, MESSAGE_EVENT } = require('./Events');
 
 class Message {
-	constructor(user, msg, timestamp) {
+	constructor(user, msg, timestamp, media) {
 		this.user = user;
 		this.msg = msg;
 		this.timestamp = timestamp;
+		this.media = media;
 	}
+
+	async generateMediaTokens () {
+		var date = new Date();
+		var token = "";
+		var mediaToken = []
+		for (var i = 0; i < this.media.length; i++ ){
+			token = this.user + date.getTime() + i
+			mediaToken.push(token);
+		}
+
+		var URLS = {};
+		for (var i = 0; i < this.media.length; i++ ){
+			var url = await AWS_Presigner.generateSignedPutUrl("chat_media/" + mediaToken[i], this.media[i].type);
+			URLS[this.media[i].name] = url;
+		}
+
+		this.media = mediaToken;
+		return URLS;
+	}
+
 }
 
 class Chat {
