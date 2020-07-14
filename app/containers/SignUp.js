@@ -80,6 +80,7 @@ class SignUp extends React.Component {
       isNameValid: false,
       isEmailValid: false,
       isPasswordValid: false,
+      isConfirmValid: false,
       isUniValid: false,
       isMajorValid: false,
       showDots: true,
@@ -88,6 +89,8 @@ class SignUp extends React.Component {
       isConnected: true,
     };
   }
+  goingToPrivacy = false;
+
 
   handleNameChange(text) {
     if (text.length >= 3 && text.length <= 30) {
@@ -112,6 +115,14 @@ class SignUp extends React.Component {
       return;
     }
     this.setState({ password: text, isPasswordValid: false });
+  }
+
+  handlePasswordConfirmChange(text){
+    if (validatePassword(text) && (this.state.password === text)){
+      this.setState({isConfirmValid: true})
+      return;
+    }
+    this.setState({isConfirmValid: false})
   }
 
   handleUniChange(text) {
@@ -149,7 +160,7 @@ class SignUp extends React.Component {
       !this.state.isPasswordValid ||
       !this.state.date ||
       !this.state.isUniValid ||
-      !this.state.isMajorValid
+      !this.state.isMajorValid //this doesn't exist anymore
     ) {
       console.log("invalid inputs");
       return;
@@ -160,7 +171,7 @@ class SignUp extends React.Component {
       email: this.state.email,
       password: this.state.password,
       uni: this.state.uni,
-      major: this.state.major,
+      major: this.state.major, //this doesn't exist anymore ?
       age: this.state.date,
     };
 
@@ -173,6 +184,8 @@ class SignUp extends React.Component {
       await AsyncStorage.setItem("storedEmail", data.email);
       this.props.navigation.navigate("AppScreen");
     }
+    
+    goingToPrivacy = true
   }
 
     render() {
@@ -222,6 +235,9 @@ class SignUp extends React.Component {
                             theme={theme}
                             style={textBoxStyle}
                         />
+
+                        {this.state.isNameValid ? null : 
+                        <Text>Name is not valid</Text>}
 
                         <Dropdown label="University" data={universities}
                             dropdownPosition={-7}
@@ -294,6 +310,9 @@ class SignUp extends React.Component {
                             theme={theme}
                             style={textBoxStyle}
                         />
+
+                        {this.state.isEmailValid ? null : 
+                        <Text>Email provided is not valid</Text>} 
                         
                         <TextInput
                             underlineColor="transparent"
@@ -308,6 +327,8 @@ class SignUp extends React.Component {
                             theme={theme}
                             style={textBoxStyle}
                         />
+                          {this.state.isPasswordValid ? null : 
+                          <Text>Passwords do not match</Text>} 
 
                         <TextInput
                             underlineColor="transparent"
@@ -322,8 +343,15 @@ class SignUp extends React.Component {
                             theme={theme}
                             style={textBoxStyle}
                         />
+
+                        {this.state.isConfirmValid ? null : 
+                        <Text>Passwords do not match</Text>} 
+                        { /* style for red */}
+                        
                         <Button mode="contained" style={styles.signupbutt}
-                        onPress={()=> this.props.navigation.navigate("Privacy")}>Sign Up</Button>
+                        onPress={()=>
+                        {this.goingToPrivacy ? this.props.navigation.navigate("Privacy") : 
+                        this.props.navigation.navigate("SignUp")} }>Sign Up</Button>
                         
                     </ScrollView>
                 </Swiper>
