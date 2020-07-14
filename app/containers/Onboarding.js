@@ -180,7 +180,7 @@ class Onboarding extends React.Component {
                 />
                 <TouchableOpacity
                   onPress={this.onPressNext}
-                  style={styles.OBnext}
+                  style={styles.OBnext2}
                 >
                   <Text style={styles.OBnextText2}>Next</Text>
                 </TouchableOpacity>
@@ -223,7 +223,7 @@ class Onboarding extends React.Component {
                 >
                   <TouchableOpacity
                     onPress={this.onPressNext}
-                    style={styles.OBnext}
+                    style={styles.OBnext3}
                   >
                     <Text style={styles.OBnextText3}>Next</Text>
                   </TouchableOpacity>

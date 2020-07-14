@@ -740,6 +740,20 @@ export default StyleSheet.create({
     borderRadius: DIMENSION_HEIGHT * 0.048,
     bottom: DIMENSION_HEIGHT * 0.1
   },
+  OBnext2: {
+    backgroundColor: "white",
+    width: DIMENSION_HEIGHT * 0.18,
+    height: DIMENSION_HEIGHT * 0.06,
+    borderRadius: DIMENSION_HEIGHT * 0.048,
+    bottom: DIMENSION_HEIGHT * 0.05
+  },
+  OBnext3: {
+    backgroundColor: "white",
+    width: DIMENSION_HEIGHT * 0.18,
+    height: DIMENSION_HEIGHT * 0.06,
+    borderRadius: DIMENSION_HEIGHT * 0.048,
+    bottom: DIMENSION_HEIGHT * 0.06
+  },
   OBnextText1: {
     color: "#8B9EAF",
     fontWeight: "bold",
