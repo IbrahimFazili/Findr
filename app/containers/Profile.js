@@ -10,6 +10,7 @@ import {
   Dimensions,
   AsyncStorage,
   ImageBackground,
+  NetInfo
 } from "react-native";
 import ProfileItem from "../components/ProfileItem";
 import Icon from "../components/Icon";
@@ -39,7 +40,7 @@ const DIMENSION_HEIGHT = Dimensions.get("window").height;
 class Profile extends React.Component {
   constructor(props) {
     super(props);
-    this.state = { API: new APIConnection(), profile: null };
+    this.state = { API: new APIConnection(), profile: null, isConnected: true };
   }
 
   async componentDidMount() {
@@ -47,7 +48,16 @@ class Profile extends React.Component {
       await AsyncStorage.getItem("storedEmail")
     );
     this.setState({ profile: user });
+    NetInfo.isConnected.addEventListener('connectionChange', this.handleConnectivityChange);
   }
+
+  async componentWillUnmount(){
+    NetInfo.isConnected.removeEventListener('connectionChange', this.handleConnectivityChange);
+  }
+
+  handleConnectivityChange = isConnected => {
+    this.setState({ isConnected });
+  };
 
   render() {
     const image = this.state.profile ? { uri: this.state.profile.image } : null;
@@ -58,6 +68,10 @@ class Profile extends React.Component {
     const major = this.state.profile ? this.state.profile.major : "";
     const email = this.state.profile ? this.state.profile.email : "";
     const keywords = this.state.profile ? this.state.profile.keywords : [];
+    
+    if (!this.state.isConnected) {
+      this.props.navigation.navigate("Internet");
+    }
 
     return (
       <ImageBackground
