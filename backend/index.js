@@ -10,6 +10,8 @@ const { bindSocketListeners } = require("./utils/Chat");
 const matcher = new (require("./utils/Matcher").Matcher)();
 const { EventQueue } = require('./utils/Events');
 const sendEmail = require("./utils/emailer").sendEmail;
+const cors = require("cors");
+
 const { CallbackQueue } = require("./utils/DataStructures");
 
 const callbackQueue = new CallbackQueue();
@@ -30,6 +32,7 @@ function generateRandomNumber() {
 	return randomNumber;
 }
 
+app.use(cors());
 function signUp(requestData, res, oncomplete){
 	DB.insertUser(requestData)
 		.then(async (result) => {
@@ -275,6 +278,16 @@ app.get("/fetchChatData", (req, res) => {
 		});
 });
 
+app.get("/fetchChatMedia", async (req, res) => {
+	try {
+		const downUrl = await AWS_Presigner.generateSignedGetUrl("chat_media/" + req.query.name, 30);
+		res.status(200).send(downUrl);
+	} catch (error) {
+		console.log(error);
+		res.status(404).send("media not found");
+	}
+});
+
 app.get("/fetchNotifications", (req, res) => {
 	DB.fetchUsers({ email: req.query.email })
 		.then(async (users) => {
@@ -443,6 +456,145 @@ app.post("/update", (req, res) => {
 });
 
 /* Socket Listeners for chat */
+
+io.on("connection", (socket) => {
+	socket
+		.join(socket.handshake.query.name)
+		.emit("joined chat room");
+	console.log(`${socket.handshake.query.name} Connected`);
+
+	socket.on("new msg", (msg) => {
+		DB.fetchUsers({ email: msg.from })
+			.then(async (users) => {
+				const user = users[0];
+				let chat = null;
+				var msgHandled = false;
+				const receiverIsReachable = io.sockets.adapter.rooms[msg.to] && io.sockets.adapter.rooms[msg.to].length > 0;
+
+				for (let i = 0; i < user.chats.length && !msgHandled; i++) {
+					try {
+						chat = (await DB.fetchChat(user.chats[i]))[0].chat;
+						
+						if (chat.user1 === msg.to || chat.user2 === msg.to) {
+							chat = Chat.parseJSON(chat);
+
+							const mediaUploadUrls = await chat.newMessage(msg.from, msg.content, msg.time, msg.media);
+							msg.media = chat.messages[chat.messages.length - 1].media;
+							msgHandled = true;
+
+							try {
+								await DB.updateChat(chat, {
+									_id: user.chats[i],
+								});
+								socket.emit("upload urls", mediaUploadUrls);
+
+								if (receiverIsReachable) {
+									socket.to(msg.to).emit("new msg", msg);
+								} else {
+									// store message event in eventQueue to notify user later
+									DB.fetchUsers({ email: msg.to }).then((receiver) => {
+										receiver = receiver[0];
+										receiver.eventQueue = new EventQueue(receiver.eventQueue.events);
+										receiver.eventQueue.enqueue(new Event(MESSAGE_EVENT, {
+											from: msg.from,
+											content: msg.content,
+											time: msg.time,
+											media: msg.media
+										}));
+
+										DB.updateUser({ eventQueue: receiver.eventQueue }, { email: msg.to });
+
+									}).catch((reason) => {
+										console.log(reason);
+									})
+								}
+							} catch (err_nested) {
+								console.log(err_nested);
+								socket.emit("send failed");
+							}
+						}
+					} catch (err) {
+						console.log(err);
+						socket.emit("server error");
+						msgHandled = true;
+					}
+				}
+
+				// no existing chat b/w users, so create a new one
+				if (!msgHandled) {
+					const chat = new Chat(msg.from, msg.to);
+					const mediaUploadUrls = await chat.newMessage(msg.from, msg.content, msg.time, msg.media);
+					msg.media = chat.messages[chat.messages.length - 1].media;
+
+					DB.insertChat({ chat })
+						.then((result) => {
+
+							user.chats.push(result.ops[0]._id);
+							DB.updateUser({ chats: user.chats }, { email: user.email })
+								.then((value) => {
+									socket.emit("upload urls", mediaUploadUrls);
+								})
+								.catch((reason) => {
+									socket.emit("send failed");
+									DB.deleteChat(result.ops[0]._id);
+									console.log(reason);
+								});
+
+							DB.fetchUsers({ email: msg.to })
+								.then((res) => {
+									let user = res[0];
+									user.chats.push(result.ops[0]._id);
+
+									DB.updateUser({ chats: user.chats }, { email: user.email })
+										.then((value) => {
+											if (receiverIsReachable) {
+												socket.to(msg.to).emit("new msg", msg);
+											} else {
+												// store message event in eventQueue to notify user later
+												DB.fetchUsers({ email: msg.to }).then((receiver) => {
+													receiver = receiver[0];
+													receiver.eventQueue = new EventQueue(receiver.eventQueue.events);
+													receiver.eventQueue.enqueue(new Event(MESSAGE_EVENT, {
+														from: msg.from,
+														content: msg.content,
+														time: msg.time,
+														media: msg.media
+													}));
+			
+													DB.updateUser({ eventQueue: receiver.eventQueue }, { email: msg.to });
+												}).catch((reason) => {
+													console.log(reason);
+												});
+											}
+										})
+										.catch((reason) => {
+											console.log(reason);
+										});
+								})
+								.catch((err) => {
+									console.log(err);
+								});
+						})
+						.catch((err) => {
+							socket.emit("send failed");
+							console.log(err);
+						});
+				}
+			})
+			.catch((err) => {
+				socket.emit("server error");
+			});
+	});
+
+	socket.on("delete media", (mediaArray) => {
+		for (var i = 0; i < mediaArray.length; i++){
+			const path = "chat_media/" + mediaArray[i];
+			AWS_Presigner.deleteMedia(path);
+		}
+
+	});
+
+});
 bindSocketListeners(io);
 
 http.listen(3000, () => {
