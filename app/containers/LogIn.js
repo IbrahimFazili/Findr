@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, AsyncStorage, AppRegistry, Image, Text, Dimensions } from 'react-native';
+import { View, AsyncStorage, AppRegistry, Image, Text, Dimensions, NetInfo } from 'react-native';
 import styles from '../assets/styles';
 import { DefaultTheme, Provider as PaperProvider, TextInput, RadioButton, Dialog, Button } from 'react-native-paper';
 import APIConnection from '../assets/data/APIConnection';
@@ -50,8 +50,21 @@ class LogIn extends React.Component {
 
       isEmailValid: false,
       isPasswordValid: false,
+      isConnected: true,
     };
   }
+
+  async componentDidMount(){
+    NetInfo.isConnected.addEventListener('connectionChange', this.handleConnectivityChange);
+  }
+
+  async componentWillUnmount(){
+    NetInfo.isConnected.removeEventListener('connectionChange', this.handleConnectivityChange);
+  }
+
+  handleConnectivityChange = isConnected => {
+    this.setState({ isConnected });
+  };
 
   handleEmailChange(text) {
     if (validateEmail(text.toLowerCase())) {
@@ -102,6 +115,9 @@ class LogIn extends React.Component {
   }
 
   render() {
+    if (!this.state.isConnected) {
+      this.props.navigation.navigate("Internet");
+    }
     return (
         <View style={{backgroundColor: "#164e48", width: "100%", height: "100%", padding: '3%' }}>
             <Image style={styles.loginlogo} source={require('../assets/images/Findr_white2x.png')}/>

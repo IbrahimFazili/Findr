@@ -101,6 +101,12 @@ export default class Chat extends Component {
       msg: this.state.inputBarText,
     });
 
+    const msg = {
+      from: this.state.own_email,
+      to: this.state.other_user,
+      
+    }
+
     this.setState({
       messages: this.state.messages,
       inputBarText: '',

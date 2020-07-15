@@ -10,6 +10,7 @@ import {
   ImageBackground,
   FlatList,
   AsyncStorage,
+  NetInfo
 } from "react-native";
 import CardItem from "../components/CardItem";
 import APIConnection from "../assets/data/APIConnection";
@@ -32,7 +33,8 @@ class Matches extends React.Component {
       name: "",
       keywords: [],
       bio: "",
-      uni: ""
+      uni: "",
+      isConnected: true,
     };
   }
 
@@ -42,10 +44,22 @@ class Matches extends React.Component {
     );
     this.scrollView.scrollToEnd({ animated: true, duration: 1000 });
     this.setState({ cards: data });
+    NetInfo.isConnected.addEventListener('connectionChange', this.handleConnectivityChange);
+
   }
 
+  async componentWillUnmount(){
+    NetInfo.isConnected.removeEventListener('connectionChange', this.handleConnectivityChange);
+  }
+
+  handleConnectivityChange = isConnected => {
+    this.setState({ isConnected });
+  };
   
   render() {
+    if (!this.state.isConnected) {
+      this.props.navigation.navigate("Internet");
+    }
     return (
       <ImageBackground
         source={require("../assets/images/Home.png")}

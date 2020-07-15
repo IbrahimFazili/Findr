@@ -6,12 +6,15 @@ const bodyParser = require("body-parser");
 const bcrypt = require("bcrypt");
 const DB = require("./utils/DatabaseManager");
 const AWS_Presigner = require("./utils/AWSPresigner");
-const Chat = require("./utils/Chat").Chat;
+const { bindSocketListeners } = require("./utils/Chat");
 const matcher = new (require("./utils/Matcher").Matcher)();
-const { EventQueue, Event, MESSAGE_EVENT } = require('./utils/Events');
+const { EventQueue } = require('./utils/Events');
 const sendEmail = require("./utils/emailer").sendEmail;
+const cors = require("cors");
 
+const { CallbackQueue } = require("./utils/DataStructures");
 
+const callbackQueue = new CallbackQueue();
 var isServerOutdated = false;
 
 function validatePassword(password) {
@@ -29,6 +32,101 @@ function generateRandomNumber() {
 	return randomNumber;
 }
 
+app.use(cors());
+function signUp(requestData, res, oncomplete){
+	DB.insertUser(requestData)
+		.then(async (result) => {
+			if (process.env.NODE_ENV !== "test") {
+				sendEmail(requestData.email, requestData.verificationHash);
+			}
+
+			await matcher.generateGraph(requestData.email);
+			process.env.NODE_ENV === "test" ? res.status(201).send(requestData.verificationHash)
+			: res.status(201).send("success");
+			oncomplete();
+		})
+		.catch((err) => {
+			// unsuccessful insert, reply back with unsuccess response code
+			console.log(err);
+			res.status(500).send("Insert Failed");
+			oncomplete();
+		});
+}
+
+function updateKeywords(email, keywords, res, oncomplete){
+	DB.fetchUsers({ email }).then((users) => {
+		const oldKeywords = users[0].keywords;
+
+		DB.updateUser({ keywords }, { email })
+			.then((updateRes) => {
+				matcher.updateGraph(email, oldKeywords).then((value) => {
+					value ? res.status(201).send("success") : res.status(500).send("Server Error");
+					oncomplete();
+				}).catch((err) => {
+					console.log(err);
+					res.status(500).send("Server Error");
+					oncomplete();
+				})
+			})
+			.catch((err) => {
+				console.log(err);
+				res.status(500).send("Database Update Error");
+				oncomplete();
+			});
+	}).catch((err) => {
+		console.log(err);
+		res.status(500).send("Database Fetch Error");
+		oncomplete();
+	})
+}
+
+async function rightSwipe(srcUser, targetUser, res, oncomplete) {
+	try {
+		const swipeResult = await matcher.handleRightSwipe(srcUser, targetUser);
+		if (swipeResult.success) res.status(201).send({ isMatch: swipeResult.isMatch });
+		else res.status(500).send("Right Swipe Failed");
+
+		oncomplete();
+
+	} catch (error) {
+		console.log(error);
+		res.status(500).send("Server Error");
+		oncomplete();
+	}
+	
+}
+
+async function leftSwipe(srcUser, targetUser, res, oncomplete) {
+	try {
+		const success = await matcher.handleLeftSwipe(srcUser, targetUser);
+		if (success) res.status(201).end();
+		else res.status(500).send("Left Swipe Failed");
+
+		oncomplete();
+
+	} catch (error) {
+		console.log(error);
+		res.status(500).send("Server Error");
+		oncomplete();
+	}
+	
+}
+
+async function deleteUser(email, res, oncomplete) {
+	try {
+		const success = await matcher.deleteUser(email);
+		if (success) res.status(201).end();
+		else res.status(500).send("Delete User Failed");
+		oncomplete();
+
+	} catch (eror) {
+		console.log(error);
+		res.status(500).send("Server Error");
+		oncomplete();
+	}
+
+}
+
 app.use(bodyParser.json());
 
 app.get("/", (req, res) => {
@@ -42,14 +140,21 @@ app.get("/", (req, res) => {
 app.get("/fetchUsers", (req, res) => {
 	DB.fetchUsers({ email: req.query.email })
 		.then(async function (result) {
+			if (process.env.NODE_ENV !== "test") {
+				for (var i = 0; i < result.length; i++) {
+					delete result[i].password;
+					delete result[i].chats;
+					delete result[i].blueConnections;
+					delete result[i].greenConnections;
+					delete result[i].verificationHash;
 
-			for (var i = 0; i < result.length; i++) {
-				result[i].image = await AWS_Presigner.generateSignedGetUrl(
-					"user_images/" + result[i].email
-				);
+					result[i].image = await AWS_Presigner.generateSignedGetUrl(
+						"user_images/" + result[i].email
+					);
+				}	
 			}
 
-			res.send(result);
+			res.status(200).send(result);
 		})
 		.catch((err) => {
 			console.log(err);
@@ -63,11 +168,20 @@ app.get("/fetchMatches", (req, res) => {
 		.then((matches) => {
 			DB.fetchUsers({ _id: { $in: matches } })
 				.then(async (users) => {
-					for (var i = 0; i < users.length; i++) {
-						users[i].image = await AWS_Presigner.generateSignedGetUrl(
-							"user_images/" + users[i].email
-						);
+					if (process.env.NODE_ENV !== "test") {
+						for (var i = 0; i < users.length; i++) {
+							delete users[i].password;
+							delete users[i].chats;
+							delete users[i].blueConnections;
+							delete users[i].greenConnections;
+							delete users[i].verificationHash;
+
+							users[i].image = await AWS_Presigner.generateSignedGetUrl(
+								"user_images/" + users[i].email
+							);
+						}
 					}
+					
 
 					res.status(200).send(users);
 				})
@@ -110,10 +224,13 @@ app.get("/fetchConnections", (req, res) => {
 						delete element.chats;
 						delete element.blueConnections;
 						delete element.greenConnections;
+						delete element.verificationHash;
 
-						element.image = await AWS_Presigner.generateSignedGetUrl(
-							"user_images/" + element.email
-						);
+						if (process.env.NODE_ENV !== "test") {
+							element.image = await AWS_Presigner.generateSignedGetUrl(
+								"user_images/" + element.email
+							);
+						}
 					}
 
 					res.status(200).send(JSON.stringify(connections));
@@ -198,7 +315,17 @@ app.get('/fetchChats', (req, res) => {
 		console.log(err);
 		res.status(500).send('Database Fetch Error');
 	  });
-  });
+});
+
+app.get("/fetchChatMedia", async (req, res) => {
+	try {
+		const downUrl = await AWS_Presigner.generateSignedGetUrl("chat_media/" + req.query.name, 30);
+		res.status(200).send(downUrl);
+	} catch (error) {
+		console.log(error);
+		res.status(404).send("media not found");
+	}
+});
 
 app.get("/fetchNotifications", (req, res) => {
 	DB.fetchUsers({ email: req.query.email })
@@ -214,7 +341,7 @@ app.get("/fetchNotifications", (req, res) => {
 			console.log(err);
 			res.status(500).send("Database Fetch Error");
 		});
-})
+});
 
 app.post("/updateKeywords", (req, res) => {
 	let keywords = req.body.keywords;
@@ -222,35 +349,20 @@ app.post("/updateKeywords", (req, res) => {
 		keywords[i] = String(keywords[i]).toLowerCase();
 	}
 
-	DB.fetchUsers({ email: req.body.email }).then((users) => {
-		const oldKeywords = users[0].keywords;
-
-		DB.updateUser({ keywords }, { email: req.body.email })
-			.then((updateRes) => {
-				matcher.updateGraph(req.body.email, oldKeywords).then((value) => {
-					value ? res.status(201).send("success") : res.status(500).send("Server Error");
-				}).catch((err) => {
-					console.log(err);
-					res.status(500).send("Server Error");
-				})
-			})
-			.catch((err) => {
-				console.log(err);
-				res.status(500).send("Database Update Error");
-			});
-	}).catch((err) => {
-		console.log(err);
-		res.status(500).send("Database Fetch Error");
-	})
+	callbackQueue.enqueue(updateKeywords, req.body.email, keywords, res);
 });
 
 app.post("/updateUserInfo", (req, res) => {
 	const user = req.body.user;
+	if (user.email === undefined || user.email === null) {
+		res.status(400).send("missing user email");
+		return;
+	}
 
 	DB.fetchUsers({ email: user.email }).then(async (users) => {
 
 		if (user.password !== undefined) {
-			if (!validatePassword(user.password) && bcrypt.compareSync(user.oldPassword, users[0].password)) {
+			if (!validatePassword(user.password) || !bcrypt.compareSync(user.oldPassword, users[0].password)) {
 				res.status(406).send("invalid password");
 				return;
 			}
@@ -268,6 +380,25 @@ app.post("/updateUserInfo", (req, res) => {
 	
 });
 
+app.get("/rightSwipe", (req, res) => {
+	const srcUser = req.query.src;
+	const targetUser = req.query.target;
+
+	callbackQueue.enqueue(rightSwipe, srcUser, targetUser, res);
+});
+
+app.get("/leftSwipe", (req, res) => {
+	const srcUser = req.query.src;
+	const targetUser = req.query.target;
+
+	callbackQueue.enqueue(leftSwipe, srcUser, targetUser, res);
+});
+
+app.get("/deleteUser", (req, res) => {
+	const email = req.query.email;
+	callbackQueue.enqueue(deleteUser, email, res);
+});
+
 app.get("/updateProfilePicture", async (req, res) => {
 	const email = req.query.email;
 	var url = await AWS_Presigner.generateSignedPutUrl("user_images/" + email);
@@ -275,6 +406,12 @@ app.get("/updateProfilePicture", async (req, res) => {
 });
 
 app.post("/new-user", (req, res) => {
+	if (process.env.NODE_ENV === "test") {
+		for (let i = 0; i < req.body.keywords.length; i++) {
+			req.body.keywords[i] = req.body.keywords[i].toLowerCase();
+		}
+	}
+	
 	const requestData = {
 		name: req.body.name,
 		email: req.body.email,
@@ -287,26 +424,17 @@ app.post("/new-user", (req, res) => {
 		projects: [],
 		experience: [],
 		chats: [],
-		keywords: [],
+		keywords: process.env.NODE_ENV === "test" ? req.body.keywords : [],
 		bio: "",
 		blueConnections: [],
 		greenConnections: [],
+		eventQueue: { events: [] },
 		active: false,
 		verificationHash: bcrypt.hashSync(req.body.email + generateRandomNumber(), 3)
 	};
-
-	DB.insertUser(requestData)
-		.then(async (result) => {
-			sendEmail(requestData.email, requestData.verificationHash);
-			matcher.generateGraph(requestData.email);
-
-			res.status(201).send("Success");
-		})
-		.catch((err) => {
-			// unsuccessful insert, reply back with unsuccess response code
-			console.log(err);
-			res.status(500).send("Insert Failed");
-		});
+	
+	callbackQueue.enqueue(signUp, requestData, res);
+	
 });
 
 app.get("/verifyUserEmail", (req, res) => {
@@ -371,8 +499,7 @@ app.post("/update", (req, res) => {
 io.on("connection", (socket) => {
 	socket
 		.join(socket.handshake.query.name)
-		.to(socket.handshake.query.name)
-		.emit("joined chat room" + socket.rooms);
+		.emit("joined chat room");
 	console.log(`${socket.handshake.query.name} Connected`);
 
 	socket.on("new msg", (msg) => {
@@ -390,13 +517,15 @@ io.on("connection", (socket) => {
 						if (chat.user1 === msg.to || chat.user2 === msg.to) {
 							chat = Chat.parseJSON(chat);
 
-							chat.newMessage(msg.from, msg.content, msg.time);
+							const mediaUploadUrls = await chat.newMessage(msg.from, msg.content, msg.time, msg.media);
+							msg.media = chat.messages[chat.messages.length - 1].media;
 							msgHandled = true;
 
 							try {
 								await DB.updateChat(chat, {
 									_id: user.chats[i],
 								});
+								socket.emit("upload urls", mediaUploadUrls);
 
 								if (receiverIsReachable) {
 									socket.to(msg.to).emit("new msg", msg);
@@ -408,7 +537,8 @@ io.on("connection", (socket) => {
 										receiver.eventQueue.enqueue(new Event(MESSAGE_EVENT, {
 											from: msg.from,
 											content: msg.content,
-											time: msg.time
+											time: msg.time,
+											media: msg.media
 										}));
 
 										DB.updateUser({ eventQueue: receiver.eventQueue }, { email: msg.to });
@@ -432,7 +562,8 @@ io.on("connection", (socket) => {
 				// no existing chat b/w users, so create a new one
 				if (!msgHandled) {
 					const chat = new Chat(msg.from, msg.to);
-					chat.newMessage(msg.from, msg.content, msg.time);
+					const mediaUploadUrls = await chat.newMessage(msg.from, msg.content, msg.time, msg.media);
+					msg.media = chat.messages[chat.messages.length - 1].media;
 
 					DB.insertChat({ chat })
 						.then((result) => {
@@ -440,7 +571,7 @@ io.on("connection", (socket) => {
 							user.chats.push(result.ops[0]._id);
 							DB.updateUser({ chats: user.chats }, { email: user.email })
 								.then((value) => {
-									// socket.to(msg.to).emit("new msg", msg);
+									socket.emit("upload urls", mediaUploadUrls);
 								})
 								.catch((reason) => {
 									socket.emit("send failed");
@@ -465,7 +596,8 @@ io.on("connection", (socket) => {
 													receiver.eventQueue.enqueue(new Event(MESSAGE_EVENT, {
 														from: msg.from,
 														content: msg.content,
-														time: msg.time
+														time: msg.time,
+														media: msg.media
 													}));
 			
 													DB.updateUser({ eventQueue: receiver.eventQueue }, { email: msg.to });
@@ -492,7 +624,17 @@ io.on("connection", (socket) => {
 				socket.emit("server error");
 			});
 	});
+
+	socket.on("delete media", (mediaArray) => {
+		for (var i = 0; i < mediaArray.length; i++){
+			const path = "chat_media/" + mediaArray[i];
+			AWS_Presigner.deleteMedia(path);
+		}
+
+	});
+
 });
+bindSocketListeners(io);
 
 http.listen(3000, () => {
 	console.log("Server is running");

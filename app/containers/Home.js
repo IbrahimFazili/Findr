@@ -1,15 +1,15 @@
-import React from 'react';
-import { View, ImageBackground, AsyncStorage, Image } from 'react-native';
-import CardStack, { Card } from 'react-native-card-stack-swiper';
-import Filters from '../components/Filters';
-import CardItem from '../components/CardItem';
-import styles from '../assets/styles';
-import APIConnection from '../assets/data/APIConnection';
-// import ProfilePopup from "../components/ProfilePopup";
+import React from "react";
+import { View, ImageBackground, AsyncStorage, Image, NetInfo } from "react-native";
+import CardStack, { Card } from "react-native-card-stack-swiper";
+import Filters from "../components/Filters";
+import CardItem from "../components/CardItem";
+import styles from "../assets/styles";
+import APIConnection from "../assets/data/APIConnection";
+import OfflinePopup from "./OfflinePop";
 
 const MAX_LENGTH = 150;
 
-class Chat extends React.Component {
+class Home extends React.Component {
   constructor(props) {
     super(props);
     this.props.navigation.addListener('didFocus', () => this.render());
@@ -18,8 +18,19 @@ class Chat extends React.Component {
       cards: [],
       API: new APIConnection("http://api.findrapp.ca", 80),
       dataLoadRequired: true,
+      isConnected: true,
     };
   }
+
+
+  async componentWillUnmount() {
+    NetInfo.isConnected.removeEventListener('connectionChange', this.handleConnectivityChange);
+  }
+  // ^^
+
+  handleConnectivityChange = isConnected => {
+      this.setState({ isConnected });
+  };
 
   async componentWillMount() {
     try {
@@ -27,6 +38,7 @@ class Chat extends React.Component {
       if (storedEmail === null) {
         this.props.navigation.navigate('LogIn');
       }
+      
       // this.props.navigation.navigate("Onboarding");
     } catch (err) {
       console.log(err);
@@ -34,7 +46,8 @@ class Chat extends React.Component {
   }
 
   async componentDidMount() {
-    let storedEmail = await AsyncStorage.getItem('storedEmail');
+    let storedEmail = await AsyncStorage.getItem("storedEmail");
+    NetInfo.isConnected.addEventListener('connectionChange', this.handleConnectivityChange);
 
     if (storedEmail !== null && this.state.dataLoadRequired) {
       const data = await this.state.API.loadData(storedEmail);
@@ -60,11 +73,16 @@ class Chat extends React.Component {
         console.log(er);
       });
 
+    if (!this.state.isConnected) {
+        this.props.navigation.navigate("Internet");
+    }
     return (
       <ImageBackground
         source={require('../assets/images/15.png')}
         style={styles.bg}
       >
+        {/* <OfflinePopup /> */}
+        {/* ^^ */}
         <Image
           style={styles.homeLogo}
           source={require('../assets/images/Findr_logo2x.png')}
@@ -105,4 +123,4 @@ class Chat extends React.Component {
   }
 }
 
-export default Chat;
+export default Home;
