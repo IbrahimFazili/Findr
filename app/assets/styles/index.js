@@ -274,6 +274,33 @@ export default StyleSheet.create({
     fontSize: 13,
   },
 
+  errorName: {
+    left: DIMENSION_WIDTH * 0.17,
+    top: DIMENSION_HEIGHT * - 0.03,
+    // color: "orange"
+    color: "#d1984b"
+  },
+
+  errorMail: {
+    left: DIMENSION_WIDTH * 0.25,
+    top: DIMENSION_HEIGHT * - 0.03,
+    // color: "orange"
+    color: "#d1984b"
+  },
+
+  passwordNotError:{
+    left: DIMENSION_WIDTH * 0.267,
+    top: DIMENSION_HEIGHT * - 0.03,
+    // color: "orange"
+    color: "#d1984b"
+  },
+
+  errorPassword: {
+    left: DIMENSION_WIDTH * 0.13,
+    top: DIMENSION_HEIGHT * - 0.03,
+    // color: "orange"
+    color: "#d1984b"
+  },
   // COMPONENT - FILTERS
   filters: {
     backgroundColor: WHITE,

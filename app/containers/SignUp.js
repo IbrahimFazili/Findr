@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, AsyncStorage, Image, Dimensions, ScrollView, NetInfo } from 'react-native';
+import { View, AsyncStorage, Image, Dimensions, ScrollView, NetInfo, Text } from 'react-native';
 import styles from '../assets/styles';
 import { DefaultTheme, TextInput, Button, Menu, Provider } from 'react-native-paper';
 import DatePicker from 'react-native-datepicker';
@@ -70,6 +70,7 @@ class SignUp extends React.Component {
       password: "",
       uni: "",
       major: "",
+      confirmedPassword: "",
 
       nameLabel: "Name",
       emailLabel: "Email",
@@ -85,15 +86,15 @@ class SignUp extends React.Component {
       isMajorValid: false,
       showDots: true,
       dropdownVisible: false,
+      goingToPrivacy: false,
 
       isConnected: true,
     };
   }
-  goingToPrivacy = false;
 
 
   handleNameChange(text) {
-    if (text.length >= 3 && text.length <= 30) {
+    if (text.length >= 3) {
       this.setState({ isNameValid: true, name: text });
       return;
     }
@@ -118,11 +119,11 @@ class SignUp extends React.Component {
   }
 
   handlePasswordConfirmChange(text){
-    if (validatePassword(text) && (this.state.password === text)){
-      this.setState({isConfirmValid: true})
+    if (this.state.password === text){
+      this.setState({isConfirmValid: true, confirmedPassword: text})
       return;
     }
-    this.setState({isConfirmValid: false})
+    this.setState({isConfirmValid: false, confirmedPassword: text})
   }
 
   handleUniChange(text) {
@@ -184,8 +185,7 @@ class SignUp extends React.Component {
       await AsyncStorage.setItem("storedEmail", data.email);
       this.props.navigation.navigate("AppScreen");
     }
-    
-    goingToPrivacy = true
+    this.setState({goingToPrivacy: true})
   }
 
     render() {
@@ -236,8 +236,8 @@ class SignUp extends React.Component {
                             style={textBoxStyle}
                         />
 
-                        {this.state.isNameValid ? null : 
-                        <Text>Name is not valid</Text>}
+                        {this.state.isNameValid === true || this.state.name === "" ? null : 
+                        <Text style={styles.errorName}>Name must be greater than 3 characters</Text>}
 
                         <Dropdown label="University" data={universities}
                             dropdownPosition={-7}
@@ -311,8 +311,8 @@ class SignUp extends React.Component {
                             style={textBoxStyle}
                         />
 
-                        {this.state.isEmailValid ? null : 
-                        <Text>Email provided is not valid</Text>} 
+                        {this.state.isEmailValid === true || this.state.email == "" ? null : 
+                        <Text style={styles.errorMail}>Email provided is not valid</Text>} 
                         
                         <TextInput
                             underlineColor="transparent"
@@ -327,31 +327,31 @@ class SignUp extends React.Component {
                             theme={theme}
                             style={textBoxStyle}
                         />
-                          {this.state.isPasswordValid ? null : 
-                          <Text>Passwords do not match</Text>} 
+                          {this.state.isPasswordValid === true || this.state.password === ""
+                          || this.state.password.length > 6 ? null : 
+                          <Text style ={styles.errorPassword}>Passwords must be greater than 6 characters</Text>} 
 
                         <TextInput
                             underlineColor="transparent"
                             secureTextEntry={true}
                             mode={"flat"}
-                            value={this.state.password}
+                            value={this.state.confirmedPassword}
                             label={"Confirm Password"}
                             placeholder="Confirm your new password"
-                            onChangeText={this.handlePasswordChange.bind(this)}
+                            onChangeText={this.handlePasswordConfirmChange.bind(this)}
                             onFocus={() => this.setState({ showDots: false })}
                             onBlur={() => this.setState({ showDots: true })}
                             theme={theme}
                             style={textBoxStyle}
                         />
 
-                        {this.state.isConfirmValid ? null : 
-                        <Text>Passwords do not match</Text>} 
+                        {this.state.isConfirmValid === true || this.state.confirmedPassword === "" ?  null :
+                        <Text style={styles.passwordNotError}>Passwords do not match</Text>} 
                         { /* style for red */}
                         
                         <Button mode="contained" style={styles.signupbutt}
-                        onPress={()=>
-                        {this.goingToPrivacy ? this.props.navigation.navigate("Privacy") : 
-                        this.props.navigation.navigate("SignUp")} }>Sign Up</Button>
+                        onPress={()=> this.props.navigation.navigate("Privacy") }
+                        >Sign Up</Button>
                         
                     </ScrollView>
                 </Swiper>
