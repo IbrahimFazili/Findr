@@ -15,7 +15,7 @@ class Home extends React.Component {
 
     this.state = {
       cards: [],
-      API: new APIConnection("http://api.findrapp.ca", 80),
+      API: new APIConnection(),
       dataLoadRequired: true,
       isConnected: true,
     };

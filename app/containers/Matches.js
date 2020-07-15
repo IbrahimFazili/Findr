@@ -27,7 +27,7 @@ class Matches extends React.Component {
   constructor(props) {
     super(props);
     this.state = { 
-      API: new APIConnection("http://api.findrapp.ca", 80),
+      API: new APIConnection(),
       cards: [],
       visible: false,
       name: "",

@@ -1,5 +1,5 @@
-const ENDPOINT = 'http://142.1.5.129'; // goes to localhost from avd
-const PORT = 3000;
+const ENDPOINT = 'http://api.findrapp.ca'; // goes to localhost from avd
+const PORT = 80;
 
 /**
  * This class provides methods to interact with our API. If no endpoint or port is provided,
