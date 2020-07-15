@@ -12,7 +12,6 @@ import {
 import Message from '../components/Message';
 import APIConnection from '../assets/data/APIConnection';
 
-/* Look into createStackNavigator for this page */
 
 class Messages extends React.Component {
   constructor(props) {
