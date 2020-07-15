@@ -42,7 +42,8 @@
 		"react-native-unimodules": "^0.9.1",
 		"react-native-unordered-list": "^1.0.4",
 		"react-native-vector-icons": "^6.6.0",
-		"react-navigation": "^3.0.9"
+		"react-navigation": "^3.0.9",
+		"socket.io-client": "^2.3.0"
 	},
 	"devDependencies": {
 		"babel-jest": "^24.8.0",

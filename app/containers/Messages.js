@@ -60,6 +60,7 @@ class Messages extends React.Component {
                       own_email: await AsyncStorage.getItem('storedEmail'),
                       user_name: item.name,
                       user_image: { uri: item.image },
+                      user_email: item.email
                     })
                   }
                 >

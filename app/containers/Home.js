@@ -5,7 +5,6 @@ import Filters from "../components/Filters";
 import CardItem from "../components/CardItem";
 import styles from "../assets/styles";
 import APIConnection from "../assets/data/APIConnection";
-import OfflinePopup from "./OfflinePop";
 
 const MAX_LENGTH = 150;
 
@@ -26,7 +25,6 @@ class Home extends React.Component {
   async componentWillUnmount() {
     NetInfo.isConnected.removeEventListener('connectionChange', this.handleConnectivityChange);
   }
-  // ^^
 
   handleConnectivityChange = isConnected => {
       this.setState({ isConnected });
