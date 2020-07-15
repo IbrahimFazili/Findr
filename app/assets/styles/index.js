@@ -399,9 +399,15 @@ export default StyleSheet.create({
   },
 
   internetText: {
-    fontSize: 27,
+    fontSize: 23,
+    paddingLeft: DIMENSION_WIDTH * 0.25,
+    bottom: DIMENSION_HEIGHT * 0.079
   },
 
+  email: {
+    marginRight: DIMENSION_WIDTH * 0.7,
+    marginTop: DIMENSION_HEIGHT * 0.1
+  },
   top: {
     paddingTop: 50,
     marginHorizontal: 10,
@@ -572,7 +578,7 @@ export default StyleSheet.create({
     alignSelf: "center",
     marginTop: DIMENSION_HEIGHT * 0.04,
     marginLeft: DIMENSION_WIDTH * 0.05,
-    width: DIMENSION_WIDTH * 0.2,
+    width: DIMENSION_WIDTH * 0.25,
     height: DIMENSION_HEIGHT * 0.1,
   },
 
