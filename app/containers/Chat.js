@@ -96,6 +96,10 @@ export default class Chat extends Component {
         user: msg.from,
         msg: msg.msg
       });
+
+      this.setState({
+        messages: this.state.messages
+      });
     });
   }
 
