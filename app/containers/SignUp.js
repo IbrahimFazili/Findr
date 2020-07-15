@@ -328,8 +328,8 @@ class SignUp extends React.Component {
                             style={textBoxStyle}
                         />
                           {this.state.isPasswordValid === true || this.state.password === ""
-                          || this.state.password.length > 6 ? null : 
-                          <Text style ={styles.errorPassword}>Passwords must be greater than 6 characters</Text>} 
+                          || this.state.password.length >= 6 ? null : 
+                          <Text style ={styles.errorPassword}>Passwords must be greater than 6 characters inclusive</Text>} 
 
                         <TextInput
                             underlineColor="transparent"
