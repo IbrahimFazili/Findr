@@ -51,6 +51,7 @@ class LogIn extends React.Component {
       isEmailValid: false,
       isPasswordValid: false,
       isConnected: true,
+      loginStatus: true,
     };
   }
 
@@ -93,9 +94,9 @@ class LogIn extends React.Component {
     if (!this.state.isEmailValid || !this.state.isPasswordValid) {
       console.log(this.state);
       console.log("invalid inputs");
+      this.setState({loginStatus: false})
       return;
     }
-
     
     const API = new APIConnection();
     const data = {
@@ -110,6 +111,7 @@ class LogIn extends React.Component {
       this.props.navigation.navigate("AppScreen");
     } else {
       // let user know they fucked up
+      this.setState({loginStatus: false})
       console.log(logInAttempt);
     }
   }
@@ -147,6 +149,9 @@ class LogIn extends React.Component {
                 theme={theme}
                 style={textBoxStyle}
             />
+
+            {this.state.loginStatus ? null : 
+            <Text style={styles.loginError} >Email or Password is incorrect</Text>}
 
             <Button mode="contained" onPress={this.handleSubmit.bind(this)} style={styles.loginbutt}>
                 Log in

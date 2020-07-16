@@ -69,21 +69,18 @@ class SignUp extends React.Component {
       email: "",
       password: "",
       uni: "",
-      major: "",
       confirmedPassword: "",
 
       nameLabel: "Name",
       emailLabel: "Email",
       passLabel: "Password",
       uniLabeL: "University",
-      majorLabel: "Major",
 
       isNameValid: false,
       isEmailValid: false,
       isPasswordValid: false,
       isConfirmValid: false,
       isUniValid: false,
-      isMajorValid: false,
       showDots: true,
       dropdownVisible: false,
       goingToPrivacy: false,
@@ -134,14 +131,6 @@ class SignUp extends React.Component {
     this.setState({ isUniValid: false, uni: text });
   }
 
-  handleMajorChange(text) {
-    if (text.length >= 6) {
-      this.setState({ isMajorValid: true, major: text });
-      return;
-    }
-    this.setState({ isMajorValid: false, major: text });
-  }
-
   async componentDidMount(){
     NetInfo.isConnected.addEventListener('connectionChange', this.handleConnectivityChange);
   }
@@ -154,15 +143,19 @@ class SignUp extends React.Component {
     this.setState({ isConnected });
   };
 
+  handlePrivacyChange(){
+    this.setState({goingToPrivacy: true})
+  }
+
   async handleSubmit() {
     if (
       !this.state.isNameValid ||
       !this.state.isEmailValid ||
       !this.state.isPasswordValid ||
       !this.state.date ||
-      !this.state.isUniValid ||
-      !this.state.isMajorValid //this doesn't exist anymore
-    ) {
+      !this.state.isUniValid
+      ) 
+    {
       console.log("invalid inputs");
       return;
     }
@@ -172,7 +165,6 @@ class SignUp extends React.Component {
       email: this.state.email,
       password: this.state.password,
       uni: this.state.uni,
-      major: this.state.major, //this doesn't exist anymore ?
       age: this.state.date,
     };
 
@@ -185,13 +177,13 @@ class SignUp extends React.Component {
       await AsyncStorage.setItem("storedEmail", data.email);
       this.props.navigation.navigate("AppScreen");
     }
-    this.setState({goingToPrivacy: true})
   }
 
     render() {
         if (!this.state.isConnected) {
           this.props.navigation.navigate("Internet");
         }
+        console.log(this.state)
         return (
             <View style={{backgroundColor: "#164e48", width: "100%", height: "100%", padding: '3%' }}>
                 <Image style={styles.logo} source={require('../assets/images/Findr_white2x.png')}/>
@@ -248,6 +240,7 @@ class SignUp extends React.Component {
                             textColor="white"
                             itemColor="black"
                             baseColor='white'
+                            onChangeText={(value)=> this.handleUniChange(value)}
                             selectedItemColor="black"
                             disabledItemColor="black"/>
 
@@ -329,7 +322,10 @@ class SignUp extends React.Component {
                         />
                           {this.state.isPasswordValid === true || this.state.password === ""
                           || this.state.password.length >= 6 ? null : 
-                          <Text style ={styles.errorPassword}>Passwords must be greater than 6 characters inclusive</Text>} 
+                          <View style={{ paddingRight:DIMENTIONS.width * 0.2}}>
+                          <Text style ={styles.errorPassword}>Passwords must be greater than 5 characters, 
+                          and include a number</Text>
+                          </View>} 
 
                         <TextInput
                             underlineColor="transparent"
@@ -350,7 +346,9 @@ class SignUp extends React.Component {
                         { /* style for red */}
                         
                         <Button mode="contained" style={styles.signupbutt}
-                        onPress={()=> this.props.navigation.navigate("Privacy") }
+                        onPress={()=> 
+                          this.props.navigation.navigate("Privacy")
+                        }
                         >Sign Up</Button>
                         
                     </ScrollView>

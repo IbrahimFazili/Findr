@@ -288,6 +288,13 @@ export default StyleSheet.create({
     color: "#d1984b"
   },
 
+  loginError: {
+    left: DIMENSION_WIDTH * 0.25,
+    top: DIMENSION_HEIGHT * - 0.03,
+    // color: "orange"
+    color: "#d1984b"
+  },
+
   passwordNotError:{
     left: DIMENSION_WIDTH * 0.267,
     top: DIMENSION_HEIGHT * - 0.03,
@@ -599,7 +606,7 @@ export default StyleSheet.create({
     alignSelf: "center",
     marginTop: DIMENSION_HEIGHT * 0.04,
     marginLeft: DIMENSION_WIDTH * 0.05,
-    width: DIMENSION_WIDTH * 0.2,
+    width: DIMENSION_WIDTH * 0.25,
     height: DIMENSION_HEIGHT * 0.1,
   },
 
@@ -647,6 +654,7 @@ export default StyleSheet.create({
     marginBottom: DIMENSION_HEIGHT * 0.05,
     width: DIMENSION_WIDTH * 0.35,
     alignSelf: 'center',
+    bottom: DIMENSION_HEIGHT * 0.017
   },
 
   bottomsignup: {
