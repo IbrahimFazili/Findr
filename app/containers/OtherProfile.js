@@ -11,6 +11,7 @@ import {
 	ImageBackground,
 	NetInfo,
 } from "react-native";
+import OtherProfileItem from "../components/OtherProfileItem";
 import ProfileItem from "../components/ProfileItem";
 import Icon from "../components/Icon";
 import APIConnection from "../assets/data/APIConnection";
@@ -24,7 +25,7 @@ const ICON_FONT = "tinderclone";
 const DIMENSION_WIDTH = Dimensions.get("window").width;
 const DIMENSION_HEIGHT = Dimensions.get("window").height;
 
-class Profile extends React.Component {
+class OtherProfile extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {
@@ -32,14 +33,15 @@ class Profile extends React.Component {
 			profile: null,
 			isConnected: true,
 			user_name: props.navigation.state.params.other_user_name,
+			user_email: props.navigation.state.params.email,
+			user_image: props.navigation.state.params.image,
 		};
 	}
 
 	async componentDidMount() {
-		let user = await this.state.API.fetchUser(
-			await AsyncStorage.getItem("storedEmail")
-		);
+		let user = await this.state.API.fetchUser(this.state.user_email);
 		this.setState({ profile: user });
+		console.log(user);
 		NetInfo.isConnected.addEventListener(
 			"connectionChange",
 			this.handleConnectivityChange
@@ -58,6 +60,7 @@ class Profile extends React.Component {
 	};
 
 	render() {
+		console.log(this.state.profile);
 		const image = this.state.profile
 			? { uri: this.state.profile.image }
 			: null;
@@ -99,11 +102,11 @@ class Profile extends React.Component {
 							<View
 								style={{ marginTop: DIMENSION_HEIGHT * 0.21 }}
 							>
-								<ProfileItem
-									name={this.state.user_name}
+								<OtherProfileItem
+									name={name}
 									age={age}
 									uni={location}
-									gender={gender == "M" ? "Male" : "Female"}
+									gender={gender}
 									major={major}
 									email={email}
 									keywords={keywords}
@@ -237,4 +240,4 @@ const styles = StyleSheet.create({
 	},
 });
 
-export default Profile;
+export default OtherProfile;

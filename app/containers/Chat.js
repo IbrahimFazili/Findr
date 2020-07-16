@@ -217,17 +217,19 @@ export default class Chat extends Component {
 							return (
 								<View>
 									<TouchableOpacity
-									// onPress={async () =>
-									// 	this.props.navigation.navigate(
-									// 		"OtherProfile",
-									// 		{
-									// 			other_user_name: this.state
-									// 				.other_user,
-									// 			email: this.state
-									// 				.other_user_email,
-									// 		}
-									// 	)
-									// }
+										onPress={async () =>
+											this.props.navigation.navigate(
+												"OtherProfile",
+												{
+													other_user_name: this.state
+														.other_user,
+													email: this.state
+														.other_user_email,
+													image: this.state
+														.other_user_image,
+												}
+											)
+										}
 									>
 										<SendIcon
 											width={DIMENSION_WIDTH * 0.09}
