@@ -82,7 +82,7 @@ function insertUser(profile) {
     });
 }
 
-function fetchUsers(query, options) {
+function fetchUsers(query, options={}) {
 
     return new Promise(function (resolve, reject) {
         getCollection(COLLECTION_USERS).then((collection) => {

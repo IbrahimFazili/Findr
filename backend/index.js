@@ -52,6 +52,7 @@ function signUp(requestData, res, oncomplete){
 }
 
 function updateKeywords(email, keywords, res, oncomplete){
+	// TODO: don't fetch irrelevant fields
 	DB.fetchUsers({ email }).then((users) => {
 		const oldKeywords = users[0].keywords;
 
@@ -136,15 +137,19 @@ app.get("/", (req, res) => {
 });
 
 app.get("/fetchUsers", (req, res) => {
-	DB.fetchUsers({ email: req.query.email })
+	const irrelevantFields = {
+		_id: 0,
+		password: 0,
+		chats: 0,
+		blueConnections: 0,
+		greenConnections: 0,
+		eventQueue: 0,
+		verificationHash: 0
+	};
+	DB.fetchUsers({ email: req.query.email }, { projection: irrelevantFields })
 		.then(async function (result) {
 			if (process.env.NODE_ENV !== "test") {
 				for (var i = 0; i < result.length; i++) {
-					delete result[i].password;
-					delete result[i].chats;
-					delete result[i].blueConnections;
-					delete result[i].greenConnections;
-					delete result[i].verificationHash;
 
 					result[i].image = await AWS_Presigner.generateSignedGetUrl(
 						"user_images/" + result[i].email
@@ -164,15 +169,19 @@ app.get("/fetchMatches", (req, res) => {
 	matcher
 		.getMatches(req.query.email)
 		.then((matches) => {
-			DB.fetchUsers({ _id: { $in: matches } })
+			const irrelevantFields = {
+				_id: 0,
+				password: 0,
+				chats: 0,
+				blueConnections: 0,
+				greenConnections: 0,
+				eventQueue: 0,
+				verificationHash: 0
+			};
+			DB.fetchUsers({ _id: { $in: matches } }, { projection: irrelevantFields })
 				.then(async (users) => {
 					if (process.env.NODE_ENV !== "test") {
 						for (var i = 0; i < users.length; i++) {
-							delete users[i].password;
-							delete users[i].chats;
-							delete users[i].blueConnections;
-							delete users[i].greenConnections;
-							delete users[i].verificationHash;
 
 							users[i].image = await AWS_Presigner.generateSignedGetUrl(
 								"user_images/" + users[i].email
@@ -195,9 +204,16 @@ app.get("/fetchMatches", (req, res) => {
 });
 
 app.get("/fetchConnections", (req, res) => {
-	DB.fetchUsers({ email: req.query.email }, { projection: { 
-		blueConnections: { $slice: CONNECTIONS_CHUNK_SIZE } 
-	} })
+	var irrelevantFields = {
+		_id: 0,
+		password: 0,
+		chats: 0,
+		blueConnections: { $slice: CONNECTIONS_CHUNK_SIZE },
+		greenConnections: 0,
+		eventQueue: 0,
+		verificationHash: 0
+	};
+	DB.fetchUsers({ email: req.query.email }, { projection: irrelevantFields })
 		.then((result) => {
 			
 			if (result.length === 0) {
@@ -211,12 +227,21 @@ app.get("/fetchConnections", (req, res) => {
 			}
 
 			const user = result[0];
-			console.log(user.blueConnections.length);
 			let ids = [];
 			user.blueConnections.forEach(element => {
 				ids.push(element._id);
 			});
-			DB.fetchUsers({ _id: { $in: ids } })
+
+			irrelevantFields = {
+				_id: 0,
+				password: 0,
+				chats: 0,
+				blueConnections: 0,
+				greenConnections: 0,
+				eventQueue: 0,
+				verificationHash: 0
+			};
+			DB.fetchUsers({ _id: { $in: ids } }, { projections : irrelevantFields })
 				.then(async (connections) => {
 					for (let i = 0; i < connections.length; i++) {
 						const element = connections[i];
@@ -249,6 +274,7 @@ app.get("/fetchConnections", (req, res) => {
 
 app.get("/fetchChatData", (req, res) => {
 	const MSG_TO = req.query.to;
+	// TODO: don't fetch irrelevant fields
 	DB.fetchUsers({ email: req.query.from })
 		.then(async (users) => {
 			const user = users[0];
@@ -280,6 +306,7 @@ app.get("/fetchChatData", (req, res) => {
 });
 
 app.get('/fetchChats', (req, res) => {
+	// TODO: don't fetch irrelevant fields
 	DB.fetchUsers({ email: req.query.email })
 	  .then(async (users) => {
 		const user = users[0];
@@ -290,7 +317,8 @@ app.get('/fetchChats', (req, res) => {
 			chat.chat.user1 === user.email ? chat.chat.user2 : chat.chat.user1
 		  );
 		}
-  
+		
+		// TODO: don't fetch irrelevant fields
 		DB.fetchUsers({ email: { $in: chat_emails } })
 		  .then(async (chat_users) => {
 			let chats = [];
@@ -329,6 +357,7 @@ app.get("/fetchChatMedia", async (req, res) => {
 });
 
 app.get("/fetchNotifications", (req, res) => {
+	// TODO: don't fetch irrelevant fields
 	DB.fetchUsers({ email: req.query.email })
 		.then(async (users) => {
 			const user = users[0];
@@ -360,6 +389,7 @@ app.post("/updateUserInfo", (req, res) => {
 		return;
 	}
 
+	// TODO: don't fetch irrelevant fields
 	DB.fetchUsers({ email: user.email }).then(async (users) => {
 
 		if (user.password !== undefined) {
@@ -439,6 +469,7 @@ app.post("/new-user", (req, res) => {
 });
 
 app.get("/verifyUserEmail", (req, res) => {
+	// TODO: don't fetch irrelevant fields
 	DB.fetchUsers({ verificationHash: req.query.key })
 		.then(async (users) => {
 			if (users.length === 0) {
@@ -463,6 +494,7 @@ app.post("/login", (req, res) => {
 		password: req.body.password,
 	};
 
+	// TODO: don't fetch irrelevant fields
 	DB.fetchUsers({ email: requestData.email })
 		.then((users) => {
 			if (users.length < 1) {
