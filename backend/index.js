@@ -13,6 +13,7 @@ const sendEmail = require("./utils/emailer").sendEmail;
 const { CallbackQueue } = require("./utils/DataStructures");
 
 const callbackQueue = new CallbackQueue();
+const CONNECTIONS_CHUNK_SIZE = 25;
 var isServerOutdated = false;
 
 function validatePassword(password) {
@@ -194,7 +195,9 @@ app.get("/fetchMatches", (req, res) => {
 });
 
 app.get("/fetchConnections", (req, res) => {
-	DB.fetchUsers({ email: req.query.email })
+	DB.fetchUsers({ email: req.query.email }, { projection: { 
+		blueConnections: { $slice: CONNECTIONS_CHUNK_SIZE } 
+	} })
 		.then((result) => {
 			
 			if (result.length === 0) {
@@ -208,6 +211,7 @@ app.get("/fetchConnections", (req, res) => {
 			}
 
 			const user = result[0];
+			console.log(user.blueConnections.length);
 			let ids = [];
 			user.blueConnections.forEach(element => {
 				ids.push(element._id);
@@ -230,7 +234,7 @@ app.get("/fetchConnections", (req, res) => {
 						}
 					}
 
-					res.status(200).send(JSON.stringify(connections));
+					res.status(200).send(connections);
 				})
 				.catch((err) => {
 					console.log(err);
