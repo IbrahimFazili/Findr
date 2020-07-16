@@ -24,10 +24,19 @@ jobs:
       uses: actions/setup-node@v1
       with:
         node-version: ${{ matrix.node-version }}
-    - run: pwd
     - run: npm ci
       working-directory: ./backend
     - run: npm run build --if-present
       working-directory: ./backend
     - run: npm test
       working-directory: ./backend
+      env:
+        ACCESS_KEY: ${{ secrets.AWS_ACCESS_KEY }}
+        SECRET_KEY: ${{ secrets.AWS_ACCESS_KEY }}
+        BUCKET_NAME: ${{ secrets.S3_BUCKET_NAME }}
+        BUCKET_REGION: ${{ secrets.S3_BUCKET_REGION }}
+        DATABASE_USER: ${{ secrets.MONGO_USER }}
+        DATABASE_PASS: ${{ secrets.MONGO_PASS }}
+        GMAIL_EMAIL: noreply.findrstudy@gmail.com
+        GMAIL_PASSWORD: ${{ secrets.GMAIL_PASSWORD }}
+        DOMAIN: api.findrapp.ca
