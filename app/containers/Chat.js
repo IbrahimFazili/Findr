@@ -20,6 +20,7 @@ import APIConnection from '../assets/data/APIConnection';
 
 import AttachIcon from '../assets/icons/attach.svg';
 import SendIcon from '../assets/icons/send_icon.svg';
+import BackButton from '../assets/icons/back_black.svg';
 
 const DIMENSION_WIDTH = Dimensions.get('window').width;
 const DIMENSION_HEIGHT = Dimensions.get('window').height;
@@ -180,22 +181,29 @@ export default class Chat extends Component {
             barStyle='light-content' // or directly
             centerComponent={() => {
               return (
-                <View>
-                  <Thumbnail
-                  small
-                  style={{ alignSelf: "center", marginTop: 0 }}
-                  source={this.state.other_user_image}
-                  key={this.state.own_email}
-                  />
-                  <Text style={styles.headerTest}>{this.state.other_user}</Text>
-                </View>
+                  <View style={styles.chatHeader}>
+                    <TouchableOpacity
+                      style={styles.chatBack}
+                      onPress={() => this.props.navigation.navigate("Messages")}
+                    >
+                      <BackButton width={DIMENSION_WIDTH * 0.02} height={DIMENSION_HEIGHT * 0.02}/>
+                    </TouchableOpacity>
+                      <Thumbnail
+                      small
+                      style={{ alignSelf: "center", marginTop: 0, marginRight: DIMENSION_WIDTH * 0.02 }}
+                      source={this.state.other_user_image}
+                      key={this.state.own_email}
+                      />
+                      <Text style={styles.headerTest}>{this.state.other_user}</Text>
+                  </View>
               );
             }}
             containerStyle={{
               backgroundColor: 'white',
               justifyContent: 'space-around',
               elevation: 15,
-              paddingBottom: DIMENSION_HEIGHT * 0.03
+              paddingBottom: DIMENSION_HEIGHT * 0.03,
+              height: DIMENSION_HEIGHT * 0.08,
             }}
           />
 
@@ -213,7 +221,6 @@ export default class Chat extends Component {
             onChangeText={(text) => this._onChangeInputBarText(text)}
             text={this.state.inputBarText}
           />
-          <KeyboardSpacer />
         </ImageBackground>
       </View>
     );
@@ -302,7 +309,7 @@ class InputBar extends Component {
         style={styles.mediaButton}
         onPress={() => this.chooseImage()}
         >
-          <AttachIcon width={DIMENSION_WIDTH * 0.07} height={DIMENSION_HEIGHT * 0.07}/>
+          <AttachIcon width={DIMENSION_WIDTH * 0.06} height={DIMENSION_HEIGHT * 0.06}/>
         </TouchableOpacity>
         <AutogrowInput
           style={styles.textBox}
@@ -310,7 +317,7 @@ class InputBar extends Component {
             this.autogrowInput = ref;
           }}
           multiline={true}
-          defaultHeight={DIMENSION_HEIGHT * 0.07}
+          defaultHeight={DIMENSION_HEIGHT * 0.045}
           onChangeText={(text) => this.props.onChangeText(text)}
           onContentSizeChange={this.props.onSizeChange}
           value={this.props.text}
@@ -320,7 +327,7 @@ class InputBar extends Component {
           style={styles.sendButton}
           onPress={() => this.props.onSendPressed()}
         >
-          <SendIcon width={DIMENSION_WIDTH * 0.1} height={DIMENSION_HEIGHT * 0.1}/>
+          <SendIcon width={DIMENSION_WIDTH * 0.09} height={DIMENSION_HEIGHT * 0.09}/>
         </TouchableOpacity>
       </View>
     );
@@ -347,9 +354,8 @@ const styles = StyleSheet.create({
   inputBar: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    paddingHorizontal: 5,
-    paddingTop: DIMENSION_HEIGHT * 0.019,
-    height: DIMENSION_HEIGHT * 0.11,
+    padding: DIMENSION_HEIGHT * 0.01,
+    height: DIMENSION_HEIGHT * 0.075,
     elevation: 15,
     backgroundColor: 'white'
   },
@@ -361,22 +367,20 @@ const styles = StyleSheet.create({
     flex: 1,
     fontSize: 16,
     paddingHorizontal: 10,
-    marginBottom: DIMENSION_HEIGHT * 0.02,
-    maxWidth: DIMENSION_WIDTH * 0.8
+    maxWidth: DIMENSION_WIDTH * 0.7
   },
 
   sendButton: {
     justifyContent: 'center',
     backgroundColor: 'transparent',
-    position: 'absolute',
-    right: DIMENSION_WIDTH * 0.025,
-    bottom: DIMENSION_HEIGHT * 0.008,
+    marginBottom: DIMENSION_HEIGHT * 0.01,
     elevation: 8
   },
 
   mediaButton: {
     backgroundColor: 'transparent',
     marginLeft: DIMENSION_WIDTH * 0.05,
+    bottom: 5,
   },
 
   //MessageBubble
@@ -429,6 +433,7 @@ const styles = StyleSheet.create({
   },
   headerTest: {
     color: '#334856',
+    width: 100
   },
   profilepic: {
     flex: 1,
@@ -472,4 +477,15 @@ const styles = StyleSheet.create({
     alignSelf: 'flex-end',
     marginRight: 20,
   },
+
+  //Header
+  chatHeader: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginRight: DIMENSION_WIDTH * 0.35,
+  },
+  chatBack: {
+    marginRight: DIMENSION_WIDTH * 0.05,
+    width: 30
+  }
 });

@@ -106,7 +106,6 @@ export default StyleSheet.create({
     paddingBottom: 10,
     fontSize: 20,
     color: "#1a5d57",
-    // fontWeight: "bold",
     letterSpacing: 1,
   },
 
