@@ -6,7 +6,7 @@ const bodyParser = require("body-parser");
 const bcrypt = require("bcrypt");
 const DB = require("./utils/DatabaseManager");
 const AWS_Presigner = require("./utils/AWSPresigner");
-const Chat = require("./utils/Chat").Chat;
+const { Chat } = require("./utils/Chat");
 const matcher = new (require("./utils/Matcher").Matcher)();
 const { EventQueue, Event, MESSAGE_EVENT } = require('./utils/Events');
 const sendEmail = require("./utils/emailer").sendEmail;
@@ -363,7 +363,7 @@ app.get("/blockUser", async (req, res) => {
 	callbackQueue.enqueue(blockUser, srcUser, targetUser, res);
 
 	try {
-		const user = await DB.fetchUsers({ email: srcUser });
+		const user = (await DB.fetchUsers({ email: srcUser }))[0];
 
 		for (let i = 0; i < user.chats.length; i++) {
 			const chat = (await DB.fetchChat(user.chats[i]))[0].chat;

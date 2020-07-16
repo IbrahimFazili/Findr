@@ -1,5 +1,5 @@
-const { EventQueue, Event, BLOCK_EVENT } = require('./Events');
 const DB = require("./DatabaseManager");
+const { EventQueue, Event, BLOCK_EVENT } = require('./Events');
 
 class Message {
 	constructor(user, msg, timestamp) {
@@ -9,13 +9,16 @@ class Message {
 	}
 }
 
+/**
+ * @param {String} user1 E-mail for one of the users participating in the chat session
+ * @param {String} user2 E-mail for the other user participating in the chat session
+ * @param {Boolean} active Whether this chat is active or not. It may not be active if one 
+ * 						   user blocks the other user
+ * @param {Array<Message>} messages List of messages in this chat
+ * Initialize the chat between user1 and user2
+ */
 class Chat {
-	/**
-	 * @param {String} user1 E-mail for one of the users participating in the chat session
-	 * @param {String} user2 E-mail for the other user participating in the chat session
-	 * 
-	 * Initialize the chat between user1 and user2
-	 */
+	
 	constructor(user1, user2) {
 		this.user1 = user1;
 		this.user2 = user2;
@@ -34,7 +37,7 @@ class Chat {
 		this.messages.push(new Message(user, msg, timestamp));
 	}
 
-	disableChat(blockedEmail){
+	async disableChat(blockedEmail) {
 		this.active = false;
 		try {
 			const blockedUser = (await DB.fetchUsers({ email: blockedEmail }))[0];
@@ -43,6 +46,8 @@ class Chat {
 			blockedUser.eventQueue.enqueue(
 				new Event(BLOCK_EVENT, {email : srcEmail})
 			);
+
+			return true;
 		} catch (fetchErr) {
             console.log(fetchErr);
             return false;
