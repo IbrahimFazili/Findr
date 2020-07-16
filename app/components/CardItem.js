@@ -75,19 +75,10 @@ const CardItem = ({
         theHeight,
       ]}
     >
-      {/* IMAGE */}
+      {/* IMAGE */} 
       <View style={imageWrapperStyle}>
         <Image source={image} style={imageStyle} />
       </View>
-
-      {/* MATCHES */}
-      {/* {matches && (
-        <View style={styles.matchesCardItem}>
-          <Text style={styles.matchesTextCardItem}>
-            <Icon name="heart" /> {matches}% Match!
-          </Text>
-        </View>
-      )} */}
 
       {/* NAME */}
       <Text style={nameStyle} numberOfLines={1}>{name}</Text>

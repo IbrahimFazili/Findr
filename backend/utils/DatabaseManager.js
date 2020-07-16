@@ -4,9 +4,12 @@ const MONGO_URL =
     "mongodb+srv://" + process.env.DATABASE_USER + ":" + process.env.DATABASE_PASS + "@cluster0-hkvsu.mongodb.net/test?retryWrites=true&w=majority";
 var client = new MongoClient(MONGO_URL, { useUnifiedTopology: true, useNewUrlParser: true });
 
-const COLLECTION_USERS = "Users";
+const COLLECTION_USERS = process.env.NODE_ENV === "test" ? "Test_Users" : "Users";
 const COLLECTION_CHATS = "ChatStorage";
 const DB = "test";
+
+var USERS_COLLECTION_LOCAL = null;
+var CHATS_COLLECTION_LOCAL = null;
 
 /**
  * Connect the client to database at the specified URL
@@ -40,11 +43,22 @@ function closeConnection() { client.close(); }
 function getCollection(collectionName) {
     return new Promise(function (resolve, reject) {
         if (client.isConnected()) {
-            resolve(client.db(DB).collection(collectionName));
+            if (collectionName === COLLECTION_USERS) {
+                resolve(USERS_COLLECTION_LOCAL ? USERS_COLLECTION_LOCAL : client.db(DB).collection(collectionName))
+            } else if (collectionName === COLLECTION_CHATS) {
+                resolve(CHATS_COLLECTION_LOCAL ? CHATS_COLLECTION_LOCAL : client.db(DB).collection(collectionName))
+            } else throw Error("Invalid Collection Name");
         }
         else {
             connectToDatabse().then((connection) => {
-                resolve(connection.db(DB).collection(collectionName));
+                if (collectionName === COLLECTION_USERS) {
+                    USERS_COLLECTION_LOCAL = connection.db(DB).collection(collectionName);
+                    resolve(USERS_COLLECTION_LOCAL);
+                } else if (collectionName === COLLECTION_CHATS) {
+                    CHATS_COLLECTION_LOCAL = connection.db(DB).collection(collectionName);
+                    resolve(CHATS_COLLECTION_LOCAL);
+                } else throw Error("Invalid Collection Name");
+                
             }).catch((reason) => {
                 reject(reason);
             })
@@ -63,7 +77,7 @@ function insertUser(profile) {
             })
 
         }).catch((reason) => {
-            reject(err);
+            reject(reason);
         });
     });
 }
@@ -149,22 +163,6 @@ function updateUser(updatedUserObject, queryObject) {
     });
 }
 
-function bulkUpdateUsers(updatedUserObjects, queryObject) {
-
-    return new Promise(function(resolve, reject) {
-        getCollection(COLLECTION_USERS).then((collection) => {
-            let updateDoc = { $set: updatedUserObjects }
-            collection.updateMany(queryObject, updateDoc, function(err, updateResult) {
-                if (err) reject(false);
-
-                resolve(true);
-            })
-        }).catch((reason) => {
-            reject(false);
-        })
-    });
-}
-
 function deleteChat(id) {
 
     return new Promise(function (resolve, reject) {
@@ -181,14 +179,27 @@ function deleteChat(id) {
     });
 }
 
+function deleteAllUsers() {
+
+    return new Promise(function (resolve, reject) {
+        getCollection(COLLECTION_USERS).then((collection) => {
+            collection.deleteMany({ }).then((deleteRes) => {
+                resolve(deleteRes);
+            }).catch((err) => {
+                reject(err);
+            });
+
+        }).catch((reason) => {
+            reject(reason);
+        });
+    });
+}
+
 module.exports.insertUser = insertUser;
 module.exports.insertChat = insertChat;
 
 module.exports.updateChat = updateChat;
 module.exports.updateUser = updateUser;
-module.exports.bulkUpdateUsers = bulkUpdateUsers;
-
-module.exports.closeConnection = closeConnection;
 
 module.exports.fetchUsers = fetchUsers;
 module.exports.fetchChat = fetchChat;
@@ -196,3 +207,4 @@ module.exports.fetchChat = fetchChat;
 module.exports.getCollection = getCollection;
 
 module.exports.deleteChat = deleteChat;
+module.exports.deleteAllUsers = process.env.NODE_ENV === "test" ? deleteAllUsers : undefined;

@@ -10,10 +10,12 @@ import {
   ImageBackground,
   FlatList,
   AsyncStorage,
+  NetInfo
 } from "react-native";
 import CardItem from "../components/CardItem";
-import Icon from "../components/Icon";
 import APIConnection from "../assets/data/APIConnection";
+import ProfilePopup from "../components/ProfilePopup";
+// import {BlurView} from '@react-native-community/blur';
 
 const thumnailStyle = {
   marginHorizontal: 10,
@@ -24,7 +26,16 @@ const thumnailStyle = {
 class Matches extends React.Component {
   constructor(props) {
     super(props);
-    this.state = { API: new APIConnection(), cards: [] };
+    this.state = { 
+      API: new APIConnection(),
+      cards: [],
+      visible: false,
+      name: "",
+      keywords: [],
+      bio: "",
+      uni: "",
+      isConnected: true,
+    };
   }
 
   async componentDidMount() {
@@ -33,9 +44,22 @@ class Matches extends React.Component {
     );
     this.scrollView.scrollToEnd({ animated: true, duration: 1000 });
     this.setState({ cards: data });
+    NetInfo.isConnected.addEventListener('connectionChange', this.handleConnectivityChange);
+
   }
 
+  async componentWillUnmount(){
+    NetInfo.isConnected.removeEventListener('connectionChange', this.handleConnectivityChange);
+  }
+
+  handleConnectivityChange = isConnected => {
+    this.setState({ isConnected });
+  };
+  
   render() {
+    if (!this.state.isConnected) {
+      this.props.navigation.navigate("Internet");
+    }
     return (
       <ImageBackground
         source={require("../assets/images/Home.png")}
@@ -49,12 +73,6 @@ class Matches extends React.Component {
             />
             <View style={styles.matchTop}>
               <Text style={styles.matchTitle}>Pending Matches</Text>
-              <TouchableOpacity>
-                <Text style={styles.seeAllicon}>
-                  See all
-                  <Icon name="arrow" />
-                </Text>
-              </TouchableOpacity>
             </View>
 
             <View style={{ flex: 3, height: 130 }}>
@@ -93,7 +111,13 @@ class Matches extends React.Component {
               data={this.state.cards}
               keyExtractor={(item, index) => index.toString()}
               renderItem={({ item }) => (
-                <TouchableOpacity>
+                <TouchableOpacity activeOpacity={1} onPress={() => this.setState({
+                  visible: true,
+                  name: item.name,
+                  keywords: item.keywords, 
+                  bio: item.bio,
+                  uni: item.uni
+                })}>
                   <CardItem
                     image={{ uri: item.image }}
                     name={item.name}
@@ -104,6 +128,15 @@ class Matches extends React.Component {
               )}
             />
           </ScrollView>
+          
+          <ProfilePopup 
+          visible={this.state.visible} 
+          name={this.state.name}
+          keywords={this.state.keywords}
+          bio={this.state.bio}
+          uni={this.state.uni}
+          />
+          
         </View>
       </ImageBackground>
     );
