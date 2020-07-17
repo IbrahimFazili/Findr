@@ -318,11 +318,22 @@ export default StyleSheet.create({
   // COMPONENT - PROFILE ITEM
   containerProfileItem: {
     backgroundColor: WHITE,
-    paddingHorizontal: 10,
-    paddingBottom: 25,
+    padding: 10,
     margin: 10,
-    borderRadius: 8,
+    borderRadius: 18,
     marginTop: -140,
+    shadowOpacity: 0.05,
+    shadowRadius: 10,
+    shadowColor: BLACK,
+    shadowOffset: { height: 0, width: 0 },
+    elevation: 8,
+  },
+  containerProfileItem2: {
+    backgroundColor: WHITE,
+    padding: 10,
+    margin: 10,
+    borderRadius: 18,
+    marginTop: 10,
     shadowOpacity: 0.05,
     shadowRadius: 10,
     shadowColor: BLACK,
@@ -344,11 +355,27 @@ export default StyleSheet.create({
     color: WHITE,
   },
   name: {
+    marginLeft: DIMENSION_WIDTH * 0.20,
     paddingTop: 25,
     paddingBottom: 5,
     color: TEAL,
-    fontSize: 15,
+    fontSize: 24,
     textAlign: "center",
+  },
+  textBoxStyle: {
+    width: '75%',
+    height: 50,
+    alignSelf: 'center',
+    backgroundColor: "transparent",
+    left: DIMENSION_WIDTH * 0.22
+  },
+  name_secondary: {
+    marginLeft: DIMENSION_WIDTH * 0.33,
+    paddingTop: 25,
+    paddingBottom: 5,
+    color: TEAL,
+    paddingBottom: 20,
+    fontSize: 13,
   },
   descriptionProfileItem: {
     color: GRAY,
@@ -356,10 +383,51 @@ export default StyleSheet.create({
     paddingBottom: 20,
     fontSize: 13,
   },
+  
+  tick: {
+    marginLeft: DIMENSION_WIDTH * 0.8,
+    bottom: DIMENSION_WIDTH * 0.12,
+  },
+
+  cross: {
+    marginLeft: DIMENSION_WIDTH * 0.8,
+    bottom: DIMENSION_WIDTH * 0.10,
+    marginBottom: -DIMENSION_WIDTH * 0.05
+  },
   info: {
     paddingVertical: 8,
     flexDirection: "row",
-    alignItems: "center",
+    height: 60,
+    alignSelf: "center",
+    marginTop: DIMENSION_HEIGHT * 0.06,
+    marginLeft: DIMENSION_HEIGHT * 0.22
+  },
+  profileTitle: {
+    fontSize: 15,
+    color: DARK_GRAY,
+    paddingHorizontal: 10,
+    // fontWeight: 'bold'
+  },
+  profileButtons: {
+    marginLeft: DIMENSION_WIDTH * 0.13,
+    marginTop: DIMENSION_HEIGHT * 0.025,
+  },
+  profileButtons2: {
+    marginLeft: DIMENSION_WIDTH * 0.31,
+    marginTop: DIMENSION_HEIGHT * 0.025,
+  },
+  profileButtons3: {
+    marginLeft: DIMENSION_WIDTH * 0.35,
+    marginTop: DIMENSION_HEIGHT * 0.025,
+  },
+  profileButtons4: {
+    marginLeft: DIMENSION_WIDTH * 0.3,
+    marginTop: DIMENSION_HEIGHT * 0.025,
+  },
+  profileCardHeader: {
+    marginTop: -DIMENSION_HEIGHT * 0.025,
+    flexDirection: "row",
+    alignItems: 'center',
   },
   iconProfile: {
     fontFamily: ICON_FONT,
@@ -377,7 +445,29 @@ export default StyleSheet.create({
     alignSelf: "center",
     marginTop: DIMENSION_HEIGHT * 0.06,
   },
+  LogoutSettings: {
+    left: DIMENSION_WIDTH * 0.425,
+    color: "black"
+  },
 
+  logoSettings: {
+    height: DIMENSION_HEIGHT * 0.07,
+    width: DIMENSION_WIDTH * 0.15,
+    marginLeft: DIMENSION_WIDTH * 0.46,
+    bottom: DIMENSION_HEIGHT * 0.025,
+    marginTop: DIMENSION_HEIGHT * 0.03,
+    padding: 2
+  },
+
+  deleteAccount:{
+    marginLeft: DIMENSION_WIDTH * 0.35,
+    color: "black"
+  },
+
+  deleteAccountButton:{
+    marginBottom: DIMENSION_HEIGHT * 0.02,
+    color: "black"
+  },
   // CONTAINER - GENERAL
   bg: {
     flex: 1,
