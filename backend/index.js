@@ -9,134 +9,18 @@ const AWS_Presigner = require("./utils/AWSPresigner");
 const { bindSocketListeners, Chat } = require("./utils/Chat");
 const matcher = new (require("./utils/Matcher").Matcher)();
 const { EventQueue } = require('./utils/Events');
-const sendEmail = require("./utils/emailer").sendEmail;
 const { CallbackQueue } = require("./utils/DataStructures");
+const { 
+	blockUser, 
+	deleteUser,
+	leftSwipe,
+	rightSwipe,
+	updateKeywords,
+	signUp
+} = require('./utils/handlers').functions;
 
 const callbackQueue = new CallbackQueue();
 var isServerOutdated = false;
-
-function validatePassword(password) {
-    const regex = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])[0-9a-zA-Z]{6,}$/;
-    return regex.test(password);
-}
-
-function generateRandomNumber() {
-	var randomNumber = "";
-	var i = 0;
-	for (i = 0; i < 8; i++){
-		randomDigit = Math.floor(Math.random() * 10);
-		randomNumber = randomNumber + randomDigit;
-	}
-	return randomNumber;
-}
-
-function signUp(requestData, res, oncomplete){
-	DB.insertUser(requestData)
-		.then(async (result) => {
-			if (process.env.NODE_ENV !== "test") {
-				sendEmail(requestData.email, requestData.verificationHash);
-			}
-
-			await matcher.generateGraph(requestData.email);
-			process.env.NODE_ENV === "test" ? res.status(201).send(requestData.verificationHash)
-			: res.status(201).send("success");
-			oncomplete();
-		})
-		.catch((err) => {
-			// unsuccessful insert, reply back with unsuccess response code
-			console.log(err);
-			res.status(500).send("Insert Failed");
-			oncomplete();
-		});
-}
-
-function updateKeywords(email, keywords, res, oncomplete){
-	DB.fetchUsers({ email }).then((users) => {
-		const oldKeywords = users[0].keywords;
-
-		DB.updateUser({ keywords }, { email })
-			.then((updateRes) => {
-				matcher.updateGraph(email, oldKeywords).then((value) => {
-					value ? res.status(201).send("success") : res.status(500).send("Server Error");
-					oncomplete();
-				}).catch((err) => {
-					console.log(err);
-					res.status(500).send("Server Error");
-					oncomplete();
-				})
-			})
-			.catch((err) => {
-				console.log(err);
-				res.status(500).send("Database Update Error");
-				oncomplete();
-			});
-	}).catch((err) => {
-		console.log(err);
-		res.status(500).send("Database Fetch Error");
-		oncomplete();
-	})
-}
-
-async function rightSwipe(srcUser, targetUser, res, oncomplete) {
-	try {
-		const swipeResult = await matcher.handleRightSwipe(srcUser, targetUser);
-		if (swipeResult.success) res.status(201).send({ isMatch: swipeResult.isMatch });
-		else res.status(500).send("Right Swipe Failed");
-
-		oncomplete();
-
-	} catch (error) {
-		console.log(error);
-		res.status(500).send("Server Error");
-		oncomplete();
-	}
-	
-}
-
-async function leftSwipe(srcUser, targetUser, res, oncomplete) {
-	try {
-		const success = await matcher.handleLeftSwipe(srcUser, targetUser);
-		if (success) res.status(201).end();
-		else res.status(500).send("Left Swipe Failed");
-
-		oncomplete();
-
-	} catch (error) {
-		console.log(error);
-		res.status(500).send("Server Error");
-		oncomplete();
-	}
-	
-}
-
-async function deleteUser(email, res, oncomplete) {
-	try {
-		const success = await matcher.deleteUser(email);
-		if (success) res.status(201).end();
-		else res.status(500).send("Delete User Failed");
-		oncomplete();
-
-	} catch (eror) {
-		console.log(error);
-		res.status(500).send("Server Error");
-		oncomplete();
-	}
-
-}
-
-async function blockUser(srcUser, targetUser, res, oncomplete) {
-	try {
-		const success = await matcher.blockUser(srcUser, targetUser);
-		if (success) res.status(201).end();
-		else res.status(500).send("block user failed");
-
-		oncomplete();
-	} catch (error) {
-		console.log(error);
-		res.status(500).send("Server error");
-		oncomplete();
-	}
-}
 
 app.use(bodyParser.json());
 
@@ -527,6 +411,21 @@ app.post("/update", (req, res) => {
 	res.status(200);
 	res.end();
 });
+
+function validatePassword(password) {
+    const regex = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])[0-9a-zA-Z]{6,}$/;
+    return regex.test(password);
+}
+
+function generateRandomNumber() {
+	var randomNumber = "";
+	var i = 0;
+	for (i = 0; i < 8; i++){
+		randomDigit = Math.floor(Math.random() * 10);
+		randomNumber = randomNumber + randomDigit;
+	}
+	return randomNumber;
+}
 
 /* Socket Listeners for chat */
 bindSocketListeners(io);
