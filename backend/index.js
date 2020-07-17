@@ -33,7 +33,7 @@ app.get("/", (req, res) => {
 	}
 });
 
-app.get("/fetchUsers", (req, res) => {
+app.get("/user/:user_email", async (req, res) => {
 	const projection = process.env.NODE_ENV !== "test" ? {
 		_id: 0,
 		password: 0,
@@ -43,7 +43,39 @@ app.get("/fetchUsers", (req, res) => {
 		eventQueue: 0,
 		verificationHash: 0
 	} : {};
-	DB.fetchUsers({ email: req.query.email }, { projection })
+
+	try {
+		const users = await DB.fetchUsers({ email: req.params.user_email }, { projection });
+		if (users.length === 0) {
+			res.status(404).send("user not found");
+			return;
+		}
+
+		const user = users[0];
+		if (process.env.NODE_ENV !== "test") {
+			user.image = await AWS_Presigner.generateSignedGetUrl(
+				"user_images/" + user.email
+			);
+		}
+
+		res.status(200).send(user);
+	} catch (error) {
+		console.log(error);
+		res.status(500).send("Database Fetch Error");
+	}
+});
+
+app.post("/fetchUsers", (req, res) => {
+	const projection = process.env.NODE_ENV !== "test" ? {
+		_id: 0,
+		password: 0,
+		chats: 0,
+		blueConnections: 0,
+		greenConnections: 0,
+		eventQueue: 0,
+		verificationHash: 0
+	} : {};
+	DB.fetchUsers({ email: { $in: req.body.emails } }, { projection })
 		.then(async function (result) {
 			if (process.env.NODE_ENV !== "test") {
 				for (var i = 0; i < result.length; i++) {
@@ -62,8 +94,8 @@ app.get("/fetchUsers", (req, res) => {
 		});
 });
 
-app.get("/fetchMatches", (req, res) => {
-	matcher.getMatches(req.query.email)
+app.get("/user/:user_email/matches", (req, res) => {
+	matcher.getMatches(req.params.user_email)
 		.then((matches) => {
 			const projection = {
 				_id: 0,
@@ -99,7 +131,7 @@ app.get("/fetchMatches", (req, res) => {
 		});
 });
 
-app.get("/fetchConnections", (req, res) => {
+app.get("/user/:user_email/connections", (req, res) => {
 	var projection = {
 		_id: 0,
 		password: 0,
@@ -109,7 +141,7 @@ app.get("/fetchConnections", (req, res) => {
 		eventQueue: 0,
 		verificationHash: 0
 	};
-	DB.fetchUsers({ email: req.query.email }, { projection })
+	DB.fetchUsers({ email: req.params.user_email }, { projection })
 		.then((result) => {
 			
 			if (result.length === 0) {
@@ -195,10 +227,10 @@ app.get("/fetchChatData", (req, res) => {
 		});
 });
 
-app.get('/fetchChats', (req, res) => {
+app.get('/user/:user_email/chats', (req, res) => {
 	var projection = { chats: 1, email: 1 };
 
-	DB.fetchUsers({ email: req.query.email }, { projection })
+	DB.fetchUsers({ email: req.params.user_email }, { projection })
 	  .then(async (users) => {
 		const user = users[0];
 		let chat_emails = [];
@@ -237,9 +269,9 @@ app.get('/fetchChats', (req, res) => {
 	  });
 });
 
-app.get("/fetchChatMedia", async (req, res) => {
+app.get("/chat_media/:mediaName", async (req, res) => {
 	try {
-		const downUrl = await AWS_Presigner.generateSignedGetUrl("chat_media/" + req.query.name, 30);
+		const downUrl = await AWS_Presigner.generateSignedGetUrl("chat_media/" + req.params.mediaName, 30);
 		res.status(200).send(downUrl);
 	} catch (error) {
 		console.log(error);
@@ -247,9 +279,9 @@ app.get("/fetchChatMedia", async (req, res) => {
 	}
 });
 
-app.get("/fetchNotifications", (req, res) => {
+app.get("/user/:user_email/notifications", (req, res) => {
 	const projection = { eventQueue: 1 };
-	DB.fetchUsers({ email: req.query.email }, { projection })
+	DB.fetchUsers({ email: req.params.user_email }, { projection })
 		.then(async (users) => {
 			const user = users[0];
 			const userEventQueue = new EventQueue(user.eventQueue.events);
@@ -349,7 +381,7 @@ app.get("/updateProfilePicture", async (req, res) => {
 	res.status(200).send(url);
 });
 
-app.post("/new-user", (req, res) => {
+app.post("/signup", (req, res) => {
 	if (process.env.NODE_ENV === "test") {
 		for (let i = 0; i < req.body.keywords.length; i++) {
 			req.body.keywords[i] = req.body.keywords[i].toLowerCase();

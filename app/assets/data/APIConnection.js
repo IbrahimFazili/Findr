@@ -21,7 +21,7 @@ class APIConnection {
    */
   async requestSignUp(data) {
     const response = await fetch(
-      this.ENDPOINT + ':' + String(this.PORT) + '/new-user',
+      this.ENDPOINT + ':' + String(this.PORT) + '/signup',
       {
         method: 'POST',
         headers: {
@@ -53,21 +53,8 @@ class APIConnection {
   /**
    * Send log-in request to the API
    * @param {{ email: String, password: String}} data log-in data to send to the server for verification
-   * @returns {{
-   *      success: Boolean,
-   *      user: Promise<{
-   *          name: String,
-   *          email: String,
-   *          gender: String,
-   *          uni: String,
-   *          major: String,
-   *          age: Number,
-   *          image: String,
-   *          password: String,
-   *          chats: Array<String>,
-   *          courses: Array<String>,
-   *          bio: String
-   *      }>
+   * @returns {{ success: Boolean, user: Promise<{ name: String, email: String, gender: String, uni: String,
+   * age: Number, image: String, password: String, chats: Array<String>, courses: Array<String>, bio: String }>
    * }} An object containing the status of request and a promise which resolves to user profile if request was succesful
    */
   async logIn(data) {
@@ -98,11 +85,7 @@ class APIConnection {
    * List of profile cards
    */
   async fetchMatches(email) {
-    return await (
-      await fetch(
-        this.ENDPOINT + ':' + String(this.PORT) + '/fetchMatches?email=' + email
-      )
-    ).json();
+    return (await fetch(`${this.ENDPOINT}:${this.PORT}/user/${email}/matches`)).json();
   }
 
   /**
@@ -114,14 +97,8 @@ class APIConnection {
    * List of profile cards
    */
   async fetchConnections(email) {
-    return await (
-      await fetch(
-        this.ENDPOINT +
-          ':' +
-          String(this.PORT) +
-          '/fetchConnections?email=' +
-          email
-      )
+    return (
+      await fetch(`${this.ENDPOINT}:${this.PORT}/user/${email}/connections`)
     ).json();
   }
 
@@ -135,9 +112,7 @@ class APIConnection {
    */
   async fetchUser(email) {
     let users = await (
-      await fetch(
-        this.ENDPOINT + ':' + String(this.PORT) + '/fetchUsers?email=' + email
-      )
+      await fetch(`${this.ENDPOINT}:${this.PORT}/user/${email}`)
     ).json();
 
     return users[0];
@@ -145,23 +120,13 @@ class APIConnection {
 
   async fetchChats(email) {
     return (
-      await fetch(
-        this.ENDPOINT + ':' + String(this.PORT) + '/fetchChats?email=' + email
-      )
+      await fetch(`${this.ENDPOINT}:${this.PORT}/user/${email}/chats`)
     ).json();
   }
 
   async fetchChatData(from, to) {
     return (
-      await fetch(
-        this.ENDPOINT +
-          ':' +
-          String(this.PORT) +
-          '/fetchChatData?from=' +
-          from +
-          '&to=' +
-          to
-      )
+      await fetch(`${this.ENDPOINT}:${this.PORT}/fetchChatData?from=${from}&to=${to}`)
     ).json();
   }
 
