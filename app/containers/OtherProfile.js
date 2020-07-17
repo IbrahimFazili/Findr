@@ -135,16 +135,10 @@ const styles = StyleSheet.create({
 		alignItems: "center",
 		justifyContent: "center",
 		marginTop: DIMENSION_HEIGHT * 0.02,
-		// padding: 20,
-		// backgroundColor: 'rgba(26, 93, 87, 0.15)',
 	},
 	profilepicWrap: {
 		width: 280,
 		height: 280,
-		// borderRadius: 100,
-		// borderColor: "rgba(26, 93, 87, 0.15)",
-		// borderWidth: 16,
-		// marginBottom: 160,
 		padding: 20,
 	},
 	profilepicWrap: {
@@ -160,8 +154,6 @@ const styles = StyleSheet.create({
 		width: null,
 		alignSelf: "stretch",
 		borderRadius: 700,
-		// borderColor: "#fff",
-		// borderWidth: 4,
 	},
 	containerProfile: { marginHorizontal: 0 },
 	photo: {
@@ -230,7 +222,6 @@ const styles = StyleSheet.create({
 	profileContainer: {
 		justifyContent: "space-between",
 		flex: 1,
-		// paddingHorizontal: 10,
 	},
 	bg: {
 		flex: 1,

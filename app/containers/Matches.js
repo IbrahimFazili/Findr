@@ -111,12 +111,14 @@ class Matches extends React.Component {
               data={this.state.cards}
               keyExtractor={(item, index) => index.toString()}
               renderItem={({ item }) => (
-                <TouchableOpacity activeOpacity={1} onPress={() => this.setState({
-                  visible: true,
-                  name: item.name,
-                  keywords: item.keywords, 
-                  bio: item.bio,
-                  uni: item.uni
+                <TouchableOpacity 
+                  activeOpacity={1} 
+                  onPress={() => this.setState({
+                    visible: true,
+                    name: item.name,
+                    keywords: item.keywords, 
+                    bio: item.bio,
+                    uni: item.uni
                 })}>
                   <CardItem
                     image={{ uri: item.image }}
@@ -129,13 +131,13 @@ class Matches extends React.Component {
             />
           </ScrollView>
           
-          <ProfilePopup 
-          visible={this.state.visible} 
-          name={this.state.name}
-          keywords={this.state.keywords}
-          bio={this.state.bio}
-          uni={this.state.uni}
-          />
+          {/* <ProfilePopup 
+            visible={this.state.visible} 
+            name={this.state.name}
+            keywords={this.state.keywords}
+            bio={this.state.bio}
+            uni={this.state.uni}
+          /> */}
           
         </View>
       </ImageBackground>
