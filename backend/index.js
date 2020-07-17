@@ -20,6 +20,7 @@ const {
 } = require('./utils/handlers').functions;
 
 const callbackQueue = new CallbackQueue();
+const CONNECTIONS_CHUNK_SIZE = 25;
 var isServerOutdated = false;
 
 app.use(bodyParser.json());
@@ -33,15 +34,19 @@ app.get("/", (req, res) => {
 });
 
 app.get("/fetchUsers", (req, res) => {
-	DB.fetchUsers({ email: req.query.email })
+	const projection = process.env.NODE_ENV !== "test" ? {
+		_id: 0,
+		password: 0,
+		chats: 0,
+		blueConnections: 0,
+		greenConnections: 0,
+		eventQueue: 0,
+		verificationHash: 0
+	} : {};
+	DB.fetchUsers({ email: req.query.email }, { projection })
 		.then(async function (result) {
 			if (process.env.NODE_ENV !== "test") {
 				for (var i = 0; i < result.length; i++) {
-					delete result[i].password;
-					delete result[i].chats;
-					delete result[i].blueConnections;
-					delete result[i].greenConnections;
-					delete result[i].verificationHash;
 
 					result[i].image = await AWS_Presigner.generateSignedGetUrl(
 						"user_images/" + result[i].email
@@ -58,18 +63,21 @@ app.get("/fetchUsers", (req, res) => {
 });
 
 app.get("/fetchMatches", (req, res) => {
-	matcher
-		.getMatches(req.query.email)
+	matcher.getMatches(req.query.email)
 		.then((matches) => {
-			DB.fetchUsers({ _id: { $in: matches } })
+			const projection = {
+				_id: 0,
+				password: 0,
+				chats: 0,
+				blueConnections: 0,
+				greenConnections: 0,
+				eventQueue: 0,
+				verificationHash: 0
+			};
+			DB.fetchUsers({ _id: { $in: matches } }, { projection })
 				.then(async (users) => {
 					if (process.env.NODE_ENV !== "test") {
 						for (var i = 0; i < users.length; i++) {
-							delete users[i].password;
-							delete users[i].chats;
-							delete users[i].blueConnections;
-							delete users[i].greenConnections;
-							delete users[i].verificationHash;
 
 							users[i].image = await AWS_Presigner.generateSignedGetUrl(
 								"user_images/" + users[i].email
@@ -92,7 +100,16 @@ app.get("/fetchMatches", (req, res) => {
 });
 
 app.get("/fetchConnections", (req, res) => {
-	DB.fetchUsers({ email: req.query.email })
+	var projection = {
+		_id: 0,
+		password: 0,
+		chats: 0,
+		blueConnections: { $slice: CONNECTIONS_CHUNK_SIZE },
+		greenConnections: 0,
+		eventQueue: 0,
+		verificationHash: 0
+	};
+	DB.fetchUsers({ email: req.query.email }, { projection })
 		.then((result) => {
 			
 			if (result.length === 0) {
@@ -110,16 +127,20 @@ app.get("/fetchConnections", (req, res) => {
 			user.blueConnections.forEach(element => {
 				ids.push(element._id);
 			});
-			DB.fetchUsers({ _id: { $in: ids } })
+
+			projection = {
+				_id: 0,
+				password: 0,
+				chats: 0,
+				blueConnections: 0,
+				greenConnections: 0,
+				eventQueue: 0,
+				verificationHash: 0
+			};
+			DB.fetchUsers({ _id: { $in: ids } }, { projection })
 				.then(async (connections) => {
 					for (let i = 0; i < connections.length; i++) {
 						const element = connections[i];
-
-						delete element.password;
-						delete element.chats;
-						delete element.blueConnections;
-						delete element.greenConnections;
-						delete element.verificationHash;
 
 						if (process.env.NODE_ENV !== "test") {
 							element.image = await AWS_Presigner.generateSignedGetUrl(
@@ -128,7 +149,7 @@ app.get("/fetchConnections", (req, res) => {
 						}
 					}
 
-					res.status(200).send(JSON.stringify(connections));
+					res.status(200).send(connections);
 				})
 				.catch((err) => {
 					console.log(err);
@@ -143,7 +164,8 @@ app.get("/fetchConnections", (req, res) => {
 
 app.get("/fetchChatData", (req, res) => {
 	const MSG_TO = req.query.to;
-	DB.fetchUsers({ email: req.query.from })
+	const projection = { chats: 1 };
+	DB.fetchUsers({ email: req.query.from }, { projection })
 		.then(async (users) => {
 			const user = users[0];
 			var chatFound = false;
@@ -174,7 +196,9 @@ app.get("/fetchChatData", (req, res) => {
 });
 
 app.get('/fetchChats', (req, res) => {
-	DB.fetchUsers({ email: req.query.email })
+	var projection = { chats: 1, email: 1 };
+
+	DB.fetchUsers({ email: req.query.email }, { projection })
 	  .then(async (users) => {
 		const user = users[0];
 		let chat_emails = [];
@@ -184,8 +208,9 @@ app.get('/fetchChats', (req, res) => {
 			chat.chat.user1 === user.email ? chat.chat.user2 : chat.chat.user1
 		  );
 		}
-  
-		DB.fetchUsers({ email: { $in: chat_emails } })
+		
+		projection = { name: 1, email: 1 };
+		DB.fetchUsers({ email: { $in: chat_emails } }, { projection })
 		  .then(async (chat_users) => {
 			let chats = [];
 			for (let i = 0; i < chat_users.length; i++) {
@@ -223,7 +248,8 @@ app.get("/fetchChatMedia", async (req, res) => {
 });
 
 app.get("/fetchNotifications", (req, res) => {
-	DB.fetchUsers({ email: req.query.email })
+	const projection = { eventQueue: 1 };
+	DB.fetchUsers({ email: req.query.email }, { projection })
 		.then(async (users) => {
 			const user = users[0];
 			const userEventQueue = new EventQueue(user.eventQueue.events);
@@ -254,7 +280,8 @@ app.post("/updateUserInfo", (req, res) => {
 		return;
 	}
 
-	DB.fetchUsers({ email: user.email }).then(async (users) => {
+	const projection = { password: 1 };
+	DB.fetchUsers({ email: user.email }, { projection }).then(async (users) => {
 
 		if (user.password !== undefined) {
 			if (!validatePassword(user.password) || !bcrypt.compareSync(user.oldPassword, users[0].password)) {
@@ -356,7 +383,8 @@ app.post("/new-user", (req, res) => {
 });
 
 app.get("/verifyUserEmail", (req, res) => {
-	DB.fetchUsers({ verificationHash: req.query.key })
+	const projection = { email: 1, active: 1  };
+	DB.fetchUsers({ verificationHash: req.query.key }, { projection })
 		.then(async (users) => {
 			if (users.length === 0) {
 				res.status(404).send("User doesn't exist");
@@ -380,7 +408,15 @@ app.post("/login", (req, res) => {
 		password: req.body.password,
 	};
 
-	DB.fetchUsers({ email: requestData.email })
+	const projection = { 
+		_id: 0,
+		chats: 0,
+		blueConnections: 0,
+		greenConnections: 0,
+		eventQueue: 0,
+		verificationHash: 0
+	};
+	DB.fetchUsers({ email: requestData.email }, { projection })
 		.then((users) => {
 			if (users.length < 1) {
 				res.status(401).send("Invalid Email");
@@ -390,7 +426,8 @@ app.post("/login", (req, res) => {
 			let user = users[0];
 			if (bcrypt.compareSync(requestData.password, user.password)) {
 				// Passwords match
-				res.status(200).send(JSON.stringify(user));
+				delete user.password;
+				res.status(200).send(user);
 			} else {
 				// Passwords don't match
 				res.status(401).send("Invalid password");
