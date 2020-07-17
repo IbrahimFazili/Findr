@@ -57,6 +57,8 @@ class Profile extends React.Component {
     const keywords = this.state.profile ? this.state.profile.keywords : [];
     const clubs = this.state.profile ? this.state.profile.clubs : [];
     const courses = this.state.profile ? this.state.profile.courses : [];
+    const major = this.state.profile ? this.state.profile.major : [];
+
     
     if (!this.state.isConnected) {
       this.props.navigation.navigate("Internet");
@@ -93,11 +95,11 @@ class Profile extends React.Component {
                   age={age}
                   uni={location}
                   gender={gender == "M" ? "Male" : "Female"}
-                  major={major}
                   email={email}
                   keywords={keywords}
                   clubs={clubs}
                   courses={courses}
+                  major={major}
                 />
               </View>
             </View>
@@ -206,7 +208,8 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   profileSettings: {
-    marginLeft: DIMENSION_HEIGHT * 0.13,
+    marginLeft: DIMENSION_HEIGHT * 0.15,
+    marginTop: DIMENSION_HEIGHT * 0.01
   },
   bg: {
     flex: 1,

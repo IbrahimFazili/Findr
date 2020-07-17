@@ -71,9 +71,10 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
+    fontSize: 20
   },
   textInput: {
-      height: 30,
+      height: 20,
       backgroundColor: 'white',
   },
   tag: {

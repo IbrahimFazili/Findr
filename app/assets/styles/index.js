@@ -361,6 +361,7 @@ export default StyleSheet.create({
     color: TEAL,
     fontSize: 24,
     textAlign: "center",
+    width: DIMENSION_WIDTH * 0.5
   },
   textBoxStyle: {
     width: '75%',
@@ -399,14 +400,41 @@ export default StyleSheet.create({
     flexDirection: "row",
     height: 60,
     alignSelf: "center",
-    marginTop: DIMENSION_HEIGHT * 0.06,
-    marginLeft: DIMENSION_HEIGHT * 0.22
+    marginLeft: DIMENSION_HEIGHT * - 0.28
+  },
+  info2: {
+    paddingVertical: 8,
+    flexDirection: "row",
+    height: 60,
+    alignSelf: "center",
+    marginLeft: DIMENSION_HEIGHT * - 0.2
+  },
+  info3: {
+    paddingVertical: 8,
+    flexDirection: "row",
+    height: 60,
+    alignSelf: "center",
+    marginLeft: DIMENSION_HEIGHT * 0.005
   },
   profileTitle: {
     fontSize: 15,
     color: DARK_GRAY,
     paddingHorizontal: 10,
     // fontWeight: 'bold'
+  },
+  profileTitle2: {
+    fontSize: 15,
+    color: DARK_GRAY,
+    paddingHorizontal: 10,
+    marginLeft: DIMENSION_HEIGHT * -0.033
+    // fontWeight: 'bold'
+  },
+  textB:{
+    width: '75%',
+    height: 50,
+    alignSelf: 'center',
+    backgroundColor: "transparent",
+    left: DIMENSION_WIDTH * 0.37
   },
   profileButtons: {
     marginLeft: DIMENSION_WIDTH * 0.13,
@@ -444,6 +472,7 @@ export default StyleSheet.create({
     height: 60,
     alignSelf: "center",
     marginTop: DIMENSION_HEIGHT * 0.06,
+    marginLeft: DIMENSION_HEIGHT * 0.2
   },
   LogoutSettings: {
     left: DIMENSION_WIDTH * 0.425,

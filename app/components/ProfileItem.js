@@ -356,12 +356,12 @@ class ProfileItem extends React.Component{
 				<Text style={styles.infoContent}>{this.state.gender}</Text>
 			</View>
 
-			<View style={styles.info}>
+			<View style={styles.info2}>
 				<Text style={styles.profileTitle}>Email: </Text>
 				<Text style={styles.infoContent}>{this.props.email}</Text>
 			</View>
 
-			<View style={styles.info}>
+			<View style={styles.info3}>
 				<Text style={styles.profileTitle}>Keywords: </Text>
 				<Tag 
 					keywords={this.state.keywords} editable={this.state.isEditable1}
@@ -380,7 +380,7 @@ class ProfileItem extends React.Component{
 				}
 			</View>
 			<View style={styles.info}>
-				<Text style={styles.profileTitle}>Major: </Text>
+				<Text style={styles.profileTitle2}>Major: </Text>
 				{this.state.isEditable2
 				? (<TextInput
 					underlineColor="transparent"
@@ -392,19 +392,19 @@ class ProfileItem extends React.Component{
 					onBlur={() => this.setState({ majorLabel: this.state.major.length === 0 ? "Major" : "" })}
 					onChangeText={this.handleMajorChange.bind(this)}
 					theme={theme}
-					style={textBoxStyle}
+					style={styles.textB}
 					/>)
 				: (<Text style={styles.infoContent}>{this.state.major}</Text>)
 				}
 			</View>
 
-			<View style={styles.info}>
+			<View style={styles.info3}>
 				<Text style={styles.profileTitle}>Courses: </Text>
 				<TagCourses keywords={this.state.courses} editable={this.state.isEditable2} 
 			    courseChange={this.handleCourseChange.bind(this)} type="course"/>
 			</View>
 
-			<View style={styles.info}>
+			<View style={styles.info3}>
 				<Text style={styles.profileTitle}>Clubs: </Text>
 				<TagClubs keywords={this.state.clubs} editable={this.state.isEditable2} type="club"
 				clubChange={this.handleClubChange.bind(this)}/>

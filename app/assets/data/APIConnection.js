@@ -104,6 +104,8 @@ async logIn(data) {
   if(logInRes.status !== 200) {
       return { success: false, user: null };
   }
+  let user = await logInRes.json();
+  return { success: true, user };
 }
 
   /**
