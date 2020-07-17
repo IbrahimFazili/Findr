@@ -6,7 +6,7 @@ const bodyParser = require("body-parser");
 const bcrypt = require("bcrypt");
 const DB = require("./utils/DatabaseManager");
 const AWS_Presigner = require("./utils/AWSPresigner");
-const { bindSocketListeners } = require("./utils/Chat");
+const { bindSocketListeners, Chat } = require("./utils/Chat");
 const matcher = new (require("./utils/Matcher").Matcher)();
 const { EventQueue } = require('./utils/Events');
 const sendEmail = require("./utils/emailer").sendEmail;
@@ -124,6 +124,20 @@ async function deleteUser(email, res, oncomplete) {
 		oncomplete();
 	}
 
+}
+
+async function blockUser(srcUser, targetUser, res, oncomplete) {
+	try {
+		const success = await matcher.blockUser(srcUser, targetUser);
+		if (success) res.status(201).end();
+		else res.status(500).send("block user failed");
+
+		oncomplete();
+	} catch (error) {
+		console.log(error);
+		res.status(500).send("Server error");
+		oncomplete();
+	}
 }
 
 app.use(bodyParser.json());
@@ -419,6 +433,28 @@ app.get("/leftSwipe", (req, res) => {
 	callbackQueue.enqueue(leftSwipe, srcUser, targetUser, res);
 });
 
+app.get("/blockUser", async (req, res) => {
+	const srcUser = req.query.src;
+	const targetUser = req.query.target;
+
+	callbackQueue.enqueue(blockUser, srcUser, targetUser, res);
+
+	try {
+		const user = (await DB.fetchUsers({ email: srcUser }))[0];
+
+		for (let i = 0; i < user.chats.length; i++) {
+			const chat = (await DB.fetchChat(user.chats[i]))[0].chat;
+			if (chat.user1 === targetUser || chat.user2 === targetUser) {
+				chat = Chat.parseJSON(chat);
+				chat.disableChat(targetUser);
+				break;
+			}
+		}
+	} catch (error) {
+		console.log(error);
+	}
+});
+
 app.get("/deleteUser", (req, res) => {
 	const email = req.query.email;
 	callbackQueue.enqueue(deleteUser, email, res);
@@ -453,6 +489,7 @@ app.post("/new-user", (req, res) => {
 		bio: "",
 		blueConnections: [],
 		greenConnections: [],
+		blockedUsers: [],
 		eventQueue: { events: [] },
 		active: false,
 		verificationHash: bcrypt.hashSync(req.body.email + generateRandomNumber(), 3)
