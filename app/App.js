@@ -160,6 +160,6 @@ const RootStack = createStackNavigator(
   { mode: 'modal', headerMode: 'none' }
 );
 
-APIConnection._initSocketConnection();
+APIConnection.initSocketConnection();
 
 export default createAppContainer(RootStack);

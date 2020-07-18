@@ -38,8 +38,7 @@ public class MainApplication extends Application implements ReactApplication {
             new BlurViewPackage(),
             new VectorIconsPackage(),
             new LinearGradientPackage(),
-            new RNGestureHandlerPackage(),
-            new NetInfoPackage()
+            new RNGestureHandlerPackage()
       );
     }
 

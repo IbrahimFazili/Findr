@@ -176,7 +176,7 @@ class APIConnection {
     return this.fetchConnections(email);
   }
 
-  async static _initSocketConnection() {
+  static async initSocketConnection() {
     const user_email = await AsyncStorage.getItem('storedEmail');
     if (user_email) {
       this.socket = io(ENDPOINT + ":" + PORT, { query: "name=" + user_email });
