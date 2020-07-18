@@ -1,6 +1,5 @@
 import React from "react";
 import globalStyles from "../assets/styles";
-
 import {
   View,
   Text,
@@ -9,25 +8,17 @@ import {
   Image,
   Dimensions,
   AsyncStorage,
+  ImageBackground,
+  NetInfo
 } from "react-native";
 import ProfileItem from "../components/ProfileItem";
 import Icon from "../components/Icon";
 import APIConnection from "../assets/data/APIConnection";
+import { ScrollView } from "react-navigation";
+import Settings from "../assets/icons/settings_fill.svg";
 
 const PRIMARY_COLOR = "#7444C0";
-const SECONDARY_COLOR = "#5636B8";
 const WHITE = "#FFFFFF";
-const GRAY = "#757E90";
-const DARK_GRAY = "#363636";
-const BLACK = "#000000";
-
-const ONLINE_STATUS = "#46A575";
-const OFFLINE_STATUS = "#D04949";
-
-const STAR_ACTIONS = "#FFA200";
-const LIKE_ACTIONS = "#2c9c91";
-const DISLIKE_ACTIONS = "#363636";
-const FLASH_ACTIONS = "#5028D7";
 
 const ICON_FONT = "tinderclone";
 
@@ -37,7 +28,7 @@ const DIMENSION_HEIGHT = Dimensions.get("window").height;
 class Profile extends React.Component {
   constructor(props) {
     super(props);
-    this.state = { API: new APIConnection(), profile: null };
+    this.state = { API: new APIConnection(), profile: null, isConnected: true };
   }
 
   async componentDidMount() {
@@ -45,7 +36,16 @@ class Profile extends React.Component {
       await AsyncStorage.getItem("storedEmail")
     );
     this.setState({ profile: user });
+    NetInfo.isConnected.addEventListener('connectionChange', this.handleConnectivityChange);
   }
+
+  async componentWillUnmount(){
+    NetInfo.isConnected.removeEventListener('connectionChange', this.handleConnectivityChange);
+  }
+
+  handleConnectivityChange = isConnected => {
+    this.setState({ isConnected });
+  };
 
   render() {
     const image = this.state.profile ? { uri: this.state.profile.image } : null;
@@ -53,41 +53,59 @@ class Profile extends React.Component {
     const age = this.state.profile ? this.state.profile.age : -1;
     const location = this.state.profile ? this.state.profile.uni : "";
     const gender = this.state.profile ? this.state.profile.gender : "";
-    const major = this.state.profile ? this.state.profile.major : "";
     const email = this.state.profile ? this.state.profile.email : "";
+    const keywords = this.state.profile ? this.state.profile.keywords : [];
+    const clubs = this.state.profile ? this.state.profile.clubs : [];
+    const courses = this.state.profile ? this.state.profile.courses : [];
+    const major = this.state.profile ? this.state.profile.major : [];
+
+    
+    if (!this.state.isConnected) {
+      this.props.navigation.navigate("Internet");
+    }
 
     return (
-      <View style={styles.headerBackground}>
-        <Image
-          source={require("../assets/images/Findr_logo2x.png")}
-          style={globalStyles.profileLogo}
-        />
-        <View style={styles.header}>
-          <View style={styles.profilepicWrap}>
-            <Image style={styles.profilepic} source={image} />
-          </View>
+      <ImageBackground
+      source={require("../assets/images/15.png")}
+      style={styles.bg}
+      >
+        <View style={styles.profileContainer}>
+          <ScrollView>
+            <View style={styles.profileLogoTop}>
+              <Image
+                source={require("../assets/images/Findr_logo2x.png")}
+                style={globalStyles.profileLogo}
+              />
+              <TouchableOpacity
+                style={styles.profileSettings}
+                onPress={() => this.props.navigation.navigate("Settings")}
+              >
+                <Settings width={DIMENSION_HEIGHT * 0.04} height={DIMENSION_HEIGHT * 0.04}/>
+              </TouchableOpacity>
+            </View>
+            <View style={styles.header}>
+              <View style={styles.profilepicWrap}>
+                <Image style={styles.profilepic} source={image} />
+              </View>
+            </View>
+            <View style={{paddingHorizontal: 10}}>
+              <View style={{marginTop: DIMENSION_HEIGHT * 0.21}}>
+                <ProfileItem
+                  name={name}
+                  age={age}
+                  uni={location}
+                  gender={gender == "M" ? "Male" : "Female"}
+                  email={email}
+                  keywords={keywords}
+                  clubs={clubs}
+                  courses={courses}
+                  major={major}
+                />
+              </View>
+            </View>
+          </ScrollView>
         </View>
-
-        <View>
-          <ProfileItem
-            name={name}
-            age={age}
-            location={location}
-            info1={gender == "M" ? "Male" : "Female"}
-            info2={major}
-            info3={email}
-          />
-        </View>
-
-        <View style={styles.actionsProfile}>
-          <TouchableOpacity style={styles.roundedButton}>
-            <Text style={styles.iconButton}>
-              <Icon name="optionsH" />
-            </Text>
-            <Text style={styles.textButton}> Update Profile</Text>
-          </TouchableOpacity>
-        </View>
-      </View>
+      </ImageBackground>
     );
   }
 }
@@ -104,25 +122,17 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: "center",
     justifyContent: "center",
-    padding: 20,
-    // backgroundColor: 'rgba(26, 93, 87, 0.15)',
+    marginTop: DIMENSION_HEIGHT * 0.02
   },
   profilepicWrap: {
-    width: 240,
-    height: 240,
-    borderRadius: 100,
-    borderColor: "rgba(26, 93, 87, 0.15)",
-    // borderWidth: 16,
-    marginBottom: 160,
-    elevation: 10,
+    width: 280,
+    height: 280,
   },
   profilepic: {
     flex: 1,
     width: null,
     alignSelf: "stretch",
-    borderRadius: 100,
-    borderColor: "#fff",
-    borderWidth: 4,
+    borderRadius: 700,
   },
   containerProfile: { marginHorizontal: 0 },
   photo: {
@@ -188,7 +198,25 @@ const styles = StyleSheet.create({
     fontWeight: "300",
     fontStyle: "italic",
   },
-  homeicon: {},
+  profileContainer: {
+    justifyContent: "space-between",
+    flex: 1,
+    // paddingHorizontal: 10,
+  },
+  profileLogoTop: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  profileSettings: {
+    marginLeft: DIMENSION_HEIGHT * 0.15,
+    marginTop: DIMENSION_HEIGHT * 0.01
+  },
+  bg: {
+    flex: 1,
+    resizeMode: "cover",
+    width: DIMENSION_WIDTH,
+    height: DIMENSION_HEIGHT,
+  }
 });
 
 export default Profile;

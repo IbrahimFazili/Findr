@@ -76,32 +76,6 @@ class Onboarding extends React.Component {
               this.setState({ idxActive: newIndex });
             }}
             ref={"swiper"}
-            // dot={
-            //   <View
-            //     style={{
-            //       backgroundColor: "rgba(0,0,0,.3)",
-            //       width: FULL_HEIGHT *0.012,
-            //       height: FULL_HEIGHT * 0.012,
-            //       borderRadius: FULL_HEIGHT * 0.012,
-            //       marginLeft: 7,
-            //       marginRight: 7,
-            //       marginBottom: FULL_HEIGHT * 0.15,
-            //     }}
-            //   />
-            // }
-            // activeDot={
-            //   <View
-            //     style={{
-            //       backgroundColor: "#FFF",
-            //       width: FULL_HEIGHT * 0.013,
-            //       height: FULL_HEIGHT * 0.013,
-            //       borderRadius: FULL_HEIGHT * 0.012,
-            //       marginRight: 7,
-            //       marginLeft: 7,
-            //       marginBottom: FULL_HEIGHT * 0.15,
-            //     }}
-            //   />
-            // }
             
             //Ignore the css styling for this, need not be relative. Only used to hide the dots in swiper.
             paginationStyle={{
