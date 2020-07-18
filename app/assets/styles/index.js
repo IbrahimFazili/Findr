@@ -355,7 +355,7 @@ export default StyleSheet.create({
     color: WHITE,
   },
   name: {
-    marginLeft: DIMENSION_WIDTH * 0.20,
+    marginLeft: DIMENSION_WIDTH * 0.10,
     paddingTop: 25,
     paddingBottom: 5,
     color: TEAL,
@@ -416,6 +416,7 @@ export default StyleSheet.create({
     height: 60,
     alignSelf: "center",
     marginTop: DIMENSION_HEIGHT * 0.06,
+    marginLeft: DIMENSION_WIDTH * 0.05
   },
   profileTitle: {
     fontSize: 15,
