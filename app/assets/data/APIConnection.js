@@ -9,85 +9,104 @@ const PORT = 80;
  */
 class APIConnection {
   // need to add credentials to log-in to the backend server
-  constructor(customEndpoint, customPort) {
-    this.ENDPOINT = customEndpoint ? customEndpoint : ENDPOINT;
-    this.PORT = customPort ? customPort : PORT;
+      constructor(customEndpoint, customPort) {
+        this.ENDPOINT = customEndpoint ? customEndpoint : ENDPOINT;
+        this.PORT = customPort ? customPort : PORT;
+    }
+
+/**
+ * Send a sign-up request to the API. If succesful, upload the profile picture (if provided) through the signed 
+ * PUT url recieved from the API upon successful sign-up
+ * @param {Object} data Form data obtained from the user on the signup page. Assumes that all fields are valid
+ */
+async requestSignUp(data) {
+  const response = (await fetch(this.ENDPOINT + ":" + String(this.PORT) + "/new-user", {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(data)
+  }));
+
+  return response;
   }
 
-  /**
-   * Send a sign-up request to the API. If succesful, upload the profile picture (if provided) through the signed
-   * PUT url recieved from the API upon successful sign-up
-   * @param {Object} data Form data obtained from the user on the signup page. Assumes that all fields are valid
-   */
-  async requestSignUp(data) {
-    const response = await fetch(
-      this.ENDPOINT + ':' + String(this.PORT) + '/new-user',
-      {
+  async updateUserInfo(data) {
+    const response = (await fetch(this.ENDPOINT + ":" + String(this.PORT) + "/updateUserInfo", {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(data),
-      }
-    );
+        body: JSON.stringify({ user: data })
+    }));
 
-    return response;
-  }
+    return response.status;
+}
 
-  uploadPicture(url, img) {
-    return new Promise(function (resolve, reject) {
+async updateKeywords(data) {
+    const response = (await fetch(this.ENDPOINT + ":" + String(this.PORT) + "/updateKeywords", {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ keywords: data.keywords, email: data.email })
+    }));
+
+    return response.status;
+}
+
+uploadPicture(url, img) {
+
+  return new Promise(function(resolve, reject) {
       const xhr = new XMLHttpRequest();
       xhr.open('PUT', url);
 
       xhr.onreadystatechange = () => {
-        if (xhr.readyState === 4) {
-          if (xhr.status === 200) resolve(true);
-          else reject(false);
-        }
+          if(xhr.readyState === 4) {
+              if(xhr.status === 200) resolve(true);
+              else reject(false);
+          }
       };
 
       xhr.send(img);
-    });
-  }
+  });
+}
 
-  /**
-   * Send log-in request to the API
-   * @param {{ email: String, password: String}} data log-in data to send to the server for verification
-   * @returns {{
-   *      success: Boolean,
-   *      user: Promise<{
-   *          name: String,
-   *          email: String,
-   *          gender: String,
-   *          uni: String,
-   *          major: String,
-   *          age: Number,
-   *          image: String,
-   *          password: String,
-   *          chats: Array<String>,
-   *          courses: Array<String>,
-   *          bio: String
-   *      }>
-   * }} An object containing the status of request and a promise which resolves to user profile if request was succesful
-   */
-  async logIn(data) {
-    let logInRes = await fetch(
-      this.ENDPOINT + ':' + String(this.PORT) + '/login',
-      {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(data),
-      }
-    );
+/**
+* Send log-in request to the API
+* @param {{ email: String, password: String}} data log-in data to send to the server for verification
+* @returns {{ 
+*      success: Boolean, 
+*      user: Promise<{
+*          name: String,
+*          email: String,
+*          gender: String,
+*          uni: String,
+*          major: String,
+*          age: Number,
+*          image: String,
+*          password: String,
+*          chats: Array<String>,
+*          keywords: Array<String>,
+*          bio: String
+*      }>
+* }} An object containing the status of request and a promise which resolves to user profile if request was succesful
+*/
+async logIn(data) {
+  let logInRes = (await (fetch(this.ENDPOINT + ":" + String(this.PORT) + "/login", {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(data)
+  })));
 
-    if (logInRes.status !== 200) {
+  if(logInRes.status !== 200) {
       return { success: false, user: null };
-    }
-    let user = await logInRes.json();
-    return { success: true, user };
   }
+  let user = await logInRes.json();
+  return { success: true, user };
+}
 
   /**
    * Request the API to send profile cards based on the email provided
