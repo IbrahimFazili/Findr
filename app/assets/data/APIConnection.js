@@ -188,7 +188,17 @@ class APIConnection {
           this.MESSAGE_QUEUES[msg.from] = new Queue();
           this.MESSAGE_QUEUES[msg.from].enqueue(msg);
         }
+
+        this.observers.forEach((observer) => observer.observer());
       });
+    }
+  }
+
+  static attachObserver(observer, uid) {
+    const existingIndex = this.observers.findIndex((value) => value.uid === uid);
+    if (existingIndex === -1) this.observers.push({ observer, uid });
+    else {
+      this.observers[existingIndex] = { observer, uid };
     }
   }
 }
@@ -207,6 +217,7 @@ class Queue {
 }
 
 APIConnection.MESSAGE_QUEUES = {}
+APIConnection.observers = [];
 APIConnection.socket = null;
 
 export default APIConnection;

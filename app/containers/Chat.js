@@ -37,7 +37,6 @@ export default class Chat extends Component {
   constructor(props) {
     super(props);
 
-    // this.socket = null;
     this.state = {
       own_email: props.navigation.state.params.own_email,
       messages: props.navigation.state.params.messages,
@@ -82,12 +81,15 @@ export default class Chat extends Component {
 
   //scroll to bottom when first showing the view
   componentDidMount() {
+    this._isMounted = true;
     setTimeout(
       function () {
         this.scrollView.scrollToEnd();
       }.bind(this)
     );
 
+    APIConnection.attachObserver(this.onNewMessage.bind(this), this.state.other_user_email);
+    this.onNewMessage();
   }
 
   //this is a bit sloppy: this is to make sure it scrolls to the bottom when a message is added, but
@@ -98,18 +100,22 @@ export default class Chat extends Component {
         this.scrollView.scrollToEnd();
       }.bind(this)
     );
+    this.onNewMessage();
+  }
 
-    if (APIConnection.MESSAGE_QUEUES[this.state.other_user_email]) {
-      const msgQueue = APIConnection.MESSAGE_QUEUES[this.state.other_user_email];
-      while (!msgQueue.isEmpty()) {
-        const msg = msgQueue.dequeue();
-        this.state.messages.push({
-          user: msg.from,
-          msg: msg.msg
-        });
-      }
-
-      this.setState({ messages: this.state.messages });
+  onNewMessage() {
+    const msgQueue = APIConnection.MESSAGE_QUEUES[this.state.other_user_email];
+    if (!msgQueue) return;
+    const newMessages = [];
+    while (!msgQueue.isEmpty()) {
+      const msg = msgQueue.dequeue();
+      newMessages.push({
+        user: msg.from,
+        msg: msg.msg
+      });
+    }
+    if (newMessages.length > 0) {
+      this.setState({ messages: this.state.messages.concat(newMessages) });
     }
   }
 
