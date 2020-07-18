@@ -168,6 +168,7 @@ class SignUp extends React.Component {
     if (signUpResponse.status === 201) {
       // signup successful, store email locally
       await AsyncStorage.setItem("storedEmail", data.email);
+      APIConnection._initSocketConnection();
       this.props.navigation.navigate("AppScreen");
     }
   }
