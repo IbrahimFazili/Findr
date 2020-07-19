@@ -788,7 +788,7 @@ export default StyleSheet.create({
     height: DIMENSION_HEIGHT,
   },
   slideOneTop: {
-    marginTop: DIMENSION_HEIGHT * 0.12,
+    // marginTop: DIMENSION_HEIGHT * 0.1,
     flexDirection: "column",
     alignItems: "center",
   },
@@ -887,7 +887,7 @@ export default StyleSheet.create({
     width: DIMENSION_HEIGHT * 0.18,
     height: DIMENSION_HEIGHT * 0.06,
     borderRadius: DIMENSION_HEIGHT * 0.048,
-    bottom: DIMENSION_HEIGHT * 0.1
+    bottom: DIMENSION_HEIGHT * 0.05,
   },
   OBnext2: {
     backgroundColor: "white",
