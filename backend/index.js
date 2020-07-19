@@ -17,7 +17,7 @@ const {
 	rightSwipe,
 	updateKeywords,
 	signUp
-} = require('./utils/handlers').functions;
+} = require('./utils/Handlers').functions;
 
 const callbackQueue = new CallbackQueue();
 const CONNECTIONS_CHUNK_SIZE = 25;
