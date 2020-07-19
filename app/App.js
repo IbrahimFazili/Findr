@@ -15,6 +15,9 @@ import ProfileScreen from "./containers/Profile";
 import PrivacyScreen from "./containers/Privacy";
 import OnboardingScreen from "./containers/Onboarding";
 import InternetScreen from "./containers/OfflinePop";
+import VerifiyScreen from "./containers/Verifiy";
+
+import SettingsScreen from "./containers/Settings";
 
 import HomeIcon_Grey from './assets/icons/home.svg';
 import HomeIcon_Green from './assets/icons/home_g.svg';
@@ -151,8 +154,17 @@ const RootStack = createStackNavigator(
     Onboarding: {
       screen: OnboardingScreen,
     },
+    Settings: {
+      screen: SettingsScreen
+    },
+    Profile: {
+      screen: ProfileScreen
+    },
     Internet:{
       screen: InternetScreen,
+    },
+    Verify: {
+      screen: VerifiyScreen
     },
   },
   { mode: 'modal', headerMode: 'none' }

@@ -8,10 +8,26 @@ const PORT = 80;
  * @param customPort (optional) Custom port number the object should point at. Defaults to 80
  */
 class APIConnection {
-  // need to add credentials to log-in to the backend server
   constructor(customEndpoint, customPort) {
     this.ENDPOINT = customEndpoint ? customEndpoint : ENDPOINT;
     this.PORT = customPort ? customPort : PORT;
+  }
+
+  /**
+   * Send a sign-up request to the API. If succesful, upload the profile picture (if provided) through the signed 
+   * PUT url recieved from the API upon successful sign-up
+   * @param {Object} data Form data obtained from the user on the signup page. Assumes that all fields are valid
+   */
+  async requestSignUp(data) {
+    const response = (await fetch(this.ENDPOINT + ":" + String(this.PORT) + "/new-user", {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(data)
+    }));
+
+    return response;
   }
 
   /**
@@ -34,16 +50,40 @@ class APIConnection {
     return response;
   }
 
+  async updateUserInfo(data) {
+    const response = (await fetch(this.ENDPOINT + ":" + String(this.PORT) + "/updateUserInfo", {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ user: data })
+    }));
+
+    return response.status;
+  }
+
+  async updateKeywords(data) {
+    const response = (await fetch(this.ENDPOINT + ":" + String(this.PORT) + "/updateKeywords", {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ keywords: data.keywords, email: data.email })
+    }));
+
+    return response.status;
+  }
+
   uploadPicture(url, img) {
-    return new Promise(function (resolve, reject) {
+    return new Promise(function(resolve, reject) {
       const xhr = new XMLHttpRequest();
       xhr.open('PUT', url);
 
       xhr.onreadystatechange = () => {
-        if (xhr.readyState === 4) {
-          if (xhr.status === 200) resolve(true);
-          else reject(false);
-        }
+          if(xhr.readyState === 4) {
+              if(xhr.status === 200) resolve(true);
+              else reject(false);
+          }
       };
 
       xhr.send(img);
@@ -58,19 +98,16 @@ class APIConnection {
    * }} An object containing the status of request and a promise which resolves to user profile if request was succesful
    */
   async logIn(data) {
-    let logInRes = await fetch(
-      this.ENDPOINT + ':' + String(this.PORT) + '/login',
-      {
+    let logInRes = (await (fetch(this.ENDPOINT + ":" + String(this.PORT) + "/login", {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(data),
-      }
-    );
+        body: JSON.stringify(data)
+    })));
 
-    if (logInRes.status !== 200) {
-      return { success: false, user: null };
+    if(logInRes.status !== 200) {
+        return { success: false, user: null };
     }
     let user = await logInRes.json();
     return { success: true, user };
