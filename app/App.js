@@ -5,19 +5,19 @@ import {
   createAppContainer,
   createStackNavigator,
 } from "react-navigation";
-import styles from "./assets/styles";
 import SignUpScreen from "./containers/SignUp";
 import LogInScreen from "./containers/LogIn";
 import HomeScreen from "./containers/Home";
 import MatchesScreen from "./containers/Matches";
 import MessagesScreen from "./containers/Messages";
+import Chat from "./containers/Chat";
 import ProfileScreen from "./containers/Profile";
-import Icon from "./components/Icon";
 import PrivacyScreen from "./containers/Privacy";
 import OnboardingScreen from "./containers/Onboarding";
 import InternetScreen from "./containers/OfflinePop";
 import VerifiyScreen from "./containers/Verifiy";
 
+import SettingsScreen from "./containers/Settings";
 
 import HomeIcon_Grey from './assets/icons/home.svg';
 import HomeIcon_Green from './assets/icons/home_g.svg';
@@ -73,7 +73,7 @@ const App = createBottomTabNavigator(
       screen: MessagesScreen,
       navigationOptions: {
         tabBarIcon: ({ focused }) => {
-          const iconFocused = focused ? "#2c9c91" : "#4a4949";
+          const iconFocused = focused ? '#2c9c91' : '#4a4949';
           return (
             <View
               style={{ paddingBottom: DIMENTIONS.height * 0.01 }}
@@ -90,7 +90,7 @@ const App = createBottomTabNavigator(
       screen: ProfileScreen,
       navigationOptions: {
         tabBarIcon: ({ focused }) => {
-          const iconFocused = focused ? "#2c9c91" : "#4a4949";
+          const iconFocused = focused ? '#2c9c91' : '#4a4949';
           return (
             <View
               style={{ paddingBottom: DIMENTIONS.height * 0.01 }}
@@ -106,21 +106,24 @@ const App = createBottomTabNavigator(
   },
   {
     tabBarOptions: {
-      activeTintColor: "#7444C0",
-      inactiveTintColor: "#363636",
+      activeTintColor: '#7444C0',
+      inactiveTintColor: '#363636',
       labelStyle: {
         paddingTop: 0,
         margin: 0,
         opacity: 0,
       },
       style: {
-        backgroundColor: "#FFF",
+        backgroundColor: '#FFF',
         borderTopWidth: 0,
         paddingVertical: 20,
-        height: Platform.OS === 'ios' ? Dimensions.get("window").height * 0.04 : Dimensions.get('window').height * 0.065,
+        height:
+          Platform.OS === 'ios'
+            ? Dimensions.get('window').height * 0.04
+            : Dimensions.get('window').height * 0.065,
         shadowOpacity: 0.3,
         shadowRadius: 10,
-        shadowColor: "#000",
+        shadowColor: '#000',
         shadowOffset: { height: 0, width: 0 },
         elevation: 25,
       },
@@ -139,11 +142,23 @@ const RootStack = createStackNavigator(
     LogIn: {
       screen: LogInScreen,
     },
+    Messages: {
+      screen: MessagesScreen,
+    },
+    ChatPage: {
+      screen: Chat,
+    },
     Privacy :{
       screen: PrivacyScreen,
     },
     Onboarding: {
       screen: OnboardingScreen,
+    },
+    Settings: {
+      screen: SettingsScreen
+    },
+    Profile: {
+      screen: ProfileScreen
     },
     Internet:{
       screen: InternetScreen,
@@ -152,7 +167,7 @@ const RootStack = createStackNavigator(
       screen: VerifiyScreen
     },
   },
-  { mode: "modal", headerMode: "none" }
+  { mode: 'modal', headerMode: 'none' }
 );
 
 // () => this.props.navigation.navigate('SignUp') on Home if signup/login needed

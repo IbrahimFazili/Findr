@@ -82,11 +82,11 @@ function insertUser(profile) {
     });
 }
 
-function fetchUsers(params) {
+function fetchUsers(query, options={}) {
 
     return new Promise(function (resolve, reject) {
         getCollection(COLLECTION_USERS).then((collection) => {
-            collection.find(params).toArray(function (err, result) {
+            collection.find(query, options).toArray(function (err, result) {
                 if (err) { reject(err); }
 
                 resolve(result);
