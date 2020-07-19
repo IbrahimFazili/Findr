@@ -11,6 +11,8 @@ import Pen from '../assets/icons/pen.svg';
 import Check from '../assets/icons/check.svg';
 import Tag from './Tag';
 import TagEducation from "./TagEducation"
+import TagCourses from "./TagCourses"
+import TagClubs from "./TagClubs"
 import Plus from "../assets/icons/Plus.svg";
 import Minus from "../assets/icons/minus_green.svg";
 
@@ -45,8 +47,8 @@ class ProfileItem extends React.Component{
 			uni: props.uni,
 			major: props.major,
 			gender: props.gender,
-			clubs: "",
-			courses: "",
+			clubs: [],
+			courses: [],
 			keywords: [],
 
 			nameLabel: "Name",
@@ -81,7 +83,6 @@ class ProfileItem extends React.Component{
 
         this.setState({allExp: newExp})
 	}
-	
 	onProjectTextChange = (text, index) => {
         const existingProjects = this.state.allProjects.map(fields => ({...fields}))
         let targetField = {...existingProjects[index]}
@@ -126,6 +127,13 @@ class ProfileItem extends React.Component{
 			}
 			updatedState.keywords = props.keywords;
 		}
+		if (props.clubs !== this.state.clubs) {
+			updatedState.clubs = props.clubs;
+		}
+
+		if (props.courses !== this.state.courses) {
+			updatedState.courses = props.courses;
+		}
 
 		if (Object.keys(updatedState).length > 0) {
 			this.setState(updatedState);
@@ -143,19 +151,24 @@ class ProfileItem extends React.Component{
 		const data = {
 			email: await AsyncStorage.getItem("storedEmail"),
 		};
-		if(this.state.name.length !== 0 && this.state.name === this.props.name){
+		if(this.state.name.length !== 0){
 			data.name = this.state.name
+		}
+		if(this.state.keywords.length !== 0){
+			data.keywords = this.state.keywords
 		}
 		if(this.state.gender.length !== 0 && this.state.gender === this.props.gender){
 			data.gender = this.state.gender[0].toUpperCase()
 		}
 		if(Object.keys(data).length > 1){
-			const update = await API.updateUserInfo(data);
+			var update = await API.updateUserInfo(data);
+			if (data.keywords) update = await API.updateKeywords(data);
 			if (update == 500) {
 				console.log("Server Error");
 			}
 			if (update == 201) {
 				this.setState({
+					keywords: this.state.keywords,
 					name: this.state.name, 
 					gender: this.state.gender[0].toUpperCase() + this.state.gender.substring(1,this.state.gender.length)
 				})
@@ -173,25 +186,45 @@ class ProfileItem extends React.Component{
 		const data = {
 			email: await AsyncStorage.getItem("storedEmail"),
 		}
+
 		if(this.state.major.length !== 0){
 			data.major = this.state.major
+		}
+
+		data.clubs = this.state.clubs
+		data.courses = this.state.courses
+
+		const update = await API.updateUserInfo(data);
+		if (update == 500) {
+			console.log("Server Error");
+		}
+		if(update == 201) {
+			this.setState({major: this.state.major, clubs: this.state.clubs})
+		}
+	}
+
+	handleEditClick3 = async() => {
+		this.setState({isEditable3: true});
+		// this.addProjectInput()
+	}
+
+	handleUpdateClick3 = async() => {
+		this.setState({isEditable3: false});
+		const API = new APIConnection();
+		const data = {
+			email: await AsyncStorage.getItem("storedEmail"),
+		}
+
+		if(this.state.allProjects.length !== 0){
+			data.projects = this.state.allProjects.map(fields => ({...fields}['value'])) //projects
 		}
 		const update = await API.updateUserInfo(data);
 		if (update == 500) {
 			console.log("Server Error");
 		}
 		if(update == 201) {
-			this.setState({major: this.state.major})
+			this.setState({allProjects: this.state.allProjects}) //projects
 		}
-	}
-
-	handleEditClick3 = () => {
-		this.setState({isEditable3: true});
-		// this.addProjectInput()
-	}
-
-	handleUpdateClick3 = () => {
-		this.setState({isEditable3: false});
 	}
 
 	handleEditClick4 = () => {
@@ -199,8 +232,23 @@ class ProfileItem extends React.Component{
 		// this.addExpInput()
 	}
 
-	handleUpdateClick4 = () => {
+	handleUpdateClick4 = async() => {
 		this.setState({isEditable4: false});
+		const API = new APIConnection();
+		const data = {
+			email: await AsyncStorage.getItem("storedEmail"),
+		}
+
+		if(this.state.allExp.length !== 0){
+			data.experience = this.state.allExp.map(fields => ({...fields}['value'])) //experience
+		}
+		const update = await API.updateUserInfo(data);
+		if (update == 500) {
+			console.log("Server Error");
+		}
+		if(update == 201) {
+			this.setState({allExp: this.state.allExp}) //experience
+		}
 	}
 
 	handleNameChange(text) {
@@ -235,12 +283,35 @@ class ProfileItem extends React.Component{
 		this.setState({ isMajorValid: false, major: text });
 	}
 
-	handleKeywordChange(text){
-		this.setState({keywords: [...this.state.keywords, text]})
+	handleKeywordChange(tag, arrayTag){
+		if (tag.length > 0){
+		this.setState({keywords: arrayTag.concat([tag])})
+		}
+		else{
+			this.setState({keywords: arrayTag})
+		}
+	}
+
+	handleClubChange(tag, clubArray){
+		if (tag.length > 0){
+			this.setState({clubs: clubArray.concat([tag])})
+			}
+		else{
+			this.setState({clubs: clubArray})
+		}
+	}
+
+	handleCourseChange(tag, courseArray){
+		if (tag.length > 0){
+			this.setState({courses: courseArray.concat([tag])})
+		}
+		else{
+			this.setState({courses: courseArray})
+		}
 	}
 
 	render() {
-		console.log(this.state.isEditable3)
+		console.log(this.state.clubs)
 		return (
 		<View>
 		<View style={styles.containerProfileItem}>
@@ -262,14 +333,14 @@ class ProfileItem extends React.Component{
 				}
 				{this.state.isEditable1 
 				? (
-					<View style={{right: FULL_WIDTH * - 0.04}}>
+					<View style={{right: FULL_WIDTH * -0.03}}>
 						<TouchableOpacity style={styles.profileButtons} onPress={this.handleUpdateClick1.bind(this)}>
 							<Check width={20} height={20}/>
 							</TouchableOpacity>
 					</View>
 					) 
 				: (
-					<View style={{right: FULL_WIDTH * 0.1}}>
+					<View style={{right: FULL_WIDTH * 0.05}}>
 						<TouchableOpacity style={styles.profileButtons} onPress={this.handleEditClick1.bind(this)}>
 							<Pen width={20} height={20}/>
 							</TouchableOpacity>
@@ -285,32 +356,17 @@ class ProfileItem extends React.Component{
 				<Text style={styles.infoContent}>{this.state.gender}</Text>
 			</View>
 
-			<View style={styles.info}>
+			<View style={styles.info2}>
 				<Text style={styles.profileTitle}>Email: </Text>
 				<Text style={styles.infoContent}>{this.props.email}</Text>
 			</View>
 
-			<View style={styles.info}>
+			<View style={styles.info3}>
 				<Text style={styles.profileTitle}>Keywords: </Text>
-				{/* {this.state.isEditable1
-				? (<TextInput
-					underlineColor="transparent"
-					mode={"flat"}
-					// value={this.state.major}
-					label='Keywords'
-					placeholder="Enter your keywords"
-					onFocus={() => this.setState({ keywordsLabel: "" })}
-					onBlur={() => this.setState({ keywordsLabel: this.state.keywords.length === 0 ? "Keyword" : "" })}
-					onChangeText={this.handleKeywordChange.bind(this)}
-					theme={theme}
-					style={textBoxStyle}
-					/>)
-				: 
-				(<Text style={styles.infoContent}>{this.state.keywords.join(", ")}</Text>)
-				} */}
 				<Tag 
 					keywords={this.state.keywords} editable={this.state.isEditable1}
 					type="keyword"
+					wordChange={this.handleKeywordChange.bind(this)}
 				/>
 			</View>
 		</View>
@@ -324,7 +380,7 @@ class ProfileItem extends React.Component{
 				}
 			</View>
 			<View style={styles.info}>
-				<Text style={styles.profileTitle}>Major: </Text>
+				<Text style={styles.profileTitle2}>Major: </Text>
 				{this.state.isEditable2
 				? (<TextInput
 					underlineColor="transparent"
@@ -336,20 +392,22 @@ class ProfileItem extends React.Component{
 					onBlur={() => this.setState({ majorLabel: this.state.major.length === 0 ? "Major" : "" })}
 					onChangeText={this.handleMajorChange.bind(this)}
 					theme={theme}
-					style={textBoxStyle}
+					style={styles.textB}
 					/>)
 				: (<Text style={styles.infoContent}>{this.state.major}</Text>)
 				}
 			</View>
 
-			<View style={styles.info}>
+			<View style={styles.info3}>
 				<Text style={styles.profileTitle}>Courses: </Text>
-				<TagEducation keywords={[]} editable={this.state.isEditable2} type="course"/>
+				<TagCourses keywords={this.state.courses} editable={this.state.isEditable2} 
+			    courseChange={this.handleCourseChange.bind(this)} type="course"/>
 			</View>
 
-			<View style={styles.info}>
+			<View style={styles.info3}>
 				<Text style={styles.profileTitle}>Clubs: </Text>
-				<TagEducation keywords={[]} editable={this.state.isEditable2} type="club"/>
+				<TagClubs keywords={this.state.clubs} editable={this.state.isEditable2} type="club"
+				clubChange={this.handleClubChange.bind(this)}/>
 			</View>
 		</View>
 
@@ -442,7 +500,6 @@ class ProfileItem extends React.Component{
 						 <Minus width={10} height={10}/>
 					 </TouchableOpacity>
 					 : null}
-					 
 				</View>
 				)
 

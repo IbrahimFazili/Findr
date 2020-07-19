@@ -9,13 +9,13 @@ import TagInput from 'react-native-tags-input';
 
 const mainColor = '#3ca897';
 
-class Tag extends React.Component {
+class TagEducation extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       tags: {
         tag: '',
-        tagsArray: props.keywords
+        tagsArray: []
       },
       edit: this.props.editable,
       keywords: props.keywords,
@@ -31,16 +31,16 @@ class Tag extends React.Component {
       this.state.tags.tagsArray = props.keywords
     }
     if (props.type !== this.state.type){
-      this.state.type = props.type
-    }  
+        this.state.type = props.type
+      }
   }
 
   updateTagState = (state) => {
       this.setState({
         tags: state
       })
-      let {wordChange} = this.props;
-      wordChange(this.state.tags.tag , this.state.tags.tagsArray)
+      let {clubChange} = this.props;
+      clubChange(this.state.tags.tag , this.state.tags.tagsArray)
     };
 
   render() {
@@ -65,15 +65,15 @@ class Tag extends React.Component {
     );
   }
 }
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    fontSize: 20
   },
   textInput: {
-      height: 20,
+      height: 30,
       backgroundColor: 'white',
   },
   tag: {
@@ -84,4 +84,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default Tag; 
+export default TagEducation; 

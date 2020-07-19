@@ -1,7 +1,7 @@
 import React from 'react';
-import { View, AsyncStorage, AppRegistry, Image, Text, Dimensions, NetInfo } from 'react-native';
+import { View, AsyncStorage, Image, Dimensions, NetInfo } from 'react-native';
 import styles from '../assets/styles';
-import { DefaultTheme, Provider as PaperProvider, TextInput, RadioButton, Dialog, Button } from 'react-native-paper';
+import { DefaultTheme, Provider as PaperProvider, TextInput, Button } from 'react-native-paper';
 import APIConnection from '../assets/data/APIConnection';
 
 const DIMENSION = Dimensions.get('window')
@@ -96,7 +96,6 @@ class LogIn extends React.Component {
       return;
     }
 
-    
     const API = new APIConnection();
     const data = {
       email: this.state.email,
