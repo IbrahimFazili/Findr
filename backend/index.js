@@ -312,6 +312,8 @@ app.post("/updateUserInfo", (req, res) => {
 		return;
 	}
 
+	if (user.keywords) delete user.keywords;
+
 	const projection = { password: 1 };
 	DB.fetchUsers({ email: user.email }, { projection }).then(async (users) => {
 
