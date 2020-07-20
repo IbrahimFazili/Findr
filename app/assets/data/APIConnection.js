@@ -14,23 +14,6 @@ class APIConnection {
   }
 
   /**
-   * Send a sign-up request to the API. If succesful, upload the profile picture (if provided) through the signed 
-   * PUT url recieved from the API upon successful sign-up
-   * @param {Object} data Form data obtained from the user on the signup page. Assumes that all fields are valid
-   */
-  async requestSignUp(data) {
-    const response = (await fetch(this.ENDPOINT + ":" + String(this.PORT) + "/new-user", {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(data)
-    }));
-
-    return response;
-  }
-
-  /**
    * Send a sign-up request to the API. If succesful, upload the profile picture (if provided) through the signed
    * PUT url recieved from the API upon successful sign-up
    * @param {Object} data Form data obtained from the user on the signup page. Assumes that all fields are valid
