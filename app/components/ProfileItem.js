@@ -10,6 +10,7 @@ import APIConnection from "../assets/data/APIConnection";
 import Pen from '../assets/icons/pen.svg';
 import Check from '../assets/icons/check.svg';
 import Tag from './Tag';
+import TagEducation from "./TagEducation"
 import TagCourses from "./TagCourses"
 import TagClubs from "./TagClubs"
 import Plus from "../assets/icons/Plus.svg";
@@ -82,7 +83,6 @@ class ProfileItem extends React.Component{
 
         this.setState({allExp: newExp})
 	}
-
 	onProjectTextChange = (text, index) => {
         const existingProjects = this.state.allProjects.map(fields => ({...fields}))
         let targetField = {...existingProjects[index]}
@@ -500,7 +500,6 @@ class ProfileItem extends React.Component{
 						 <Minus width={10} height={10}/>
 					 </TouchableOpacity>
 					 : null}
-
 				</View>
 				)
 
