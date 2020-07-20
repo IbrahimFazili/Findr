@@ -9,136 +9,19 @@ const AWS_Presigner = require("./utils/AWSPresigner");
 const { bindSocketListeners, Chat } = require("./utils/Chat");
 const matcher = new (require("./utils/Matcher").Matcher)();
 const { EventQueue } = require('./utils/Events');
-const sendEmail = require("./utils/emailer").sendEmail;
 const { CallbackQueue } = require("./utils/DataStructures");
+const { 
+	blockUser, 
+	deleteUser,
+	leftSwipe,
+	rightSwipe,
+	updateKeywords,
+	signUp
+} = require('./utils/Handlers').functions;
 
 const callbackQueue = new CallbackQueue();
 const CONNECTIONS_CHUNK_SIZE = 25;
 var isServerOutdated = false;
-
-function validatePassword(password) {
-    const regex = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])[0-9a-zA-Z]{6,}$/;
-    return regex.test(password);
-}
-
-function generateRandomNumber() {
-	var randomNumber = "";
-	var i = 0;
-	for (i = 0; i < 8; i++){
-		randomDigit = Math.floor(Math.random() * 10);
-		randomNumber = randomNumber + randomDigit;
-	}
-	return randomNumber;
-}
-
-function signUp(requestData, res, oncomplete){
-	DB.insertUser(requestData)
-		.then(async (result) => {
-			if (process.env.NODE_ENV !== "test") {
-				sendEmail(requestData.email, requestData.verificationHash);
-			}
-
-			await matcher.generateGraph(requestData.email);
-			process.env.NODE_ENV === "test" ? res.status(201).send(requestData.verificationHash)
-			: res.status(201).send("success");
-			oncomplete();
-		})
-		.catch((err) => {
-			// unsuccessful insert, reply back with unsuccess response code
-			console.log(err);
-			res.status(500).send("Insert Failed");
-			oncomplete();
-		});
-}
-
-function updateKeywords(email, keywords, res, oncomplete){
-	// TODO: don't fetch irrelevant fields
-	DB.fetchUsers({ email }).then((users) => {
-		const oldKeywords = users[0].keywords;
-
-		DB.updateUser({ keywords }, { email })
-			.then((updateRes) => {
-				matcher.updateGraph(email, oldKeywords).then((value) => {
-					value ? res.status(201).send("success") : res.status(500).send("Server Error");
-					oncomplete();
-				}).catch((err) => {
-					console.log(err);
-					res.status(500).send("Server Error");
-					oncomplete();
-				})
-			})
-			.catch((err) => {
-				console.log(err);
-				res.status(500).send("Database Update Error");
-				oncomplete();
-			});
-	}).catch((err) => {
-		console.log(err);
-		res.status(500).send("Database Fetch Error");
-		oncomplete();
-	})
-}
-
-async function rightSwipe(srcUser, targetUser, res, oncomplete) {
-	try {
-		const swipeResult = await matcher.handleRightSwipe(srcUser, targetUser);
-		if (swipeResult.success) res.status(201).send({ isMatch: swipeResult.isMatch });
-		else res.status(500).send("Right Swipe Failed");
-
-		oncomplete();
-
-	} catch (error) {
-		console.log(error);
-		res.status(500).send("Server Error");
-		oncomplete();
-	}
-	
-}
-
-async function leftSwipe(srcUser, targetUser, res, oncomplete) {
-	try {
-		const success = await matcher.handleLeftSwipe(srcUser, targetUser);
-		if (success) res.status(201).end();
-		else res.status(500).send("Left Swipe Failed");
-
-		oncomplete();
-
-	} catch (error) {
-		console.log(error);
-		res.status(500).send("Server Error");
-		oncomplete();
-	}
-	
-}
-
-async function deleteUser(email, res, oncomplete) {
-	try {
-		const success = await matcher.deleteUser(email);
-		if (success) res.status(201).end();
-		else res.status(500).send("Delete User Failed");
-		oncomplete();
-
-	} catch (eror) {
-		console.log(error);
-		res.status(500).send("Server Error");
-		oncomplete();
-	}
-
-}
-
-async function blockUser(srcUser, targetUser, res, oncomplete) {
-	try {
-		const success = await matcher.blockUser(srcUser, targetUser);
-		if (success) res.status(201).end();
-		else res.status(500).send("block user failed");
-
-		oncomplete();
-	} catch (error) {
-		console.log(error);
-		res.status(500).send("Server error");
-		oncomplete();
-	}
-}
 
 app.use(bodyParser.json());
 
@@ -150,7 +33,7 @@ app.get("/", (req, res) => {
 	}
 });
 
-app.get("/fetchUsers", (req, res) => {
+app.get("/user/:user_email", async (req, res) => {
 	const projection = process.env.NODE_ENV !== "test" ? {
 		_id: 0,
 		password: 0,
@@ -160,7 +43,39 @@ app.get("/fetchUsers", (req, res) => {
 		eventQueue: 0,
 		verificationHash: 0
 	} : {};
-	DB.fetchUsers({ email: req.query.email }, { projection })
+
+	try {
+		const users = await DB.fetchUsers({ email: req.params.user_email }, { projection });
+		if (users.length === 0) {
+			res.status(404).send("user not found");
+			return;
+		}
+
+		const user = users[0];
+		if (process.env.NODE_ENV !== "test") {
+			user.image = await AWS_Presigner.generateSignedGetUrl(
+				"user_images/" + user.email
+			);
+		}
+
+		res.status(200).send(user);
+	} catch (error) {
+		console.log(error);
+		res.status(500).send("Database Fetch Error");
+	}
+});
+
+app.post("/fetchUsers", (req, res) => {
+	const projection = process.env.NODE_ENV !== "test" ? {
+		_id: 0,
+		password: 0,
+		chats: 0,
+		blueConnections: 0,
+		greenConnections: 0,
+		eventQueue: 0,
+		verificationHash: 0
+	} : {};
+	DB.fetchUsers({ email: { $in: req.body.emails } }, { projection })
 		.then(async function (result) {
 			if (process.env.NODE_ENV !== "test") {
 				for (var i = 0; i < result.length; i++) {
@@ -179,8 +94,8 @@ app.get("/fetchUsers", (req, res) => {
 		});
 });
 
-app.get("/fetchMatches", (req, res) => {
-	matcher.getMatches(req.query.email)
+app.get("/user/:user_email/matches", (req, res) => {
+	matcher.getMatches(req.params.user_email)
 		.then((matches) => {
 			const projection = {
 				_id: 0,
@@ -216,7 +131,7 @@ app.get("/fetchMatches", (req, res) => {
 		});
 });
 
-app.get("/fetchConnections", (req, res) => {
+app.get("/user/:user_email/connections", (req, res) => {
 	var projection = {
 		_id: 0,
 		password: 0,
@@ -226,7 +141,7 @@ app.get("/fetchConnections", (req, res) => {
 		eventQueue: 0,
 		verificationHash: 0
 	};
-	DB.fetchUsers({ email: req.query.email }, { projection })
+	DB.fetchUsers({ email: req.params.user_email }, { projection })
 		.then((result) => {
 			
 			if (result.length === 0) {
@@ -312,10 +227,10 @@ app.get("/fetchChatData", (req, res) => {
 		});
 });
 
-app.get('/fetchChats', (req, res) => {
+app.get('/user/:user_email/chats', (req, res) => {
 	var projection = { chats: 1, email: 1 };
 
-	DB.fetchUsers({ email: req.query.email }, { projection })
+	DB.fetchUsers({ email: req.params.user_email }, { projection })
 	  .then(async (users) => {
 		const user = users[0];
 		let chat_emails = [];
@@ -354,9 +269,9 @@ app.get('/fetchChats', (req, res) => {
 	  });
 });
 
-app.get("/fetchChatMedia", async (req, res) => {
+app.get("/chat_media/:mediaName", async (req, res) => {
 	try {
-		const downUrl = await AWS_Presigner.generateSignedGetUrl("chat_media/" + req.query.name, 30);
+		const downUrl = await AWS_Presigner.generateSignedGetUrl("chat_media/" + req.params.mediaName, 30);
 		res.status(200).send(downUrl);
 	} catch (error) {
 		console.log(error);
@@ -364,9 +279,9 @@ app.get("/fetchChatMedia", async (req, res) => {
 	}
 });
 
-app.get("/fetchNotifications", (req, res) => {
+app.get("/user/:user_email/notifications", (req, res) => {
 	const projection = { eventQueue: 1 };
-	DB.fetchUsers({ email: req.query.email }, { projection })
+	DB.fetchUsers({ email: req.params.user_email }, { projection })
 		.then(async (users) => {
 			const user = users[0];
 			const userEventQueue = new EventQueue(user.eventQueue.events);
@@ -396,6 +311,8 @@ app.post("/updateUserInfo", (req, res) => {
 		res.status(400).send("missing user email");
 		return;
 	}
+
+	if (user.keywords) delete user.keywords;
 
 	const projection = { password: 1 };
 	DB.fetchUsers({ email: user.email }, { projection }).then(async (users) => {
@@ -466,7 +383,7 @@ app.get("/updateProfilePicture", async (req, res) => {
 	res.status(200).send(url);
 });
 
-app.post("/new-user", (req, res) => {
+app.post("/signup", (req, res) => {
 	if (process.env.NODE_ENV === "test") {
 		for (let i = 0; i < req.body.keywords.length; i++) {
 			req.body.keywords[i] = req.body.keywords[i].toLowerCase();
@@ -565,6 +482,21 @@ app.post("/update", (req, res) => {
 	res.status(200);
 	res.end();
 });
+
+function validatePassword(password) {
+    const regex = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])[0-9a-zA-Z]{6,}$/;
+    return regex.test(password);
+}
+
+function generateRandomNumber() {
+	var randomNumber = "";
+	var i = 0;
+	for (i = 0; i < 8; i++){
+		randomDigit = Math.floor(Math.random() * 10);
+		randomNumber = randomNumber + randomDigit;
+	}
+	return randomNumber;
+}
 
 /* Socket Listeners for chat */
 bindSocketListeners(io);

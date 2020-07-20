@@ -8,27 +8,29 @@ const PORT = 80;
  * @param customPort (optional) Custom port number the object should point at. Defaults to 80
  */
 class APIConnection {
-  // need to add credentials to log-in to the backend server
-      constructor(customEndpoint, customPort) {
-        this.ENDPOINT = customEndpoint ? customEndpoint : ENDPOINT;
-        this.PORT = customPort ? customPort : PORT;
-    }
+  constructor(customEndpoint, customPort) {
+    this.ENDPOINT = customEndpoint ? customEndpoint : ENDPOINT;
+    this.PORT = customPort ? customPort : PORT;
+  }
 
-/**
- * Send a sign-up request to the API. If succesful, upload the profile picture (if provided) through the signed 
- * PUT url recieved from the API upon successful sign-up
- * @param {Object} data Form data obtained from the user on the signup page. Assumes that all fields are valid
- */
-async requestSignUp(data) {
-  const response = (await fetch(this.ENDPOINT + ":" + String(this.PORT) + "/new-user", {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(data)
-  }));
+  /**
+   * Send a sign-up request to the API. If succesful, upload the profile picture (if provided) through the signed
+   * PUT url recieved from the API upon successful sign-up
+   * @param {Object} data Form data obtained from the user on the signup page. Assumes that all fields are valid
+   */
+  async requestSignUp(data) {
+    const response = await fetch(
+      this.ENDPOINT + ':' + String(this.PORT) + '/signup',
+      {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(data),
+      }
+    );
 
-  return response;
+    return response;
   }
 
   async updateUserInfo(data) {
@@ -41,9 +43,9 @@ async requestSignUp(data) {
     }));
 
     return response.status;
-}
+  }
 
-async updateKeywords(data) {
+  async updateKeywords(data) {
     const response = (await fetch(this.ENDPOINT + ":" + String(this.PORT) + "/updateKeywords", {
         method: 'POST',
         headers: {
@@ -53,11 +55,10 @@ async updateKeywords(data) {
     }));
 
     return response.status;
-}
+  }
 
-uploadPicture(url, img) {
-
-  return new Promise(function(resolve, reject) {
+  uploadPicture(url, img) {
+    return new Promise(function(resolve, reject) {
       const xhr = new XMLHttpRequest();
       xhr.open('PUT', url);
 
@@ -69,44 +70,31 @@ uploadPicture(url, img) {
       };
 
       xhr.send(img);
-  });
-}
-
-/**
-* Send log-in request to the API
-* @param {{ email: String, password: String}} data log-in data to send to the server for verification
-* @returns {{ 
-*      success: Boolean, 
-*      user: Promise<{
-*          name: String,
-*          email: String,
-*          gender: String,
-*          uni: String,
-*          major: String,
-*          age: Number,
-*          image: String,
-*          password: String,
-*          chats: Array<String>,
-*          keywords: Array<String>,
-*          bio: String
-*      }>
-* }} An object containing the status of request and a promise which resolves to user profile if request was succesful
-*/
-async logIn(data) {
-  let logInRes = (await (fetch(this.ENDPOINT + ":" + String(this.PORT) + "/login", {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(data)
-  })));
-
-  if(logInRes.status !== 200) {
-      return { success: false, user: null };
+    });
   }
-  let user = await logInRes.json();
-  return { success: true, user };
-}
+
+  /**
+   * Send log-in request to the API
+   * @param {{ email: String, password: String}} data log-in data to send to the server for verification
+   * @returns {{ success: Boolean, user: Promise<{ name: String, email: String, gender: String, uni: String,
+   * age: Number, image: String, password: String, chats: Array<String>, courses: Array<String>, bio: String }>
+   * }} An object containing the status of request and a promise which resolves to user profile if request was succesful
+   */
+  async logIn(data) {
+    let logInRes = (await (fetch(this.ENDPOINT + ":" + String(this.PORT) + "/login", {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(data)
+    })));
+
+    if(logInRes.status !== 200) {
+        return { success: false, user: null };
+    }
+    let user = await logInRes.json();
+    return { success: true, user };
+  }
 
   /**
    * Request the API to send profile cards based on the email provided
@@ -117,11 +105,7 @@ async logIn(data) {
    * List of profile cards
    */
   async fetchMatches(email) {
-    return await (
-      await fetch(
-        this.ENDPOINT + ':' + String(this.PORT) + '/fetchMatches?email=' + email
-      )
-    ).json();
+    return (await fetch(`${this.ENDPOINT}:${this.PORT}/user/${email}/matches`)).json();
   }
 
   /**
@@ -133,14 +117,8 @@ async logIn(data) {
    * List of profile cards
    */
   async fetchConnections(email) {
-    return await (
-      await fetch(
-        this.ENDPOINT +
-          ':' +
-          String(this.PORT) +
-          '/fetchConnections?email=' +
-          email
-      )
+    return (
+      await fetch(`${this.ENDPOINT}:${this.PORT}/user/${email}/connections`)
     ).json();
   }
 
@@ -154,9 +132,7 @@ async logIn(data) {
    */
   async fetchUser(email) {
     let users = await (
-      await fetch(
-        this.ENDPOINT + ':' + String(this.PORT) + '/fetchUsers?email=' + email
-      )
+      await fetch(`${this.ENDPOINT}:${this.PORT}/user/${email}`)
     ).json();
 
     return users[0];
@@ -164,23 +140,13 @@ async logIn(data) {
 
   async fetchChats(email) {
     return (
-      await fetch(
-        this.ENDPOINT + ':' + String(this.PORT) + '/fetchChats?email=' + email
-      )
+      await fetch(`${this.ENDPOINT}:${this.PORT}/user/${email}/chats`)
     ).json();
   }
 
   async fetchChatData(from, to) {
     return (
-      await fetch(
-        this.ENDPOINT +
-          ':' +
-          String(this.PORT) +
-          '/fetchChatData?from=' +
-          from +
-          '&to=' +
-          to
-      )
+      await fetch(`${this.ENDPOINT}:${this.PORT}/fetchChatData?from=${from}&to=${to}`)
     ).json();
   }
 
