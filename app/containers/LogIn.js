@@ -96,7 +96,6 @@ class LogIn extends React.Component {
       return;
     }
 
-    
     const API = new APIConnection();
     const data = {
       email: this.state.email,
