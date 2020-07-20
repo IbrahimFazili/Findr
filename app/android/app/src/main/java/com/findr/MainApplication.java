@@ -7,7 +7,6 @@ import com.reactnativecommunity.netinfo.NetInfoPackage;
 import com.horcrux.svg.SvgPackage;
 import com.cmcewen.blurview.BlurViewPackage;
 import com.imagepicker.ImagePickerPackage;
-import com.cmcewen.blurview.BlurViewPackage;
 import com.oblador.vectoricons.VectorIconsPackage;
 import com.BV.LinearGradient.LinearGradientPackage;
 import com.swmansion.gesturehandler.react.RNGestureHandlerPackage;
@@ -15,7 +14,6 @@ import com.facebook.react.ReactNativeHost;
 import com.facebook.react.ReactPackage;
 import com.facebook.react.shell.MainReactPackage;
 import com.facebook.soloader.SoLoader;
-import com.reactnativecommunity.netinfo.NetInfoPackage;
 
 
 import java.util.Arrays;
@@ -33,10 +31,8 @@ public class MainApplication extends Application implements ReactApplication {
     protected List<ReactPackage> getPackages() {
       return Arrays.<ReactPackage>asList(
           new MainReactPackage(),
-            new NetInfoPackage(),
             new SvgPackage(),
             new ImagePickerPackage(),
-            new BlurViewPackage(),
             new BlurViewPackage(),
             new VectorIconsPackage(),
             new LinearGradientPackage(),
