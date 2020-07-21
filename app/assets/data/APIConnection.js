@@ -60,10 +60,11 @@ class APIConnection {
     return response.status;
   }
 
-  uploadPicture(url, img) {
+  static uploadPicture(url, img) {
     return new Promise(function(resolve, reject) {
       const xhr = new XMLHttpRequest();
       xhr.open('PUT', url);
+      xhr.setRequestHeader('Content-Type', img.type);
 
       xhr.onreadystatechange = () => {
           if(xhr.readyState === 4) {
@@ -72,7 +73,7 @@ class APIConnection {
           }
       };
 
-      xhr.send(img);
+      xhr.send({ uri: img.uri, type: img.type });
     });
   }
 
@@ -176,6 +177,15 @@ class APIConnection {
 
         this.observers.forEach((observer) => observer.observer());
       });
+
+      this.socket.on("upload urls", (urls) => {
+        const keys = Object.keys(urls);
+        keys.forEach(async (key) => {
+          await this.uploadPicture(urls[key], this.mediaStore[key]);
+        });
+
+        keys.forEach((key) => delete this.mediaStore[key]);
+      });
     }
   }
 
@@ -204,5 +214,6 @@ class Queue {
 APIConnection.MESSAGE_QUEUES = {}
 APIConnection.observers = [];
 APIConnection.socket = null;
+APIConnection.mediaStore = {};
 
 export default APIConnection;
