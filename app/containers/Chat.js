@@ -21,10 +21,15 @@ import APIConnection from "../assets/data/APIConnection";
 import AttachIcon from "../assets/icons/attach.svg";
 import SendIcon from "../assets/icons/send_icon.svg";
 import BackButton from "../assets/icons/back_black.svg";
+import InfoIcon from "../assets/icons/in.svg";
+
+import ChatPopup from "../components/ChatPopup";
 
 const DIMENSION_WIDTH = Dimensions.get("window").width;
 const DIMENSION_HEIGHT = Dimensions.get("window").height;
 const ICON_FONT = "tinderclone";
+const WHITE = "#FFFFFF";
+const BLACK = "#000000";
 
 const renderCustomHeader = () => {
 	return (
@@ -47,6 +52,7 @@ export default class Chat extends Component {
 			other_user: props.navigation.state.params.user_name,
 			other_user_image: props.navigation.state.params.user_image,
 			other_user_email: props.navigation.state.params.user_email,
+			showPopup: false,
 		};
 	}
 
@@ -217,18 +223,10 @@ export default class Chat extends Component {
 							return (
 								<View>
 									<TouchableOpacity
-										onPress={async () =>
-											this.props.navigation.navigate(
-												"OtherProfile",
-												{
-													other_user_name: this.state
-														.other_user,
-													email: this.state
-														.other_user_email,
-													image: this.state
-														.other_user_image,
-												}
-											)
+										onPress={() =>
+											this.setState({
+												showPopup: true,
+											})
 										}
 									>
 										<SendIcon
@@ -236,6 +234,12 @@ export default class Chat extends Component {
 											height={DIMENSION_HEIGHT * 0.09}
 										/>
 									</TouchableOpacity>
+									<ChatPopup
+										visible={this.state.showPopup}
+										email={this.state.other_user_email}
+										navigation={this.props.navigation}
+										own_email={this.state.own_email}
+									/>
 								</View>
 							);
 						}}

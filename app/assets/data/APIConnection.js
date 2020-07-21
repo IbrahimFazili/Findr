@@ -50,6 +50,18 @@ class APIConnection {
 		});
 	}
 
+	async blockUser(user, other_user) {
+		await fetch(
+			this.ENDPOINT +
+				":" +
+				String(this.PORT) +
+				"/blockUser?src=" +
+				user +
+				"&target=" +
+				other_user
+		);
+	}
+
 	/**
 	 * Send log-in request to the API
 	 * @param {{ email: String, password: String}} data log-in data to send to the server for verification

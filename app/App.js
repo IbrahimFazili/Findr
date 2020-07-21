@@ -16,6 +16,7 @@ import PrivacyScreen from "./containers/Privacy";
 import OnboardingScreen from "./containers/Onboarding";
 import InternetScreen from "./containers/OfflinePop";
 import OtherProfileScreen from "./containers/OtherProfile";
+import ChatPopUpScreen from "./components/ChatPopup";
 
 import HomeIcon_Grey from "./assets/icons/home.svg";
 import HomeIcon_Green from "./assets/icons/home_g.svg";
@@ -190,6 +191,9 @@ const RootStack = createStackNavigator(
 		OtherProfile: {
 			screen: OtherProfileScreen,
 		},
+		ChatPopup: {
+			screen:ChatPopUpScreen
+		}
 	},
 	{ mode: "modal", headerMode: "none" }
 );
