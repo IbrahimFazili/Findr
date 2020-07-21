@@ -2,7 +2,8 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/.idea/Findr.iml" filepath="$PROJECT_DIR$/.idea/Findr.iml" />
+      <module fileurl="file://$PROJECT_DIR$/Findr.iml" filepath="$PROJECT_DIR$/Findr.iml" />
+      <module fileurl="file://$PROJECT_DIR$/app/android/app/src/debug/debug.iml" filepath="$PROJECT_DIR$/app/android/app/src/debug/debug.iml" />
     </modules>
   </component>
-</project>
+</project> 

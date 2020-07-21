@@ -1,7 +1,7 @@
 import React from 'react';
 import { View, AsyncStorage, Image, Dimensions, ScrollView, NetInfo, Text } from 'react-native';
 import styles from '../assets/styles';
-import { DefaultTheme, TextInput, Button, Menu, Provider } from 'react-native-paper';
+import { DefaultTheme, TextInput, Button } from 'react-native-paper';
 import DatePicker from 'react-native-datepicker';
 import Swiper from 'react-native-swiper'
 import APIConnection from '../assets/data/APIConnection';
@@ -171,8 +171,7 @@ class SignUp extends React.Component {
     const signUpResponse = await API.requestSignUp(data);
     if (signUpResponse.status === 201) {
       // signup successful, store email locally and upload profile picture (if provided)
-    await AsyncStorage.setItem("storedEmail", data.email);
-
+      await AsyncStorage.setItem("storedEmail", data.email);
       this.props.navigation.navigate("Privacy");
     }
   }

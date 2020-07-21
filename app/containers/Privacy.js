@@ -1,5 +1,5 @@
 import React from 'react';
-import { Text, View, AsyncStorage, Image, Dimensions, ScrollView, NetInfo } from 'react-native';
+import { Text, View, Image, ScrollView, NetInfo } from 'react-native';
 import styles from '../assets/styles';
 import Unorderedlist from 'react-native-unordered-list';
 import {Button} from 'react-native-paper';
@@ -271,7 +271,7 @@ class Privacy extends React.Component{
                              to review the changes.{'\n'}</Text>
                     </ScrollView>
                 </View>
-                <Button mode="contained" style={styles.acceptButton}>
+                <Button mode="contained" style={styles.acceptButton} onPress={()=> this.props.navigation.navigate('Verify')}>
                     Accept
                 </Button>
             </View>

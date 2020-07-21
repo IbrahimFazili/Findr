@@ -1,7 +1,6 @@
 import React, { PureComponent } from 'react';
 import { View, Text, Dimensions, StyleSheet, NetInfo, Image, ImageBackground} from 'react-native';
 import styles from "../assets/styles/index";
-// import NetInfo from "@react-native-community/netinfo";
 import Wifi_Icon from '../assets/icons/wifi.svg';
 
 function MiniOfflineSign() {

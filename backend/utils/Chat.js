@@ -1,6 +1,6 @@
 const AWS_Presigner = require("./AWSPresigner");
 const DB = require('./DatabaseManager');
-const { EventQueue, Event, MESSAGE_EVENT } = require('./Events');
+const { EventQueue, Event, MESSAGE_EVENT, BLOCK_EVENT } = require('./Events');
 
 class Message {
 	constructor(user, msg, timestamp, media) {
@@ -10,7 +10,7 @@ class Message {
 		this.media = media;
 	}
 
-	async generateMediaTokens () {
+	async generateMediaTokens() {
 		var date = new Date();
 		var token = "";
 		var mediaToken = []
@@ -32,10 +32,18 @@ class Message {
 }
 
 class Chat {
+	/**
+	 * @param {String} user1 E-mail for one of the users participating in the chat session
+	 * @param {String} user2 E-mail for the other user participating in the chat session
+	 * @param {Boolean} active Whether this chat is active or not. It may not be active if one 
+	 * 						   user blocks the other user
+	 * @param {Array<Message>} messages List of messages in this chat
+	 * Initialize the chat between user1 and user2
+	 */
 	constructor(user1, user2) {
 		this.user1 = user1;
 		this.user2 = user2;
-
+		this.active = true;
 		this.user1_public_key = null;
 		this.user2_public_key = null;
 		this.messages = [];
@@ -48,17 +56,36 @@ class Chat {
 		return chat;
 	}
 
-	newMessage(user, msg, timestamp, public_key=null) {
-		this.messages.push(new Message(user, msg, timestamp));
-		if (public_key === null) return;
+	newMessage(user, msg, timestamp, media, public_key=null) {
+		const newMsg = new Message(user, msg, timestamp, media);
+		this.messages.push(newMsg);
+		if (public_key === null) return newMsg.generateMediaTokens();
 
 		if (this.user === this.user1 && this.user1_public_key !== null) this.user1_public_key = public_key;
 		else if (this.user2_public_key !== null) this.user2_public_key = public_key;
+
+		return newMsg.generateMediaTokens();
+	}
+
+	async disableChat(blockedEmail) {
+		this.active = false;
+		try {
+			const blockedUser = (await DB.fetchUsers({ email: blockedEmail }))[0];
+			blockedUser.eventQueue = new EventQueue(blockedUser.eventQueue.events);
+			const srcEmail = (blockedUser === this.user1) ? this.user2 : this.user1;
+			blockedUser.eventQueue.enqueue(
+				new Event(BLOCK_EVENT, {email : srcEmail})
+			);
+	
+			return true;
+		} catch (fetchErr) {
+			console.log(fetchErr);
+			return false;
+		}
 	}
 }
 
 /* Socket Listeners for chat */
-
 function bindSocketListeners(io) {
 	io.on("connection", (socket) => {
 		socket
@@ -79,14 +106,19 @@ function bindSocketListeners(io) {
 						chat = await findChat(user, msg.to);
 
 						if (chat !== null) {
-							chat.newMessage(msg.from, msg.content, msg.time, msg.public_key);
+							const chat_id = chat._id;
+							chat = chat.chat;
+							const mediaUploadUrls = await chat.newMessage(msg.from, msg.msg, msg.time, msg.media, msg.public_key);
+
+							msg.media = chat.messages[chat.messages.length - 1].media;
 							if (msg.public_key) delete msg.public_key;
 							msgHandled = true;
 
 							try {
 								await DB.updateChat(chat, {
-									_id: user.chats[i],
+									_id: chat_id,
 								});
+								socket.emit("upload urls", mediaUploadUrls);
 
 								if (receiverIsReachable) {
 									socket.to(msg.to).emit("new msg", msg);
@@ -97,8 +129,9 @@ function bindSocketListeners(io) {
 										receiver.eventQueue = new EventQueue(receiver.eventQueue.events);
 										receiver.eventQueue.enqueue(new Event(MESSAGE_EVENT, {
 											from: msg.from,
-											content: msg.content,
-											time: msg.time
+											content: msg.msg,
+											time: msg.time,
+											media: msg.media
 										}));
 
 										DB.updateUser({ eventQueue: receiver.eventQueue }, { email: msg.to });
@@ -155,12 +188,20 @@ function bindSocketListeners(io) {
 				});
 		});
 
+		socket.on("delete media", (mediaArray) => {
+			for (var i = 0; i < mediaArray.length; i++){
+				const path = "chat_media/" + mediaArray[i];
+				AWS_Presigner.deleteMedia(path);
+			}
+		});
+
 	});
 }
 
-function initNewChat(socket, user, msg, receiverIsReachable) {
+async function initNewChat(socket, user, msg, receiverIsReachable) {
 	const chat = new Chat(msg.from, msg.to);
-	chat.newMessage(msg.from, msg.content, msg.time, msg.public_key);
+	const mediaUploadUrls = await chat.newMessage(msg.from, msg.msg, msg.time, msg.media, msg.public_key);
+	msg.media = chat.messages[chat.messages.length - 1].media;
 
 	DB.insertChat({ chat })
 		.then((result) => {
@@ -168,7 +209,7 @@ function initNewChat(socket, user, msg, receiverIsReachable) {
 			user.chats.push(result.ops[0]._id);
 			DB.updateUser({ chats: user.chats }, { email: user.email })
 				.then((value) => {
-					// socket.to(msg.to).emit("new msg", msg);
+					socket.emit("upload urls", mediaUploadUrls);
 				})
 				.catch((reason) => {
 					socket.emit("send failed");
@@ -192,8 +233,9 @@ function initNewChat(socket, user, msg, receiverIsReachable) {
 									receiver.eventQueue = new EventQueue(receiver.eventQueue.events);
 									receiver.eventQueue.enqueue(new Event(MESSAGE_EVENT, {
 										from: msg.from,
-										content: msg.content,
-										time: msg.time
+										msg: msg.msg,
+										time: msg.time,
+										media: msg.media
 									}));
 
 									DB.updateUser({ eventQueue: receiver.eventQueue }, { email: msg.to });
@@ -219,10 +261,14 @@ function initNewChat(socket, user, msg, receiverIsReachable) {
 async function findChat(user, target) {
 	for (let i = 0; i < user.chats.length; i++) {
 		try {
-			const chat = (await DB.fetchChat(user.chats[i]))[0].chat;
+			const DBchat = (await DB.fetchChat(user.chats[i]))[0];
+			const chat = {
+				chat: DBchat.chat,
+				_id: DBchat._id
+			}
 
-			if (chat.user1 === target || chat.user2 === target) {
-				chat = Chat.parseJSON(chat);
+			if (chat.chat.user1 === target || chat.chat.user2 === target) {
+				chat.chat = Chat.parseJSON(chat.chat);
 				return chat;
 			}
 		} catch (error) {
@@ -231,9 +277,9 @@ async function findChat(user, target) {
 		}
 		
 	}
-
 	return null;
 }
+
 
 module.exports.Chat = Chat;
 module.exports.bindSocketListeners = bindSocketListeners;

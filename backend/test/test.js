@@ -21,7 +21,7 @@ describe("Test Cases", () => {
         process.env.NODE_ENV = "test";
         var insertCount = 0;
         for (var i = 0; i < TestData.length; i++) {
-            chai.request(SERVER_URL).post("/new-user")
+            chai.request(SERVER_URL).post("/signup")
             .set('content-type', 'application/json')
             .send(TestData[i])
             .end(function(err, res) {            
@@ -59,10 +59,10 @@ describe("Test Cases", () => {
                 res.should.have.status(400);
                 
                 chai.request(SERVER_URL)
-                .get(`/fetchUsers?email=${TEST_USER.email}`)
+                .get(`/user/${TEST_USER.email}`)
                 .end(function (err, res) {
                     res.should.have.status(200);
-                    chai.expect(res.body[0].name).to.be.equal(TEST_USER.name);
+                    chai.expect(res.body.name).to.be.equal(TEST_USER.name);
                     done();
                 });
             });
@@ -84,11 +84,11 @@ describe("Test Cases", () => {
                 res.should.have.status(201);
                 
                 chai.request(SERVER_URL)
-                .get(`/fetchUsers?email=${TEST_USER.email}`)
+                .get(`/user/${TEST_USER.email}`)
                 .end(function (err, res) {
                     res.should.have.status(200);
-                    chai.expect(res.body[0].name).to.be.equal(NEW_NAME);
-                    chai.expect(res.body[0].uni).to.be.equal(NEW_UNI);
+                    chai.expect(res.body.name).to.be.equal(NEW_NAME);
+                    chai.expect(res.body.uni).to.be.equal(NEW_UNI);
                     done();
                 });
             });
@@ -110,10 +110,10 @@ describe("Test Cases", () => {
                 res.should.have.status(406);
                 
                 chai.request(SERVER_URL)
-                .get(`/fetchUsers?email=${TEST_USER.email}`)
+                .get(`/user/${TEST_USER.email}`)
                 .end(function (err, res) {
                     res.should.have.status(200);
-                    chai.expect(bcrypt.compareSync(TEST_USER.password, res.body[0].password)).to.be.equal(true);
+                    chai.expect(bcrypt.compareSync(TEST_USER.password, res.body.password)).to.be.equal(true);
                     done();
                 });
             });
@@ -135,10 +135,10 @@ describe("Test Cases", () => {
                 res.should.have.status(406);
                 
                 chai.request(SERVER_URL)
-                .get(`/fetchUsers?email=${TEST_USER.email}`)
+                .get(`/user/${TEST_USER.email}`)
                 .end(function (err, res) {
                     res.should.have.status(200);
-                    chai.expect(bcrypt.compareSync(TEST_USER.password, res.body[0].password)).to.be.equal(true);
+                    chai.expect(bcrypt.compareSync(TEST_USER.password, res.body.password)).to.be.equal(true);
                     done();
                 });
             });
@@ -160,10 +160,10 @@ describe("Test Cases", () => {
                 res.should.have.status(201);
                 
                 chai.request(SERVER_URL)
-                .get(`/fetchUsers?email=${TEST_USER.email}`)
+                .get(`/user/${TEST_USER.email}`)
                 .end(function (err, res) {
                     res.should.have.status(200);
-                    chai.expect(bcrypt.compareSync(NEW_PASSWORD, res.body[0].password)).to.be.equal(true);
+                    chai.expect(bcrypt.compareSync(NEW_PASSWORD, res.body.password)).to.be.equal(true);
                     done();
                 });
             });
@@ -276,7 +276,7 @@ describe("Test Cases", () => {
             DB.deleteAllUsers().then((value) => {
                 var insertCount = 0;
                 for (var i = 0; i < TestData.length; i++) {
-                    chai.request(SERVER_URL).post("/new-user")
+                    chai.request(SERVER_URL).post("/signup")
                     .set('content-type', 'application/json')
                     .send(TestData[i])
                     .end(function(err, res) {            
@@ -641,7 +641,7 @@ describe("Test Cases", () => {
             DB.deleteAllUsers().then((value) => {
                 var insertCount = 0;
                 for (var i = 0; i < TestData.length; i++) {
-                    chai.request(SERVER_URL).post("/new-user")
+                    chai.request(SERVER_URL).post("/signup")
                     .set('content-type', 'application/json')
                     .send(TestData[i])
                     .end(function(err, res) {            
@@ -734,10 +734,53 @@ describe("Test Cases", () => {
         
     }); 
     
-    /*
-    describe("Update keyword", function() {
+    describe("Block user tests", function () {
+        before((done) => {
+            DB.deleteAllUsers().then((value) => {
+                var insertCount = 0;
+                for (var i = 0; i < TestData.length; i++) {
+                    chai.request(SERVER_URL).post("/signup")
+                    .set('content-type', 'application/json')
+                    .send(TestData[i])
+                    .end(function(err, res) {            
+                        res.should.have.status(201);
+                        insertCount++;
+                        if (insertCount === TestData.length) {
+                            done();
+                        }
+                    });
+                }
+            }).catch((err) => {
+                console.log(err);
+                done();
+            }); 
+        });
 
-    }*/
+        it("Block blue connection", (done) => {
+
+            chai.request(SERVER_URL)
+            .get(`/blockUser?src=${TestData[1].email}&target=${TestData[0].email}`)
+            .end(async (err, res) => {
+                res.should.have.status(201);
+
+                const leonard = (await DB.fetchUsers({ email: TestData[1].email }))[0];
+                const sheldon = (await DB.fetchUsers({ email: TestData[0].email }))[0];
+
+                var ids = [];
+                for (let i = 0; i < leonard.blueConnections.length; i++) ids.push(leonard.blueConnections[i]._id);
+
+                chai.expect(ids).to.not.include(sheldon._id);
+
+                ids = [];
+                for (let i = 0; i < sheldon.blueConnections.length; i++) ids.push(sheldon.blueConnections[i]._id);
+
+                chai.expect(ids).to.not.include(leonard._id);
+
+                done();
+            });
+        });
+
+    });
 
 
     after((done) => {
