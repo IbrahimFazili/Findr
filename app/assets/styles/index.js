@@ -92,6 +92,7 @@ export default StyleSheet.create({
     height: 60,
     alignSelf: "center",
     marginTop: DIMENSION_HEIGHT * 0.06,
+    marginLeft: DIMENSION_WIDTH * 0.03,
   },
 
   seeAllicon: {
@@ -106,7 +107,6 @@ export default StyleSheet.create({
     paddingBottom: 10,
     fontSize: 20,
     color: "#1a5d57",
-    // fontWeight: "bold",
     letterSpacing: 1,
   },
 
@@ -563,8 +563,9 @@ export default StyleSheet.create({
   },
   title: {
     paddingBottom: 10,
+    marginTop: DIMENSION_HEIGHT * 0.02,
     fontSize: 22,
-    color: DARK_GRAY,
+    color: "#1a5d57",
   },
   icon: {
     fontFamily: ICON_FONT,
@@ -591,6 +592,7 @@ export default StyleSheet.create({
     height: 60,
     alignSelf: "center",
     marginTop: DIMENSION_HEIGHT * 0.06,
+    marginLeft: DIMENSION_WIDTH * 0.03,
   },
 
   top: {

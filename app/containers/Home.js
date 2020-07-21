@@ -1,10 +1,10 @@
 import React from "react";
-import { View, ImageBackground, AsyncStorage, Image, NetInfo } from "react-native";
+import { View, ImageBackground, AsyncStorage, Image, NetInfo, TouchableOpacity } from "react-native";
 import CardStack, { Card } from "react-native-card-stack-swiper";
-import Filters from "../components/Filters";
 import CardItem from "../components/CardItem";
 import styles from "../assets/styles";
 import APIConnection from "../assets/data/APIConnection";
+import ProfilePopup from "../components/ProfilePopup";
 
 const MAX_LENGTH = 150;
 
@@ -15,7 +15,12 @@ class Home extends React.Component {
 
     this.state = {
       cards: [],
+      visible: false,
       API: new APIConnection(),
+      keywords: [],
+      name: "",
+      bio: "",
+      uni: "",
       dataLoadRequired: true,
       isConnected: true,
     };
@@ -95,6 +100,15 @@ class Home extends React.Component {
             >
               {this.state.cards.map((item, index) => (
                 <Card key={index}>
+                  <TouchableOpacity 
+                    activeOpacity={1} 
+                    onPress={() => this.setState({
+                      visible: true,
+                      name: item.name,
+                      keywords: item.keywords, 
+                      bio: item.bio,
+                      uni: item.uni
+                  })}>
                   <CardItem
                     image={{ uri: item.image }}
                     name={item.name}
@@ -108,13 +122,18 @@ class Home extends React.Component {
                     onPressRight={() => this.swiper.swipeRight()}
                     onPressLeft={() => this.swiper.swipeLeft()}
                   />
+                  </TouchableOpacity>
                 </Card>
               ))}
             </CardStack>
           </View>
-          <View style={styles.filterStyle}>
-            <Filters />
-          </View>
+          <ProfilePopup 
+            visible={this.state.visible} 
+            name={this.state.name}
+            keywords={this.state.keywords}
+            bio={this.state.bio}
+            uni={this.state.uni}
+          />
         </View>
       </ImageBackground>
     );

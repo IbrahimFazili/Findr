@@ -186,7 +186,6 @@ class ProfileItem extends React.Component{
 		const data = {
 			email: await AsyncStorage.getItem("storedEmail"),
 		}
-
 		if(this.state.major.length !== 0){
 			data.major = this.state.major
 		}
@@ -214,7 +213,6 @@ class ProfileItem extends React.Component{
 		const data = {
 			email: await AsyncStorage.getItem("storedEmail"),
 		}
-
 		if(this.state.allProjects.length !== 0){
 			data.projects = this.state.allProjects.map(fields => ({...fields}['value'])) //projects
 		}
@@ -238,7 +236,6 @@ class ProfileItem extends React.Component{
 		const data = {
 			email: await AsyncStorage.getItem("storedEmail"),
 		}
-
 		if(this.state.allExp.length !== 0){
 			data.experience = this.state.allExp.map(fields => ({...fields}['value'])) //experience
 		}
