@@ -171,11 +171,9 @@ class SignUp extends React.Component {
     const signUpResponse = await API.requestSignUp(data);
     if (signUpResponse.status === 201) {
       // signup successful, store email locally and upload profile picture (if provided)
-      const responseData = await signUpResponse.json();
+    await AsyncStorage.setItem("storedEmail", data.email);
 
-      API.uploadPicture(responseData.signedPutUrl, null); // need to replace null with the image
-      await AsyncStorage.setItem("storedEmail", data.email);
-      this.props.navigation.navigate("AppScreen");
+      this.props.navigation.navigate("Privacy");
     }
   }
 
@@ -183,7 +181,6 @@ class SignUp extends React.Component {
         if (!this.state.isConnected) {
           this.props.navigation.navigate("Internet");
         }
-        console.log(this.state)
         return (
             <View style={{backgroundColor: "#164e48", width: "100%", height: "100%", padding: '3%' }}>
                 <Image style={styles.logo} source={require('../assets/images/Findr_white2x.png')}/>
@@ -324,7 +321,7 @@ class SignUp extends React.Component {
                           || this.state.password.length >= 6 ? null : 
                           <View style={{ paddingRight:DIMENTIONS.width * 0.2}}>
                           <Text style ={styles.errorPassword}>Passwords must be greater than 5 characters, 
-                          and include a number</Text>
+                          include a number and a capital letter</Text>
                           </View>} 
 
                         <TextInput
@@ -347,7 +344,7 @@ class SignUp extends React.Component {
                         
                         <Button mode="contained" style={styles.signupbutt}
                         onPress={()=> 
-                          this.props.navigation.navigate("Privacy")
+                          this.handleSubmit()
                         }
                         >Sign Up</Button>
                         

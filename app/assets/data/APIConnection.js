@@ -22,7 +22,7 @@ class APIConnection {
      * @param {Object} data Form data obtained from the user on the signup page. Assumes that all fields are valid
      */
     async requestSignUp(data) {
-        const response = (await fetch(this.ENDPOINT + ":" + String(this.PORT) + "/new-user", {
+        const response = (await fetch(this.ENDPOINT + ":" + String(this.PORT) + "/signup", {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',
