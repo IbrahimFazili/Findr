@@ -340,7 +340,7 @@ class ProfileItem extends React.Component{
 					</View>
 					) 
 				: (
-					<View style={{right: FULL_WIDTH * 0.05}}>
+					<View style={{right: FULL_WIDTH * 0.17}}>
 						<TouchableOpacity style={styles.profileButtons} onPress={this.handleEditClick1.bind(this)}>
 							<Pen width={20} height={20}/>
 							</TouchableOpacity>

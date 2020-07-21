@@ -96,7 +96,7 @@ class Profile extends React.Component {
 
 						<View style={{ paddingHorizontal: 10 }}>
 							<View
-								style={{ marginTop: DIMENSION_HEIGHT * 0.21 }}
+								style={{ marginTop: DIMENSION_HEIGHT * 0.02 }}
 							>
 								<ProfileItem
 									name={name}
