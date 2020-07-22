@@ -1,3 +1,6 @@
+import io from 'socket.io-client';
+import { AsyncStorage } from 'react-native';
+
 const ENDPOINT = 'http://api.findrapp.ca'; // goes to localhost from avd
 const PORT = 80;
 
@@ -157,6 +160,49 @@ class APIConnection {
   loadData(email) {
     return this.fetchConnections(email);
   }
+
+  static async initSocketConnection() {
+    const user_email = await AsyncStorage.getItem('storedEmail');
+    if (user_email) {
+      this.socket = io(ENDPOINT + ":" + PORT, { query: "name=" + user_email });
+      this.socket.on("new msg", (msg) => {
+        if (this.MESSAGE_QUEUES[msg.from]) {
+          this.MESSAGE_QUEUES[msg.from].enqueue(msg);
+        }
+        else {
+          this.MESSAGE_QUEUES[msg.from] = new Queue();
+          this.MESSAGE_QUEUES[msg.from].enqueue(msg);
+        }
+
+        this.observers.forEach((observer) => observer.observer());
+      });
+    }
+  }
+
+  static attachObserver(observer, uid) {
+    const existingIndex = this.observers.findIndex((value) => value.uid === uid);
+    if (existingIndex === -1) this.observers.push({ observer, uid });
+    else {
+      this.observers[existingIndex] = { observer, uid };
+    }
+  }
 }
+
+class Queue {
+  constructor() {
+    this._elements = [];
+  }
+
+  getSize() { return this._elements.length; }
+  isEmpty() { return this._elements.length === 0; }
+  enqueue(item) { this._elements.push(item); }
+  dequeue() { return !this.isEmpty() ? this._elements.shift() : null; }
+  peekNewest() { return !this.isEmpty() ? this._elements[this._elements.length - 1] : null; }
+  peekOldest() { return !this.isEmpty() ? this._elements[0] : null; }
+}
+
+APIConnection.MESSAGE_QUEUES = {}
+APIConnection.observers = [];
+APIConnection.socket = null;
 
 export default APIConnection;

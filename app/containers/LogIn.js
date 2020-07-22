@@ -106,6 +106,7 @@ class LogIn extends React.Component {
     if (logInAttempt.success) {
       // store email
       await AsyncStorage.setItem("storedEmail", logInAttempt.user.email);
+      APIConnection.initSocketConnection();
       this.props.navigation.navigate("AppScreen");
     } else {
       // let user know they fucked up
