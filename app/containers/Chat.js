@@ -97,6 +97,7 @@ export default class Chat extends Component {
 			this.state.messages.push({
 				user: msg.from,
 				msg: msg.msg,
+				media: msg.media,
 			});
 		});
 	}
@@ -172,7 +173,7 @@ export default class Chat extends Component {
 				messages.push(
 					<ImageBubble
 						key={index}
-						image={message.media}
+						image={message.media[0]}
 						direction={
 							message.user === own_email ? "left" : "right"
 						}
