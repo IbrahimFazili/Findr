@@ -14,7 +14,7 @@ import {
 } from "react-native";
 import CardItem from "../components/CardItem";
 import APIConnection from "../assets/data/APIConnection";
-import ProfilePopup from "../components/ProfilePopup";
+
 // import {BlurView} from '@react-native-community/blur';
 
 const thumnailStyle = {
@@ -113,13 +113,10 @@ class Matches extends React.Component {
               renderItem={({ item }) => (
                 <TouchableOpacity 
                   activeOpacity={1} 
-                  onPress={() => this.setState({
-                    visible: true,
-                    name: item.name,
-                    keywords: item.keywords, 
-                    bio: item.bio,
-                    uni: item.uni
-                })}>
+                  onPress={() => this.props.navigation.navigate("OtherProfile", {
+                    email: item.email,
+                  })}
+                >
                   <CardItem
                     image={{ uri: item.image }}
                     name={item.name}
@@ -130,15 +127,6 @@ class Matches extends React.Component {
               )}
             />
           </ScrollView>
-          
-          <ProfilePopup 
-            visible={this.state.visible} 
-            name={this.state.name}
-            keywords={this.state.keywords}
-            bio={this.state.bio}
-            uni={this.state.uni}
-          />
-          
         </View>
       </ImageBackground>
     );
