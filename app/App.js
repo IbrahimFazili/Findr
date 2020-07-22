@@ -1,5 +1,5 @@
 import React from "react";
-import { Text, Dimensions, Platform, View } from "react-native";
+import { Dimensions, Platform, View } from "react-native";
 import {
 	createBottomTabNavigator,
 	createAppContainer,
@@ -30,7 +30,9 @@ import PersonIcon_Green from "./assets/icons/person_g.svg";
 import ChatIcon_Grey from "./assets/icons/chat.svg";
 import ChatIcon_Green from "./assets/icons/chat_g.svg";
 
-const DIMENTIONS = Dimensions.get("window");
+import APIConnection from './assets/data/APIConnection';
+
+const DIMENTIONS = Dimensions.get('window');
 
 const ICON_WIDTH = DIMENTIONS.width * 0.05;
 const ICON_HEIGHT = DIMENTIONS.height * 0.03;
@@ -210,6 +212,6 @@ const RootStack = createStackNavigator(
 	{ mode: "modal", headerMode: "none" }
 );
 
-// () => this.props.navigation.navigate('SignUp') on Home if signup/login needed
+APIConnection.initSocketConnection();
 
 export default createAppContainer(RootStack);
