@@ -36,6 +36,18 @@ class APIConnection {
     return response;
   }
 
+  async deleteUser(data) {
+	const response = (await fetch(this.ENDPOINT + ":" + String(this.PORT) + "/deleteUser", {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({email: data.email, password: data.pass})
+    }));
+
+    return response.status;
+  }
+
   async updateUserInfo(data) {
     const response = (await fetch(this.ENDPOINT + ":" + String(this.PORT) + "/updateUserInfo", {
         method: 'POST',

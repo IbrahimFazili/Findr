@@ -5,6 +5,7 @@ import SettingsList from 'react-native-settings-list';
 import styles from "../assets/styles";
 import {Button} from "react-native-paper"
 import BackButton from "../assets/icons/back_black.svg";
+import APIConnection from "../assets/data/APIConnection";
 
 const DIMENTIONS = Dimensions.get('window');
 
@@ -15,6 +16,8 @@ class Settings extends React.Component{
     constructor(){
         super();
         this.state = {switchValue: false};
+        const API = new APIConnection();
+        visible: false;
       }
       render() {
         var bgColor = '#DCE3F4';
@@ -35,7 +38,7 @@ class Settings extends React.Component{
               <View style={{backgroundColor:'#EFEFF4',flex:1}}>
                 <SettingsList borderColor='#c8c7cc' defaultItemSize={50}>
 
-                  <SettingsList.Header headerStyle={{marginTop:15}}
+                  <SettingsList.Header headerStyle={{marginTop:15}} 
                   headerText="Contact Us"/>
                   <SettingsList.Item
                     title='Help and Support'
@@ -78,7 +81,11 @@ class Settings extends React.Component{
 
                   <SettingsList.Item
                     title='Logout'
-                    onPress={() => {}}
+                    onPress={(() => {
+                      AsyncStorage.removeItem('storedEmail');
+                      this.props.navigation.navigate("LogIn")
+                    }).bind(this)
+                  }
                     hasNavArrow={false}
                     titleStyle={styles.LogoutSettings}
                   />
@@ -90,16 +97,16 @@ class Settings extends React.Component{
               <View style={styles.deleteAccountButton}>
                 <SettingsList borderColor='#c8c7cc' defaultItemSize={50}>
                     <SettingsList.Item 
-                    title="Delete Account"
-                    onPress={()=> {}}
-                    hasNavArrow={false}
-                    titleStyle={styles.deleteAccount}
-
+                      title="Delete Account"
+                      onPress={() => this.setState({
+                        visible: true
+                      })}
+                      hasNavArrow={false}
+                      titleStyle={styles.deleteAccount}
                     />
-
                 </SettingsList>
               </View>
-              </View>
+            </View>
           </ImageBackground>
         );
     }

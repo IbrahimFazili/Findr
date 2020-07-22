@@ -130,11 +130,11 @@ class Matches extends React.Component {
           </ScrollView>
           
           <ProfilePopup 
-          visible={this.state.visible} 
-          name={this.state.name}
-          keywords={this.state.keywords}
-          bio={this.state.bio}
-          uni={this.state.uni}
+            visible={this.state.visible} 
+            name={this.state.name}
+            keywords={this.state.keywords}
+            bio={this.state.bio}
+            uni={this.state.uni}
           />
           
         </View>
