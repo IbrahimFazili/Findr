@@ -25,6 +25,7 @@ import InfoIcon from "../assets/icons/in.svg";
 
 import ChatPopup from "../components/ChatPopup";
 
+//beepboop
 const DIMENSION_WIDTH = Dimensions.get("window").width;
 const DIMENSION_HEIGHT = Dimensions.get("window").height;
 const ICON_FONT = "tinderclone";
