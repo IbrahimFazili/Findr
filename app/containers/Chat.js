@@ -1,24 +1,5 @@
 import React, { Component } from "react";
 import {
-<<<<<<< HEAD
-	Text,
-	View,
-	StyleSheet,
-	ScrollView,
-	TouchableOpacity,
-	Keyboard,
-	ImageBackground,
-	Dimensions,
-} from "react-native";
-import { Header, Image } from "react-native-elements";
-import KeyboardSpacer from "react-native-keyboard-spacer";
-import AutogrowInput from "react-native-autogrow-input";
-import { moderateScale } from "react-native-size-matters";
-import ImagePicker from "react-native-image-picker";
-import { Thumbnail } from "native-base";
-import io from "socket.io-client";
-import APIConnection from "../assets/data/APIConnection";
-=======
   Text,
   View,
   StyleSheet,
@@ -35,7 +16,6 @@ import { moderateScale } from 'react-native-size-matters';
 import ImagePicker from 'react-native-image-picker';
 import { Thumbnail } from "native-base";
 import APIConnection from '../assets/data/APIConnection';
->>>>>>> master
 
 import AttachIcon from "../assets/icons/attach.svg";
 import SendIcon from "../assets/icons/send_icon.svg";
