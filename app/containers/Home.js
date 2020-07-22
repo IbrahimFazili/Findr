@@ -1,7 +1,6 @@
 import React from "react";
-import { View, ImageBackground, AsyncStorage, Image, NetInfo } from "react-native";
+import { View, ImageBackground, AsyncStorage, Image, NetInfo, TouchableOpacity } from "react-native";
 import CardStack, { Card } from "react-native-card-stack-swiper";
-import Filters from "../components/Filters";
 import CardItem from "../components/CardItem";
 import styles from "../assets/styles";
 import APIConnection from "../assets/data/APIConnection";
@@ -16,7 +15,12 @@ class Home extends React.Component {
 
     this.state = {
       cards: [],
+      visible: false,
       API: new APIConnection(),
+      keywords: [],
+      name: "",
+      bio: "",
+      uni: "",
       dataLoadRequired: true,
       isConnected: true,
       visible: false,
@@ -127,9 +131,6 @@ class Home extends React.Component {
                 </Card>
               ))}
             </CardStack>
-          </View>
-          <View style={styles.filterStyle}>
-            <Filters />
           </View>
           <ProfilePopup 
             visible={this.state.visible} 

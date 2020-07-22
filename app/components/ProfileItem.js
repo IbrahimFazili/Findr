@@ -10,6 +10,7 @@ import APIConnection from "../assets/data/APIConnection";
 import Pen from '../assets/icons/pen.svg';
 import Check from '../assets/icons/check.svg';
 import Tag from './Tag';
+import TagEducation from "./TagEducation"
 import TagCourses from "./TagCourses"
 import TagClubs from "./TagClubs"
 import Plus from "../assets/icons/Plus.svg";
@@ -82,7 +83,6 @@ class ProfileItem extends React.Component{
 
         this.setState({allExp: newExp})
 	}
-	
 	onProjectTextChange = (text, index) => {
         const existingProjects = this.state.allProjects.map(fields => ({...fields}))
         let targetField = {...existingProjects[index]}
@@ -186,7 +186,6 @@ class ProfileItem extends React.Component{
 		const data = {
 			email: await AsyncStorage.getItem("storedEmail"),
 		}
-		
 		if(this.state.major.length !== 0){
 			data.major = this.state.major
 		}
@@ -214,7 +213,6 @@ class ProfileItem extends React.Component{
 		const data = {
 			email: await AsyncStorage.getItem("storedEmail"),
 		}
-		
 		if(this.state.allProjects.length !== 0){
 			data.projects = this.state.allProjects.map(fields => ({...fields}['value'])) //projects
 		}
@@ -238,7 +236,6 @@ class ProfileItem extends React.Component{
 		const data = {
 			email: await AsyncStorage.getItem("storedEmail"),
 		}
-		
 		if(this.state.allExp.length !== 0){
 			data.experience = this.state.allExp.map(fields => ({...fields}['value'])) //experience
 		}
@@ -340,7 +337,7 @@ class ProfileItem extends React.Component{
 					</View>
 					) 
 				: (
-					<View style={{right: FULL_WIDTH * 0.17}}>
+					<View style={{right: FULL_WIDTH * 0.05}}>
 						<TouchableOpacity style={styles.profileButtons} onPress={this.handleEditClick1.bind(this)}>
 							<Pen width={20} height={20}/>
 							</TouchableOpacity>
@@ -356,12 +353,12 @@ class ProfileItem extends React.Component{
 				<Text style={styles.infoContent}>{this.state.gender}</Text>
 			</View>
 
-			<View style={styles.info}>
+			<View style={styles.info2}>
 				<Text style={styles.profileTitle}>Email: </Text>
 				<Text style={styles.infoContent}>{this.props.email}</Text>
 			</View>
 
-			<View style={styles.info}>
+			<View style={styles.info3}>
 				<Text style={styles.profileTitle}>Keywords: </Text>
 				<Tag 
 					keywords={this.state.keywords} editable={this.state.isEditable1}
@@ -380,7 +377,7 @@ class ProfileItem extends React.Component{
 				}
 			</View>
 			<View style={styles.info}>
-				<Text style={styles.profileTitle}>Major: </Text>
+				<Text style={styles.profileTitle2}>Major: </Text>
 				{this.state.isEditable2
 				? (<TextInput
 					underlineColor="transparent"
@@ -392,19 +389,19 @@ class ProfileItem extends React.Component{
 					onBlur={() => this.setState({ majorLabel: this.state.major.length === 0 ? "Major" : "" })}
 					onChangeText={this.handleMajorChange.bind(this)}
 					theme={theme}
-					style={textBoxStyle}
+					style={styles.textB}
 					/>)
 				: (<Text style={styles.infoContent}>{this.state.major}</Text>)
 				}
 			</View>
 
-			<View style={styles.info}>
+			<View style={styles.info3}>
 				<Text style={styles.profileTitle}>Courses: </Text>
 				<TagCourses keywords={this.state.courses} editable={this.state.isEditable2} 
 			    courseChange={this.handleCourseChange.bind(this)} type="course"/>
 			</View>
 
-			<View style={styles.info}>
+			<View style={styles.info3}>
 				<Text style={styles.profileTitle}>Clubs: </Text>
 				<TagClubs keywords={this.state.clubs} editable={this.state.isEditable2} type="club"
 				clubChange={this.handleClubChange.bind(this)}/>
@@ -500,7 +497,6 @@ class ProfileItem extends React.Component{
 						 <Minus width={10} height={10}/>
 					 </TouchableOpacity>
 					 : null}
-					 
 				</View>
 				)
 

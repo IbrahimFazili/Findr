@@ -15,6 +15,9 @@ import ProfileScreen from "./containers/Profile";
 import PrivacyScreen from "./containers/Privacy";
 import OnboardingScreen from "./containers/Onboarding";
 import InternetScreen from "./containers/OfflinePop";
+import VerifiyScreen from "./containers/Verifiy";
+
+import SettingsScreen from "./containers/Settings";
 import OtherProfileScreen from "./containers/OtherProfile";
 import ChatPopUpScreen from "./components/ChatPopup";
 
@@ -179,6 +182,9 @@ const RootStack = createStackNavigator(
 		ChatPage: {
 			screen: Chat,
 		},
+		Profile: {
+			screen: ProfileScreen
+		},
 		Privacy: {
 			screen: PrivacyScreen,
 		},
@@ -193,6 +199,12 @@ const RootStack = createStackNavigator(
 		},
 		ChatPopup: {
 			screen:ChatPopUpScreen
+		},
+		Verify: {
+			screen: VerifiyScreen
+		},
+		Settings: {
+			screen: SettingsScreen
 		}
 	},
 	{ mode: "modal", headerMode: "none" }

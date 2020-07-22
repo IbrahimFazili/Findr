@@ -4,6 +4,10 @@ import android.app.Application;
 
 import com.facebook.react.ReactApplication;
 import com.horcrux.svg.SvgPackage;
+import com.cmcewen.blurview.BlurViewPackage;
+import com.reactnativecommunity.netinfo.NetInfoPackage;
+import com.oblador.vectoricons.VectorIconsPackage;
+import com.BV.LinearGradient.LinearGradientPackage;
 import com.swmansion.gesturehandler.react.RNGestureHandlerPackage;
 import com.imagepicker.ImagePickerPackage;
 import com.facebook.react.ReactNativeHost;
@@ -25,11 +29,15 @@ public class MainApplication extends Application implements ReactApplication {
     @Override
     protected List<ReactPackage> getPackages() {
       return Arrays.<ReactPackage>asList(
-          new MainReactPackage(),
+            new MainReactPackage(),
+            new NetInfoPackage(),
             new SvgPackage(),
-            new RNGestureHandlerPackage(),
-            new ImagePickerPackage()
-      );
+            new ImagePickerPackage(),
+            new BlurViewPackage(),
+            new VectorIconsPackage(),
+            new LinearGradientPackage(),
+            new RNGestureHandlerPackage()
+          );
     }
 
     @Override
