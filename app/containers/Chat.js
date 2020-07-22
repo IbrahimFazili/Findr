@@ -9,7 +9,7 @@ import {
   ImageBackground,
   Dimensions,
 } from 'react-native';
-import { Header, Image } from 'react-native-elements';
+import { Header, Image, ThemeConsumer } from 'react-native-elements';
 import KeyboardSpacer from 'react-native-keyboard-spacer';
 import AutogrowInput from 'react-native-autogrow-input';
 import { moderateScale } from 'react-native-size-matters';
@@ -41,6 +41,7 @@ export default class Chat extends Component {
       own_email: props.navigation.state.params.own_email,
       messages: props.navigation.state.params.messages,
       inputBarText: '',
+      selectedMedia: [],
       other_user: props.navigation.state.params.user_name,
       other_user_image: props.navigation.state.params.user_image,
       other_user_email: props.navigation.state.params.user_email
@@ -125,11 +126,17 @@ export default class Chat extends Component {
       msg: this.state.inputBarText,
     });
 
+    for (let i = 0; i < this.state.selectedMedia.length; i++) {
+      const media = this.state.selectedMedia[i];
+      APIConnection.mediaStore[media.name] = { uri: media.uri, type: media.type };
+      delete media.uri;      
+    }
+
     const msg = {
       from: this.state.own_email,
       to: this.state.other_user_email,
       msg: this.state.inputBarText,
-      media: [],
+      media: this.state.selectedMedia,
       time: (new Date()).getTime(),
       public_key: null
     }
@@ -139,6 +146,7 @@ export default class Chat extends Component {
     this.setState({
       messages: this.state.messages,
       inputBarText: '',
+      selectedMedia: []
     });
   }
 
@@ -146,6 +154,20 @@ export default class Chat extends Component {
     this.setState({
       inputBarText: text,
     });
+  }
+
+  _onChangeMedia(selection) {
+    const media = {
+      name: selection.fileName,
+      type: selection.type,
+      uri: selection.uri
+    };
+
+    if (this.state.selectedMedia.length > 0) {
+      this.state.selectedMedia[0] = media
+    } else this.state.selectedMedia.push(media);
+
+    this.setState({ selectedMedia: this.state.selectedMedia });
   }
 
   //This event fires way too often.
@@ -217,6 +239,7 @@ export default class Chat extends Component {
             onSendPressed={() => this._sendMessage()}
             onSizeChange={() => this._onInputSizeChange()}
             onChangeText={(text) => this._onChangeInputBarText(text)}
+            onChangeMedia={this._onChangeMedia.bind(this)}
             text={this.state.inputBarText}
           />
           <KeyboardSpacer />
@@ -279,7 +302,6 @@ class InputBar extends Component {
       },
     };
     ImagePicker.showImagePicker(options, (response) => {
-      console.log('Response = ', response);
 
       if (response.didCancel) {
         console.log('User cancelled image picker');
@@ -291,12 +313,9 @@ class InputBar extends Component {
       } else {
         const source = { uri: response.uri };
 
-        console.log('response', JSON.stringify(response));
-        this.setState({
-          filePath: response,
-          fileData: response.data,
-          fileUri: response.uri,
-        });
+        // file type: response.type
+        // file name: response.fileName
+        this.props.onChangeMedia(response);
       }
     });
   };
