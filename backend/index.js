@@ -377,9 +377,9 @@ app.get("/deleteUser", (req, res) => {
 	callbackQueue.enqueue(deleteUser, email, res);
 });
 
-app.get("/updateProfilePicture", async (req, res) => {
-	const email = req.query.email;
-	var url = await AWS_Presigner.generateSignedPutUrl("user_images/" + email);
+app.get("/user/:user_email/updateProfilePicture", async (req, res) => {
+	const email = req.params.user_email;
+	var url = await AWS_Presigner.generateSignedPutUrl("user_images/" + email, req.query.type);
 	res.status(200).send(url);
 });
 
