@@ -18,6 +18,7 @@ const {
 	updateKeywords,
 	signUp
 } = require('./utils/Handlers').functions;
+const { SUPPORTED_UNIVERSITIES } = require("./vars");
 
 const callbackQueue = new CallbackQueue();
 const CONNECTIONS_CHUNK_SIZE = 25;
@@ -381,6 +382,10 @@ app.get("/updateProfilePicture", async (req, res) => {
 	const email = req.query.email;
 	var url = await AWS_Presigner.generateSignedPutUrl("user_images/" + email);
 	res.status(200).send(url);
+});
+
+app.get("/supportedUniversities", (req, res) => {
+	res.status(200).send(SUPPORTED_UNIVERSITIES);
 });
 
 app.post("/signup", (req, res) => {
