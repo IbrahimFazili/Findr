@@ -16,6 +16,11 @@ import Icon from "../components/Icon";
 import APIConnection from "../assets/data/APIConnection";
 import { ScrollView } from "react-navigation";
 import Settings from "../assets/icons/settings_fill.svg";
+import ImagePicker from 'react-native-image-picker';
+import PlaceHolder from "../assets/icons/placeholder_icon.svg"
+import Pen from '../assets/icons/pen.svg';
+
+
 
 const PRIMARY_COLOR = "#7444C0";
 const WHITE = "#FFFFFF";
@@ -46,6 +51,49 @@ class Profile extends React.Component {
   handleConnectivityChange = isConnected => {
     this.setState({ isConnected });
   };
+
+  async _onChangeMedia(selection) {
+    const media = {
+      name: selection.fileName,
+      type: selection.type,
+      uri: selection.uri
+    };
+    const url = await this.state.API.updateProfilePicture(
+      await AsyncStorage.getItem('storedEmail'),
+      media.type
+    )
+
+    APIConnection.uploadPicture(url, media);
+    this.setState({ image: media.uri });
+  }
+
+  chooseImage = () => {
+    let options = {
+      title: 'Select Image',
+      storageOptions: {
+        skipBackup: true,
+        path: 'images',
+      },
+    };
+    ImagePicker.showImagePicker(options, (response) => {
+
+      if (response.didCancel) {
+        console.log('User cancelled image picker');
+      } else if (response.error) {
+        console.log('ImagePicker Error: ', response.error);
+      } else if (response.customButton) {
+        console.log('User tapped custom button: ', response.customButton);
+        alert(response.customButton);
+      } else {
+        const source = { uri: response.uri };
+
+        // file type: response.type
+        // file name: response.fileName
+        this._onChangeMedia(response);
+      }
+    });
+  };
+
 
   render() {
     const image = this.state.profile ? { uri: this.state.profile.image } : null;
@@ -85,7 +133,10 @@ class Profile extends React.Component {
             </View>
             <View style={styles.header}>
               <View style={styles.profilepicWrap}>
-                <Image style={styles.profilepic} source={image} />
+                  <Image style={styles.profilepic} source={image} />
+                <TouchableOpacity onPress={() => this.chooseImage()}>
+							    <Pen width={20} height={20}/>
+							  </TouchableOpacity>
               </View>
             </View>
             <View style={{paddingHorizontal: 10}}>

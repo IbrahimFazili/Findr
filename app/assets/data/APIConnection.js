@@ -60,6 +60,10 @@ class APIConnection {
     return response.status;
   }
 
+  async updateProfilePicture(email, type) {
+    return (await fetch(`${this.ENDPOINT}:${this.PORT}/user/${email}/updateProfilePicture?type=${type}`)).text();
+  }
+
   static uploadPicture(url, img) {
     return new Promise(function(resolve, reject) {
       const xhr = new XMLHttpRequest();
@@ -139,7 +143,7 @@ class APIConnection {
       await fetch(`${this.ENDPOINT}:${this.PORT}/user/${email}`)
     ).json();
 
-    return users[0];
+    return users;
   }
 
   async fetchChats(email) {
