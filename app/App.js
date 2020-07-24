@@ -5,16 +5,15 @@ import {
   createAppContainer,
   createStackNavigator,
 } from "react-navigation";
-import styles from "./assets/styles";
 import SignUpScreen from "./containers/SignUp";
 import LogInScreen from "./containers/LogIn";
 import HomeScreen from "./containers/Home";
 import MatchesScreen from "./containers/Matches";
 import MessagesScreen from "./containers/Messages";
 import ProfileScreen from "./containers/Profile";
-import Icon from "./components/Icon";
 import PrivacyScreen from "./containers/Privacy";
 import OnboardingScreen from "./containers/Onboarding";
+import CachedImage from './components/CachedImage';
 
 import HomeIcon_Grey from './assets/icons/home.svg';
 import HomeIcon_Green from './assets/icons/home_g.svg';
@@ -146,6 +145,6 @@ const RootStack = createStackNavigator(
   { mode: "modal", headerMode: "none" }
 );
 
-// () => this.props.navigation.navigate('SignUp') on Home if signup/login needed
+CachedImage.validateCache();
 
 export default createAppContainer(RootStack);
