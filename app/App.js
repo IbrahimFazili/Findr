@@ -1,5 +1,5 @@
 import React from "react";
-import { Text, Dimensions, Platform, View } from "react-native";
+import { Dimensions, Platform, View } from "react-native";
 import {
   createBottomTabNavigator,
   createAppContainer,
@@ -10,10 +10,15 @@ import LogInScreen from "./containers/LogIn";
 import HomeScreen from "./containers/Home";
 import MatchesScreen from "./containers/Matches";
 import MessagesScreen from "./containers/Messages";
+import Chat from "./containers/Chat";
 import ProfileScreen from "./containers/Profile";
 import PrivacyScreen from "./containers/Privacy";
 import OnboardingScreen from "./containers/Onboarding";
 import CachedImage from './components/CachedImage';
+import InternetScreen from "./containers/OfflinePop";
+import VerifiyScreen from "./containers/Verifiy";
+
+import SettingsScreen from "./containers/Settings";
 
 import HomeIcon_Grey from './assets/icons/home.svg';
 import HomeIcon_Green from './assets/icons/home_g.svg';
@@ -23,6 +28,8 @@ import PersonIcon_Grey from './assets/icons/person.svg';
 import PersonIcon_Green from './assets/icons/person_g.svg';
 import ChatIcon_Grey from './assets/icons/chat.svg';
 import ChatIcon_Green from './assets/icons/chat_g.svg';
+
+import APIConnection from './assets/data/APIConnection';
 
 const DIMENTIONS = Dimensions.get('window');
 
@@ -69,7 +76,7 @@ const App = createBottomTabNavigator(
       screen: MessagesScreen,
       navigationOptions: {
         tabBarIcon: ({ focused }) => {
-          const iconFocused = focused ? "#2c9c91" : "#4a4949";
+          const iconFocused = focused ? '#2c9c91' : '#4a4949';
           return (
             <View
               style={{ paddingBottom: DIMENTIONS.height * 0.01 }}
@@ -86,7 +93,7 @@ const App = createBottomTabNavigator(
       screen: ProfileScreen,
       navigationOptions: {
         tabBarIcon: ({ focused }) => {
-          const iconFocused = focused ? "#2c9c91" : "#4a4949";
+          const iconFocused = focused ? '#2c9c91' : '#4a4949';
           return (
             <View
               style={{ paddingBottom: DIMENTIONS.height * 0.01 }}
@@ -102,21 +109,24 @@ const App = createBottomTabNavigator(
   },
   {
     tabBarOptions: {
-      activeTintColor: "#7444C0",
-      inactiveTintColor: "#363636",
+      activeTintColor: '#7444C0',
+      inactiveTintColor: '#363636',
       labelStyle: {
         paddingTop: 0,
         margin: 0,
         opacity: 0,
       },
       style: {
-        backgroundColor: "#FFF",
+        backgroundColor: '#FFF',
         borderTopWidth: 0,
         paddingVertical: 20,
-        height: Platform.OS === 'ios' ? Dimensions.get("window").height * 0.04 : Dimensions.get('window').height * 0.065,
+        height:
+          Platform.OS === 'ios'
+            ? Dimensions.get('window').height * 0.04
+            : Dimensions.get('window').height * 0.065,
         shadowOpacity: 0.3,
         shadowRadius: 10,
-        shadowColor: "#000",
+        shadowColor: '#000',
         shadowOffset: { height: 0, width: 0 },
         elevation: 25,
       },
@@ -135,16 +145,35 @@ const RootStack = createStackNavigator(
     LogIn: {
       screen: LogInScreen,
     },
+    Messages: {
+      screen: MessagesScreen,
+    },
+    ChatPage: {
+      screen: Chat,
+    },
     Privacy :{
       screen: PrivacyScreen,
     },
     Onboarding: {
       screen: OnboardingScreen,
-    }
+    },
+    Settings: {
+      screen: SettingsScreen
+    },
+    Profile: {
+      screen: ProfileScreen
+    },
+    Internet:{
+      screen: InternetScreen,
+    },
+    Verify: {
+      screen: VerifiyScreen
+    },
   },
-  { mode: "modal", headerMode: "none" }
+  { mode: 'modal', headerMode: 'none' }
 );
 
 CachedImage.validateCache();
+APIConnection.initSocketConnection();
 
 export default createAppContainer(RootStack);

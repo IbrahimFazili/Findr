@@ -7,47 +7,77 @@ import {
   ImageBackground,
   View,
   FlatList,
+  AsyncStorage,
 } from 'react-native';
 import Message from '../components/Message';
-import Icon from '../components/Icon';
-import Demo from '../assets/data/demo.js';
+import APIConnection from '../assets/data/APIConnection';
 
-/* Look into createStackNavigator for this page */
 
-const Messages = () => {
-  return (
-    <ImageBackground
-      source={require('../assets/images/bg.png')}
-      style={styles.bg}
-    >
-      <View style={styles.containerMessages}>
-        <ScrollView>
-          <View style={styles.top}>
-            <Text style={styles.title}>Messages</Text>
-            <TouchableOpacity>
-              <Text style={styles.icon}>
-                <Icon name='optionsV' />
-              </Text>
-            </TouchableOpacity>
-          </View>
+class Messages extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = { API: new APIConnection(), chats: [] };
+  }
 
-          <FlatList
-            data={Demo}
-            keyExtractor={(item, index) => index.toString()}
-            renderItem={({ item }) => (
-              <TouchableOpacity>
-                <Message
-                  image={item.image}
-                  name={item.name}
-                  lastMessage={item.message}
-                />
-              </TouchableOpacity>
-            )}
-          />
-        </ScrollView>
-      </View>
-    </ImageBackground>
-  );
-};
+  async componentDidMount() {
+    let data = await this.state.API.fetchChats(
+      await AsyncStorage.getItem('storedEmail')
+    );
+
+    for (let i = 0; i < data.length; i++) {
+      data[i].messages = (
+        await this.state.API.fetchChatData(
+          await AsyncStorage.getItem('storedEmail'),
+          data[i].email
+        )
+      ).messages;
+    }
+
+    this.setState({ chats: data });
+  }
+
+  render() {
+    return (
+      <ImageBackground
+        source={require('../assets/images/bg.png')}
+        style={styles.bg}
+      >
+        <View style={styles.containerMessages}>
+          <ScrollView>
+            <View style={styles.top}>
+              <Text style={styles.title}>Messages</Text>
+            </View>
+
+            <FlatList
+              data={this.state.chats}
+              keyExtractor={(item, index) => index.toString()}
+              renderItem={({ item }) => (
+                <TouchableOpacity
+                  onPress={async () =>
+                    this.props.navigation.navigate('ChatPage', {
+                      messages: item.messages,
+                      own_email: await AsyncStorage.getItem('storedEmail'),
+                      user_name: item.name,
+                      user_image: { uri: item.image },
+                      user_email: item.email
+                    })
+                  }
+                >
+                  <Message
+                    image={{ uri: item.image }}
+                    name={item.name}
+                    lastMessage={APIConnection.MESSAGE_QUEUES[item.email] ?
+                      APIConnection.MESSAGE_QUEUES[item.email].peekNewest().msg
+                      : item.messages[item.messages.length - 1].msg}
+                  />
+                </TouchableOpacity>
+              )}
+            />
+          </ScrollView>
+        </View>
+      </ImageBackground>
+    );
+  }
+}
 
 export default Messages;

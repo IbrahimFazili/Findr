@@ -1,7 +1,7 @@
 import React from 'react';
-import { View, AsyncStorage, Image, Dimensions, ScrollView } from 'react-native';
+import { View, AsyncStorage, Image, Dimensions, ScrollView, NetInfo } from 'react-native';
 import styles from '../assets/styles';
-import { DefaultTheme, TextInput, Button, Menu, Provider } from 'react-native-paper';
+import { DefaultTheme, TextInput, Button } from 'react-native-paper';
 import DatePicker from 'react-native-datepicker';
 import Swiper from 'react-native-swiper'
 import APIConnection from '../assets/data/APIConnection';
@@ -83,7 +83,9 @@ class SignUp extends React.Component {
       isUniValid: false,
       isMajorValid: false,
       showDots: true,
-      dropdownVisible: false
+      dropdownVisible: false,
+
+      isConnected: true,
     };
   }
 
@@ -128,6 +130,18 @@ class SignUp extends React.Component {
     this.setState({ isMajorValid: false, major: text });
   }
 
+  async componentDidMount(){
+    NetInfo.isConnected.addEventListener('connectionChange', this.handleConnectivityChange);
+  }
+
+  async componentWillUnmount() {
+    NetInfo.isConnected.removeEventListener('connectionChange', this.handleConnectivityChange);
+  }
+
+  handleConnectivityChange = isConnected => {
+    this.setState({ isConnected });
+  };
+
   async handleSubmit() {
     if (
       !this.state.isNameValid ||
@@ -152,16 +166,17 @@ class SignUp extends React.Component {
 
     const signUpResponse = await API.requestSignUp(data);
     if (signUpResponse.status === 201) {
-      // signup successful, store email locally and upload profile picture (if provided)
-      const responseData = await signUpResponse.json();
-
-      API.uploadPicture(responseData.signedPutUrl, null); // need to replace null with the image
+      // signup successful, store email locally
       await AsyncStorage.setItem("storedEmail", data.email);
+      APIConnection.initSocketConnection();
       this.props.navigation.navigate("AppScreen");
     }
   }
 
     render() {
+        if (!this.state.isConnected) {
+          this.props.navigation.navigate("Internet");
+        }
         return (
             <View style={{backgroundColor: "#164e48", width: "100%", height: "100%", padding: '3%' }}>
                 <Image style={styles.logo} source={require('../assets/images/Findr_white2x.png')}/>
@@ -250,7 +265,7 @@ class SignUp extends React.Component {
 
                         <Image 
                             source={require('../assets/images/or.png')} 
-                            style={{marginLeft: DIMENTIONS.width * 0.2, marginTop: DIMENTIONS.width * 0.25}}
+                            style={{marginLeft: DIMENTIONS.width * 0.2, marginTop: DIMENTIONS.width * 0.24}}
                         />
 
                         <Button 

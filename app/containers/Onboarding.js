@@ -76,34 +76,7 @@ class Onboarding extends React.Component {
               this.setState({ idxActive: newIndex });
             }}
             ref={"swiper"}
-            // dot={
-            //   <View
-            //     style={{
-            //       backgroundColor: "rgba(0,0,0,.3)",
-            //       width: FULL_HEIGHT *0.012,
-            //       height: FULL_HEIGHT * 0.012,
-            //       borderRadius: FULL_HEIGHT * 0.012,
-            //       marginLeft: 7,
-            //       marginRight: 7,
-            //       marginBottom: FULL_HEIGHT * 0.15,
-            //     }}
-            //   />
-            // }
-            // activeDot={
-            //   <View
-            //     style={{
-            //       backgroundColor: "#FFF",
-            //       width: FULL_HEIGHT * 0.013,
-            //       height: FULL_HEIGHT * 0.013,
-            //       borderRadius: FULL_HEIGHT * 0.012,
-            //       marginRight: 7,
-            //       marginLeft: 7,
-            //       marginBottom: FULL_HEIGHT * 0.15,
-            //     }}
-            //   />
-            // }
             
-            //Ignore the css styling for this, need not be relative. Only used to hide the dots in swiper.
             paginationStyle={{
               bottom: -23,
               left: null,
@@ -139,7 +112,7 @@ class Onboarding extends React.Component {
                   }}
                 >
                   {this.state.cards.map((user) => (
-                    <View>
+                    <View style={{paddingHorizontal: FULL_WIDTH * 0.006}}>
                       <CardItem
                         variant
                         key={user.name}
@@ -202,12 +175,12 @@ class Onboarding extends React.Component {
                   Find people in every field
                 </Text>
                 <Image
-                  style={{ marginTop: FULL_HEIGHT * 0.03 }}
+                  style={{ marginTop: FULL_HEIGHT * 0.025, marginBottom: FULL_HEIGHT * 0.018}}
                   source={require("../assets/images/newicn_add.png")}
                 />
                 <TouchableOpacity
                   onPress={this.onPressNext}
-                  style={styles.OBnext}
+                  style={styles.OBnext2}
                 >
                   <Text style={styles.OBnextText2}>Next</Text>
                 </TouchableOpacity>
@@ -245,12 +218,12 @@ class Onboarding extends React.Component {
                 <View
                   style={{
                     marginLeft: FULL_WIDTH * 0.32,
-                    marginTop: FULL_HEIGHT * 0.115,
+                    marginTop: FULL_HEIGHT * 0.14,
                   }}
                 >
                   <TouchableOpacity
                     onPress={this.onPressNext}
-                    style={styles.OBnext}
+                    style={styles.OBnext3}
                   >
                     <Text style={styles.OBnextText3}>Next</Text>
                   </TouchableOpacity>

@@ -82,15 +82,6 @@ const CardItem = ({
         <CachedImage uri={image.uri} uid={email} style={imageStyle} />
       </View>
 
-      {/* MATCHES */}
-      {/* {matches && (
-        <View style={styles.matchesCardItem}>
-          <Text style={styles.matchesTextCardItem}>
-            <Icon name="heart" /> {matches}% Match!
-          </Text>
-        </View>
-      )} */}
-
       {/* NAME */}
       <Text style={nameStyle} numberOfLines={1}>{name}</Text>
 

@@ -18,14 +18,14 @@ class Matcher {
                 await DB.updateUser({ blueConnections: user.blueConnections, greenConnections: user.greenConnections },
                     { email: srcUser });
 
-                const isMatch = await this.hasIncomingGreenConnection(user._id, swipedUserConnection._id);
-                if (isMatch){
+                const isMatch = this.hasIncomingGreenConnection(user._id, rightSwipedUser);
+                if (isMatch) {
                     rightSwipedUser.eventQueue = new EventQueue(rightSwipedUser.eventQueue.events);
                     rightSwipedUser.eventQueue.enqueue(
                         new Event(MATCH_EVENT, { _id : user._id})
                     )
 
-                    DB.updateUser({ eventQueue: rightSwipedUser.eventQueue }, { email: rightSwipedUser.email });
+                    await DB.updateUser({ eventQueue: rightSwipedUser.eventQueue }, { email: rightSwipedUser.email });
                 }
 
                 return { success: true, isMatch };
@@ -112,20 +112,23 @@ class Matcher {
                 
                 potentialConnections = potentialConnections.filter((value) => {
                     return user.blueConnections.findIndex((conn) => conn._id.equals(value._id)) === -1 &&
-                        !(value._id.equals(user._id));
+                        !(value._id.equals(user._id))
+                        && user.blockedUsers.findIndex((id) => id.equals(value._id)) === -1
+                        && value.blockedUsers.findIndex((id) => id.equals(user._id)) === -1
                 });
 
                 for (var i = 0; i < duplicateConnections.length; i++) {
-                    let commonKeywords = user.keywords.filter(value => duplicateConnections[i].keywords.includes(value))
-                    let index1 = user.blueConnections.findIndex((conn) => conn._id.equals(duplicateConnections[i]._id))
+                    let commonKeywords = user.keywords.filter(value => duplicateConnections[i].keywords.includes(value));
+                    let index1 = user.blueConnections.findIndex((conn) => conn._id.equals(duplicateConnections[i]._id));
                     user.blueConnections[index1].commonKeywords = commonKeywords;
-                    let index2 = duplicateConnections[i].blueConnections.findIndex((conn) => conn._id.equals(user._id))
+
+                    let index2 = duplicateConnections[i].blueConnections.findIndex((conn) => conn._id.equals(user._id));
                     duplicateConnections[i].blueConnections[index2].commonKeywords = commonKeywords;
                     await DB.updateUser({ blueConnections: user.blueConnections },
-                        { email: user.email })
+                        { email: user.email });
 
                     await DB.updateUser({ blueConnections: duplicateConnections[i].blueConnections },
-                        { email: duplicateConnections[i].email })
+                        { email: duplicateConnections[i].email });
                 }
                
                 let blueConn = null;
@@ -175,15 +178,16 @@ class Matcher {
                 
                 let connections = await DB.fetchUsers({ _id: { $in : ids } });
                 connections.forEach((element) => {
-                    const index = element.blueConnections.indexOf(user._id);
+                    
+                    const index = element.blueConnections.findIndex((value) => value._id.equals(user._id));
                     element.blueConnections.splice(index, 1);
                 });
 
                 try {
-                    // await DB.bulkUpdateUsers(connections, { _id: { $in : user.blueConnections } })
-                    connections.forEach((element) => {
-                        DB.updateUser({ blueConnections: element.blueConnections }, { email: element.email })
-                    });
+                    for (let i = 0; i < connections.length; i++) {
+                        const element = connections[i];
+                        await DB.updateUser({ blueConnections: element.blueConnections }, { email: element.email })
+                    }
     
                     return true;
                 } catch (error) {
@@ -256,9 +260,8 @@ class Matcher {
         }
     }
 
-    async hasIncomingGreenConnection(srcUserId, _id) {
+    hasIncomingGreenConnection(srcUserId, user) {
         try {
-            const user = (await DB.fetchUsers({ _id }))[0];
             return user.greenConnections.findIndex((id) => id._id.equals(srcUserId)) !== -1;
         } catch (fetchErr) {
             console.log(fetchErr);
@@ -271,7 +274,7 @@ class Matcher {
             const user = (await DB.fetchUsers({ email }))[0];
             let matches = [];
             for (let i = 0; i < user.greenConnections.length; i++) {
-                if (await this.hasIncomingGreenConnection(user._id, user.greenConnections[i])) {
+                if (this.hasIncomingGreenConnection(user._id, user.greenConnections[i])) {
                     matches.push(user.greenConnections[i]);
                 }
             }
@@ -282,6 +285,40 @@ class Matcher {
             return [];
         }
     }
+
+    async blockUser(srcEmail, blockedEmail) {
+        try {
+            const srcUser = (await DB.fetchUsers({ email: srcEmail }))[0];
+            const blockedUser = (await DB.fetchUsers({ email: blockedEmail}))[0];
+
+            const blueConnectionsIndex = srcUser.blueConnections.findIndex((value) => value._id.equals(blockedUser._id));
+            if ( blueConnectionsIndex !== -1){
+                srcUser.blueConnections.splice(blueConnectionsIndex, 1);
+            }
+            const greenConnectionsIndex = srcUser.greenConnections.findIndex((value) => value._id.equals(blockedUser._id));
+            if ( greenConnectionsIndex !== -1){
+                srcUser.greenConnections.splice(greenConnectionsIndex, 1);
+            }
+            const blueConnectionsIndex2 = blockedUser.blueConnections.findIndex((value) => value._id.equals(srcUser._id));
+            if ( blueConnectionsIndex2 !== -1){
+                blockedUser.blueConnections.splice(blueConnectionsIndex2, 1);
+            }
+            const greenConnectionsIndex2 = blockedUser.greenConnections.findIndex((value) => value._id.equals(srcUser._id));
+            if ( greenConnectionsIndex2 !== -1){
+                blockedUser.greenConnections.splice(greenConnectionsIndex2, 1);
+            }
+
+            srcUser.blockedUsers.push(blockedUser._id);
+            await DB.updateUser(srcUser, { email: srcEmail });
+            await DB.updateUser(blockedUser, { email: blockedEmail });
+            return true;
+        } catch (fetchErr) {
+            console.log(fetchErr);
+            return false;
+        }
+    }
+
+    
 }
 
 module.exports.Matcher = Matcher;

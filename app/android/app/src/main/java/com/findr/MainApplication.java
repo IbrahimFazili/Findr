@@ -3,9 +3,15 @@ package com.findr;
 import android.app.Application;
 
 import com.facebook.react.ReactApplication;
+<<<<<<< HEAD
 import com.rnfs.RNFSPackage;
 import com.cmcewen.blurview.BlurViewPackage;
+=======
+>>>>>>> master
 import com.horcrux.svg.SvgPackage;
+import com.cmcewen.blurview.BlurViewPackage;
+import com.reactnativecommunity.netinfo.NetInfoPackage;
+import com.imagepicker.ImagePickerPackage;
 import com.oblador.vectoricons.VectorIconsPackage;
 import com.BV.LinearGradient.LinearGradientPackage;
 import com.swmansion.gesturehandler.react.RNGestureHandlerPackage;
@@ -28,10 +34,12 @@ public class MainApplication extends Application implements ReactApplication {
     @Override
     protected List<ReactPackage> getPackages() {
       return Arrays.<ReactPackage>asList(
-          new MainReactPackage(),
+            new MainReactPackage(),
             new RNFSPackage(),
-            new BlurViewPackage(),
+            new NetInfoPackage(),
             new SvgPackage(),
+            new ImagePickerPackage(),
+            new BlurViewPackage(),
             new VectorIconsPackage(),
             new LinearGradientPackage(),
             new RNGestureHandlerPackage()
