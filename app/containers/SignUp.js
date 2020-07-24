@@ -10,15 +10,15 @@ import {Dropdown} from 'react-native-material-dropdown'
 
 const DIMENTIONS = Dimensions.get('window');
 
-let universities=[
-    {value: "University of Toronto",},
-    {value: "University of Waterloo",},
-    {value: "University of British Columbia",},
-    {value: "University of Ottawa",},
-    {value: "York University",},
-    {value: "McGill University",},
-    {value: "Trent University",},
-];
+// let universities=[
+//     {value: "University of Toronto",},
+//     {value: "University of Waterloo",},
+//     {value: "University of British Columbia",},
+//     {value: "University of Ottawa",},
+//     {value: "York University",},
+//     {value: "McGill University",},
+//     {value: "Trent University",},
+// ];
 
 const theme = {
     colors: {
@@ -86,6 +86,7 @@ class SignUp extends React.Component {
       goingToPrivacy: false,
 
       isConnected: true,
+      universityArray: []
     };
   }
 
@@ -133,6 +134,8 @@ class SignUp extends React.Component {
 
   async componentDidMount(){
     NetInfo.isConnected.addEventListener('connectionChange', this.handleConnectivityChange);
+    const temp = await ((new APIConnection())).fetchUniversities()
+    this.setState({ universityArray: temp.map((value) => { return { value } }) })
   }
 
   async componentWillUnmount() {
@@ -180,6 +183,7 @@ class SignUp extends React.Component {
         if (!this.state.isConnected) {
           this.props.navigation.navigate("Internet");
         }
+        console.log(this.state.universityArray)
         return (
             <View style={{backgroundColor: "#164e48", width: "100%", height: "100%", padding: '3%' }}>
                 <Image style={styles.logo} source={require('../assets/images/Findr_white2x.png')}/>
@@ -227,8 +231,8 @@ class SignUp extends React.Component {
                         {this.state.isNameValid === true || this.state.name === "" ? null : 
                         <Text style={styles.errorName}>Name must be greater than 3 characters</Text>}
 
-                        <Dropdown label="University" data={universities}
-                            dropdownPosition={-7}
+                        <Dropdown label="University" data={this.state.universityArray}
+                            dropdownPosition={-6.15}
                             containerStyle={styles.uniDropDown}
                             pickerStyle={{borderRadius: 35,}}
                             dropdownOffset={{top: 20, left: 10}}
