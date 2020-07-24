@@ -9,13 +9,12 @@ import {
   ImageBackground,
   Dimensions,
 } from 'react-native';
-import { Header, Image } from 'react-native-elements';
+import { Header, Image, ThemeConsumer } from 'react-native-elements';
 import KeyboardSpacer from 'react-native-keyboard-spacer';
 import AutogrowInput from 'react-native-autogrow-input';
 import { moderateScale } from 'react-native-size-matters';
 import ImagePicker from 'react-native-image-picker';
 import { Thumbnail } from "native-base";
-import io from 'socket.io-client';
 import APIConnection from '../assets/data/APIConnection';
 
 import AttachIcon from '../assets/icons/attach.svg';
@@ -38,11 +37,11 @@ export default class Chat extends Component {
   constructor(props) {
     super(props);
 
-    this.socket = null;
     this.state = {
       own_email: props.navigation.state.params.own_email,
       messages: props.navigation.state.params.messages,
       inputBarText: '',
+      selectedMedia: [],
       other_user: props.navigation.state.params.user_name,
       other_user_image: props.navigation.state.params.user_image,
       other_user_email: props.navigation.state.params.user_email
@@ -83,24 +82,15 @@ export default class Chat extends Component {
 
   //scroll to bottom when first showing the view
   componentDidMount() {
+    this._isMounted = true;
     setTimeout(
       function () {
         this.scrollView.scrollToEnd();
       }.bind(this)
     );
 
-    const API = new APIConnection();
-    this.socket = io(API.ENDPOINT + ":" + API.PORT, { query: "name=" + this.state.own_email });
-    this.socket.on("new msg", (msg) => {
-      this.state.messages.push({
-        user: msg.from,
-        msg: msg.msg
-      });
-
-      this.setState({
-        messages: this.state.messages
-      });
-    });
+    APIConnection.attachObserver(this.onNewMessage.bind(this), this.state.other_user_email);
+    this.onNewMessage();
   }
 
   //this is a bit sloppy: this is to make sure it scrolls to the bottom when a message is added, but
@@ -111,6 +101,23 @@ export default class Chat extends Component {
         this.scrollView.scrollToEnd();
       }.bind(this)
     );
+    this.onNewMessage();
+  }
+
+  onNewMessage() {
+    const msgQueue = APIConnection.MESSAGE_QUEUES[this.state.other_user_email];
+    if (!msgQueue) return;
+    const newMessages = [];
+    while (!msgQueue.isEmpty()) {
+      const msg = msgQueue.dequeue();
+      newMessages.push({
+        user: msg.from,
+        msg: msg.msg
+      });
+    }
+    if (newMessages.length > 0) {
+      this.setState({ messages: this.state.messages.concat(newMessages) });
+    }
   }
 
   _sendMessage() {
@@ -119,20 +126,27 @@ export default class Chat extends Component {
       msg: this.state.inputBarText,
     });
 
+    for (let i = 0; i < this.state.selectedMedia.length; i++) {
+      const media = this.state.selectedMedia[i];
+      APIConnection.mediaStore[media.name] = { uri: media.uri, type: media.type };
+      delete media.uri;      
+    }
+
     const msg = {
       from: this.state.own_email,
       to: this.state.other_user_email,
       msg: this.state.inputBarText,
-      media: [],
+      media: this.state.selectedMedia,
       time: (new Date()).getTime(),
       public_key: null
     }
 
-    this.socket.emit("new msg", msg);
+    APIConnection.socket.emit("new msg", msg);
 
     this.setState({
       messages: this.state.messages,
       inputBarText: '',
+      selectedMedia: []
     });
   }
 
@@ -140,6 +154,20 @@ export default class Chat extends Component {
     this.setState({
       inputBarText: text,
     });
+  }
+
+  _onChangeMedia(selection) {
+    const media = {
+      name: selection.fileName,
+      type: selection.type,
+      uri: selection.uri
+    };
+
+    if (this.state.selectedMedia.length > 0) {
+      this.state.selectedMedia[0] = media
+    } else this.state.selectedMedia.push(media);
+
+    this.setState({ selectedMedia: this.state.selectedMedia });
   }
 
   //This event fires way too often.
@@ -211,6 +239,7 @@ export default class Chat extends Component {
             onSendPressed={() => this._sendMessage()}
             onSizeChange={() => this._onInputSizeChange()}
             onChangeText={(text) => this._onChangeInputBarText(text)}
+            onChangeMedia={this._onChangeMedia.bind(this)}
             text={this.state.inputBarText}
           />
           <KeyboardSpacer />
@@ -273,7 +302,6 @@ class InputBar extends Component {
       },
     };
     ImagePicker.showImagePicker(options, (response) => {
-      console.log('Response = ', response);
 
       if (response.didCancel) {
         console.log('User cancelled image picker');
@@ -285,12 +313,9 @@ class InputBar extends Component {
       } else {
         const source = { uri: response.uri };
 
-        console.log('response', JSON.stringify(response));
-        this.setState({
-          filePath: response,
-          fileData: response.data,
-          fileUri: response.uri,
-        });
+        // file type: response.type
+        // file name: response.fileName
+        this.props.onChangeMedia(response);
       }
     });
   };

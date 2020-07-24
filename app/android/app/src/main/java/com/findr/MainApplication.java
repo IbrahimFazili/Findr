@@ -37,7 +37,7 @@ public class MainApplication extends Application implements ReactApplication {
             new VectorIconsPackage(),
             new LinearGradientPackage(),
             new RNGestureHandlerPackage()
-          );
+      );
     }
 
     @Override

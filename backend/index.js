@@ -18,6 +18,7 @@ const {
 	updateKeywords,
 	signUp
 } = require('./utils/Handlers').functions;
+const { SUPPORTED_UNIVERSITIES } = require("./vars");
 
 const callbackQueue = new CallbackQueue();
 const CONNECTIONS_CHUNK_SIZE = 25;
@@ -377,10 +378,14 @@ app.get("/deleteUser", (req, res) => {
 	callbackQueue.enqueue(deleteUser, email, res);
 });
 
-app.get("/updateProfilePicture", async (req, res) => {
-	const email = req.query.email;
-	var url = await AWS_Presigner.generateSignedPutUrl("user_images/" + email);
+app.get("/user/:user_email/updateProfilePicture", async (req, res) => {
+	const email = req.params.user_email;
+	var url = await AWS_Presigner.generateSignedPutUrl("user_images/" + email, req.query.type);
 	res.status(200).send(url);
+});
+
+app.get("/supportedUniversities", (req, res) => {
+	res.status(200).send(SUPPORTED_UNIVERSITIES);
 });
 
 app.post("/signup", (req, res) => {
@@ -409,7 +414,7 @@ app.post("/signup", (req, res) => {
 		blockedUsers: [],
 		eventQueue: { events: [] },
 		active: false,
-		verificationHash: bcrypt.hashSync(req.body.email + generateRandomNumber(), 3)
+		verificationHash: generateVerificationHash(req.body.email)
 	};
 	
 	callbackQueue.enqueue(signUp, requestData, res);
@@ -418,6 +423,10 @@ app.post("/signup", (req, res) => {
 
 app.get("/verifyUserEmail", (req, res) => {
 	const projection = { email: 1, active: 1  };
+	if (!req.query.key){
+		res.status(400).send("Verfication key missing");
+		return;
+	}
 	DB.fetchUsers({ verificationHash: req.query.key }, { projection })
 		.then(async (users) => {
 			if (users.length === 0) {
@@ -496,6 +505,15 @@ function generateRandomNumber() {
 		randomNumber = randomNumber + randomDigit;
 	}
 	return randomNumber;
+}
+
+function generateVerificationHash(email) {
+	let hash = bcrypt.hashSync(email + generateRandomNumber(), 3);
+	while (hash.endsWith('.')) {
+		hash = hash.substr(0, hash.length - 1);
+	}
+
+	return hash;
 }
 
 /* Socket Listeners for chat */

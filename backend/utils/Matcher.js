@@ -184,9 +184,10 @@ class Matcher {
                 });
 
                 try {
-                    connections.forEach((element) => {
-                        DB.updateUser({ blueConnections: element.blueConnections }, { email: element.email })
-                    });
+                    for (let i = 0; i < connections.length; i++) {
+                        const element = connections[i];
+                        await DB.updateUser({ blueConnections: element.blueConnections }, { email: element.email })
+                    }
     
                     return true;
                 } catch (error) {

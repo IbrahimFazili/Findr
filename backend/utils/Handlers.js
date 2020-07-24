@@ -84,7 +84,10 @@ async function leftSwipe(srcUser, targetUser, res, oncomplete) {
 async function deleteUser(email, res, oncomplete) {
 	try {
 		const success = await matcher.deleteUser(email);
-		if (success) res.status(201).end();
+		if (success) {
+			if (process.env.NODE_ENV !== "test") DB.deleteUser({ email });
+			res.status(201).end();
+		}
 		else res.status(500).send("Delete User Failed");
 		oncomplete();
 
