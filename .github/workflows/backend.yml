@@ -1,0 +1,42 @@
+# This workflow will do a clean install of node dependencies, build the source code and run tests across different versions of node
+# For more information see: https://help.github.com/actions/language-and-framework-guides/using-nodejs-with-github-actions
+
+name: Backend Node.js CI
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [10.x]
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Use Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v1
+      with:
+        node-version: ${{ matrix.node-version }}
+    - run: npm ci
+      working-directory: ./backend
+    - run: npm run build --if-present
+      working-directory: ./backend
+    - run: npm test
+      working-directory: ./backend
+      env:
+        ACCESS_KEY: ${{ secrets.AWS_ACCESS_KEY }}
+        SECRET_KEY: ${{ secrets.AWS_ACCESS_KEY }}
+        BUCKET_NAME: ${{ secrets.S3_BUCKET_NAME }}
+        BUCKET_REGION: ${{ secrets.S3_BUCKET_REGION }}
+        DATABASE_USER: ${{ secrets.MONGO_USER }}
+        DATABASE_PASS: ${{ secrets.MONGO_PASS }}
+        GMAIL_EMAIL: noreply.findrstudy@gmail.com
+        GMAIL_PASSWORD: ${{ secrets.GMAIL_PASSWORD }}
+        DOMAIN: api.findrapp.ca

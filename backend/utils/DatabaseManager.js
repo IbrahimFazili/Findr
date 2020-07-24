@@ -82,11 +82,11 @@ function insertUser(profile) {
     });
 }
 
-function fetchUsers(params) {
+function fetchUsers(query, options={}) {
 
     return new Promise(function (resolve, reject) {
         getCollection(COLLECTION_USERS).then((collection) => {
-            collection.find(params).toArray(function (err, result) {
+            collection.find(query, options).toArray(function (err, result) {
                 if (err) { reject(err); }
 
                 resolve(result);
@@ -97,11 +97,11 @@ function fetchUsers(params) {
     });
 }
 
-function fetchChat(chat_id) {
+function fetchChat(chat_id, options={}) {
 
     return new Promise(function (resolve, reject) {
         getCollection(COLLECTION_CHATS).then((collection) => {
-            collection.find({ _id: chat_id }).toArray(function (err, result) {
+            collection.find({ _id: chat_id }, options).toArray(function (err, result) {
                 if (err) { reject(err); }
 
                 resolve(result);
@@ -179,6 +179,17 @@ function deleteChat(id) {
     });
 }
 
+function deleteUser(query) {
+    return new Promise(function (resolve, reject) {
+        getCollection(COLLECTION_USERS).then((collection) => {
+            collection.deleteOne(query)
+            .then((res) => resolve(res))
+            .catch((err) => reject(err));
+
+        }).catch((reason) => reject(reason));
+    });
+}
+
 function deleteAllUsers() {
 
     return new Promise(function (resolve, reject) {
@@ -207,4 +218,5 @@ module.exports.fetchChat = fetchChat;
 module.exports.getCollection = getCollection;
 
 module.exports.deleteChat = deleteChat;
+module.exports.deleteUser = deleteUser;
 module.exports.deleteAllUsers = process.env.NODE_ENV === "test" ? deleteAllUsers : undefined;

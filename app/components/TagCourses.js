@@ -4,11 +4,11 @@ import {
   StyleSheet,
   View
 } from 'react-native';
- 
+
 import TagInput from 'react-native-tags-input';
- 
+
 const mainColor = '#3ca897';
- 
+
 class TagEducation extends React.Component {
   constructor(props) {
     super(props);
@@ -41,7 +41,6 @@ class TagEducation extends React.Component {
       let {courseChange} = this.props;
       courseChange(this.state.tags.tag , this.state.tags.tagsArray)
     };
- 
   render() {
     return (
       <View style={styles.container}>
@@ -64,7 +63,6 @@ class TagEducation extends React.Component {
     );
   }
 }
- 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -83,4 +81,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default TagEducation;
+export default TagEducation; 

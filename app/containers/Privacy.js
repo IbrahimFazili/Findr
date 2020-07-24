@@ -271,7 +271,7 @@ class Privacy extends React.Component{
                              to review the changes.{'\n'}</Text>
                     </ScrollView>
                 </View>
-                <Button mode="contained" style={styles.acceptButton}>
+                <Button mode="contained" style={styles.acceptButton} onPress={()=> this.props.navigation.navigate('Verify')}>
                     Accept
                 </Button>
             </View>
