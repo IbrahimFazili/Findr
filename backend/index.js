@@ -423,6 +423,10 @@ app.post("/signup", (req, res) => {
 
 app.get("/verifyUserEmail", (req, res) => {
 	const projection = { email: 1, active: 1  };
+	if (!req.query.key){
+		res.status(400).send("Verfication key missing");
+		return;
+	}
 	DB.fetchUsers({ verificationHash: req.query.key }, { projection })
 		.then(async (users) => {
 			if (users.length === 0) {
