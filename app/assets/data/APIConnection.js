@@ -139,7 +139,7 @@ class APIConnection {
       await fetch(`${this.ENDPOINT}:${this.PORT}/user/${email}`)
     ).json();
 
-    return users[0];
+    return users;
   }
 
   async fetchChats(email) {
