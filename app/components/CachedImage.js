@@ -11,7 +11,7 @@ class CachedImage extends React.Component {
     /**
      * Check if any of the items in the cache have expired. Expired items are deleted
      */
-    static validateCache() {
+    static async validateCache() {
         let cacheTable = await AsyncStorage.getItem('cacheTable');
         if (cacheTable) cacheTable = JSON.parse(cacheTable);
         else return;
