@@ -725,6 +725,7 @@ describe("Test Cases", () => {
                     
                 } catch (error) {
                     console.log(error);
+                    throw Error(error);
                 }
 
                 done(); 
