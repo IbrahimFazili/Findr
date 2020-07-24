@@ -98,11 +98,6 @@ class Settings extends React.Component{
                 <SettingsList borderColor='#c8c7cc' defaultItemSize={50}>
                     <SettingsList.Item 
                       title="Delete Account"
-                      onPress={() => this.setState({
-                        visible: true
-                      })}
-                      hasNavArrow={false}
-                      titleStyle={styles.deleteAccount}
                     />
                 </SettingsList>
               </View>
