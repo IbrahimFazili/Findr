@@ -22,6 +22,7 @@ const { SUPPORTED_UNIVERSITIES } = require("./vars");
 
 const callbackQueue = new CallbackQueue();
 const CONNECTIONS_CHUNK_SIZE = 25;
+const MESSAGES_CHUNK_SIZE = 50;
 var isServerOutdated = false;
 
 app.use(bodyParser.json());
@@ -197,7 +198,8 @@ app.get("/user/:user_email/connections", (req, res) => {
 
 app.get("/fetchChatData", (req, res) => {
 	const MSG_TO = req.query.to;
-	const projection = { chats: 1 };
+	var projection = { chats: 1 };
+	const skipCount = Number(req.query.skipCount);
 	DB.fetchUsers({ email: req.query.from }, { projection })
 		.then(async (users) => {
 			const user = users[0];
@@ -206,11 +208,16 @@ app.get("/fetchChatData", (req, res) => {
 
 			for (let i = 0; i < user.chats.length && !chatFound; i++) {
 				try {
-					chat = (await DB.fetchChat(user.chats[i]))[0].chat;
+					projection = { 'chat.user1': 1, 'chat.user2': 1 };
+					chat = (await DB.fetchChat(user.chats[i], { projection }))[0].chat;
 
 					if (chat.user1 === MSG_TO || chat.user2 === MSG_TO) {
 						chatFound = true;
+						projection = { "chat.messages": { $slice: [ -skipCount - MESSAGES_CHUNK_SIZE, MESSAGES_CHUNK_SIZE] } }
+						// projection = { chat: { messages: { $slice: [ -skipCount, MESSAGES_CHUNK_SIZE] } } };
+						chat = (await DB.fetchChat(user.chats[i], { projection }))[0].chat;
 						res.status(200).send(JSON.stringify(chat));
+						break;
 					}
 				} catch (err) {
 					console.log("err fetching chats");

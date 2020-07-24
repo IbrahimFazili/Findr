@@ -97,11 +97,11 @@ function fetchUsers(query, options={}) {
     });
 }
 
-function fetchChat(chat_id) {
+function fetchChat(chat_id, options={}) {
 
     return new Promise(function (resolve, reject) {
         getCollection(COLLECTION_CHATS).then((collection) => {
-            collection.find({ _id: chat_id }).toArray(function (err, result) {
+            collection.find({ _id: chat_id }, options).toArray(function (err, result) {
                 if (err) { reject(err); }
 
                 resolve(result);
