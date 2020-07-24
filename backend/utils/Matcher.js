@@ -307,6 +307,10 @@ class Matcher {
             if ( greenConnectionsIndex2 !== -1){
                 blockedUser.greenConnections.splice(greenConnectionsIndex2, 1);
             }
+
+            srcUser.blockedUsers.push(blockedUser._id);
+            await DB.updateUser(srcUser, { email: srcEmail });
+            await DB.updateUser(blockedUser, { email: blockedEmail });
             return true;
         } catch (fetchErr) {
             console.log(fetchErr);
