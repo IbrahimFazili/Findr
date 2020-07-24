@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, AsyncStorage, Image, Dimensions, NetInfo } from 'react-native';
+import { View, AsyncStorage, Image, Dimensions, NetInfo, Text} from 'react-native';
 import styles from '../assets/styles';
 import { DefaultTheme, Provider as PaperProvider, TextInput, Button } from 'react-native-paper';
 import APIConnection from '../assets/data/APIConnection';
