@@ -414,7 +414,7 @@ app.post("/signup", (req, res) => {
 		blockedUsers: [],
 		eventQueue: { events: [] },
 		active: false,
-		verificationHash: bcrypt.hashSync(req.body.email + generateRandomNumber(), 3)
+		verificationHash: generateVerificationHash(req.body.email)
 	};
 	
 	callbackQueue.enqueue(signUp, requestData, res);
@@ -501,6 +501,15 @@ function generateRandomNumber() {
 		randomNumber = randomNumber + randomDigit;
 	}
 	return randomNumber;
+}
+
+function generateVerificationHash(email) {
+	let hash = bcrypt.hashSync(email + generateRandomNumber(), 3);
+	while (hash.endsWith('.')) {
+		hash = hash.substr(0, hash.length - 1);
+	}
+
+	return hash;
 }
 
 /* Socket Listeners for chat */
