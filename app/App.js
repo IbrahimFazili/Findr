@@ -20,6 +20,7 @@ import VerifiyScreen from "./containers/Verifiy";
 import SettingsScreen from "./containers/Settings";
 import OtherProfileScreen from "./containers/OtherProfile";
 import ChatPopUpScreen from "./components/ChatPopup";
+import OtherProfileScreen2 from "./containers/OtherProfile2";
 
 import HomeIcon_Grey from "./assets/icons/home.svg";
 import HomeIcon_Green from "./assets/icons/home_g.svg";
@@ -30,9 +31,9 @@ import PersonIcon_Green from "./assets/icons/person_g.svg";
 import ChatIcon_Grey from "./assets/icons/chat.svg";
 import ChatIcon_Green from "./assets/icons/chat_g.svg";
 
-import APIConnection from './assets/data/APIConnection';
+import APIConnection from "./assets/data/APIConnection";
 
-const DIMENTIONS = Dimensions.get('window');
+const DIMENTIONS = Dimensions.get("window");
 
 const ICON_WIDTH = DIMENTIONS.width * 0.05;
 const ICON_HEIGHT = DIMENTIONS.height * 0.03;
@@ -185,7 +186,7 @@ const RootStack = createStackNavigator(
 			screen: Chat,
 		},
 		Profile: {
-			screen: ProfileScreen
+			screen: ProfileScreen,
 		},
 		Privacy: {
 			screen: PrivacyScreen,
@@ -200,14 +201,17 @@ const RootStack = createStackNavigator(
 			screen: OtherProfileScreen,
 		},
 		ChatPopup: {
-			screen:ChatPopUpScreen
+			screen: ChatPopUpScreen,
 		},
 		Verify: {
-			screen: VerifiyScreen
+			screen: VerifiyScreen,
 		},
 		Settings: {
-			screen: SettingsScreen
-		}
+			screen: SettingsScreen,
+		},
+		OtherProfile2: {
+			screen: OtherProfileScreen2,
+		},
 	},
 	{ mode: "modal", headerMode: "none" }
 );
