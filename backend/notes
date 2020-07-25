@@ -1,0 +1,11 @@
+[msg6, msg5, msg4, msg3, msg2, msg1] (len = 6)
+
+- New messages are appended to the list
+- Lower bound not inclusive in index range
+
+1) User requests chunk 0 -> ((len - 1) - (0 * 2)) to ((len - 1) - (0*2 + 2)) = index 5 to 3 
+    -> elements in range (3, 5] ->  chunk0 = [msg2, msg1]
+
+2) User has conversation of 2 msgs -> new msg list = [msg8, msg7, msg6, msg5, msg4, msg3, msg2, msg1] (len = 8)
+
+3) User request chunk 1 -> ((len - 1) - (1 * 2)) to ((len - 1) - (1*2 + 2)) -> index in range (3 to 5] = [msg4, msg3]

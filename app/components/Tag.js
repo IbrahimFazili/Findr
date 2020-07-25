@@ -4,11 +4,11 @@ import {
   StyleSheet,
   View
 } from 'react-native';
- 
+
 import TagInput from 'react-native-tags-input';
- 
+
 const mainColor = '#3ca897';
- 
+
 class Tag extends React.Component {
   constructor(props) {
     super(props);
@@ -42,7 +42,7 @@ class Tag extends React.Component {
       let {wordChange} = this.props;
       wordChange(this.state.tags.tag , this.state.tags.tagsArray)
     };
- 
+
   render() {
     return (
       <View style={styles.container}>
@@ -65,15 +65,15 @@ class Tag extends React.Component {
     );
   }
 }
- 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
+    fontSize: 20
   },
   textInput: {
-      height: 30,
+      height: 20,
       backgroundColor: 'white',
   },
   tag: {
@@ -84,4 +84,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default Tag;
+export default Tag; 

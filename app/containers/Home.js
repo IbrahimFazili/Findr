@@ -1,10 +1,10 @@
 import React from "react";
-import { View, ImageBackground, AsyncStorage, Image, NetInfo } from "react-native";
+import { View, ImageBackground, AsyncStorage, Image, NetInfo, TouchableOpacity } from "react-native";
 import CardStack, { Card } from "react-native-card-stack-swiper";
-import Filters from "../components/Filters";
 import CardItem from "../components/CardItem";
 import styles from "../assets/styles";
 import APIConnection from "../assets/data/APIConnection";
+import ProfilePopup from "../components/ProfilePopup";
 
 const MAX_LENGTH = 150;
 
@@ -15,9 +15,19 @@ class Home extends React.Component {
 
     this.state = {
       cards: [],
+      visible: false,
       API: new APIConnection(),
+      keywords: [],
+      name: "",
+      bio: "",
+      uni: "",
       dataLoadRequired: true,
       isConnected: true,
+      visible: false,
+      name: "",
+      keywords: [],
+      bio: "",
+      uni: "",
     };
   }
 
@@ -31,19 +41,27 @@ class Home extends React.Component {
   };
 
   async componentWillMount() {
+    
     try {
       let storedEmail = await AsyncStorage.getItem('storedEmail');
-      if (storedEmail === null) {
-        this.props.navigation.navigate('LogIn');
+      if (storedEmail === null){
+        if((await AsyncStorage.getItem('onboarding')) === "1") {
+          this.props.navigation.navigate('LogIn');
+        }
+
+        if((await AsyncStorage.getItem('onboarding')) === "0"){
+          await AsyncStorage.setItem('onboarding', '1');
+          this.props.navigation.navigate("Onboarding");
+        }
       }
-      
-      // this.props.navigation.navigate("Onboarding");
-    } catch (err) {
+    } 
+    catch (err) {
       console.log(err);
     }
   }
 
   async componentDidMount() {
+    await AsyncStorage.setItem('onboarding', '0');
     let storedEmail = await AsyncStorage.getItem("storedEmail");
     NetInfo.isConnected.addEventListener('connectionChange', this.handleConnectivityChange);
 
@@ -95,26 +113,40 @@ class Home extends React.Component {
             >
               {this.state.cards.map((item, index) => (
                 <Card key={index}>
-                  <CardItem
-                    image={{ uri: item.image }}
-                    name={item.name}
-                    keywords={item.keywords}
-                    description={
-                      item.bio.length > MAX_LENGTH
-                        ? item.bio.substring(0, MAX_LENGTH) + '...'
-                        : item.bio
-                    }
-                    actions
-                    onPressRight={() => this.swiper.swipeRight()}
-                    onPressLeft={() => this.swiper.swipeLeft()}
-                  />
+                  <TouchableOpacity 
+                  activeOpacity={1} 
+                  onPress={() => this.setState({
+                    visible: true,
+                    name: item.name,
+                    keywords: item.keywords, 
+                    bio: item.bio,
+                    uni: item.uni
+                  })}>
+                    <CardItem
+                      image={{ uri: item.image }}
+                      name={item.name}
+                      keywords={item.keywords}
+                      description={
+                        item.bio.length > MAX_LENGTH
+                          ? item.bio.substring(0, MAX_LENGTH) + '...'
+                          : item.bio
+                      }
+                      actions
+                      onPressRight={() => this.swiper.swipeRight()}
+                      onPressLeft={() => this.swiper.swipeLeft()}
+                    />
+                  </TouchableOpacity>
                 </Card>
               ))}
             </CardStack>
           </View>
-          <View style={styles.filterStyle}>
-            <Filters />
-          </View>
+          <ProfilePopup 
+            visible={this.state.visible} 
+            name={this.state.name}
+            keywords={this.state.keywords}
+            bio={this.state.bio}
+            uni={this.state.uni}
+          />
         </View>
       </ImageBackground>
     );

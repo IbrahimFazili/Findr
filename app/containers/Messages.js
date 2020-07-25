@@ -86,7 +86,9 @@ class Messages extends React.Component {
                   <Message
                     image={{ uri: item.image }}
                     name={item.name}
-                    lastMessage={item.messages[item.messages.length - 1].msg}
+                    lastMessage={APIConnection.MESSAGE_QUEUES[item.email] ?
+                      APIConnection.MESSAGE_QUEUES[item.email].peekNewest().msg
+                      : item.messages[item.messages.length - 1].msg}
                   />
                 </TouchableOpacity>
               )}

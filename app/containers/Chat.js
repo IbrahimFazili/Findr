@@ -9,13 +9,12 @@ import {
 	ImageBackground,
 	Dimensions,
 } from "react-native";
-import { Header, Image } from "react-native-elements";
+import { Header, Image, ThemeConsumer } from "react-native-elements";
 import KeyboardSpacer from "react-native-keyboard-spacer";
 import AutogrowInput from "react-native-autogrow-input";
 import { moderateScale } from "react-native-size-matters";
 import ImagePicker from "react-native-image-picker";
 import { Thumbnail } from "native-base";
-import io from "socket.io-client";
 import APIConnection from "../assets/data/APIConnection";
 
 import AttachIcon from "../assets/icons/attach.svg";
@@ -41,236 +40,282 @@ const renderCustomHeader = () => {
 	);
 };
 
+function convertTimestamptoTime(unixTimestamp) {
+	dateObj = new Date(unixTimestamp);
+	hours = dateObj.getHours();
+	minutes = dateObj.getMinutes();
+
+	if (hours >= 12) {
+		hours = hours % 12;
+		formattedTime =
+			hours.toString() + ":" + minutes.toString().padStart(2, "0") + " PM";
+	} else {
+		formattedTime =
+			hours.toString() + ":" + minutes.toString().padStart(2, "0") + " AM";
+	}
+
+	return formattedTime;
+}
+
 export default class Chat extends Component {
-	constructor(props) {
-		super(props);
+  constructor(props) {
+    super(props);
 
-		this.socket = null;
-		this.state = {
-			own_email: props.navigation.state.params.own_email,
-			messages: props.navigation.state.params.messages,
-			inputBarText: "",
-			other_user: props.navigation.state.params.user_name,
-			other_user_image: props.navigation.state.params.user_image,
-			other_user_email: props.navigation.state.params.user_email,
-			showPopup: false,
-		};
-	}
+    this.state = {
+      own_email: props.navigation.state.params.own_email,
+      messages: props.navigation.state.params.messages,
+      inputBarText: '',
+      selectedMedia: [],
+      other_user: props.navigation.state.params.user_name,
+      other_user_image: props.navigation.state.params.user_image,
+      other_user_email: props.navigation.state.params.user_email
+    };
+  }
 
-	static navigationOptions = {
-		title: "Chat",
-	};
+  static navigationOptions = {
+    title: 'Chat',
+  };
 
-	//fun keyboard stuff- we use these to get the end of the ScrollView to "follow" the top of the InputBar as the keyboard rises and falls
-	componentWillMount() {
-		this.keyboardDidShowListener = Keyboard.addListener(
-			"keyboardDidShow",
-			this.keyboardDidShow.bind(this)
-		);
-		this.keyboardDidHideListener = Keyboard.addListener(
-			"keyboardDidHide",
-			this.keyboardDidHide.bind(this)
-		);
-	}
+  //fun keyboard stuff- we use these to get the end of the ScrollView to "follow" the top of the InputBar as the keyboard rises and falls
+  componentWillMount() {
+    this.keyboardDidShowListener = Keyboard.addListener(
+      'keyboardDidShow',
+      this.keyboardDidShow.bind(this)
+    );
+    this.keyboardDidHideListener = Keyboard.addListener(
+      'keyboardDidHide',
+      this.keyboardDidHide.bind(this)
+    );
+  }
 
-	componentWillUnmount() {
-		this.keyboardDidShowListener.remove();
-		this.keyboardDidHideListener.remove();
-	}
+  componentWillUnmount() {
+    this.keyboardDidShowListener.remove();
+    this.keyboardDidHideListener.remove();
+  }
 
-	//When the keyboard appears, this gets the ScrollView to move the end back "up" so the last message is visible with the keyboard up
-	//Without this, whatever message is the keyboard's height from the bottom will look like the last message.
-	keyboardDidShow(e) {
-		this.scrollView.scrollToEnd();
-	}
+  //When the keyboard appears, this gets the ScrollView to move the end back "up" so the last message is visible with the keyboard up
+  //Without this, whatever message is the keyboard's height from the bottom will look like the last message.
+  keyboardDidShow(e) {
+    this.scrollView.scrollToEnd();
+  }
 
-	//When the keyboard dissapears, this gets the ScrollView to move the last message back down.
-	keyboardDidHide(e) {
-		this.scrollView.scrollToEnd();
-	}
+  //When the keyboard dissapears, this gets the ScrollView to move the last message back down.
+  keyboardDidHide(e) {
+    this.scrollView.scrollToEnd();
+  }
 
-	//scroll to bottom when first showing the view
-	componentDidMount() {
-		setTimeout(
-			function () {
-				this.scrollView.scrollToEnd();
-			}.bind(this)
-		);
+  //scroll to bottom when first showing the view
+  componentDidMount() {
+    this._isMounted = true;
+    setTimeout(
+      function () {
+        this.scrollView.scrollToEnd();
+      }.bind(this)
+    );
 
-		const API = new APIConnection();
-		this.socket = io(API.ENDPOINT + ":" + API.PORT, {
-			query: "name=" + this.state.own_email,
-		});
-		this.socket.on("new msg", (msg) => {
-			this.state.messages.push({
-				user: msg.from,
-				msg: msg.msg,
-			});
+    APIConnection.attachObserver(this.onNewMessage.bind(this), this.state.other_user_email);
+    this.onNewMessage();
+  }
 
-			this.setState({
-				messages: this.state.messages,
-			});
-		});
-	}
+  //this is a bit sloppy: this is to make sure it scrolls to the bottom when a message is added, but
+  //the component could update for other reasons, for which we wouldn't want it to scroll to the bottom.
+  componentDidUpdate() {
+    setTimeout(
+      function () {
+        this.scrollView.scrollToEnd();
+      }.bind(this)
+    );
+    this.onNewMessage();
+  }
 
-	//this is a bit sloppy: this is to make sure it scrolls to the bottom when a message is added, but
-	//the component could update for other reasons, for which we wouldn't want it to scroll to the bottom.
-	componentDidUpdate() {
-		setTimeout(
-			function () {
-				this.scrollView.scrollToEnd();
-			}.bind(this)
-		);
-	}
+  onNewMessage() {
+    const msgQueue = APIConnection.MESSAGE_QUEUES[this.state.other_user_email];
+    if (!msgQueue) return;
+    const newMessages = [];
+    while (!msgQueue.isEmpty()) {
+      const msg = msgQueue.dequeue();
+      newMessages.push({
+        user: msg.from,
+        msg: msg.msg,
+        timestamp: msg.time
+      });
+    }
+    if (newMessages.length > 0) {
+      this.setState({ messages: this.state.messages.concat(newMessages) });
+    }
+  }
 
-	_sendMessage() {
-		this.state.messages.push({
-			user: this.state.own_email,
-			msg: this.state.inputBarText,
-		});
+  _sendMessage() {
+    const timestamp = (new Date()).getTime();
+    this.state.messages.push({
+      user: this.state.own_email,
+      msg: this.state.inputBarText,
+      timestamp
+    });
 
-		const msg = {
-			from: this.state.own_email,
-			to: this.state.other_user_email,
-			msg: this.state.inputBarText,
-			media: [],
-			time: new Date().getTime(),
-			public_key: null,
-		};
+    for (let i = 0; i < this.state.selectedMedia.length; i++) {
+      const media = this.state.selectedMedia[i];
+      APIConnection.mediaStore[media.name] = { uri: media.uri, type: media.type };
+      delete media.uri;      
+    }
 
-		this.socket.emit("new msg", msg);
+    const msg = {
+      from: this.state.own_email,
+      to: this.state.other_user_email,
+      msg: this.state.inputBarText,
+      media: this.state.selectedMedia,
+      time: timestamp,
+      public_key: null
+    }
 
-		this.setState({
-			messages: this.state.messages,
-			inputBarText: "",
-		});
-	}
+    APIConnection.socket.emit("new msg", msg);
 
-	_onChangeInputBarText(text) {
-		this.setState({
-			inputBarText: text,
-		});
-	}
+    this.setState({
+      messages: this.state.messages,
+      inputBarText: '',
+      selectedMedia: []
+    });
+  }
 
-	//This event fires way too often.
-	//We need to move the last message up if the input bar expands due to the user's new message exceeding the height of the box.
-	//We really only need to do anything when the height of the InputBar changes, but AutogrowInput can't tell us that.
-	//The real solution here is probably a fork of AutogrowInput that can provide this information.
-	_onInputSizeChange() {
-		setTimeout(
-			function () {
-				this.scrollView.scrollToEnd({ animated: false });
-			}.bind(this)
-		);
-	}
+  _onChangeInputBarText(text) {
+    this.setState({
+      inputBarText: text,
+    });
+  }
 
-	render() {
-		var messages = [];
-		const own_email = this.state.own_email;
+  _onChangeMedia(selection) {
+    const media = {
+      name: selection.fileName,
+      type: selection.type,
+      uri: selection.uri
+    };
 
-		this.state.messages.forEach(function (message, index) {
-			messages.push(
-				<MessageBubble
-					key={index}
-					direction={message.user === own_email ? "left" : "right"}
-					text={message.msg}
-					time={message.timestamp}
+    if (this.state.selectedMedia.length > 0) {
+      this.state.selectedMedia[0] = media
+    } else this.state.selectedMedia.push(media);
+
+    this.setState({ selectedMedia: this.state.selectedMedia });
+  }
+
+  //This event fires way too often.
+  //We need to move the last message up if the input bar expands due to the user's new message exceeding the height of the box.
+  //We really only need to do anything when the height of the InputBar changes, but AutogrowInput can't tell us that.
+  //The real solution here is probably a fork of AutogrowInput that can provide this information.
+  _onInputSizeChange() {
+    setTimeout(
+      function () {
+        this.scrollView.scrollToEnd({ animated: false });
+      }.bind(this)
+    );
+  }
+
+  render() {
+    var messages = [];
+    const own_email = this.state.own_email;
+
+    this.state.messages.forEach(function (message, index) {
+      messages.push(
+        <MessageBubble
+          key={index}
+          direction={message.user === own_email ? 'left' : 'right'}
+          text={message.msg}
+          time={message.timestamp}
+        />
+      );
+    });
+
+    return (
+		<View style={styles.outer}>
+			<ImageBackground
+				source={require("../assets/images/15.png")}
+				style={styles.bg}
+			>
+				<Header
+					statusBarProps={{ barStyle: "light-content" }}
+					barStyle="light-content" // or directly
+					centerComponent={() => {
+						return (
+							<View style={styles.chatHeader}>
+								<TouchableOpacity
+									style={styles.chatBack}
+									onPress={() =>
+										this.props.navigation.goBack()
+									}
+								>
+									<BackButton
+										width={DIMENSION_WIDTH * 0.02}
+										height={DIMENSION_HEIGHT * 0.02}
+									/>
+								</TouchableOpacity>
+								<Thumbnail
+									small
+									style={{
+										alignSelf: "center",
+										marginTop: 0,
+										marginRight: DIMENSION_WIDTH * 0.02,
+									}}
+									source={this.state.other_user_image}
+									key={this.state.own_email}
+								/>
+								<Text style={styles.headerTest}>
+									{this.state.other_user}
+								</Text>
+							</View>
+						);
+					}}
+					rightComponent={() => {
+						return (
+							<View>
+								<TouchableOpacity
+									onPress={() =>
+										this.setState({
+											showPopup: true,
+										})
+									}
+								>
+									<InfoIcon
+										width={DIMENSION_WIDTH * 0.058}
+										height={DIMENSION_HEIGHT * 0.058}
+									/>
+								</TouchableOpacity>
+								<ChatPopup
+									visible={this.state.showPopup}
+									email={this.state.other_user_email}
+									navigation={this.props.navigation}
+									own_email={this.state.own_email}
+								/>
+							</View>
+						);
+					}}
+					containerStyle={{
+						backgroundColor: "white",
+						justifyContent: "space-around",
+						elevation: 15,
+						paddingBottom: DIMENSION_HEIGHT * 0.03,
+						height: DIMENSION_HEIGHT * 0.08,
+					}}
 				/>
-			);
-		});
 
-		return (
-			<View style={styles.outer}>
-				<ImageBackground
-					source={require("../assets/images/15.png")}
-					style={styles.bg}
+				<ScrollView
+					ref={(ref) => {
+						this.scrollView = ref;
+					}}
+					style={styles.messages}
 				>
-					<Header
-						statusBarProps={{ barStyle: "light-content" }}
-						barStyle="light-content" // or directly
-						centerComponent={() => {
-							return (
-								<View style={styles.chatHeader}>
-									<TouchableOpacity
-										style={styles.chatBack}
-										onPress={() =>
-											this.props.navigation.goBack()
-										}
-									>
-										<BackButton
-											width={DIMENSION_WIDTH * 0.02}
-											height={DIMENSION_HEIGHT * 0.02}
-										/>
-									</TouchableOpacity>
-									<Thumbnail
-										small
-										style={{
-											alignSelf: "center",
-											marginTop: 0,
-											marginRight: DIMENSION_WIDTH * 0.02,
-										}}
-										source={this.state.other_user_image}
-										key={this.state.own_email}
-									/>
-									<Text style={styles.headerTest}>
-										{this.state.other_user}
-									</Text>
-								</View>
-							);
-						}}
-						rightComponent={() => {
-							return (
-								<View>
-									<TouchableOpacity
-										onPress={() =>
-											this.setState({
-												showPopup: true,
-											})
-										}
-									>
-										<InfoIcon
-											width={DIMENSION_WIDTH * 0.058}
-											height={DIMENSION_HEIGHT * 0.058}
-										/>
-									</TouchableOpacity>
-									<ChatPopup
-										visible={this.state.showPopup}
-										email={this.state.other_user_email}
-										navigation={this.props.navigation}
-										own_email={this.state.own_email}
-									/>
-								</View>
-							);
-						}}
-						containerStyle={{
-							backgroundColor: "white",
-							justifyContent: "space-around",
-							elevation: 15,
-							paddingBottom: DIMENSION_HEIGHT * 0.03,
-							height: DIMENSION_HEIGHT * 0.08,
-						}}
-					/>
-
-					<ScrollView
-						ref={(ref) => {
-							this.scrollView = ref;
-						}}
-						style={styles.messages}
-					>
-						{messages}
-					</ScrollView>
-					<InputBar
-						onSendPressed={() => this._sendMessage()}
-						onSizeChange={() => this._onInputSizeChange()}
-						onChangeText={(text) =>
-							this._onChangeInputBarText(text)
-						}
-						text={this.state.inputBarText}
-					/>
-				</ImageBackground>
-			</View>
-		);
-	}
+					{messages}
+				</ScrollView>
+				<InputBar
+					onSendPressed={() => this._sendMessage()}
+					onSizeChange={() => this._onInputSizeChange()}
+					onChangeText={(text) =>
+						this._onChangeInputBarText(text)
+					}
+					text={this.state.inputBarText}
+				/>
+			</ImageBackground>
+		</View>
+	);
+  }
 }
 
 //The bubbles that appear on the left or the right for the messages.
@@ -296,18 +341,39 @@ class MessageBubble extends Component {
 				? styles.messageBubbleTextLeft
 				: styles.messageBubbleTextRight;
 
-		return (
-			<View
-				style={{
-					justifyContent: "space-between",
-					flexDirection: "row",
-				}}
-			>
-				{leftSpacer}
-				<View style={bubbleStyles}>
-					<Text style={bubbleTextStyle}>{this.props.text}</Text>
+		var leftTime =
+			this.props.direction == "left" ? (
+				<View style={styles.timeLeft}>
+					<Text style={styles.timeText}>
+						{convertTimestamptoTime(this.props.time)}
+					</Text>
 				</View>
-				{rightSpacer}
+			) : null;
+		var rightTime =
+			this.props.direction == "right" ? (
+				<View style={styles.timeRight}>
+					<Text style={styles.timeText}>
+						{convertTimestamptoTime(this.props.time)}
+					</Text>
+				</View>
+			) : null;
+
+		return (
+			<View>
+				<View
+					style={{
+						justifyContent: "space-between",
+						flexDirection: "row",
+					}}
+				>
+					{leftSpacer}
+					<View style={bubbleStyles}>
+						<Text style={bubbleTextStyle}>{this.props.text}</Text>
+					</View>
+					{rightSpacer}
+				</View>
+				{leftTime}
+				{rightTime}
 			</View>
 		);
 	}
@@ -315,87 +381,74 @@ class MessageBubble extends Component {
 
 //The bar at the bottom with a textbox and a send button.
 class InputBar extends Component {
-	//AutogrowInput doesn't change its size when the text is changed from the outside.
-	//Thus, when text is reset to zero, we'll call it's reset function which will take it back to the original size.
-	//Another possible solution here would be if InputBar kept the text as state and only reported it when the Send button
-	//was pressed. Then, resetInputText() could be called when the Send button is pressed. However, this limits the ability
-	//of the InputBar's text to be set from the outside.
-	componentWillReceiveProps(nextProps) {
-		if (nextProps.text === "") {
-			this.autogrowInput.resetInputText();
-		}
-	}
+  //AutogrowInput doesn't change its size when the text is changed from the outside.
+  //Thus, when text is reset to zero, we'll call it's reset function which will take it back to the original size.
+  //Another possible solution here would be if InputBar kept the text as state and only reported it when the Send button
+  //was pressed. Then, resetInputText() could be called when the Send button is pressed. However, this limits the ability
+  //of the InputBar's text to be set from the outside.
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.text === '') {
+      this.autogrowInput.resetInputText();
+    }
+  }
 
-	chooseImage = () => {
-		let options = {
-			title: "Select Image",
-			storageOptions: {
-				skipBackup: true,
-				path: "images",
-			},
-		};
-		ImagePicker.showImagePicker(options, (response) => {
-			console.log("Response = ", response);
+  chooseImage = () => {
+    let options = {
+      title: 'Select Image',
+      storageOptions: {
+        skipBackup: true,
+        path: 'images',
+      },
+    };
+    ImagePicker.showImagePicker(options, (response) => {
 
-			if (response.didCancel) {
-				console.log("User cancelled image picker");
-			} else if (response.error) {
-				console.log("ImagePicker Error: ", response.error);
-			} else if (response.customButton) {
-				console.log(
-					"User tapped custom button: ",
-					response.customButton
-				);
-				alert(response.customButton);
-			} else {
-				const source = { uri: response.uri };
+      if (response.didCancel) {
+        console.log('User cancelled image picker');
+      } else if (response.error) {
+        console.log('ImagePicker Error: ', response.error);
+      } else if (response.customButton) {
+        console.log('User tapped custom button: ', response.customButton);
+        alert(response.customButton);
+      } else {
+        const source = { uri: response.uri };
 
-				console.log("response", JSON.stringify(response));
-				this.setState({
-					filePath: response,
-					fileData: response.data,
-					fileUri: response.uri,
-				});
-			}
-		});
-	};
+        // file type: response.type
+        // file name: response.fileName
+        this.props.onChangeMedia(response);
+      }
+    });
+  };
 
-	render() {
-		return (
-			<View style={styles.inputBar}>
-				<TouchableOpacity
-					style={styles.mediaButton}
-					onPress={() => this.chooseImage()}
-				>
-					<AttachIcon
-						width={DIMENSION_WIDTH * 0.06}
-						height={DIMENSION_HEIGHT * 0.06}
-					/>
-				</TouchableOpacity>
-				<AutogrowInput
-					style={styles.textBox}
-					ref={(ref) => {
-						this.autogrowInput = ref;
-					}}
-					multiline={true}
-					defaultHeight={DIMENSION_HEIGHT * 0.045}
-					onChangeText={(text) => this.props.onChangeText(text)}
-					onContentSizeChange={this.props.onSizeChange}
-					value={this.props.text}
-					placeholder={"Type a message"}
-				/>
-				<TouchableOpacity
-					style={styles.sendButton}
-					onPress={() => this.props.onSendPressed()}
-				>
-					<SendIcon
-						width={DIMENSION_WIDTH * 0.09}
-						height={DIMENSION_HEIGHT * 0.09}
-					/>
-				</TouchableOpacity>
-			</View>
-		);
-	}
+  render() {
+    return (
+      <View style={styles.inputBar}>
+        <TouchableOpacity
+        style={styles.mediaButton}
+        onPress={() => this.chooseImage()}
+        >
+          <AttachIcon width={DIMENSION_WIDTH * 0.07} height={DIMENSION_HEIGHT * 0.07}/>
+        </TouchableOpacity>
+        <AutogrowInput
+          style={styles.textBox}
+          ref={(ref) => {
+            this.autogrowInput = ref;
+          }}
+          multiline={true}
+          defaultHeight={DIMENSION_HEIGHT * 0.07}
+          onChangeText={(text) => this.props.onChangeText(text)}
+          onContentSizeChange={this.props.onSizeChange}
+          value={this.props.text}
+          placeholder={"Type a message"}
+        />
+        <TouchableOpacity
+          style={styles.sendButton}
+          onPress={() => this.props.onSendPressed()}
+        >
+          <SendIcon width={DIMENSION_WIDTH * 0.1} height={DIMENSION_HEIGHT * 0.1}/>
+        </TouchableOpacity>
+      </View>
+    );
+  }
 }
 
 //TODO: separate these out. This is what happens when you're in a hurry!
@@ -540,6 +593,21 @@ const styles = StyleSheet.create({
 	itemOut: {
 		alignSelf: "flex-end",
 		marginRight: 20,
+	},
+	timeLeft: {
+		alignSelf: "flex-end",
+		marginTop: DIMENSION_HEIGHT * 0.001,
+		marginRight: DIMENSION_WIDTH * 0.05,
+		marginBottom: DIMENSION_HEIGHT * 0.005,
+	},
+	timeRight: {
+		alignSelf: "flex-start",
+		marginTop: DIMENSION_HEIGHT * 0.001,
+		marginLeft: DIMENSION_WIDTH * 0.05,
+		marginBottom: DIMENSION_HEIGHT * 0.005,
+	},
+	timeText: {
+		color: "#969693",
 	},
 
 	//Header

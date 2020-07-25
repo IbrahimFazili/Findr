@@ -1,5 +1,5 @@
 import React from "react";
-import { Text, Dimensions, Platform, View } from "react-native";
+import { Dimensions, Platform, View } from "react-native";
 import {
 	createBottomTabNavigator,
 	createAppContainer,
@@ -15,8 +15,12 @@ import ProfileScreen from "./containers/Profile";
 import PrivacyScreen from "./containers/Privacy";
 import OnboardingScreen from "./containers/Onboarding";
 import InternetScreen from "./containers/OfflinePop";
+import VerifiyScreen from "./containers/Verifiy";
+
+import SettingsScreen from "./containers/Settings";
 import OtherProfileScreen from "./containers/OtherProfile";
 import ChatPopUpScreen from "./components/ChatPopup";
+import OtherProfileScreen2 from "./containers/OtherProfile2";
 
 import HomeIcon_Grey from "./assets/icons/home.svg";
 import HomeIcon_Green from "./assets/icons/home_g.svg";
@@ -27,7 +31,9 @@ import PersonIcon_Green from "./assets/icons/person_g.svg";
 import ChatIcon_Grey from "./assets/icons/chat.svg";
 import ChatIcon_Green from "./assets/icons/chat_g.svg";
 
-const DIMENTIONS = Dimensions.get("window");
+import APIConnection from './assets/data/APIConnection';
+
+const DIMENTIONS = Dimensions.get('window');
 
 const ICON_WIDTH = DIMENTIONS.width * 0.05;
 const ICON_HEIGHT = DIMENTIONS.height * 0.03;
@@ -179,6 +185,9 @@ const RootStack = createStackNavigator(
 		ChatPage: {
 			screen: Chat,
 		},
+		Profile: {
+			screen: ProfileScreen,
+		},
 		Privacy: {
 			screen: PrivacyScreen,
 		},
@@ -192,12 +201,21 @@ const RootStack = createStackNavigator(
 			screen: OtherProfileScreen,
 		},
 		ChatPopup: {
-			screen:ChatPopUpScreen
-		}
+			screen: ChatPopUpScreen,
+		},
+		Verify: {
+			screen: VerifiyScreen,
+		},
+		Settings: {
+			screen: SettingsScreen,
+		},
+		OtherProfile2: {
+			screen: OtherProfileScreen2,
+		},
 	},
 	{ mode: "modal", headerMode: "none" }
 );
 
-// () => this.props.navigation.navigate('SignUp') on Home if signup/login needed
+APIConnection.initSocketConnection();
 
 export default createAppContainer(RootStack);

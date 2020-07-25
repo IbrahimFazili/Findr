@@ -274,6 +274,40 @@ export default StyleSheet.create({
     fontSize: 13,
   },
 
+  errorName: {
+    left: DIMENSION_WIDTH * 0.17,
+    top: DIMENSION_HEIGHT * - 0.03,
+    // color: "orange"
+    color: "#d1984b"
+  },
+
+  errorMail: {
+    left: DIMENSION_WIDTH * 0.25,
+    top: DIMENSION_HEIGHT * - 0.03,
+    // color: "orange"
+    color: "#d1984b"
+  },
+
+  loginError: {
+    left: DIMENSION_WIDTH * 0.25,
+    top: DIMENSION_HEIGHT * - 0.03,
+    // color: "orange"
+    color: "#d1984b"
+  },
+
+  passwordNotError:{
+    left: DIMENSION_WIDTH * 0.267,
+    top: DIMENSION_HEIGHT * - 0.03,
+    // color: "orange"
+    color: "#d1984b"
+  },
+
+  errorPassword: {
+    left: DIMENSION_WIDTH * 0.13,
+    top: DIMENSION_HEIGHT * - 0.03,
+    // color: "orange"
+    color: "#d1984b"
+  },
   // COMPONENT - FILTERS
   filters: {
     backgroundColor: WHITE,
@@ -355,14 +389,14 @@ export default StyleSheet.create({
     color: WHITE,
   },
   name: {
-    marginLeft: DIMENSION_WIDTH * 0.10,
+    marginLeft: DIMENSION_WIDTH * 0.20,
     paddingTop: 25,
     paddingBottom: 5,
     color: TEAL,
     fontSize: 24,
     textAlign: "center",
+    width: DIMENSION_WIDTH * 0.5
   },
-
   textBoxStyle: {
     width: '75%',
     height: 50,
@@ -375,8 +409,8 @@ export default StyleSheet.create({
     paddingTop: 25,
     paddingBottom: 5,
     color: TEAL,
-    fontSize: 15,
-    textAlign: "center",
+    paddingBottom: 20,
+    fontSize: 13,
   },
   descriptionProfileItem: {
     color: GRAY,
@@ -384,7 +418,7 @@ export default StyleSheet.create({
     paddingBottom: 20,
     fontSize: 13,
   },
-
+  
   tick: {
     marginLeft: DIMENSION_WIDTH * 0.8,
     bottom: DIMENSION_WIDTH * 0.12,
@@ -395,11 +429,67 @@ export default StyleSheet.create({
     bottom: DIMENSION_WIDTH * 0.10,
     marginBottom: -DIMENSION_WIDTH * 0.05
   },
-
   info: {
     paddingVertical: 8,
     flexDirection: "row",
-    alignItems: "center",
+    height: 60,
+    alignSelf: "center",
+    marginLeft: DIMENSION_HEIGHT * - 0.28
+  },
+  info2: {
+    paddingVertical: 8,
+    flexDirection: "row",
+    height: 60,
+    alignSelf: "center",
+    marginLeft: DIMENSION_HEIGHT * - 0.2
+  },
+  info3: {
+    paddingVertical: 8,
+    flexDirection: "row",
+    height: 60,
+    alignSelf: "center",
+    marginLeft: DIMENSION_HEIGHT * 0.005
+  },
+  profileTitle: {
+    fontSize: 15,
+    color: DARK_GRAY,
+    paddingHorizontal: 10,
+    // fontWeight: 'bold'
+  },
+  profileTitle2: {
+    fontSize: 15,
+    color: DARK_GRAY,
+    paddingHorizontal: 10,
+    marginLeft: DIMENSION_HEIGHT * -0.033
+    // fontWeight: 'bold'
+  },
+  textB:{
+    width: '75%',
+    height: 50,
+    alignSelf: 'center',
+    backgroundColor: "transparent",
+    left: DIMENSION_WIDTH * 0.37
+  },
+  profileButtons: {
+    marginLeft: DIMENSION_WIDTH * 0.13,
+    marginTop: DIMENSION_HEIGHT * 0.025,
+  },
+  profileButtons2: {
+    marginLeft: DIMENSION_WIDTH * 0.31,
+    marginTop: DIMENSION_HEIGHT * 0.025,
+  },
+  profileButtons3: {
+    marginLeft: DIMENSION_WIDTH * 0.35,
+    marginTop: DIMENSION_HEIGHT * 0.025,
+  },
+  profileButtons4: {
+    marginLeft: DIMENSION_WIDTH * 0.3,
+    marginTop: DIMENSION_HEIGHT * 0.025,
+  },
+  profileCardHeader: {
+    marginTop: -DIMENSION_HEIGHT * 0.025,
+    flexDirection: "row",
+    alignItems: 'center',
   },
   iconProfile: {
     fontFamily: ICON_FONT,
@@ -416,7 +506,11 @@ export default StyleSheet.create({
     height: 60,
     alignSelf: "center",
     marginTop: DIMENSION_HEIGHT * 0.06,
-    marginLeft: DIMENSION_WIDTH * 0.05
+    marginLeft: DIMENSION_HEIGHT * 0.2
+  },
+  LogoutSettings: {
+    left: DIMENSION_WIDTH * 0.425,
+    color: "black"
   },
   profileTitle: {
     fontSize: 15,
@@ -446,6 +540,24 @@ export default StyleSheet.create({
     alignItems: 'center',
   },
 
+  logoSettings: {
+    height: DIMENSION_HEIGHT * 0.07,
+    width: DIMENSION_WIDTH * 0.15,
+    marginLeft: DIMENSION_WIDTH * 0.46,
+    bottom: DIMENSION_HEIGHT * 0.025,
+    marginTop: DIMENSION_HEIGHT * 0.03,
+    padding: 2
+  },
+
+  deleteAccount:{
+    marginLeft: DIMENSION_WIDTH * 0.35,
+    color: "black"
+  },
+
+  deleteAccountButton:{
+    marginBottom: DIMENSION_HEIGHT * 0.02,
+    color: "black"
+  },
   // CONTAINER - GENERAL
   bg: {
     flex: 1,
@@ -467,9 +579,15 @@ export default StyleSheet.create({
   },
 
   internetText: {
-    fontSize: 27,
+    fontSize: 23,
+    paddingLeft: DIMENSION_WIDTH * 0.25,
+    bottom: DIMENSION_HEIGHT * 0.079
   },
 
+  email: {
+    marginRight: DIMENSION_WIDTH * 0.7,
+    marginTop: DIMENSION_HEIGHT * 0.1
+  },
   top: {
     paddingTop: 50,
     marginHorizontal: 10,
@@ -642,7 +760,7 @@ export default StyleSheet.create({
     alignSelf: "center",
     marginTop: DIMENSION_HEIGHT * 0.04,
     marginLeft: DIMENSION_WIDTH * 0.05,
-    width: DIMENSION_WIDTH * 0.2,
+    width: DIMENSION_WIDTH * 0.25,
     height: DIMENSION_HEIGHT * 0.1,
   },
 
@@ -690,6 +808,7 @@ export default StyleSheet.create({
     marginBottom: DIMENSION_HEIGHT * 0.05,
     width: DIMENSION_WIDTH * 0.35,
     alignSelf: 'center',
+    bottom: DIMENSION_HEIGHT * 0.017
   },
 
   bottomsignup: {
@@ -709,6 +828,15 @@ export default StyleSheet.create({
   loginbutt: {
     backgroundColor: "#013d38",
     borderRadius: 10,
+    marginTop: 40,
+    width: 150,
+    marginLeft: DIMENSION_WIDTH * 0.275,
+  },
+
+  signupredirect: {
+    marginTop: 40,
+    marginLeft: DIMENSION_WIDTH * 0.285,
+    width: 150,
     marginTop: DIMENSION_HEIGHT * 0.05,
     width: DIMENSION_WIDTH * 0.35,
     alignSelf: 'center',
@@ -781,7 +909,7 @@ export default StyleSheet.create({
     height: DIMENSION_HEIGHT,
   },
   slideOneTop: {
-    marginTop: DIMENSION_HEIGHT * 0.12,
+    // marginTop: DIMENSION_HEIGHT * 0.1,
     flexDirection: "column",
     alignItems: "center",
   },
@@ -793,6 +921,10 @@ export default StyleSheet.create({
     marginTop: DIMENSION_HEIGHT * 0.05,
     color: "white",
     fontSize: 30,
+  },
+
+  slideSignUp: {
+    marginTop: DIMENSION_HEIGHT * 0.02
   },
   slideTwoNormal: {
     color: "white",
@@ -806,7 +938,8 @@ export default StyleSheet.create({
   },
   slideoneCarousel: {
     marginTop: DIMENSION_HEIGHT * 0.2,
-    height: 200,
+    height: DIMENSION_HEIGHT * 0.2,
+    marginBottom: DIMENSION_HEIGHT * 0.1
   },
   onBoardingButt: {
     backgroundColor: "#1b4a45",
@@ -875,6 +1008,21 @@ export default StyleSheet.create({
     width: DIMENSION_HEIGHT * 0.18,
     height: DIMENSION_HEIGHT * 0.06,
     borderRadius: DIMENSION_HEIGHT * 0.048,
+    bottom: DIMENSION_HEIGHT * 0.05,
+  },
+  OBnext2: {
+    backgroundColor: "white",
+    width: DIMENSION_HEIGHT * 0.18,
+    height: DIMENSION_HEIGHT * 0.06,
+    borderRadius: DIMENSION_HEIGHT * 0.048,
+    bottom: DIMENSION_HEIGHT * 0.05
+  },
+  OBnext3: {
+    backgroundColor: "white",
+    width: DIMENSION_HEIGHT * 0.18,
+    height: DIMENSION_HEIGHT * 0.06,
+    borderRadius: DIMENSION_HEIGHT * 0.048,
+    bottom: DIMENSION_HEIGHT * 0.06
   },
   OBnextText1: {
     color: "#8B9EAF",
