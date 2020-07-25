@@ -150,33 +150,52 @@ class APIConnection {
     return users;
   }
 
-	static async initSocketConnection() {
-		const user_email = await AsyncStorage.getItem("storedEmail");
-		if (user_email) {
-			this.socket = io(ENDPOINT + ":" + PORT, {
-				query: "name=" + user_email,
-			});
-			this.socket.on("new msg", (msg) => {
-				if (this.MESSAGE_QUEUES[msg.from]) {
-					this.MESSAGE_QUEUES[msg.from].enqueue(msg);
-				} else {
-					this.MESSAGE_QUEUES[msg.from] = new Queue();
-					this.MESSAGE_QUEUES[msg.from].enqueue(msg);
-				}
+  async fetchChats(email) {
+    return (
+      await fetch(`${this.ENDPOINT}:${this.PORT}/user/${email}/chats`)
+    ).json();
+  }
 
-				this.observers.forEach((observer) => observer.observer());
-			});
+  async fetchChatData(from, to) {
+    return (
+      await fetch(`${this.ENDPOINT}:${this.PORT}/fetchChatData?from=${from}&to=${to}&skipCount=${0}`)
+    ).json();
+  }
 
-			this.socket.on("upload urls", (urls) => {
-				const keys = Object.keys(urls);
-				keys.forEach(async (key) => {
-					await this.uploadPicture(urls[key], this.mediaStore[key]);
-				});
+  /**
+   * Fetch profile cards with format that can be rendered on-screen
+   * @param {String} email User email to use as a search parameter for profile cards
+   */
+  loadData(email) {
+    return this.fetchConnections(email);
+  }
 
-				keys.forEach((key) => delete this.mediaStore[key]);
-			});
-		}
-	}
+  static async initSocketConnection() {
+    const user_email = await AsyncStorage.getItem('storedEmail');
+    if (user_email) {
+      this.socket = io(ENDPOINT + ":" + PORT, { query: "name=" + user_email });
+      this.socket.on("new msg", (msg) => {
+        if (this.MESSAGE_QUEUES[msg.from]) {
+          this.MESSAGE_QUEUES[msg.from].enqueue(msg);
+        }
+        else {
+          this.MESSAGE_QUEUES[msg.from] = new Queue();
+          this.MESSAGE_QUEUES[msg.from].enqueue(msg);
+        }
+
+        this.observers.forEach((observer) => observer.observer());
+      });
+
+      this.socket.on("upload urls", (urls) => {
+        const keys = Object.keys(urls);
+        keys.forEach(async (key) => {
+          await this.uploadPicture(urls[key], this.mediaStore[key]);
+        });
+
+        keys.forEach((key) => delete this.mediaStore[key]);
+      });
+    }
+  }
 
   static attachObserver(observer, uid) {
     const existingIndex = this.observers.findIndex((value) => value.uid === uid);
@@ -188,33 +207,19 @@ class APIConnection {
 }
 
 class Queue {
-	constructor() {
-		this._elements = [];
-	}
+  constructor() {
+    this._elements = [];
+  }
 
-	getSize() {
-		return this._elements.length;
-	}
-	isEmpty() {
-		return this._elements.length === 0;
-	}
-	enqueue(item) {
-		this._elements.push(item);
-	}
-	dequeue() {
-		return !this.isEmpty() ? this._elements.shift() : null;
-	}
-	peekNewest() {
-		return !this.isEmpty()
-			? this._elements[this._elements.length - 1]
-			: null;
-	}
-	peekOldest() {
-		return !this.isEmpty() ? this._elements[0] : null;
-	}
+  getSize() { return this._elements.length; }
+  isEmpty() { return this._elements.length === 0; }
+  enqueue(item) { this._elements.push(item); }
+  dequeue() { return !this.isEmpty() ? this._elements.shift() : null; }
+  peekNewest() { return !this.isEmpty() ? this._elements[this._elements.length - 1] : null; }
+  peekOldest() { return !this.isEmpty() ? this._elements[0] : null; }
 }
 
-APIConnection.MESSAGE_QUEUES = {};
+APIConnection.MESSAGE_QUEUES = {}
 APIConnection.observers = [];
 APIConnection.socket = null;
 APIConnection.mediaStore = {};

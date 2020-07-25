@@ -41,9 +41,9 @@ const renderCustomHeader = () => {
 };
 
 function convertTimestamptoTime(unixTimestamp) {
-	dateObj = new Date(unixTimestamp * 1000);
-	hours = dateObj.getUTCHours();
-	minutes = dateObj.getUTCMinutes();
+	dateObj = new Date(unixTimestamp);
+	hours = dateObj.getHours();
+	minutes = dateObj.getMinutes();
 
 	if (hours >= 12) {
 		hours = hours % 12;
@@ -136,7 +136,8 @@ export default class Chat extends Component {
       const msg = msgQueue.dequeue();
       newMessages.push({
         user: msg.from,
-        msg: msg.msg
+        msg: msg.msg,
+        timestamp: msg.time
       });
     }
     if (newMessages.length > 0) {
@@ -145,9 +146,11 @@ export default class Chat extends Component {
   }
 
   _sendMessage() {
+    const timestamp = (new Date()).getTime();
     this.state.messages.push({
       user: this.state.own_email,
       msg: this.state.inputBarText,
+      timestamp
     });
 
     for (let i = 0; i < this.state.selectedMedia.length; i++) {
@@ -161,7 +164,7 @@ export default class Chat extends Component {
       to: this.state.other_user_email,
       msg: this.state.inputBarText,
       media: this.state.selectedMedia,
-      time: (new Date()).getTime(),
+      time: timestamp,
       public_key: null
     }
 
