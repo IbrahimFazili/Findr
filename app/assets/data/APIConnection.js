@@ -77,6 +77,14 @@ class APIConnection {
     });
   }
 
+  async fetchUniversities(){
+    const response = await fetch(
+      this.ENDPOINT + ':' + String(this.PORT) + '/supportedUniversities'
+    );
+
+    return response.json();
+  }
+
   /**
    * Send log-in request to the API
    * @param {{ email: String, password: String}} data log-in data to send to the server for verification
@@ -139,7 +147,7 @@ class APIConnection {
       await fetch(`${this.ENDPOINT}:${this.PORT}/user/${email}`)
     ).json();
 
-    return users[0];
+    return users;
   }
 
   async fetchChats(email) {
