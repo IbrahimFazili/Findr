@@ -147,6 +147,7 @@ export default class Chat extends Component {
   }
 
   _sendMessage() {
+	if (this.state.inputBarText.trim().length === 0) return;
     const timestamp = (new Date()).getTime();
     this.state.messages.push({
       user: this.state.own_email,
