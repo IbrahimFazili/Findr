@@ -62,22 +62,21 @@ class ChatPopup extends React.Component {
 				transparent={true}
 				animationType={"fade"}
 			>
-				<View >
+				<View>
 					<TouchableOpacity
 						style={styles.filters1}
 						onPress={async () =>
 							await this.state.API.blockUser(
 								this.state.own_email,
-								this.state.email,
+								this.state.email
 							)
-							
 						}
 					>
-						<Text style={{color: "red"}}>Block</Text>
+						<Text style={{ color: "red" }}>Block</Text>
 					</TouchableOpacity>
 					<TouchableOpacity
 						style={styles.filters2}
-						onPress={() => console.log('click')}
+						onPress={this.onNavigate}
 					>
 						<Text>View Profile</Text>
 					</TouchableOpacity>
@@ -94,7 +93,7 @@ const styles = StyleSheet.create({
 		width: 100,
 		elevation: 10,
 		alignSelf: "center",
-		marginBottom: DIMENSION_HEIGHT * 0.02
+		marginBottom: DIMENSION_HEIGHT * 0.02,
 	},
 	filters2: {
 		backgroundColor: WHITE,
