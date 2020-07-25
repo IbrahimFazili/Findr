@@ -762,21 +762,28 @@ describe("Test Cases", () => {
             .get(`/blockUser?src=${TestData[1].email}&target=${TestData[0].email}`)
             .end(async (err, res) => {
                 res.should.have.status(201);
+                try {
+                    const leonard = (await DB.fetchUsers({ email: TestData[1].email }))[0];
+                    const sheldon = (await DB.fetchUsers({ email: TestData[0].email }))[0];
 
-                const leonard = (await DB.fetchUsers({ email: TestData[1].email }))[0];
-                const sheldon = (await DB.fetchUsers({ email: TestData[0].email }))[0];
+                    var ids = [];
+                    for (let i = 0; i < leonard.blueConnections.length; i++) ids.push(leonard.blueConnections[i]._id);
 
-                var ids = [];
-                for (let i = 0; i < leonard.blueConnections.length; i++) ids.push(leonard.blueConnections[i]._id);
+                    chai.expect(ids).to.not.include(sheldon._id);
 
-                chai.expect(ids).to.not.include(sheldon._id);
+                    ids = [];
+                    for (let i = 0; i < sheldon.blueConnections.length; i++) ids.push(sheldon.blueConnections[i]._id);
 
-                ids = [];
-                for (let i = 0; i < sheldon.blueConnections.length; i++) ids.push(sheldon.blueConnections[i]._id);
+                    chai.expect(ids).to.not.include(leonard._id);
 
-                chai.expect(ids).to.not.include(leonard._id);
+                    chai.expect(leonard.blockedUsers[0].equals(sheldon._id)).to.be.equal(true);
 
-                done();
+                    done();
+                } catch (error) {
+                    console.log(error);
+                    done();
+                }
+                
             });
         });
 

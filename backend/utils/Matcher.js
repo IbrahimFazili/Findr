@@ -184,9 +184,10 @@ class Matcher {
                 });
 
                 try {
-                    connections.forEach((element) => {
-                        DB.updateUser({ blueConnections: element.blueConnections }, { email: element.email })
-                    });
+                    for (let i = 0; i < connections.length; i++) {
+                        const element = connections[i];
+                        await DB.updateUser({ blueConnections: element.blueConnections }, { email: element.email })
+                    }
     
                     return true;
                 } catch (error) {
@@ -306,6 +307,10 @@ class Matcher {
             if ( greenConnectionsIndex2 !== -1){
                 blockedUser.greenConnections.splice(greenConnectionsIndex2, 1);
             }
+
+            srcUser.blockedUsers.push(blockedUser._id);
+            await DB.updateUser(srcUser, { email: srcEmail });
+            await DB.updateUser(blockedUser, { email: blockedEmail });
             return true;
         } catch (fetchErr) {
             console.log(fetchErr);

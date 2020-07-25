@@ -76,6 +76,8 @@ class Chat {
 			blockedUser.eventQueue.enqueue(
 				new Event(BLOCK_EVENT, {email : srcEmail})
 			);
+
+			await DB.updateUser(blockedUser, { email: blockedEmail });
 	
 			return true;
 		} catch (fetchErr) {

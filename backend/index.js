@@ -18,9 +18,11 @@ const {
 	updateKeywords,
 	signUp
 } = require('./utils/Handlers').functions;
+const { SUPPORTED_UNIVERSITIES } = require("./vars");
 
 const callbackQueue = new CallbackQueue();
 const CONNECTIONS_CHUNK_SIZE = 25;
+const MESSAGES_CHUNK_SIZE = 50;
 var isServerOutdated = false;
 
 app.use(bodyParser.json());
@@ -196,7 +198,8 @@ app.get("/user/:user_email/connections", (req, res) => {
 
 app.get("/fetchChatData", (req, res) => {
 	const MSG_TO = req.query.to;
-	const projection = { chats: 1 };
+	var projection = { chats: 1 };
+	const skipCount = Number(req.query.skipCount);
 	DB.fetchUsers({ email: req.query.from }, { projection })
 		.then(async (users) => {
 			const user = users[0];
@@ -205,11 +208,16 @@ app.get("/fetchChatData", (req, res) => {
 
 			for (let i = 0; i < user.chats.length && !chatFound; i++) {
 				try {
-					chat = (await DB.fetchChat(user.chats[i]))[0].chat;
+					projection = { 'chat.user1': 1, 'chat.user2': 1 };
+					chat = (await DB.fetchChat(user.chats[i], { projection }))[0].chat;
 
 					if (chat.user1 === MSG_TO || chat.user2 === MSG_TO) {
 						chatFound = true;
+						projection = { "chat.messages": { $slice: [ -skipCount - MESSAGES_CHUNK_SIZE, MESSAGES_CHUNK_SIZE] } }
+						// projection = { chat: { messages: { $slice: [ -skipCount, MESSAGES_CHUNK_SIZE] } } };
+						chat = (await DB.fetchChat(user.chats[i], { projection }))[0].chat;
 						res.status(200).send(JSON.stringify(chat));
+						break;
 					}
 				} catch (err) {
 					console.log("err fetching chats");
@@ -377,10 +385,14 @@ app.get("/deleteUser", (req, res) => {
 	callbackQueue.enqueue(deleteUser, email, res);
 });
 
-app.get("/updateProfilePicture", async (req, res) => {
-	const email = req.query.email;
-	var url = await AWS_Presigner.generateSignedPutUrl("user_images/" + email);
+app.get("/user/:user_email/updateProfilePicture", async (req, res) => {
+	const email = req.params.user_email;
+	var url = await AWS_Presigner.generateSignedPutUrl("user_images/" + email, req.query.type);
 	res.status(200).send(url);
+});
+
+app.get("/supportedUniversities", (req, res) => {
+	res.status(200).send(SUPPORTED_UNIVERSITIES);
 });
 
 app.post("/signup", (req, res) => {
@@ -409,7 +421,7 @@ app.post("/signup", (req, res) => {
 		blockedUsers: [],
 		eventQueue: { events: [] },
 		active: false,
-		verificationHash: bcrypt.hashSync(req.body.email + generateRandomNumber(), 3)
+		verificationHash: generateVerificationHash(req.body.email)
 	};
 	
 	callbackQueue.enqueue(signUp, requestData, res);
@@ -418,6 +430,10 @@ app.post("/signup", (req, res) => {
 
 app.get("/verifyUserEmail", (req, res) => {
 	const projection = { email: 1, active: 1  };
+	if (!req.query.key){
+		res.status(400).send("Verfication key missing");
+		return;
+	}
 	DB.fetchUsers({ verificationHash: req.query.key }, { projection })
 		.then(async (users) => {
 			if (users.length === 0) {
@@ -496,6 +512,15 @@ function generateRandomNumber() {
 		randomNumber = randomNumber + randomDigit;
 	}
 	return randomNumber;
+}
+
+function generateVerificationHash(email) {
+	let hash = bcrypt.hashSync(email + generateRandomNumber(), 3);
+	while (hash.endsWith('.')) {
+		hash = hash.substr(0, hash.length - 1);
+	}
+
+	return hash;
 }
 
 /* Socket Listeners for chat */

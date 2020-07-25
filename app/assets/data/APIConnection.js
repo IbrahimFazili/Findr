@@ -1,7 +1,7 @@
-import io from "socket.io-client";
-import { AsyncStorage } from "react-native";
+import io from 'socket.io-client';
+import { AsyncStorage } from 'react-native';
 
-const ENDPOINT = "http://api.findrapp.ca"; // goes to localhost from avd
+const ENDPOINT = 'http://api.findrapp.ca'; // goes to localhost from avd
 const PORT = 80;
 
 /**
@@ -11,174 +11,144 @@ const PORT = 80;
  * @param customPort (optional) Custom port number the object should point at. Defaults to 80
  */
 class APIConnection {
-	constructor(customEndpoint, customPort) {
-		this.ENDPOINT = customEndpoint ? customEndpoint : ENDPOINT;
-		this.PORT = customPort ? customPort : PORT;
-	}
+  constructor(customEndpoint, customPort) {
+    this.ENDPOINT = customEndpoint ? customEndpoint : ENDPOINT;
+    this.PORT = customPort ? customPort : PORT;
+  }
 
-	/**
-	 * Send a sign-up request to the API. If succesful, upload the profile picture (if provided) through the signed
-	 * PUT url recieved from the API upon successful sign-up
-	 * @param {Object} data Form data obtained from the user on the signup page. Assumes that all fields are valid
-	 */
-	async requestSignUp(data) {
-		const response = await fetch(
-			this.ENDPOINT + ":" + String(this.PORT) + "/signup",
-			{
-				method: "POST",
-				headers: {
-					"Content-Type": "application/json",
-				},
-				body: JSON.stringify(data),
-			}
-		);
+  /**
+   * Send a sign-up request to the API. If succesful, upload the profile picture (if provided) through the signed
+   * PUT url recieved from the API upon successful sign-up
+   * @param {Object} data Form data obtained from the user on the signup page. Assumes that all fields are valid
+   */
+  async requestSignUp(data) {
+    const response = await fetch(
+      this.ENDPOINT + ':' + String(this.PORT) + '/signup',
+      {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(data),
+      }
+    );
 
-		return response;
-	}
+    return response;
+  }
 
-	async updateUserInfo(data) {
-		const response = await fetch(
-			this.ENDPOINT + ":" + String(this.PORT) + "/updateUserInfo",
-			{
-				method: "POST",
-				headers: {
-					"Content-Type": "application/json",
-				},
-				body: JSON.stringify({ user: data }),
-			}
-		);
+  async updateUserInfo(data) {
+    const response = (await fetch(this.ENDPOINT + ":" + String(this.PORT) + "/updateUserInfo", {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ user: data })
+    }));
 
-		return response.status;
-	}
+    return response.status;
+  }
 
-	async updateKeywords(data) {
-		const response = await fetch(
-			this.ENDPOINT + ":" + String(this.PORT) + "/updateKeywords",
-			{
-				method: "POST",
-				headers: {
-					"Content-Type": "application/json",
-				},
-				body: JSON.stringify({
-					keywords: data.keywords,
-					email: data.email,
-				}),
-			}
-		);
+  async updateKeywords(data) {
+    const response = (await fetch(this.ENDPOINT + ":" + String(this.PORT) + "/updateKeywords", {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ keywords: data.keywords, email: data.email })
+    }));
 
-		return response.status;
-	}
+    return response.status;
+  }
 
-	static uploadPicture(url, img) {
-		return new Promise(function (resolve, reject) {
-			const xhr = new XMLHttpRequest();
-			xhr.open("PUT", url);
-			xhr.setRequestHeader("Content-Type", img.type);
+  static uploadPicture(url, img) {
+    return new Promise(function(resolve, reject) {
+      const xhr = new XMLHttpRequest();
+      xhr.open('PUT', url);
+      xhr.setRequestHeader('Content-Type', img.type);
 
-			xhr.onreadystatechange = () => {
-				if (xhr.readyState === 4) {
-					if (xhr.status === 200) resolve(true);
-					else reject(false);
-				}
-			};
+      xhr.onreadystatechange = () => {
+          if(xhr.readyState === 4) {
+              if(xhr.status === 200) resolve(true);
+              else reject(false);
+          }
+      };
 
-			xhr.send({ uri: img.uri, type: img.type });
-		});
-	}
+      xhr.send({ uri: img.uri, type: img.type });
+    });
+  }
 
-	/**
-	 * Send log-in request to the API
-	 * @param {{ email: String, password: String}} data log-in data to send to the server for verification
-	 * @returns {{ success: Boolean, user: Promise<{ name: String, email: String, gender: String, uni: String,
-	 * age: Number, image: String, password: String, chats: Array<String>, courses: Array<String>, bio: String }>
-	 * }} An object containing the status of request and a promise which resolves to user profile if request was succesful
-	 */
-	async logIn(data) {
-		let logInRes = await fetch(
-			this.ENDPOINT + ":" + String(this.PORT) + "/login",
-			{
-				method: "POST",
-				headers: {
-					"Content-Type": "application/json",
-				},
-				body: JSON.stringify(data),
-			}
-		);
+  async fetchUniversities(){
+    const response = await fetch(
+      this.ENDPOINT + ':' + String(this.PORT) + '/supportedUniversities'
+    );
 
-		if (logInRes.status !== 200) {
-			return { success: false, user: null };
-		}
-		let user = await logInRes.json();
-		return { success: true, user };
-	}
+    return response.json();
+  }
 
-	/**
-	 * Request the API to send profile cards based on the email provided
-	 * @param {String} email E-mail of the user for whom to obtain profile cards for
-	 * @returns {Promise<Array<{ name: String, email: String, gender: String, uni: String, major: String,
-	 * age: Number, image: String, password: String, chats: Array<String>, keywords: Array<String>, bio: String }>>}
-	 *
-	 * List of profile cards
-	 */
-	async fetchMatches(email) {
-		return (
-			await fetch(`${this.ENDPOINT}:${this.PORT}/user/${email}/matches`)
-		).json();
-	}
+  /**
+   * Send log-in request to the API
+   * @param {{ email: String, password: String}} data log-in data to send to the server for verification
+   * @returns {{ success: Boolean, user: Promise<{ name: String, email: String, gender: String, uni: String,
+   * age: Number, image: String, password: String, chats: Array<String>, courses: Array<String>, bio: String }>
+   * }} An object containing the status of request and a promise which resolves to user profile if request was succesful
+   */
+  async logIn(data) {
+    let logInRes = (await (fetch(this.ENDPOINT + ":" + String(this.PORT) + "/login", {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(data)
+    })));
 
-	/**
-	 * Request the API to send potential connections for the user with the email provided
-	 * @param {String} email E-mail of the user for whom to obtain potential connections for
-	 * @returns {Promise<Array<{ name: String, email: String, gender: String, uni: String,
-	 * major: String, age: Number, image: String, keywords: Array<String>, bio: String }>>}
-	 *
-	 * List of profile cards
-	 */
-	async fetchConnections(email) {
-		return (
-			await fetch(
-				`${this.ENDPOINT}:${this.PORT}/user/${email}/connections`
-			)
-		).json();
-	}
+    if(logInRes.status !== 200) {
+        return { success: false, user: null };
+    }
+    let user = await logInRes.json();
+    return { success: true, user };
+  }
 
-	/**
-	 * Fetch the user profile given the email
-	 * @param {String} email email of the user whose profile to fetch
-	 * @returns {Promise<{ name: String, email: String, gender: String, uni: String, major: String,
-	 * age: Number, image: String, password: String, chats: Array<String>, keywords: Array<String>, bio: String }>}
-	 *
-	 * User's profile
-	 */
-	async fetchUser(email) {
-		let users = await (
-			await fetch(`${this.ENDPOINT}:${this.PORT}/user/${email}`)
-		).json();
+  /**
+   * Request the API to send profile cards based on the email provided
+   * @param {String} email E-mail of the user for whom to obtain profile cards for
+   * @returns {Promise<Array<{ name: String, email: String, gender: String, uni: String, major: String,
+   * age: Number, image: String, password: String, chats: Array<String>, keywords: Array<String>, bio: String }>>}
+   *
+   * List of profile cards
+   */
+  async fetchMatches(email) {
+    return (await fetch(`${this.ENDPOINT}:${this.PORT}/user/${email}/matches`)).json();
+  }
 
-		return users[0];
-	}
+  /**
+   * Request the API to send potential connections for the user with the email provided
+   * @param {String} email E-mail of the user for whom to obtain potential connections for
+   * @returns {Promise<Array<{ name: String, email: String, gender: String, uni: String,
+   * major: String, age: Number, image: String, keywords: Array<String>, bio: String }>>}
+   *
+   * List of profile cards
+   */
+  async fetchConnections(email) {
+    return (
+      await fetch(`${this.ENDPOINT}:${this.PORT}/user/${email}/connections`)
+    ).json();
+  }
 
-	async fetchChats(email) {
-		return (
-			await fetch(`${this.ENDPOINT}:${this.PORT}/user/${email}/chats`)
-		).json();
-	}
+  /**
+   * Fetch the user profile given the email
+   * @param {String} email email of the user whose profile to fetch
+   * @returns {Promise<{ name: String, email: String, gender: String, uni: String, major: String,
+   * age: Number, image: String, password: String, chats: Array<String>, keywords: Array<String>, bio: String }>}
+   *
+   * User's profile
+   */
+  async fetchUser(email) {
+    let users = await (
+      await fetch(`${this.ENDPOINT}:${this.PORT}/user/${email}`)
+    ).json();
 
-	async fetchChatData(from, to) {
-		return (
-			await fetch(
-				`${this.ENDPOINT}:${this.PORT}/fetchChatData?from=${from}&to=${to}`
-			)
-		).json();
-	}
-
-	/**
-	 * Fetch profile cards with format that can be rendered on-screen
-	 * @param {String} email User email to use as a search parameter for profile cards
-	 */
-	loadData(email) {
-		return this.fetchConnections(email);
-	}
+    return users;
+  }
 
 	static async initSocketConnection() {
 		const user_email = await AsyncStorage.getItem("storedEmail");
@@ -208,15 +178,13 @@ class APIConnection {
 		}
 	}
 
-	static attachObserver(observer, uid) {
-		const existingIndex = this.observers.findIndex(
-			(value) => value.uid === uid
-		);
-		if (existingIndex === -1) this.observers.push({ observer, uid });
-		else {
-			this.observers[existingIndex] = { observer, uid };
-		}
-	}
+  static attachObserver(observer, uid) {
+    const existingIndex = this.observers.findIndex((value) => value.uid === uid);
+    if (existingIndex === -1) this.observers.push({ observer, uid });
+    else {
+      this.observers[existingIndex] = { observer, uid };
+    }
+  }
 }
 
 class Queue {

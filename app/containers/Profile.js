@@ -1,15 +1,15 @@
 import React from "react";
 import globalStyles from "../assets/styles";
 import {
-	View,
-	Text,
-	TouchableOpacity,
-	StyleSheet,
-	Image,
-	Dimensions,
-	AsyncStorage,
-	ImageBackground,
-	NetInfo,
+  View,
+  Text,
+  TouchableOpacity,
+  StyleSheet,
+  Image,
+  Dimensions,
+  AsyncStorage,
+  ImageBackground,
+  NetInfo
 } from "react-native";
 import ProfileItem from "../components/ProfileItem";
 import Icon from "../components/Icon";

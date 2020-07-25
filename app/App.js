@@ -31,9 +31,9 @@ import PersonIcon_Green from "./assets/icons/person_g.svg";
 import ChatIcon_Grey from "./assets/icons/chat.svg";
 import ChatIcon_Green from "./assets/icons/chat_g.svg";
 
-import APIConnection from "./assets/data/APIConnection";
+import APIConnection from './assets/data/APIConnection';
 
-const DIMENTIONS = Dimensions.get("window");
+const DIMENTIONS = Dimensions.get('window');
 
 const ICON_WIDTH = DIMENTIONS.width * 0.05;
 const ICON_HEIGHT = DIMENTIONS.height * 0.03;
