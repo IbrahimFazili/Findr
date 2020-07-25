@@ -62,21 +62,22 @@ class ChatPopup extends React.Component {
 				transparent={true}
 				animationType={"fade"}
 			>
-				<View>
+				<View >
 					<TouchableOpacity
-						style={styles.filters}
+						style={styles.filters1}
 						onPress={async () =>
 							await this.state.API.blockUser(
 								this.state.own_email,
-								this.state.email
+								this.state.email,
 							)
+							
 						}
 					>
-						<Text>Block</Text>
+						<Text style={{color: "red"}}>Block</Text>
 					</TouchableOpacity>
 					<TouchableOpacity
-						style={styles.filters}
-						onPress={this.onNavigate}
+						style={styles.filters2}
+						onPress={() => console.log('click')}
 					>
 						<Text>View Profile</Text>
 					</TouchableOpacity>
@@ -86,25 +87,30 @@ class ChatPopup extends React.Component {
 	}
 }
 const styles = StyleSheet.create({
-	filters: {
+	filters1: {
 		backgroundColor: WHITE,
 		padding: 10,
 		borderRadius: 20,
 		width: 100,
-		// shadowOpacity: 0.05,
-		// shadowRadius: 10,
-		// shadowColor: BLACK,
-		// shadowOffset: { height: 0, width: 0 },
+		elevation: 10,
+		alignSelf: "center",
+		marginBottom: DIMENSION_HEIGHT * 0.02
+	},
+	filters2: {
+		backgroundColor: WHITE,
+		padding: 10,
+		borderRadius: 20,
+		width: 100,
 		elevation: 10,
 		alignSelf: "center",
 	},
 	popupCard: {
 		backgroundColor: WHITE,
 		borderRadius: 20,
-		maxHeight: DIMENSION_HEIGHT * 0.7,
-		maxWidth: DIMENSION_WIDTH * 0.85,
+		maxHeight: DIMENSION_HEIGHT * 0.2,
+		maxWidth: DIMENSION_WIDTH * 0.6,
 		alignSelf: "center",
-		marginVertical: DIMENSION_HEIGHT * 0.13,
+		marginVertical: DIMENSION_HEIGHT * 0.35,
 		borderRadius: 30,
 		height: 300,
 		width: 300,

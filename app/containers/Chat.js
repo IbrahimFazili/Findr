@@ -21,7 +21,7 @@ import APIConnection from "../assets/data/APIConnection";
 import AttachIcon from "../assets/icons/attach.svg";
 import SendIcon from "../assets/icons/send_icon.svg";
 import BackButton from "../assets/icons/back_black.svg";
-import InfoIcon from "../assets/icons/in.svg";
+import InfoIcon from "../assets/icons/i_icon.svg";
 
 import ChatPopup from "../components/ChatPopup";
 
@@ -194,9 +194,7 @@ export default class Chat extends Component {
 									<TouchableOpacity
 										style={styles.chatBack}
 										onPress={() =>
-											this.props.navigation.navigate(
-												"Messages"
-											)
+											this.props.navigation.goBack()
 										}
 									>
 										<BackButton
@@ -230,9 +228,9 @@ export default class Chat extends Component {
 											})
 										}
 									>
-										<SendIcon
-											width={DIMENSION_WIDTH * 0.09}
-											height={DIMENSION_HEIGHT * 0.09}
+										<InfoIcon
+											width={DIMENSION_WIDTH * 0.058}
+											height={DIMENSION_HEIGHT * 0.058}
 										/>
 									</TouchableOpacity>
 									<ChatPopup
