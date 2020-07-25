@@ -10,7 +10,6 @@ import APIConnection from "../assets/data/APIConnection";
 import Pen from '../assets/icons/pen.svg';
 import Check from '../assets/icons/check.svg';
 import Tag from './Tag';
-import TagEducation from "./TagEducation"
 import TagCourses from "./TagCourses"
 import TagClubs from "./TagClubs"
 import Plus from "../assets/icons/Plus.svg";
