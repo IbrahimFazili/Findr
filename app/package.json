@@ -40,6 +40,7 @@
 		"react-native-swipe": "^1.0.0",
 		"react-native-swiper": "^1.6.0",
 		"react-native-swiper-flatlist": "^2.0.4",
+		"react-native-tags": "^2.1.0",
 		"react-native-tags-input": "^1.0.10",
 		"react-native-unimodules": "^0.9.1",
 		"react-native-unordered-list": "^1.0.4",

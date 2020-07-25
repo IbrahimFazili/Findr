@@ -10,7 +10,6 @@ import APIConnection from "../assets/data/APIConnection";
 import Pen from '../assets/icons/pen.svg';
 import Check from '../assets/icons/check.svg';
 import Tag from './Tag';
-import TagEducation from "./TagEducation"
 import TagCourses from "./TagCourses"
 import TagClubs from "./TagClubs"
 import Plus from "../assets/icons/Plus.svg";
@@ -186,7 +185,6 @@ class ProfileItem extends React.Component{
 		const data = {
 			email: await AsyncStorage.getItem("storedEmail"),
 		}
-
 		if(this.state.major.length !== 0){
 			data.major = this.state.major
 		}
@@ -214,7 +212,6 @@ class ProfileItem extends React.Component{
 		const data = {
 			email: await AsyncStorage.getItem("storedEmail"),
 		}
-
 		if(this.state.allProjects.length !== 0){
 			data.projects = this.state.allProjects.map(fields => ({...fields}['value'])) //projects
 		}
@@ -238,7 +235,6 @@ class ProfileItem extends React.Component{
 		const data = {
 			email: await AsyncStorage.getItem("storedEmail"),
 		}
-
 		if(this.state.allExp.length !== 0){
 			data.experience = this.state.allExp.map(fields => ({...fields}['value'])) //experience
 		}

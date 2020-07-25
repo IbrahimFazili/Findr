@@ -3,6 +3,8 @@ package com.findr;
 import android.app.Application;
 
 import com.facebook.react.ReactApplication;
+import com.oblador.vectoricons.VectorIconsPackage;
+import com.BV.LinearGradient.LinearGradientPackage;
 import com.horcrux.svg.SvgPackage;
 import com.cmcewen.blurview.BlurViewPackage;
 import com.reactnativecommunity.netinfo.NetInfoPackage;
@@ -30,12 +32,12 @@ public class MainApplication extends Application implements ReactApplication {
     protected List<ReactPackage> getPackages() {
       return Arrays.<ReactPackage>asList(
             new MainReactPackage(),
+            new VectorIconsPackage(),
+            new LinearGradientPackage(),
             new NetInfoPackage(),
             new SvgPackage(),
             new ImagePickerPackage(),
             new BlurViewPackage(),
-            new VectorIconsPackage(),
-            new LinearGradientPackage(),
             new RNGestureHandlerPackage()
       );
     }
