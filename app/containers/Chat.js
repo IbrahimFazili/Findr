@@ -47,10 +47,10 @@ function convertTimestamptoTime(unixTimestamp) {
 	if (hours >= 12) {
 		hours = hours % 12;
 		formattedTime =
-			hours.toString() + ":" + minutes.toString().padStart(2, "0") + "pm";
+			hours.toString() + ":" + minutes.toString().padStart(2, "0") + " PM";
 	} else {
 		formattedTime =
-			hours.toString() + ":" + minutes.toString().padStart(2, "0") + "am";
+			hours.toString() + ":" + minutes.toString().padStart(2, "0") + " AM";
 	}
 
 	return formattedTime;
