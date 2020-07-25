@@ -4,6 +4,9 @@ import android.app.Application;
 
 import com.facebook.react.ReactApplication;
 import com.rnfs.RNFSPackage;
+import com.oblador.vectoricons.VectorIconsPackage;
+import com.BV.LinearGradient.LinearGradientPackage;
+import com.horcrux.svg.SvgPackage;
 import com.cmcewen.blurview.BlurViewPackage;
 import com.horcrux.svg.SvgPackage;
 import com.reactnativecommunity.netinfo.NetInfoPackage;
@@ -32,12 +35,12 @@ public class MainApplication extends Application implements ReactApplication {
       return Arrays.<ReactPackage>asList(
             new MainReactPackage(),
             new RNFSPackage(),
+            new VectorIconsPackage(),
+            new LinearGradientPackage(),
             new NetInfoPackage(),
             new SvgPackage(),
             new ImagePickerPackage(),
             new BlurViewPackage(),
-            new VectorIconsPackage(),
-            new LinearGradientPackage(),
             new RNGestureHandlerPackage()
       );
     }

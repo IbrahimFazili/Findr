@@ -27,26 +27,36 @@ const DIMENSION_WIDTH = Dimensions.get("window").width;
 const DIMENSION_HEIGHT = Dimensions.get("window").height;
 
 class Profile extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = { API: new APIConnection(), profile: null, isConnected: true };
-  }
+	constructor(props) {
+		super(props);
+		this.state = {
+			API: new APIConnection(),
+			profile: null,
+			isConnected: true,
+		};
+	}
 
-  async componentDidMount() {
-    let user = await this.state.API.fetchUser(
-      await AsyncStorage.getItem("storedEmail")
-    );
-    this.setState({ profile: user });
-    NetInfo.isConnected.addEventListener('connectionChange', this.handleConnectivityChange);
-  }
+	async componentDidMount() {
+		let user = await this.state.API.fetchUser(
+			await AsyncStorage.getItem("storedEmail")
+		);
+		this.setState({ profile: user });
+		NetInfo.isConnected.addEventListener(
+			"connectionChange",
+			this.handleConnectivityChange
+		);
+	}
 
-  async componentWillUnmount(){
-    NetInfo.isConnected.removeEventListener('connectionChange', this.handleConnectivityChange);
-  }
+	async componentWillUnmount() {
+		NetInfo.isConnected.removeEventListener(
+			"connectionChange",
+			this.handleConnectivityChange
+		);
+	}
 
-  handleConnectivityChange = isConnected => {
-    this.setState({ isConnected });
-  };
+	handleConnectivityChange = (isConnected) => {
+		this.setState({ isConnected });
+	};
 
   render() {
     const image = this.state.profile ? { uri: this.state.profile.image } : null;

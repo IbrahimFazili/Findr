@@ -31,19 +31,27 @@ class Home extends React.Component {
   };
 
   async componentWillMount() {
+    
     try {
       let storedEmail = await AsyncStorage.getItem('storedEmail');
-      if (storedEmail === null) {
-        this.props.navigation.navigate('LogIn');
+      if (storedEmail === null){
+        if((await AsyncStorage.getItem('onboarding')) === "1") {
+          this.props.navigation.navigate('LogIn');
+        }
+
+        if((await AsyncStorage.getItem('onboarding')) === "0"){
+          await AsyncStorage.setItem('onboarding', '1');
+          this.props.navigation.navigate("Onboarding");
+        }
       }
-      
-      // this.props.navigation.navigate("Onboarding");
-    } catch (err) {
+    } 
+    catch (err) {
       console.log(err);
     }
   }
 
   async componentDidMount() {
+    await AsyncStorage.setItem('onboarding', '0');
     let storedEmail = await AsyncStorage.getItem("storedEmail");
     NetInfo.isConnected.addEventListener('connectionChange', this.handleConnectivityChange);
 
