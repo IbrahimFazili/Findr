@@ -20,7 +20,7 @@ import APIConnection from "../assets/data/APIConnection";
 import AttachIcon from "../assets/icons/attach.svg";
 import SendIcon from "../assets/icons/send_icon.svg";
 import BackButton from "../assets/icons/back_black.svg";
-import InfoIcon from "../assets/icons/in.svg";
+import InfoIcon from "../assets/icons/i_icon.svg";
 
 import ChatPopup from "../components/ChatPopup";
 
@@ -62,6 +62,7 @@ export default class Chat extends Component {
     super(props);
 
     this.state = {
+	  showPopup: false,
       own_email: props.navigation.state.params.own_email,
       messages: props.navigation.state.params.messages,
       inputBarText: '',
@@ -225,54 +226,96 @@ export default class Chat extends Component {
     });
 
     return (
-      <View style={styles.outer}>
-        <ImageBackground
-          source={require('../assets/images/15.png')}
-          style={styles.bg}
-        >
-          <Header
-            statusBarProps={{ barStyle: 'light-content' }}
-            barStyle='light-content' // or directly
-            centerComponent={() => {
-              return (
-                <View>
-                  <Thumbnail
-                  small
-                  style={{ alignSelf: "center", marginTop: 0 }}
-                  source={this.state.other_user_image}
-                  key={this.state.own_email}
-                  />
-                  <Text style={styles.headerTest}>{this.state.other_user}</Text>
-                </View>
-              );
-            }}
-            containerStyle={{
-              backgroundColor: 'white',
-              justifyContent: 'space-around',
-              elevation: 15,
-              paddingBottom: DIMENSION_HEIGHT * 0.03
-            }}
-          />
+		<View style={styles.outer}>
+			<ImageBackground
+				source={require("../assets/images/15.png")}
+				style={styles.bg}
+			>
+				<Header
+					statusBarProps={{ barStyle: "light-content" }}
+					barStyle="light-content" // or directly
+					centerComponent={() => {
+						return (
+							<View style={styles.chatHeader}>
+								<TouchableOpacity
+									style={styles.chatBack}
+									onPress={() =>
+										this.props.navigation.goBack()
+									}
+								>
+									<BackButton
+										width={DIMENSION_WIDTH * 0.02}
+										height={DIMENSION_HEIGHT * 0.02}
+									/>
+								</TouchableOpacity>
+								<Thumbnail
+									small
+									style={{
+										alignSelf: "center",
+										marginTop: 0,
+										marginRight: DIMENSION_WIDTH * 0.02,
+									}}
+									source={this.state.other_user_image}
+									key={this.state.own_email}
+								/>
+								<Text style={styles.headerTest}>
+									{this.state.other_user}
+								</Text>
+							</View>
+						);
+					}}
+					rightComponent={() => {
+						return (
+							<View>
+								<TouchableOpacity
+									onPress={() =>
+										this.setState({
+											showPopup: true,
+										})
+									}
+								>
+									<InfoIcon
+										width={DIMENSION_WIDTH * 0.058}
+										height={DIMENSION_HEIGHT * 0.058}
+									/>
+								</TouchableOpacity>
+								<ChatPopup
+									visible={this.state.showPopup}
+									email={this.state.other_user_email}
+									navigation={this.props.navigation}
+									own_email={this.state.own_email}
+								/>
+							</View>
+						);
+					}}
+					containerStyle={{
+						backgroundColor: "white",
+						justifyContent: "space-around",
+						elevation: 15,
+						paddingBottom: DIMENSION_HEIGHT * 0.03,
+						height: DIMENSION_HEIGHT * 0.08,
+					}}
+				/>
 
-          <ScrollView
-            ref={(ref) => {
-              this.scrollView = ref;
-            }}
-            style={styles.messages}
-          >
-            {messages}
-          </ScrollView>
-          <InputBar
-            onSendPressed={() => this._sendMessage()}
-            onSizeChange={() => this._onInputSizeChange()}
-            onChangeText={(text) => this._onChangeInputBarText(text)}
-            onChangeMedia={this._onChangeMedia.bind(this)}
-            text={this.state.inputBarText}
-          />
-          <KeyboardSpacer />
-        </ImageBackground>
-      </View>
-    );
+				<ScrollView
+					ref={(ref) => {
+						this.scrollView = ref;
+					}}
+					style={styles.messages}
+				>
+					{messages}
+				</ScrollView>
+				<InputBar
+					onSendPressed={() => this._sendMessage()}
+					onSizeChange={() => this._onInputSizeChange()}
+					onChangeText={(text) =>
+						this._onChangeInputBarText(text)
+					}
+					text={this.state.inputBarText}
+				/>
+			</ImageBackground>
+		</View>
+	);
   }
 }
 
