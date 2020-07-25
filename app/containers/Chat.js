@@ -62,6 +62,7 @@ export default class Chat extends Component {
     super(props);
 
     this.state = {
+	  showPopup: false,
       own_email: props.navigation.state.params.own_email,
       messages: props.navigation.state.params.messages,
       inputBarText: '',
