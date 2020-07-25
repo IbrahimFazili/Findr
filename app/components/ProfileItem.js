@@ -311,7 +311,6 @@ class ProfileItem extends React.Component{
 	}
 
 	render() {
-		console.log(this.state)
 		return (
 		<View>
 		<View style={styles.containerProfileItem}>

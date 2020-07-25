@@ -33,7 +33,7 @@ const DIMENSION_HEIGHT = Dimensions.get("window").height;
 class Profile extends React.Component {
   constructor(props) {
     super(props);
-    this.state = { API: new APIConnection(), profile: null, isConnected: true };
+    this.state = { API: new APIConnection(), profile: null, isConnected: true, };
   }
 
   async componentDidMount() {
@@ -64,7 +64,10 @@ class Profile extends React.Component {
     )
 
     APIConnection.uploadPicture(url, media);
-    this.setState({ image: media.uri });
+    var profile = {...this.state.profile}
+    profile.image = media.uri
+    this.setState({profile})
+    // this.setState({ image: media.uri });
   }
 
   chooseImage = () => {
@@ -107,7 +110,7 @@ class Profile extends React.Component {
     const courses = this.state.profile ? this.state.profile.courses : [];
     const major = this.state.profile ? this.state.profile.major : [];
 
-    
+    console.log(this.state);
     if (!this.state.isConnected) {
       this.props.navigation.navigate("Internet");
     }
@@ -133,9 +136,18 @@ class Profile extends React.Component {
             </View>
             <View style={styles.header}>
               <View style={styles.profilepicWrap}>
-                  <Image style={styles.profilepic} source={image} />
+                {
+                  image === null ?
+                  <PlaceHolder  style={styles.profilepic} /> : 
+                  <Image style={styles.profilepic} 
+                  source={image} />
+                }
+               {/* <Image style={styles.profilepic} 
+                  source={image} /> */}
                 <TouchableOpacity onPress={() => this.chooseImage()}>
-							    <Pen width={20} height={20}/>
+                  <View style={styles.penProfile}>
+							      <Pen width={20} height={20}/>
+                  </View>
 							  </TouchableOpacity>
               </View>
             </View>
@@ -176,7 +188,7 @@ const styles = StyleSheet.create({
     marginTop: DIMENSION_HEIGHT * 0.02
   },
   profilepicWrap: {
-    width: 280,
+    width: 265,
     height: 280,
   },
   profilepic: {

@@ -749,6 +749,7 @@ export default StyleSheet.create({
     height: 50,
   },
 
+
   slide4: {
     flex: 1,
     justifyContent: "center",
