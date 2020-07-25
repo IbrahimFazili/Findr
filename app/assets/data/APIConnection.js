@@ -158,7 +158,7 @@ class APIConnection {
 
   async fetchChatData(from, to) {
     return (
-      await fetch(`${this.ENDPOINT}:${this.PORT}/fetchChatData?from=${from}&to=${to}`)
+      await fetch(`${this.ENDPOINT}:${this.PORT}/fetchChatData?from=${from}&to=${to}&skipCount=${0}`)
     ).json();
   }
 

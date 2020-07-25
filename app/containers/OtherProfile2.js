@@ -25,7 +25,7 @@ const ICON_FONT = "tinderclone";
 const DIMENSION_WIDTH = Dimensions.get("window").width;
 const DIMENSION_HEIGHT = Dimensions.get("window").height;
 
-class OtherProfile extends React.Component {
+class OtherProfile2 extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {
@@ -230,4 +230,4 @@ const styles = StyleSheet.create({
 	},
 });
 
-export default OtherProfile;
+export default OtherProfile2;

@@ -15,11 +15,12 @@ import ProfileScreen from "./containers/Profile";
 import PrivacyScreen from "./containers/Privacy";
 import OnboardingScreen from "./containers/Onboarding";
 import InternetScreen from "./containers/OfflinePop";
-import OtherProfileScreen from "./containers/OtherProfile";
-import ChatPopUpScreen from "./components/ChatPopup";
 import VerifiyScreen from "./containers/Verifiy";
 
 import SettingsScreen from "./containers/Settings";
+import OtherProfileScreen from "./containers/OtherProfile";
+import ChatPopUpScreen from "./components/ChatPopup";
+import OtherProfileScreen2 from "./containers/OtherProfile2";
 
 import HomeIcon_Grey from "./assets/icons/home.svg";
 import HomeIcon_Green from "./assets/icons/home_g.svg";
@@ -168,48 +169,51 @@ const App = createBottomTabNavigator(
 );
 
 const RootStack = createStackNavigator(
-  {
-    AppScreen: {
-      screen: App,
-    },
-    SignUp: {
-      screen: SignUpScreen,
-    },
-    LogIn: {
-      screen: LogInScreen,
-    },
-    Messages: {
-      screen: MessagesScreen,
-    },
-    ChatPage: {
-      screen: Chat,
-    },
-    Privacy :{
-      screen: PrivacyScreen,
-    },
-    Onboarding: {
-      screen: OnboardingScreen,
-    },
-    Settings: {
-      screen: SettingsScreen
-    },
-    Profile: {
-      screen: ProfileScreen
-    },
-    Internet:{
-      screen: InternetScreen,
-    },
-    Verify: {
-      screen: VerifiyScreen
+	{
+		AppScreen: {
+			screen: App,
+		},
+		SignUp: {
+			screen: SignUpScreen,
+		},
+		LogIn: {
+			screen: LogInScreen,
+		},
+		Messages: {
+			screen: MessagesScreen,
+		},
+		ChatPage: {
+			screen: Chat,
+		},
+		Profile: {
+			screen: ProfileScreen,
+		},
+		Privacy: {
+			screen: PrivacyScreen,
+		},
+		Onboarding: {
+			screen: OnboardingScreen,
+		},
+		Internet: {
+			screen: InternetScreen,
+		},
+		OtherProfile: {
+			screen: OtherProfileScreen,
+		},
+		ChatPopup: {
+			screen: ChatPopUpScreen,
+		},
+		Verify: {
+			screen: VerifiyScreen,
+		},
+		Settings: {
+			screen: SettingsScreen,
+		},
+		OtherProfile2: {
+			screen: OtherProfileScreen2,
+		},
 	},
-	OtherProfile: {
-		screen: OtherProfileScreen,
-	},
-	ChatPopup: {
-		screen:ChatPopUpScreen
-	}
-  },
-  { mode: 'modal', headerMode: 'none' }
+	{ mode: "modal", headerMode: "none" }
 );
 
 APIConnection.initSocketConnection();

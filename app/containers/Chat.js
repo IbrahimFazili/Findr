@@ -1,21 +1,21 @@
 import React, { Component } from "react";
 import {
-  Text,
-  View,
-  StyleSheet,
-  ScrollView,
-  TouchableOpacity,
-  Keyboard,
-  ImageBackground,
-  Dimensions,
-} from 'react-native';
-import { Header, Image, ThemeConsumer } from 'react-native-elements';
-import KeyboardSpacer from 'react-native-keyboard-spacer';
-import AutogrowInput from 'react-native-autogrow-input';
-import { moderateScale } from 'react-native-size-matters';
-import ImagePicker from 'react-native-image-picker';
+	Text,
+	View,
+	StyleSheet,
+	ScrollView,
+	TouchableOpacity,
+	Keyboard,
+	ImageBackground,
+	Dimensions,
+} from "react-native";
+import { Header, Image, ThemeConsumer } from "react-native-elements";
+import KeyboardSpacer from "react-native-keyboard-spacer";
+import AutogrowInput from "react-native-autogrow-input";
+import { moderateScale } from "react-native-size-matters";
+import ImagePicker from "react-native-image-picker";
 import { Thumbnail } from "native-base";
-import APIConnection from '../assets/data/APIConnection';
+import APIConnection from "../assets/data/APIConnection";
 
 import AttachIcon from "../assets/icons/attach.svg";
 import SendIcon from "../assets/icons/send_icon.svg";
@@ -39,6 +39,23 @@ const renderCustomHeader = () => {
 		/>
 	);
 };
+
+function convertTimestamptoTime(unixTimestamp) {
+	dateObj = new Date(unixTimestamp);
+	hours = dateObj.getHours();
+	minutes = dateObj.getMinutes();
+
+	if (hours >= 12) {
+		hours = hours % 12;
+		formattedTime =
+			hours.toString() + ":" + minutes.toString().padStart(2, "0") + " PM";
+	} else {
+		formattedTime =
+			hours.toString() + ":" + minutes.toString().padStart(2, "0") + " AM";
+	}
+
+	return formattedTime;
+}
 
 export default class Chat extends Component {
   constructor(props) {
@@ -119,7 +136,8 @@ export default class Chat extends Component {
       const msg = msgQueue.dequeue();
       newMessages.push({
         user: msg.from,
-        msg: msg.msg
+        msg: msg.msg,
+        timestamp: msg.time
       });
     }
     if (newMessages.length > 0) {
@@ -128,9 +146,11 @@ export default class Chat extends Component {
   }
 
   _sendMessage() {
+    const timestamp = (new Date()).getTime();
     this.state.messages.push({
       user: this.state.own_email,
       msg: this.state.inputBarText,
+      timestamp
     });
 
     for (let i = 0; i < this.state.selectedMedia.length; i++) {
@@ -144,7 +164,7 @@ export default class Chat extends Component {
       to: this.state.other_user_email,
       msg: this.state.inputBarText,
       media: this.state.selectedMedia,
-      time: (new Date()).getTime(),
+      time: timestamp,
       public_key: null
     }
 
@@ -279,18 +299,39 @@ class MessageBubble extends Component {
 				? styles.messageBubbleTextLeft
 				: styles.messageBubbleTextRight;
 
-		return (
-			<View
-				style={{
-					justifyContent: "space-between",
-					flexDirection: "row",
-				}}
-			>
-				{leftSpacer}
-				<View style={bubbleStyles}>
-					<Text style={bubbleTextStyle}>{this.props.text}</Text>
+		var leftTime =
+			this.props.direction == "left" ? (
+				<View style={styles.timeLeft}>
+					<Text style={styles.timeText}>
+						{convertTimestamptoTime(this.props.time)}
+					</Text>
 				</View>
-				{rightSpacer}
+			) : null;
+		var rightTime =
+			this.props.direction == "right" ? (
+				<View style={styles.timeRight}>
+					<Text style={styles.timeText}>
+						{convertTimestamptoTime(this.props.time)}
+					</Text>
+				</View>
+			) : null;
+
+		return (
+			<View>
+				<View
+					style={{
+						justifyContent: "space-between",
+						flexDirection: "row",
+					}}
+				>
+					{leftSpacer}
+					<View style={bubbleStyles}>
+						<Text style={bubbleTextStyle}>{this.props.text}</Text>
+					</View>
+					{rightSpacer}
+				</View>
+				{leftTime}
+				{rightTime}
 			</View>
 		);
 	}
@@ -510,6 +551,21 @@ const styles = StyleSheet.create({
 	itemOut: {
 		alignSelf: "flex-end",
 		marginRight: 20,
+	},
+	timeLeft: {
+		alignSelf: "flex-end",
+		marginTop: DIMENSION_HEIGHT * 0.001,
+		marginRight: DIMENSION_WIDTH * 0.05,
+		marginBottom: DIMENSION_HEIGHT * 0.005,
+	},
+	timeRight: {
+		alignSelf: "flex-start",
+		marginTop: DIMENSION_HEIGHT * 0.001,
+		marginLeft: DIMENSION_WIDTH * 0.05,
+		marginBottom: DIMENSION_HEIGHT * 0.005,
+	},
+	timeText: {
+		color: "#969693",
 	},
 
 	//Header
