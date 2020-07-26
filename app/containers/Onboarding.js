@@ -117,6 +117,7 @@ class Onboarding extends React.Component {
                         variant
                         key={user.name}
                         image={{ uri: user.image }}
+                        email={user.email}
                         name={user.name}
                         status={"Online"}
                       />

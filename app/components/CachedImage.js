@@ -55,8 +55,9 @@ class CachedImage extends React.Component {
         RNFS.downloadFile({ fromUrl: uri, toFile: path }).promise.then((res) => this.loadFile(path));
     }
 
-    componentDidMount = () => {
+    componentDidMount = () => {;
         const { uri, uid } = this.props;
+        if (uid === undefined) return;
         const name = shorthash.unique(uid);
         const extension = (Platform.OS === 'android') ? 'file://' : '' 
         const path =`${extension}${RNFS.CachesDirectoryPath}/${name}`;
