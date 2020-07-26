@@ -526,6 +526,7 @@ function generateVerificationHash(email) {
 /* Socket Listeners for chat */
 bindSocketListeners(io);
 
-http.listen(3000, () => {
+const port = (process.env.NODE_ENV === "test") ? 8100 : 3000;
+http.listen(port, () => {
 	console.log("Server is running");
 });

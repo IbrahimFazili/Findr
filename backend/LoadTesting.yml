@@ -1,0 +1,25 @@
+config:
+  target: 'http://api.findrapp.ca'
+  phases:
+    - duration: 10
+      arrivalRate: 20
+  payload:
+      path: "users.csv"
+      fields:
+        - "email"
+        - "password"
+      skipHeader: true
+scenarios:
+  - flow:
+    - post: 
+        url: "/login"
+        json:
+          email: "{{ email }}"
+          password: "{{ password }}"
+    - get:
+        url: "/user/{{ email }}/connections"      
+    - get:
+        url: "/user/{{ email }}/chats"
+    - get:
+        url: "/fetchChatData?from={{ email }}&to={{ email }}&skipCount=0"
+      
