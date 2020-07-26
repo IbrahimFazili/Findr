@@ -156,6 +156,10 @@ class ProfilePopup extends React.Component {
 					</View>
 				</Swiper>
 				{/* </BlurView> */}
+				<Overlay
+           			visible={this.state.isVisible} onBackdropPress={()=> this.setState({isVisible: false})}
+           		>  
+				   </Overlay>
 			</Modal>
 		);
 	}

@@ -5,6 +5,8 @@ import CardItem from "../components/CardItem";
 import styles from "../assets/styles";
 import APIConnection from "../assets/data/APIConnection";
 import ProfilePopup from "../components/ProfilePopup";
+import {Overlay} from "react-native-elements"
+import MatchPopup from "../components/MatchPopup"
 
 const MAX_LENGTH = 150;
 
@@ -140,13 +142,17 @@ class Home extends React.Component {
               ))}
             </CardStack>
           </View>
-          <ProfilePopup 
+
+          <MatchPopup name={this.state.name} visible={this.state.visible} />
+
+          {/* <ProfilePopup 
             visible={this.state.visible} 
             name={this.state.name}
             keywords={this.state.keywords}
             bio={this.state.bio}
             uni={this.state.uni}
-          />
+          /> */}
+ 
         </View>
       </ImageBackground>
     );
