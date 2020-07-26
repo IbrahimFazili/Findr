@@ -473,8 +473,8 @@ const styles = StyleSheet.create({
 	inputBar: {
 		flexDirection: "row",
 		justifyContent: "space-between",
-		padding: DIMENSION_HEIGHT * 0.01,
-		height: DIMENSION_HEIGHT * 0.075,
+		// padding: DIMENSION_HEIGHT * 0.015,
+		height: DIMENSION_HEIGHT * 0.07,
 		elevation: 15,
 		backgroundColor: "white",
 	},
@@ -487,18 +487,22 @@ const styles = StyleSheet.create({
 		fontSize: 16,
 		paddingHorizontal: 10,
 		maxWidth: DIMENSION_WIDTH * 0.7,
+		maxHeight: DIMENSION_HEIGHT * 0.05,
+		top: DIMENSION_HEIGHT * 0.01,
 	},
 
 	sendButton: {
 		justifyContent: "center",
 		backgroundColor: "transparent",
-		marginBottom: DIMENSION_HEIGHT * 0.01,
+		marginBottom: DIMENSION_HEIGHT * 0.003,
+		marginRight: DIMENSION_WIDTH * 0.01,
 		elevation: 8,
 	},
 
 	mediaButton: {
 		backgroundColor: "transparent",
 		marginLeft: DIMENSION_WIDTH * 0.05,
+		marginTop: DIMENSION_HEIGHT * 0.008,
 		bottom: 5,
 	},
 
@@ -610,6 +614,7 @@ const styles = StyleSheet.create({
 	},
 	timeText: {
 		color: "#969693",
+		fontSize: 11,
 	},
 
 	//Header

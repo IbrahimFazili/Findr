@@ -215,10 +215,10 @@ export default StyleSheet.create({
   popupCard: {
     backgroundColor: WHITE,
     borderRadius: 20,
-    maxHeight: DIMENSION_HEIGHT * 0.7,
+    maxHeight: DIMENSION_HEIGHT * 0.76,
     maxWidth: DIMENSION_WIDTH * 0.85,
     alignSelf: "center",
-    marginVertical: DIMENSION_HEIGHT * 0.13,
+    marginTop: DIMENSION_HEIGHT * 0.15,
     borderRadius: 30,
     // overflow: "hidden",
   },
@@ -649,7 +649,7 @@ export default StyleSheet.create({
   containerMatches: {
     justifyContent: "space-between",
     flex: 1,
-    paddingHorizontal: 10,
+    // paddingHorizontal: 10,
   },
 
   matchTop: {

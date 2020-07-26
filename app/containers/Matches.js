@@ -115,32 +115,33 @@ class Matches extends React.Component {
 						<View style={styles.matchTopSub}>
 							<Text style={styles.matchTitle}>Matches</Text>
 						</View>
-
-						<FlatList
-							numColumns={2}
-							data={this.state.cards}
-							keyExtractor={(item, index) => index.toString()}
-							renderItem={({ item }) => (
-								<TouchableOpacity
-									activeOpacity={1}
-									onPress={() =>
-										this.props.navigation.navigate(
-											"OtherProfile2",
-											{
-												email: item.email,
-											}
-										)
-									}
-								>
-									<CardItem
-										image={{ uri: item.image }}
-										name={item.name}
-										status={"Online"}
-										variant
-									/>
-								</TouchableOpacity>
-							)}
-						/>
+						<View style={{paddingHorizontal: 10}}>
+							<FlatList
+								numColumns={2}
+								data={this.state.cards}
+								keyExtractor={(item, index) => index.toString()}
+								renderItem={({ item }) => (
+									<TouchableOpacity
+										activeOpacity={1}
+										onPress={() =>
+											this.props.navigation.navigate(
+												"OtherProfile2",
+												{
+													email: item.email,
+												}
+											)
+										}
+									>
+										<CardItem
+											image={{ uri: item.image }}
+											name={item.name}
+											status={"Online"}
+											variant
+										/>
+									</TouchableOpacity>
+								)}
+							/>
+						</View>
 					</ScrollView>
 				</View>
 			</ImageBackground>
