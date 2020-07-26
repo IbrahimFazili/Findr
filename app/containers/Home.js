@@ -84,14 +84,14 @@ class Home extends React.Component {
     this.setState({ cards: data, dataLoadRequired: false });
   }
 
-  async handleRightSwipe(email) {
+  async handleRightSwipe(email, swiped=false) {
     const swipeStatus = await this.state.API.rightSwipe(
       await AsyncStorage.getItem('storedEmail'), 
       email
     );
 
     if (swipeStatus.success) {
-      this.swiper.swipeRight();
+      !swiped ? this.swiper.swipeRight() : null;
       if (swipeStatus.isMatch) this.setState({ matchPossible: true });
     } else {
       // server didn't register the right swipe or the request didn't make sense.
@@ -99,13 +99,13 @@ class Home extends React.Component {
     }
   }
 
-  async handleLeftSwipe(email) {
+  async handleLeftSwipe(email, swiped=false) {
     const success = await this.state.API.leftSwipe(
       await AsyncStorage.getItem('storedEmail'), 
       email
     );
 
-    if (success) this.swiper.swipeLeft();
+    if (success) !swiped ? this.swiper.swipeLeft() : null;
     else {
       // server didn't register the left swipe or the request didn't make sense.
       // TODO: display some sort of error message to the user that something's wrong
@@ -146,7 +146,10 @@ class Home extends React.Component {
               ref={(swiper) => (this.swiper = swiper)}
             >
               {this.state.cards.map((item, index) => (
-                <Card key={index}>
+                <Card key={index}
+                onSwipedLeft={() => this.handleLeftSwipe(item.email, true)}
+                onSwipedRight={() => this.handleRightSwipe(item.email, true)}
+                >
                   <TouchableOpacity 
                   activeOpacity={1} 
                   onPress={() => this.setState({
@@ -166,8 +169,8 @@ class Home extends React.Component {
                           : item.bio
                       }
                       actions
-                      onPressRight={() => this.swiper.swipeRight()}
-                      onPressLeft={() => this.swiper.swipeLeft()}
+                      onPressRight={() => this.handleRightSwipe(item.email)}
+                      onPressLeft={() => this.handleLeftSwipe(item.email)}
                     />
                   </TouchableOpacity>
                 </Card>
