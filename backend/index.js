@@ -29,7 +29,8 @@ app.use(bodyParser.json());
 
 app.get("/", (req, res) => {
 	if (!isServerOutdated) {
-		res.status(200).send("Server is Alive");
+		res.status(200).send((process.env.NODE_ENV === "test") ? "Test Server is Alive"
+				     : "Server is Alive");
 	} else {
 		res.status(503).send("Server is updating...");
 	}
