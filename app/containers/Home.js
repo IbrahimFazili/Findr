@@ -5,6 +5,8 @@ import CardItem from "../components/CardItem";
 import styles from "../assets/styles";
 import APIConnection from "../assets/data/APIConnection";
 import ProfilePopup from "../components/ProfilePopup";
+import {Overlay} from "react-native-elements"
+import MatchPopup from "../components/MatchPopup"
 
 const MAX_LENGTH = 150;
 
@@ -28,6 +30,7 @@ class Home extends React.Component {
       keywords: [],
       bio: "",
       uni: "",
+      matchPossible: false,
     };
   }
 
@@ -53,6 +56,9 @@ class Home extends React.Component {
           await AsyncStorage.setItem('onboarding', '1');
           this.props.navigation.navigate("Onboarding");
         }
+      } else {
+        const verified = (await this.state.API.fetchUser(storedEmail)).active;
+        if (!verified) this.props.navigation.navigate("Verify");
       }
     } 
     catch (err) {
@@ -76,6 +82,34 @@ class Home extends React.Component {
       await AsyncStorage.getItem('storedEmail')
     );
     this.setState({ cards: data, dataLoadRequired: false });
+  }
+
+  async handleRightSwipe(email, swiped=false) {
+    const swipeStatus = await this.state.API.rightSwipe(
+      await AsyncStorage.getItem('storedEmail'), 
+      email
+    );
+
+    if (swipeStatus.success) {
+      !swiped ? this.swiper.swipeRight() : null;
+      if (swipeStatus.isMatch) this.setState({ matchPossible: true });
+    } else {
+      // server didn't register the right swipe or the request didn't make sense.
+      // TODO: display some sort of error message to the user that something's wrong
+    }
+  }
+
+  async handleLeftSwipe(email, swiped=false) {
+    const success = await this.state.API.leftSwipe(
+      await AsyncStorage.getItem('storedEmail'), 
+      email
+    );
+
+    if (success) !swiped ? this.swiper.swipeLeft() : null;
+    else {
+      // server didn't register the left swipe or the request didn't make sense.
+      // TODO: display some sort of error message to the user that something's wrong
+    }
   }
 
   render() {
@@ -112,7 +146,10 @@ class Home extends React.Component {
               ref={(swiper) => (this.swiper = swiper)}
             >
               {this.state.cards.map((item, index) => (
-                <Card key={index}>
+                <Card key={index}
+                onSwipedLeft={() => this.handleLeftSwipe(item.email, true)}
+                onSwipedRight={() => this.handleRightSwipe(item.email, true)}
+                >
                   <TouchableOpacity 
                   activeOpacity={1} 
                   onPress={() => this.setState({
@@ -132,21 +169,25 @@ class Home extends React.Component {
                           : item.bio
                       }
                       actions
-                      onPressRight={() => this.swiper.swipeRight()}
-                      onPressLeft={() => this.swiper.swipeLeft()}
+                      onPressRight={() => this.handleRightSwipe(item.email)}
+                      onPressLeft={() => this.handleLeftSwipe(item.email)}
                     />
                   </TouchableOpacity>
                 </Card>
               ))}
             </CardStack>
           </View>
-          <ProfilePopup 
+
+          <MatchPopup name={this.state.name} visible={this.state.matchPossible} />
+
+          {/* <ProfilePopup 
             visible={this.state.visible} 
             name={this.state.name}
             keywords={this.state.keywords}
             bio={this.state.bio}
             uni={this.state.uni}
-          />
+          /> */}
+ 
         </View>
       </ImageBackground>
     );

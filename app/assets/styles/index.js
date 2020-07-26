@@ -223,6 +223,16 @@ export default StyleSheet.create({
     // overflow: "hidden",
   },
 
+  matchPop: {
+    backgroundColor: WHITE,
+    borderRadius: 20,
+    top: DIMENSION_HEIGHT * 0.3,
+    maxHeight: DIMENSION_HEIGHT * 0.3,
+    width: DIMENSION_WIDTH * 0.85,
+    alignSelf: "center",
+    borderRadius: 30,
+  },
+
   blurredView: {
     flex: 1, 
     justifyContent: "center", 
@@ -762,6 +772,63 @@ export default StyleSheet.create({
     marginLeft: DIMENSION_WIDTH * 0.05,
     width: DIMENSION_WIDTH * 0.25,
     height: DIMENSION_HEIGHT * 0.1,
+  },
+
+  usernameHome: {
+    paddingBottom: 7,
+    marginTop: 0,
+    color: '#363636',
+    fontSize: 20,
+    alignSelf: 'center',
+    top: DIMENSION_HEIGHT * 0.05,
+  },
+
+  buttonText: {
+    paddingBottom: 7,
+    marginTop: 0,
+    fontSize: 20,
+    alignSelf: 'center',
+  },
+
+  ignoreText:{
+    paddingBottom: 7,
+    marginTop: 0,
+    fontSize: 20,
+    alignSelf: 'center',
+    color: "red",
+  },
+
+  ignoreButtonStyle: {
+    borderBottomRightRadius: 30,
+    borderColor: "black",
+    borderWidth: 0.06,
+  },
+
+  chatButtonStyle: {
+    borderBottomLeftRadius: 30,
+    borderColor: "black",
+    borderWidth: 0.06,
+  },
+
+  match: {
+    paddingBottom: 7,
+    marginTop: 0,
+    top: DIMENSION_HEIGHT * 0.05,
+    color: '#363636',
+    fontSize: 15,
+    alignSelf: 'center'
+  },
+
+  chatButton:{
+    maxWidth: DIMENSION_WIDTH * 0.45,
+    top: DIMENSION_HEIGHT * 0.114,
+    borderBottomLeftRadius: 20,
+  },
+
+  ignoreButton:{
+    maxWidth: DIMENSION_WIDTH * 0.4,
+    left: DIMENSION_WIDTH * 0.45,
+    top: DIMENSION_HEIGHT * 0.05,
   },
 
   slide0: {

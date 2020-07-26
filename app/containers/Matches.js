@@ -39,7 +39,7 @@ class Matches extends React.Component {
 	}
 
 	async componentDidMount() {
-		const data = await this.state.API.loadData(
+		const data = await this.state.API.fetchMatches(
 			await AsyncStorage.getItem("storedEmail")
 		);
 		this.scrollView.scrollToEnd({ animated: true, duration: 1000 });
