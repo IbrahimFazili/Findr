@@ -30,6 +30,7 @@ class Home extends React.Component {
       keywords: [],
       bio: "",
       uni: "",
+      matchPossible: false,
     };
   }
 
@@ -55,6 +56,9 @@ class Home extends React.Component {
           await AsyncStorage.setItem('onboarding', '1');
           this.props.navigation.navigate("Onboarding");
         }
+      } else {
+        const verified = (await this.state.API.fetchUser(storedEmail)).active;
+        if (!verified) this.props.navigation.navigate("Verify");
       }
     } 
     catch (err) {
@@ -78,6 +82,34 @@ class Home extends React.Component {
       await AsyncStorage.getItem('storedEmail')
     );
     this.setState({ cards: data, dataLoadRequired: false });
+  }
+
+  async handleRightSwipe(email) {
+    const swipeStatus = await this.state.API.rightSwipe(
+      await AsyncStorage.getItem('storedEmail'), 
+      email
+    );
+
+    if (swipeStatus.success) {
+      this.swiper.swipeRight();
+      if (swipeStatus.isMatch) this.setState({ matchPossible: true });
+    } else {
+      // server didn't register the right swipe or the request didn't make sense.
+      // TODO: display some sort of error message to the user that something's wrong
+    }
+  }
+
+  async handleLeftSwipe(email) {
+    const success = await this.state.API.leftSwipe(
+      await AsyncStorage.getItem('storedEmail'), 
+      email
+    );
+
+    if (success) this.swiper.swipeLeft();
+    else {
+      // server didn't register the left swipe or the request didn't make sense.
+      // TODO: display some sort of error message to the user that something's wrong
+    }
   }
 
   render() {
@@ -143,7 +175,7 @@ class Home extends React.Component {
             </CardStack>
           </View>
 
-          <MatchPopup name={this.state.name} visible={this.state.visible} />
+          <MatchPopup name={this.state.name} visible={this.state.matchPossible} />
 
           {/* <ProfilePopup 
             visible={this.state.visible} 
