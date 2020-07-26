@@ -10,7 +10,7 @@ chai.use(chatHttp);
 chai.use(deepEqualInAnyOrder);
 chai.should();
 
-const SERVER_URL = "http://localhost:3000";
+const SERVER_URL = "http://localhost:8100";
 
 function getRandomEntry(data) {
     return data[Math.floor(Math.random() * data.length)];
