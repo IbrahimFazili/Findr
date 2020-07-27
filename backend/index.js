@@ -322,6 +322,12 @@ app.post("/updateUserInfo", (req, res) => {
 	}
 
 	if (user.keywords) delete user.keywords;
+	if (user.gender) {
+		if (user.gender !== 'M' && user.gender !== 'F' &&
+		user.gender !== 'O' && user.gender !== 'P') {
+			delete user.gender;
+		}
+	}
 
 	const projection = { password: 1 };
 	DB.fetchUsers({ email: user.email }, { projection }).then(async (users) => {
@@ -407,10 +413,10 @@ app.post("/signup", (req, res) => {
 		name: req.body.name,
 		email: req.body.email,
 		password: bcrypt.hashSync(req.body.password, 10),
-		gender: req.body.gender,
+		gender: '',
 		uni: req.body.uni,
 		major: req.body.major,
-		age: Number(req.body.age),
+		age: req.body.age,
 		clubs: [],
 		projects: [],
 		experience: [],
