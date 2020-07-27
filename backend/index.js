@@ -29,7 +29,8 @@ app.use(bodyParser.json());
 
 app.get("/", (req, res) => {
 	if (!isServerOutdated) {
-		res.status(200).send("Server is Alive");
+		res.status(200).send((process.env.NODE_ENV === "test") ? "Test Server is Alive"
+				     : "Server is Alive");
 	} else {
 		res.status(503).send("Server is updating...");
 	}
@@ -526,6 +527,7 @@ function generateVerificationHash(email) {
 /* Socket Listeners for chat */
 bindSocketListeners(io);
 
-http.listen(3000, () => {
+const port = (process.env.NODE_ENV === "test") ? 8100 : 3000;
+http.listen(port, () => {
 	console.log("Server is running");
 });

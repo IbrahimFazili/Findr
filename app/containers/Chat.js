@@ -1,26 +1,26 @@
 import React, { Component } from "react";
 import {
-  Text,
-  View,
-  StyleSheet,
-  ScrollView,
-  TouchableOpacity,
-  Keyboard,
-  ImageBackground,
-  Dimensions,
-} from 'react-native';
-import { Header, Image, ThemeConsumer } from 'react-native-elements';
-import KeyboardSpacer from 'react-native-keyboard-spacer';
-import AutogrowInput from 'react-native-autogrow-input';
-import { moderateScale } from 'react-native-size-matters';
-import ImagePicker from 'react-native-image-picker';
+	Text,
+	View,
+	StyleSheet,
+	ScrollView,
+	TouchableOpacity,
+	Keyboard,
+	ImageBackground,
+	Dimensions,
+} from "react-native";
+import { Header, Image, ThemeConsumer } from "react-native-elements";
+import KeyboardSpacer from "react-native-keyboard-spacer";
+import AutogrowInput from "react-native-autogrow-input";
+import { moderateScale } from "react-native-size-matters";
+import ImagePicker from "react-native-image-picker";
 import { Thumbnail } from "native-base";
-import APIConnection from '../assets/data/APIConnection';
+import APIConnection from "../assets/data/APIConnection";
 
 import AttachIcon from "../assets/icons/attach.svg";
 import SendIcon from "../assets/icons/send_icon.svg";
 import BackButton from "../assets/icons/back_black.svg";
-import InfoIcon from "../assets/icons/in.svg";
+import InfoIcon from "../assets/icons/i_icon.svg";
 
 import ChatPopup from "../components/ChatPopup";
 
@@ -40,11 +40,29 @@ const renderCustomHeader = () => {
 	);
 };
 
+function convertTimestamptoTime(unixTimestamp) {
+	dateObj = new Date(unixTimestamp);
+	hours = dateObj.getHours();
+	minutes = dateObj.getMinutes();
+
+	if (hours >= 12) {
+		hours = hours % 12;
+		formattedTime =
+			hours.toString() + ":" + minutes.toString().padStart(2, "0") + " PM";
+	} else {
+		formattedTime =
+			hours.toString() + ":" + minutes.toString().padStart(2, "0") + " AM";
+	}
+
+	return formattedTime;
+}
+
 export default class Chat extends Component {
   constructor(props) {
     super(props);
 
     this.state = {
+	  showPopup: false,
       own_email: props.navigation.state.params.own_email,
       messages: props.navigation.state.params.messages,
       inputBarText: '',
@@ -119,7 +137,8 @@ export default class Chat extends Component {
       const msg = msgQueue.dequeue();
       newMessages.push({
         user: msg.from,
-        msg: msg.msg
+        msg: msg.msg,
+        timestamp: msg.time
       });
     }
     if (newMessages.length > 0) {
@@ -128,9 +147,12 @@ export default class Chat extends Component {
   }
 
   _sendMessage() {
+	if (this.state.inputBarText.trim().length === 0) return;
+    const timestamp = (new Date()).getTime();
     this.state.messages.push({
       user: this.state.own_email,
       msg: this.state.inputBarText,
+      timestamp
     });
 
     for (let i = 0; i < this.state.selectedMedia.length; i++) {
@@ -144,7 +166,7 @@ export default class Chat extends Component {
       to: this.state.other_user_email,
       msg: this.state.inputBarText,
       media: this.state.selectedMedia,
-      time: (new Date()).getTime(),
+      time: timestamp,
       public_key: null
     }
 
@@ -205,54 +227,96 @@ export default class Chat extends Component {
     });
 
     return (
-      <View style={styles.outer}>
-        <ImageBackground
-          source={require('../assets/images/15.png')}
-          style={styles.bg}
-        >
-          <Header
-            statusBarProps={{ barStyle: 'light-content' }}
-            barStyle='light-content' // or directly
-            centerComponent={() => {
-              return (
-                <View>
-                  <Thumbnail
-                  small
-                  style={{ alignSelf: "center", marginTop: 0 }}
-                  source={this.state.other_user_image}
-                  key={this.state.own_email}
-                  />
-                  <Text style={styles.headerTest}>{this.state.other_user}</Text>
-                </View>
-              );
-            }}
-            containerStyle={{
-              backgroundColor: 'white',
-              justifyContent: 'space-around',
-              elevation: 15,
-              paddingBottom: DIMENSION_HEIGHT * 0.03
-            }}
-          />
+		<View style={styles.outer}>
+			<ImageBackground
+				source={require("../assets/images/15.png")}
+				style={styles.bg}
+			>
+				<Header
+					statusBarProps={{ barStyle: "light-content" }}
+					barStyle="light-content" // or directly
+					centerComponent={() => {
+						return (
+							<View style={styles.chatHeader}>
+								<TouchableOpacity
+									style={styles.chatBack}
+									onPress={() =>
+										this.props.navigation.goBack()
+									}
+								>
+									<BackButton
+										width={DIMENSION_WIDTH * 0.02}
+										height={DIMENSION_HEIGHT * 0.02}
+									/>
+								</TouchableOpacity>
+								<Thumbnail
+									small
+									style={{
+										alignSelf: "center",
+										marginTop: 0,
+										marginRight: DIMENSION_WIDTH * 0.02,
+									}}
+									source={this.state.other_user_image}
+									key={this.state.own_email}
+								/>
+								<Text style={styles.headerTest}>
+									{this.state.other_user}
+								</Text>
+							</View>
+						);
+					}}
+					rightComponent={() => {
+						return (
+							<View>
+								<TouchableOpacity
+									onPress={() =>
+										this.setState({
+											showPopup: true,
+										})
+									}
+								>
+									<InfoIcon
+										width={DIMENSION_WIDTH * 0.058}
+										height={DIMENSION_HEIGHT * 0.058}
+									/>
+								</TouchableOpacity>
+								<ChatPopup
+									visible={this.state.showPopup}
+									email={this.state.other_user_email}
+									navigation={this.props.navigation}
+									own_email={this.state.own_email}
+								/>
+							</View>
+						);
+					}}
+					containerStyle={{
+						backgroundColor: "white",
+						justifyContent: "space-around",
+						elevation: 15,
+						paddingBottom: DIMENSION_HEIGHT * 0.03,
+						height: DIMENSION_HEIGHT * 0.08,
+					}}
+				/>
 
-          <ScrollView
-            ref={(ref) => {
-              this.scrollView = ref;
-            }}
-            style={styles.messages}
-          >
-            {messages}
-          </ScrollView>
-          <InputBar
-            onSendPressed={() => this._sendMessage()}
-            onSizeChange={() => this._onInputSizeChange()}
-            onChangeText={(text) => this._onChangeInputBarText(text)}
-            onChangeMedia={this._onChangeMedia.bind(this)}
-            text={this.state.inputBarText}
-          />
-          <KeyboardSpacer />
-        </ImageBackground>
-      </View>
-    );
+				<ScrollView
+					ref={(ref) => {
+						this.scrollView = ref;
+					}}
+					style={styles.messages}
+				>
+					{messages}
+				</ScrollView>
+				<InputBar
+					onSendPressed={() => this._sendMessage()}
+					onSizeChange={() => this._onInputSizeChange()}
+					onChangeText={(text) =>
+						this._onChangeInputBarText(text)
+					}
+					text={this.state.inputBarText}
+				/>
+			</ImageBackground>
+		</View>
+	);
   }
 }
 
@@ -279,18 +343,39 @@ class MessageBubble extends Component {
 				? styles.messageBubbleTextLeft
 				: styles.messageBubbleTextRight;
 
-		return (
-			<View
-				style={{
-					justifyContent: "space-between",
-					flexDirection: "row",
-				}}
-			>
-				{leftSpacer}
-				<View style={bubbleStyles}>
-					<Text style={bubbleTextStyle}>{this.props.text}</Text>
+		var leftTime =
+			this.props.direction == "left" ? (
+				<View style={styles.timeLeft}>
+					<Text style={styles.timeText}>
+						{convertTimestamptoTime(this.props.time)}
+					</Text>
 				</View>
-				{rightSpacer}
+			) : null;
+		var rightTime =
+			this.props.direction == "right" ? (
+				<View style={styles.timeRight}>
+					<Text style={styles.timeText}>
+						{convertTimestamptoTime(this.props.time)}
+					</Text>
+				</View>
+			) : null;
+
+		return (
+			<View>
+				<View
+					style={{
+						justifyContent: "space-between",
+						flexDirection: "row",
+					}}
+				>
+					{leftSpacer}
+					<View style={bubbleStyles}>
+						<Text style={bubbleTextStyle}>{this.props.text}</Text>
+					</View>
+					{rightSpacer}
+				</View>
+				{leftTime}
+				{rightTime}
 			</View>
 		);
 	}
@@ -388,8 +473,8 @@ const styles = StyleSheet.create({
 	inputBar: {
 		flexDirection: "row",
 		justifyContent: "space-between",
-		padding: DIMENSION_HEIGHT * 0.01,
-		height: DIMENSION_HEIGHT * 0.075,
+		// padding: DIMENSION_HEIGHT * 0.015,
+		height: DIMENSION_HEIGHT * 0.07,
 		elevation: 15,
 		backgroundColor: "white",
 	},
@@ -402,18 +487,22 @@ const styles = StyleSheet.create({
 		fontSize: 16,
 		paddingHorizontal: 10,
 		maxWidth: DIMENSION_WIDTH * 0.7,
+		maxHeight: DIMENSION_HEIGHT * 0.05,
+		top: DIMENSION_HEIGHT * 0.01,
 	},
 
 	sendButton: {
 		justifyContent: "center",
 		backgroundColor: "transparent",
-		marginBottom: DIMENSION_HEIGHT * 0.01,
+		marginBottom: DIMENSION_HEIGHT * 0.003,
+		marginRight: DIMENSION_WIDTH * 0.01,
 		elevation: 8,
 	},
 
 	mediaButton: {
 		backgroundColor: "transparent",
 		marginLeft: DIMENSION_WIDTH * 0.05,
+		marginTop: DIMENSION_HEIGHT * 0.008,
 		bottom: 5,
 	},
 
@@ -510,6 +599,22 @@ const styles = StyleSheet.create({
 	itemOut: {
 		alignSelf: "flex-end",
 		marginRight: 20,
+	},
+	timeLeft: {
+		alignSelf: "flex-end",
+		marginTop: DIMENSION_HEIGHT * 0.001,
+		marginRight: DIMENSION_WIDTH * 0.05,
+		marginBottom: DIMENSION_HEIGHT * 0.005,
+	},
+	timeRight: {
+		alignSelf: "flex-start",
+		marginTop: DIMENSION_HEIGHT * 0.001,
+		marginLeft: DIMENSION_WIDTH * 0.05,
+		marginBottom: DIMENSION_HEIGHT * 0.005,
+	},
+	timeText: {
+		color: "#969693",
+		fontSize: 11,
 	},
 
 	//Header

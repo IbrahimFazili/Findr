@@ -108,6 +108,23 @@ class APIConnection {
     return { success: true, user };
   }
 
+  async rightSwipe(src, target) {
+    const swipeResult = (await fetch(`${this.ENDPOINT}:${this.PORT}/rightSwipe?src=${src}&target=${target}`));
+    if (swipeResult.status === 201) { 
+      return { 
+        isMatch: (await swipeResult.json()).isMatch,
+        success: true
+      }
+    }
+    return { success: false, isMatch: false };
+  }
+
+  async leftSwipe(src, target) {
+    const swipeResult = (await fetch(`${this.ENDPOINT}:${this.PORT}/leftSwipe?src=${src}&target=${target}`));
+    if (swipeResult.status === 201) return true;
+    return false;
+  }
+
   /**
    * Request the API to send profile cards based on the email provided
    * @param {String} email E-mail of the user for whom to obtain profile cards for
@@ -158,7 +175,7 @@ class APIConnection {
 
   async fetchChatData(from, to) {
     return (
-      await fetch(`${this.ENDPOINT}:${this.PORT}/fetchChatData?from=${from}&to=${to}`)
+      await fetch(`${this.ENDPOINT}:${this.PORT}/fetchChatData?from=${from}&to=${to}&skipCount=${0}`)
     ).json();
   }
 

@@ -1,10 +1,10 @@
 {
-	"name": "tinder-react-native",
-	"description": "Tinder React Native clone",
-	"version": "0.2.0",
-	"author": "Steven Persia",
+	"name": "Findr",
+	"description": "Findr Mobile App",
+	"version": "0.8.0",
+	"author": "Steven Persia, Lakshya Gupta, Gautam Gireesh, Parshva Shah, Ibrahim Fazili",
 	"licence": "MIT",
-	"homepage": "https://github.com/stevenpersia/tinder-react-native",
+	"homepage": "https://github.com/Lakshya2610/Findr",
 	"private": true,
 	"scripts": {
 		"lint": "eslint ./components ./containers --fix",

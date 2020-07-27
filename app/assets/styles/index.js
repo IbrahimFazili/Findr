@@ -215,12 +215,22 @@ export default StyleSheet.create({
   popupCard: {
     backgroundColor: WHITE,
     borderRadius: 20,
-    maxHeight: DIMENSION_HEIGHT * 0.7,
+    maxHeight: DIMENSION_HEIGHT * 0.76,
     maxWidth: DIMENSION_WIDTH * 0.85,
     alignSelf: "center",
-    marginVertical: DIMENSION_HEIGHT * 0.13,
+    marginTop: DIMENSION_HEIGHT * 0.15,
     borderRadius: 30,
     // overflow: "hidden",
+  },
+
+  matchPop: {
+    backgroundColor: WHITE,
+    borderRadius: 20,
+    top: DIMENSION_HEIGHT * 0.3,
+    maxHeight: DIMENSION_HEIGHT * 0.3,
+    width: DIMENSION_WIDTH * 0.85,
+    alignSelf: "center",
+    borderRadius: 30,
   },
 
   blurredView: {
@@ -649,7 +659,7 @@ export default StyleSheet.create({
   containerMatches: {
     justifyContent: "space-between",
     flex: 1,
-    paddingHorizontal: 10,
+    // paddingHorizontal: 10,
   },
 
   matchTop: {
@@ -762,6 +772,63 @@ export default StyleSheet.create({
     marginLeft: DIMENSION_WIDTH * 0.05,
     width: DIMENSION_WIDTH * 0.25,
     height: DIMENSION_HEIGHT * 0.1,
+  },
+
+  usernameHome: {
+    paddingBottom: 7,
+    marginTop: 0,
+    color: '#363636',
+    fontSize: 20,
+    alignSelf: 'center',
+    top: DIMENSION_HEIGHT * 0.05,
+  },
+
+  buttonText: {
+    paddingBottom: 7,
+    marginTop: 0,
+    fontSize: 20,
+    alignSelf: 'center',
+  },
+
+  ignoreText:{
+    paddingBottom: 7,
+    marginTop: 0,
+    fontSize: 20,
+    alignSelf: 'center',
+    color: "red",
+  },
+
+  ignoreButtonStyle: {
+    borderBottomRightRadius: 30,
+    borderColor: "black",
+    borderWidth: 0.06,
+  },
+
+  chatButtonStyle: {
+    borderBottomLeftRadius: 30,
+    borderColor: "black",
+    borderWidth: 0.06,
+  },
+
+  match: {
+    paddingBottom: 7,
+    marginTop: 0,
+    top: DIMENSION_HEIGHT * 0.05,
+    color: '#363636',
+    fontSize: 15,
+    alignSelf: 'center'
+  },
+
+  chatButton:{
+    maxWidth: DIMENSION_WIDTH * 0.45,
+    top: DIMENSION_HEIGHT * 0.114,
+    borderBottomLeftRadius: 20,
+  },
+
+  ignoreButton:{
+    maxWidth: DIMENSION_WIDTH * 0.4,
+    left: DIMENSION_WIDTH * 0.45,
+    top: DIMENSION_HEIGHT * 0.05,
   },
 
   slide0: {
