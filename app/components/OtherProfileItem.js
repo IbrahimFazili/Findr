@@ -400,21 +400,21 @@ class ProfileItem extends React.Component {
 					</Text>
 
 					<View style={styles.info}>
-						<Text style={styles.profileTitle}>Gender: </Text>
-						<Text style={styles.infoContent}>
+						<Text style={styles.profileTitle}>Gender </Text>
+						<Text style={styles.infoContentGenderOther}>
 							{this.state.gender}
 						</Text>
 					</View>
 
 					<View style={styles.info}>
-						<Text style={styles.profileTitle}>Email: </Text>
-						<Text style={styles.infoContent}>
+						<Text style={styles.profileTitleEmailOther}>Email </Text>
+						<Text style={styles.infoContentOther}>
 							{this.props.email}
 						</Text>
 					</View>
 
 					<View style={styles.info}>
-						<Text style={styles.profileTitle}>Keywords: </Text>
+						<Text style={styles.profileTitleKeywordOther}>Keywords</Text>
 						<OtherTag
 							keywords={this.state.keywords}
 							type="keyword"
@@ -440,7 +440,7 @@ class ProfileItem extends React.Component {
 						)}
 					</View>
 					<View style={styles.info}>
-						<Text style={styles.profileTitle}>Major: </Text>
+						<Text style={styles.profileTitleMajorOther}>Major </Text>
 						{this.state.isEditable2 ? (
 							<TextInput
 								underlineColor="transparent"
@@ -464,14 +464,14 @@ class ProfileItem extends React.Component {
 								style={textBoxStyle}
 							/>
 						) : (
-							<Text style={styles.infoContent}>
+							<Text style={styles.infoContentMajorOther}>
 								{this.state.major}
 							</Text>
 						)}
 					</View>
 
-					<View style={styles.info}>
-						<Text style={styles.profileTitle}>Courses: </Text>
+					<View>
+						<Text style={styles.profileTitleCourseOther}>Courses </Text>
 						<OtherTagCourses
 							keywords={this.state.courses}
 							editable={this.state.isEditable2}
@@ -480,8 +480,8 @@ class ProfileItem extends React.Component {
 						/>
 					</View>
 
-					<View style={styles.info}>
-						<Text style={styles.profileTitle}>Clubs: </Text>
+					<View>
+						<Text style={styles.profileTitleCourseOther}>Clubs </Text>
 						<OtherTagClubs
 							keywords={this.state.clubs}
 							editable={this.state.isEditable2}

@@ -60,6 +60,8 @@ const styles = StyleSheet.create({
 		flex: 1,
 		justifyContent: "center",
 		alignItems: "center",
+		left: Dimensions.get('window').width * 0.2,
+		bottom: Dimensions.get("window").width * 0.023
 	},
 	textInput: {
 		height: 30,

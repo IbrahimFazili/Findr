@@ -86,7 +86,7 @@ class OtherProfile extends React.Component {
 					<ScrollView>
 						<Image
 							source={require("../assets/images/Findr_logo2x.png")}
-							style={globalStyles.profileLogo}
+							style={globalStyles.otherProfileLogo}
 						/>
 						<View style={styles.header}>
 							<View style={styles.profilepicWrap}>
@@ -99,7 +99,7 @@ class OtherProfile extends React.Component {
 
 						<View style={{ paddingHorizontal: 10 }}>
 							<View
-								style={{ marginTop: DIMENSION_HEIGHT * 0.21 }}
+								style={{ marginTop: DIMENSION_HEIGHT *  0.21 }}
 							>
 								<OtherProfileItem
 									name={name}
