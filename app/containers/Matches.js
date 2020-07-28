@@ -38,16 +38,22 @@ class Matches extends React.Component {
 		};
 	}
 
-	async componentDidMount() {
+	async loadData(){
 		const data = await this.state.API.fetchMatches(
 			await AsyncStorage.getItem("storedEmail")
 		);
 		this.scrollView.scrollToEnd({ animated: true, duration: 1000 });
 		this.setState({ cards: data });
+	}
+
+	async componentDidMount() {
+		this.loadData();
 		NetInfo.isConnected.addEventListener(
 			"connectionChange",
 			this.handleConnectivityChange
 		);
+
+		APIConnection.attachMatchPageNotifier(this.loadData.bind(this));
 	}
 
 	async componentWillUnmount() {

@@ -15,7 +15,8 @@ import ProfileItem from "../components/ProfileItem";
 import Icon from "../components/Icon";
 import APIConnection from "../assets/data/APIConnection";
 import { ScrollView } from "react-navigation";
-import Settings from "../assets/icons/settings_fill.svg";
+import Settings from "../assets/icons/menu_bar.svg";
+
 
 const PRIMARY_COLOR = "#7444C0";
 const WHITE = "#FFFFFF";
@@ -33,17 +34,23 @@ class Profile extends React.Component {
 			profile: null,
 			isConnected: true,
 		};
-	}
-
-	async componentDidMount() {
-		let user = await this.state.API.fetchUser(
+  }
+  
+  async loadData(){
+    let user = await this.state.API.fetchUser(
 			await AsyncStorage.getItem("storedEmail")
 		);
 		this.setState({ profile: user });
+  }
+
+	async componentDidMount() {
+		this.loadData();
 		NetInfo.isConnected.addEventListener(
 			"connectionChange",
 			this.handleConnectivityChange
-		);
+    );
+    
+    APIConnection.attachProfilePageNotifier(this.loadData.bind(this));
 	}
 
 	async componentWillUnmount() {
@@ -90,7 +97,7 @@ class Profile extends React.Component {
                 style={styles.profileSettings}
                 onPress={() => this.props.navigation.navigate("Settings")}
               >
-                <Settings width={DIMENSION_HEIGHT * 0.04} height={DIMENSION_HEIGHT * 0.04}/>
+                <Settings width={DIMENSION_HEIGHT * 0.03} height={DIMENSION_HEIGHT * 0.03}/>
               </TouchableOpacity>
             </View>
             <View style={styles.header}>
@@ -218,8 +225,10 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   profileSettings: {
+    width: DIMENSION_WIDTH * 0.2,
+    height: DIMENSION_WIDTH * 0.1,
     marginLeft: DIMENSION_HEIGHT * 0.15,
-    marginTop: DIMENSION_HEIGHT * 0.01
+    marginTop: DIMENSION_HEIGHT * 0.04,
   },
   bg: {
     flex: 1,
