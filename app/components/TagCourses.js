@@ -74,6 +74,7 @@ const styles = StyleSheet.create({
   textInput: {
       height: 30,
       backgroundColor: 'white',
+      bottom: 10
   },
   tag: {
       backgroundColor: 'transparent'

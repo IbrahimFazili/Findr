@@ -97,6 +97,23 @@ class Profile extends React.Component {
     });
   };
 
+  _getFormattedGender(gender) {
+    switch (gender) {
+      case "" : return "";
+      case "M": return "Male";
+      case "F": return "Female";
+      case "O": return "Other";
+      case "P": return "Prefer Not To Say";
+      default: return "";
+    }
+  }
+
+  _getAge(age) {
+    if (typeof age === "number"){ return age; }
+    // MM-DD-YYYY
+    const year = Number(age.split("-")[2]);
+    return (new Date()).getFullYear() - year;
+  }
 
   render() {
     const image = this.state.profile ? { uri: this.state.profile.image } : null;
@@ -109,6 +126,7 @@ class Profile extends React.Component {
     const clubs = this.state.profile ? this.state.profile.clubs : [];
     const courses = this.state.profile ? this.state.profile.courses : [];
     const major = this.state.profile ? this.state.profile.major : [];
+    const bio = this.state.profile ? this.state.profile.bio : [];
 
     console.log(this.state);
     if (!this.state.isConnected) {
@@ -155,14 +173,15 @@ class Profile extends React.Component {
               <View style={{marginTop: DIMENSION_HEIGHT * 0.21}}>
                 <ProfileItem
                   name={name}
-                  age={age}
+                  age={this._getAge(age)}
                   uni={location}
-                  gender={gender == "M" ? "Male" : "Female"}
+                  gender={this._getFormattedGender(gender)}
                   email={email}
                   keywords={keywords}
                   clubs={clubs}
                   courses={courses}
                   major={major}
+                  bio={bio}
                 />
               </View>
             </View>

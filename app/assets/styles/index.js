@@ -364,11 +364,11 @@ export default StyleSheet.create({
     width: DIMENSION_WIDTH * 0.5
   },
   textBoxStyle: {
-    width: '75%',
+    width: '55%',
     height: 50,
     alignSelf: 'center',
     backgroundColor: "transparent",
-    left: DIMENSION_WIDTH * 0.22
+    left: DIMENSION_WIDTH * 0.2
   },
   name_secondary: {
     marginLeft: DIMENSION_WIDTH * 0.33,
@@ -419,22 +419,43 @@ export default StyleSheet.create({
   profileTitle: {
     fontSize: 15,
     color: DARK_GRAY,
-    paddingHorizontal: 10,
+    // paddingHorizontal: 10,
+    left: 30
     // fontWeight: 'bold'
   },
   profileTitle2: {
     fontSize: 15,
     color: DARK_GRAY,
     paddingHorizontal: 10,
-    marginLeft: DIMENSION_HEIGHT * -0.033
+    top: DIMENSION_WIDTH * 0.014 ,
+    position: 'absolute',
+    left: DIMENSION_WIDTH * 0.17
     // fontWeight: 'bold'
   },
   textB:{
-    width: '75%',
+    width: '65%',
     height: 50,
-    alignSelf: 'center',
     backgroundColor: "transparent",
-    left: DIMENSION_WIDTH * 0.37
+    left: DIMENSION_WIDTH * 0.17,
+  },
+  textMajor:{
+    width: '45%',
+    height: 50,
+    backgroundColor: "transparent",
+    left: DIMENSION_WIDTH * 0.35,
+    bottom: 14
+  },
+  genderDrop: {
+    width: DIMENSION_WIDTH * 0.45, 
+    left: DIMENSION_WIDTH * 0.32,
+    borderColor: "white", 
+    borderWidth: 0.4, 
+    borderRadius: 35,
+    paddingLeft: 20, 
+    paddingRight: 20, 
+    paddingTop: -30,
+    height: 50,
+    bottom: 20
   },
   profileButtons: {
     marginLeft: DIMENSION_WIDTH * 0.13,
@@ -466,6 +487,33 @@ export default StyleSheet.create({
   infoContent: {
     color: GRAY,
     fontSize: 13,
+    left: 28
+  },
+  infoContentGender: {
+    color: GRAY,
+    fontSize: 13,
+    left: 118,
+    top: 4,
+    width: 150
+  },
+  infoContentMajor: {
+    color: GRAY,
+    fontSize: 13,
+    left: DIMENSION_WIDTH * 0.42,
+    top: 1,
+    width: DIMENSION_WIDTH * 0.6
+  },
+  infoContentBio: {
+    color: GRAY,
+    fontSize: 13,
+    left: 85,
+    width: 200,
+    height:400
+  },
+  infoContentEmail: {
+    color: GRAY,
+    fontSize: 13,
+    left: 50,
   },
   profileLogo: {
     width: 65,
@@ -482,6 +530,29 @@ export default StyleSheet.create({
     fontSize: 15,
     color: DARK_GRAY,
     paddingHorizontal: 10,
+    // fontWeight: 'bold'
+  },
+  profileTitleGender: {
+    fontSize: 15,
+    color: DARK_GRAY,
+    paddingHorizontal: 10,
+    position: 'absolute',
+    top: 10,
+    left: DIMENSION_WIDTH * 0.05
+    // fontWeight: 'bold'
+  },
+  profileTitleBio: {
+    fontSize: 15,
+    color: DARK_GRAY,
+    paddingHorizontal: 10,
+    left: 33
+    // fontWeight: 'bold'
+  },
+  profileTitleEmail: {
+    fontSize: 15,
+    color: DARK_GRAY,
+    paddingHorizontal: 15,
+    left: 20
     // fontWeight: 'bold'
   },
   profileButtons: {
