@@ -136,6 +136,7 @@ class Matches extends React.Component {
 											image={{ uri: item.image }}
 											name={item.name}
 											status={"Online"}
+											email={item.email}
 											variant
 										/>
 									</TouchableOpacity>

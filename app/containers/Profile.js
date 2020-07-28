@@ -14,6 +14,7 @@ import {
 import ProfileItem from "../components/ProfileItem";
 import Icon from "../components/Icon";
 import APIConnection from "../assets/data/APIConnection";
+import CachedImage from "../components/CachedImage";
 import { ScrollView } from "react-navigation";
 import Settings from "../assets/icons/settings_fill.svg";
 import ImagePicker from 'react-native-image-picker';
@@ -167,8 +168,7 @@ class Profile extends React.Component {
                 {
                   image === null ?
                   <PlaceHolder  style={styles.profilepic} /> : 
-                  <Image style={styles.profilepic} 
-                  source={image} />
+                  <CachedImage style={styles.profilepic} uri={image.uri} uid={email} />
                 }
                {/* <Image style={styles.profilepic} 
                   source={image} /> */}
