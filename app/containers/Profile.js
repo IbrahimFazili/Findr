@@ -14,6 +14,7 @@ import {
 import ProfileItem from "../components/ProfileItem";
 import Icon from "../components/Icon";
 import APIConnection from "../assets/data/APIConnection";
+import CachedImage from "../components/CachedImage";
 import { ScrollView } from "react-navigation";
 import Settings from "../assets/icons/settings_fill.svg";
 
@@ -95,7 +96,7 @@ class Profile extends React.Component {
             </View>
             <View style={styles.header}>
               <View style={styles.profilepicWrap}>
-                <Image style={styles.profilepic} source={image} />
+                {image ? <CachedImage style={styles.profilepic} uri={image.uri} uid={email} /> : null}
               </View>
             </View>
             <View style={{paddingHorizontal: 10}}>
