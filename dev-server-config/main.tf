@@ -30,7 +30,8 @@ resource "aws_launch_configuration" "find_dev_backend_config" {
               aws s3 cp s3://findr-user-media/.env ./.env
               npm i
               sudo iptables -t nat -A PREROUTING -i eth0 -p tcp --dport 80 -j REDIRECT --to-port 3000
-              node index.js
+              node index.js &
+              NODE_ENV=test node index.js
 EOF
 
 
@@ -47,7 +48,7 @@ resource "aws_autoscaling_group" "findr_dev_autoscaler" {
   min_size = 1
   max_size = 3
 
-  target_group_arns = [aws_lb_target_group.backend_target_group.arn]
+  target_group_arns = [aws_lb_target_group.backend_target_group.arn, aws_lb_target_group.testing_group.arn]
   health_check_type = "ELB"
 
   tag {
@@ -86,6 +87,22 @@ resource "aws_lb_target_group" "backend_target_group" {
   }
 }
 
+resource "aws_lb_target_group" "testing_group" {
+  name     = "testing-target-group"
+  port     = 8100
+  protocol = "HTTP"
+  vpc_id   = aws_default_vpc.default.id
+
+  health_check {
+    interval            = 10
+    path                = "/"
+    port                = 8100
+    healthy_threshold   = 2
+    unhealthy_threshold = 2
+    matcher             = "200-299"
+  }
+}
+
 resource "aws_lb_listener" "request_listener" {
   load_balancer_arn = aws_lb.findr-dev-alb.arn
   port              = "80"
@@ -94,6 +111,17 @@ resource "aws_lb_listener" "request_listener" {
   default_action {
     type             = "forward"
     target_group_arn = aws_lb_target_group.backend_target_group.arn
+  }
+}
+
+resource "aws_lb_listener" "testing_request_listener" {
+  load_balancer_arn = aws_lb.findr-dev-alb.arn
+  port              = "8100"
+  protocol          = "HTTP"
+
+  default_action {
+    type             = "forward"
+    target_group_arn = aws_lb_target_group.testing_group.arn
   }
 }
 
@@ -112,6 +140,13 @@ resource "aws_security_group" "findr_dev_server_rules" {
   ingress {
     from_port   = 80
     to_port     = 80
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  ingress {
+    from_port   = 8100
+    to_port     = 8100
     protocol    = "tcp"
     cidr_blocks = ["0.0.0.0/0"]
   }

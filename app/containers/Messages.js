@@ -6,8 +6,10 @@ import {
   TouchableOpacity,
   ImageBackground,
   View,
+  Image,
   FlatList,
   AsyncStorage,
+  Dimensions,
 } from 'react-native';
 import Message from '../components/Message';
 import APIConnection from '../assets/data/APIConnection';
@@ -36,21 +38,39 @@ class Messages extends React.Component {
     this.setState({ chats: data });
   }
 
+  FlatListItemSeparator = () => {
+    return (
+      <View
+        style={{
+          height: 1,
+          width: "80%",
+          backgroundColor: "lightgrey",
+          marginLeft: Dimensions.get('window').width * 0.21
+        }}
+      />
+    );
+  }
+
   render() {
     return (
       <ImageBackground
-        source={require('../assets/images/bg.png')}
+        source={require('../assets/images/Home.png')}
         style={styles.bg}
       >
         <View style={styles.containerMessages}>
           <ScrollView>
             <View style={styles.top}>
+              <Image
+                style={styles.matchLogo}
+                source={require("../assets/images/Findr_logo2x.png")}
+              />
               <Text style={styles.title}>Messages</Text>
             </View>
 
             <FlatList
               data={this.state.chats}
               keyExtractor={(item, index) => index.toString()}
+              ItemSeparatorComponent = {this.FlatListItemSeparator}
               renderItem={({ item }) => (
                 <TouchableOpacity
                   onPress={async () =>

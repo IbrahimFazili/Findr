@@ -64,7 +64,7 @@ const CardItem = ({
 
   const theHeight = [
     {
-      height: variant ? fullHeight * 0.2 : fullHeight * 0.685,
+      height: variant ? fullHeight * 0.2 : fullHeight * 0.75,
     },
   ];
 
@@ -95,9 +95,7 @@ const CardItem = ({
       )}
 
       {/* DESCRIPTION */}
-      {description && (
-        <Text style={styles.descriptionCardItem}>{description}</Text>
-      )}
+      {(<Text style={styles.descriptionCardItem}>{description}</Text>)}
 
       {/* STATUS */}
       {status && (

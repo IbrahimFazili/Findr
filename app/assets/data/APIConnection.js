@@ -81,6 +81,14 @@ class APIConnection {
     });
   }
 
+  async fetchUniversities(){
+    const response = await fetch(
+      this.ENDPOINT + ':' + String(this.PORT) + '/supportedUniversities'
+    );
+
+    return response.json();
+  }
+
   /**
    * Send log-in request to the API
    * @param {{ email: String, password: String}} data log-in data to send to the server for verification
@@ -102,6 +110,23 @@ class APIConnection {
     }
     let user = await logInRes.json();
     return { success: true, user };
+  }
+
+  async rightSwipe(src, target) {
+    const swipeResult = (await fetch(`${this.ENDPOINT}:${this.PORT}/rightSwipe?src=${src}&target=${target}`));
+    if (swipeResult.status === 201) { 
+      return { 
+        isMatch: (await swipeResult.json()).isMatch,
+        success: true
+      }
+    }
+    return { success: false, isMatch: false };
+  }
+
+  async leftSwipe(src, target) {
+    const swipeResult = (await fetch(`${this.ENDPOINT}:${this.PORT}/leftSwipe?src=${src}&target=${target}`));
+    if (swipeResult.status === 201) return true;
+    return false;
   }
 
   /**
@@ -154,7 +179,7 @@ class APIConnection {
 
   async fetchChatData(from, to) {
     return (
-      await fetch(`${this.ENDPOINT}:${this.PORT}/fetchChatData?from=${from}&to=${to}`)
+      await fetch(`${this.ENDPOINT}:${this.PORT}/fetchChatData?from=${from}&to=${to}&skipCount=${0}`)
     ).json();
   }
 

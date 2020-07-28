@@ -29,7 +29,8 @@ app.use(bodyParser.json());
 
 app.get("/", (req, res) => {
 	if (!isServerOutdated) {
-		res.status(200).send("Server is Alive");
+		res.status(200).send((process.env.NODE_ENV === "test") ? "Test Server is Alive"
+				     : "Server is Alive");
 	} else {
 		res.status(503).send("Server is updating...");
 	}
@@ -321,6 +322,12 @@ app.post("/updateUserInfo", (req, res) => {
 	}
 
 	if (user.keywords) delete user.keywords;
+	if (user.gender) {
+		if (user.gender !== 'M' && user.gender !== 'F' &&
+		user.gender !== 'O' && user.gender !== 'P') {
+			delete user.gender;
+		}
+	}
 
 	const projection = { password: 1 };
 	DB.fetchUsers({ email: user.email }, { projection }).then(async (users) => {
@@ -406,10 +413,10 @@ app.post("/signup", (req, res) => {
 		name: req.body.name,
 		email: req.body.email,
 		password: bcrypt.hashSync(req.body.password, 10),
-		gender: req.body.gender,
+		gender: '',
 		uni: req.body.uni,
 		major: req.body.major,
-		age: Number(req.body.age),
+		age: req.body.age,
 		clubs: [],
 		projects: [],
 		experience: [],
@@ -526,6 +533,7 @@ function generateVerificationHash(email) {
 /* Socket Listeners for chat */
 bindSocketListeners(io);
 
-http.listen(3000, () => {
+const port = (process.env.NODE_ENV === "test") ? 8100 : 3000;
+http.listen(port, () => {
 	console.log("Server is running");
 });

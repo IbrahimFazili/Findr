@@ -41,7 +41,6 @@ class TagEducation extends React.Component {
       let {courseChange} = this.props;
       courseChange(this.state.tags.tag , this.state.tags.tagsArray)
     };
-
   render() {
     return (
       <View style={styles.container}>
@@ -64,7 +63,6 @@ class TagEducation extends React.Component {
     );
   }
 }
-
 const styles = StyleSheet.create({
   container: {
     flex: 1,
