@@ -97,7 +97,9 @@ const CardItem = ({
       )}
 
       {/* DESCRIPTION */}
-      {(<Text style={styles.descriptionCardItem}>{description}</Text>)}
+      {description && (
+        <Text style={styles.descriptionCardItem}>{description}</Text>
+      )}
 
       {/* STATUS */}
       {status && (
