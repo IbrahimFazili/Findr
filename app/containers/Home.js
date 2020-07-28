@@ -168,6 +168,7 @@ class Home extends React.Component {
                       image={{ uri: item.image }}
                       name={item.name}
                       keywords={item.keywords}
+                      email={item.email}
                       description={
                         item.bio.length > MAX_LENGTH
                           ? item.bio.substring(0, MAX_LENGTH) + '...'

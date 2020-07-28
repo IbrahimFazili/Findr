@@ -14,6 +14,7 @@ import Chat from "./containers/Chat";
 import ProfileScreen from "./containers/Profile";
 import PrivacyScreen from "./containers/Privacy";
 import OnboardingScreen from "./containers/Onboarding";
+import CachedImage from './components/CachedImage';
 import InternetScreen from "./containers/OfflinePop";
 import VerifiyScreen from "./containers/Verifiy";
 
@@ -216,6 +217,7 @@ const RootStack = createStackNavigator(
 	{ mode: "modal", headerMode: "none" }
 );
 
+CachedImage.validateCache();
 APIConnection.initSocketConnection();
 
 export default createAppContainer(RootStack);
