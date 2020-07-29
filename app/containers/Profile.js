@@ -20,8 +20,7 @@ import Settings from "../assets/icons/settings_fill.svg";
 import ImagePicker from 'react-native-image-picker';
 import PlaceHolder from "../assets/icons/placeholder_icon.svg"
 import Pen from '../assets/icons/pen.svg';
-
-
+let RNFS = require('react-native-fs');
 
 const PRIMARY_COLOR = "#7444C0";
 const WHITE = "#FFFFFF";
@@ -75,9 +74,13 @@ class Profile extends React.Component {
       type: selection.type,
       uri: selection.uri
     };
+
+    const checksumImage = RNFS.hash(selection.path, "md5");
+    
     const url = await this.state.API.updateProfilePicture(
       await AsyncStorage.getItem('storedEmail'),
-      media.type
+      media.type,
+      checksumImage
     )
 
     APIConnection.uploadPicture(url, media);
