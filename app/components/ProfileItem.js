@@ -14,6 +14,8 @@ import TagCourses from "./TagCourses"
 import TagClubs from "./TagClubs"
 import Plus from "../assets/icons/Plus.svg";
 import Minus from "../assets/icons/minus_green.svg";
+import {Dropdown} from 'react-native-material-dropdown'
+
 
 const theme = {
 	colors: {
@@ -33,6 +35,14 @@ const textBoxStyle = {
 	backgroundColor: "transparent",
 };
 
+
+let genders=[
+    {value: "Male",},
+    {value: "Female",},
+    {value: "Other",},
+    {value: "Prefer Not To Say",},
+];
+
 class ProfileItem extends React.Component{
 	constructor(props) {
 		super(props);
@@ -49,6 +59,7 @@ class ProfileItem extends React.Component{
 			clubs: [],
 			courses: [],
 			keywords: [],
+			bio: "",
 
 			nameLabel: "Name",
 			emailLabel: "Email",
@@ -59,6 +70,7 @@ class ProfileItem extends React.Component{
 			clubsLabel: "Clubs",
 			coursesLabel: "Courses",
 			keywordsLabel: "Keywords",
+			bioLabel: "Bio",
 
 			allProjects: [{value: ''}],
 			allExp: [{value: ''}]
@@ -134,6 +146,11 @@ class ProfileItem extends React.Component{
 			updatedState.courses = props.courses;
 		}
 
+		if (props.bio !== this.state.bio) {
+			updatedState.bio = props.bio;
+		}
+
+
 		if (Object.keys(updatedState).length > 0) {
 			this.setState(updatedState);
 		}
@@ -156,9 +173,10 @@ class ProfileItem extends React.Component{
 		if(this.state.keywords.length !== 0){
 			data.keywords = this.state.keywords
 		}
-		if(this.state.gender.length !== 0 && this.state.gender === this.props.gender){
-			data.gender = this.state.gender[0].toUpperCase()
-		}
+		
+		data.gender = this.state.sendG
+
+		data.bio = this.state.bio
 		if(Object.keys(data).length > 1){
 			var update = await API.updateUserInfo(data);
 			if (data.keywords) update = await API.updateKeywords(data);
@@ -169,9 +187,25 @@ class ProfileItem extends React.Component{
 				this.setState({
 					keywords: this.state.keywords,
 					name: this.state.name, 
-					gender: this.state.gender[0].toUpperCase() + this.state.gender.substring(1,this.state.gender.length)
+					gender: this.state.gender[0].toUpperCase() + this.state.gender.substring(1,this.state.gender.length),
+					bio: this.state.bio
 				})
 			}
+		}
+	}
+
+	handleGenderChange(text){
+		if (text === "Male"){
+			this.setState({gender: 'Male', sendG : 'M'})
+		}
+		else if (text === "Female"){
+			this.setState({gender: 'Female', sendG : 'F'})
+		}
+		else if (text === "Prefer Not To Say"){
+			this.setState({gender: 'Prefer Not To Say', sendG : 'P'})
+		}
+		else{
+			this.setState({gender: 'Other', sendG : 'O'})
 		}
 	}
 
@@ -306,8 +340,11 @@ class ProfileItem extends React.Component{
 		}
 	}
 
+	handleBioChange(text){
+		this.setState({ bio: text });
+	}
+
 	render() {
-		console.log(this.state.clubs)
 		return (
 		<View>
 		<View style={styles.containerProfileItem}>
@@ -329,7 +366,7 @@ class ProfileItem extends React.Component{
 				}
 				{this.state.isEditable1 
 				? (
-					<View style={{right: FULL_WIDTH * -0.03}}>
+					<View style={{left: FULL_WIDTH * 0.20}}>
 						<TouchableOpacity style={styles.profileButtons} onPress={this.handleUpdateClick1.bind(this)}>
 							<Check width={20} height={20}/>
 							</TouchableOpacity>
@@ -348,22 +385,58 @@ class ProfileItem extends React.Component{
 			</Text>
 
 			<View style={styles.info}>
-				<Text style={styles.profileTitle}>Gender: </Text>
-				<Text style={styles.infoContent}>{this.state.gender}</Text>
+				<Text style={styles.profileTitleGender}>Gender </Text>
+
+				{this.state.isEditable1 ? 
+				<Dropdown data={genders}
+				dropdownPosition={-5}
+				containerStyle={styles.genderDrop}
+				pickerStyle={{borderRadius: 35,}}
+				dropdownOffset={{top: 20, left: 10}}
+				itemCount={4}
+				textColor="black"
+				itemColor="black"
+				baseColor='black'
+				onChangeText={this.handleGenderChange.bind(this)}
+				selectedItemColor="black"
+				disabledItemColor="black"/> : 
+
+				<Text style={styles.infoContentGender}>{this.state.gender}</Text>
+				}
 			</View>
 
 			<View style={styles.info2}>
-				<Text style={styles.profileTitle}>Email: </Text>
-				<Text style={styles.infoContent}>{this.props.email}</Text>
+				<Text style={styles.profileTitleEmail}>Email </Text>
+				<Text style={styles.infoContentEmail}>{this.props.email}</Text>
 			</View>
 
 			<View style={styles.info3}>
-				<Text style={styles.profileTitle}>Keywords: </Text>
+				<Text style={styles.profileTitle}>Keywords </Text>
 				<Tag 
 					keywords={this.state.keywords} editable={this.state.isEditable1}
 					type="keyword"
 					wordChange={this.handleKeywordChange.bind(this)}
 				/>
+			</View>
+
+			<View style={styles.info2}>
+				<Text style={styles.profileTitleBio}>Bio </Text>
+				{this.state.isEditable1
+				? (<TextInput
+					underlineColor="transparent"
+					mode={"flat"}
+					value={this.state.bio}
+					label='Bio'
+					placeholder="Say something about yourself"
+					onFocus={() => this.setState({ bioLabel: "" })}
+					onBlur={() => this.setState({ bioLabel: this.state.bio.length === 0 ? "Bio" : "" })}
+					onChangeText={this.handleBioChange.bind(this)}
+					theme={theme}
+					style={styles.textB}
+					multiline={true}
+					/>)
+				: (<Text style={styles.infoContentBio}>{this.state.bio}</Text>)
+				}
 			</View>
 		</View>
 
@@ -382,15 +455,14 @@ class ProfileItem extends React.Component{
 					underlineColor="transparent"
 					mode={"flat"}
 					value={this.state.major}
-					label='Major'
 					placeholder="Enter your major"
 					onFocus={() => this.setState({ majorLabel: "" })}
 					onBlur={() => this.setState({ majorLabel: this.state.major.length === 0 ? "Major" : "" })}
 					onChangeText={this.handleMajorChange.bind(this)}
 					theme={theme}
-					style={styles.textB}
+					style={styles.textMajor}
 					/>)
-				: (<Text style={styles.infoContent}>{this.state.major}</Text>)
+				: (<Text style={styles.infoContentMajor}>{this.state.major}</Text>)
 				}
 			</View>
 

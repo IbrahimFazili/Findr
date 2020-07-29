@@ -16,7 +16,11 @@ import Icon from "../components/Icon";
 import APIConnection from "../assets/data/APIConnection";
 import CachedImage from "../components/CachedImage";
 import { ScrollView } from "react-navigation";
-import Settings from "../assets/icons/menu_bar.svg";
+import Settings from "../assets/icons/settings_fill.svg";
+import ImagePicker from 'react-native-image-picker';
+import PlaceHolder from "../assets/icons/placeholder_icon.svg"
+import Pen from '../assets/icons/pen.svg';
+
 
 
 const PRIMARY_COLOR = "#7444C0";
@@ -65,6 +69,69 @@ class Profile extends React.Component {
 		this.setState({ isConnected });
 	};
 
+  async _onChangeMedia(selection) {
+    const media = {
+      name: selection.fileName,
+      type: selection.type,
+      uri: selection.uri
+    };
+    const url = await this.state.API.updateProfilePicture(
+      await AsyncStorage.getItem('storedEmail'),
+      media.type
+    )
+
+    APIConnection.uploadPicture(url, media);
+    var profile = {...this.state.profile}
+    profile.image = media.uri
+    this.setState({profile})
+    // this.setState({ image: media.uri });
+  }
+
+  chooseImage = () => {
+    let options = {
+      title: 'Select Image',
+      storageOptions: {
+        skipBackup: true,
+        path: 'images',
+      },
+    };
+    ImagePicker.showImagePicker(options, (response) => {
+
+      if (response.didCancel) {
+        console.log('User cancelled image picker');
+      } else if (response.error) {
+        console.log('ImagePicker Error: ', response.error);
+      } else if (response.customButton) {
+        console.log('User tapped custom button: ', response.customButton);
+        alert(response.customButton);
+      } else {
+        const source = { uri: response.uri };
+
+        // file type: response.type
+        // file name: response.fileName
+        this._onChangeMedia(response);
+      }
+    });
+  };
+
+  _getFormattedGender(gender) {
+    switch (gender) {
+      case "" : return "";
+      case "M": return "Male";
+      case "F": return "Female";
+      case "O": return "Other";
+      case "P": return "Prefer Not To Say";
+      default: return "";
+    }
+  }
+
+  _getAge(age) {
+    if (typeof age === "number"){ return age; }
+    // MM-DD-YYYY
+    const year = Number(age.split("-")[2]);
+    return (new Date()).getFullYear() - year;
+  }
+
   render() {
     const image = this.state.profile ? { uri: this.state.profile.image } : null;
     const name = this.state.profile ? this.state.profile.name : "";
@@ -76,8 +143,9 @@ class Profile extends React.Component {
     const clubs = this.state.profile ? this.state.profile.clubs : [];
     const courses = this.state.profile ? this.state.profile.courses : [];
     const major = this.state.profile ? this.state.profile.major : [];
+    const bio = this.state.profile ? this.state.profile.bio : [];
 
-    
+    console.log(this.state);
     if (!this.state.isConnected) {
       this.props.navigation.navigate("Internet");
     }
@@ -103,21 +171,33 @@ class Profile extends React.Component {
             </View>
             <View style={styles.header}>
               <View style={styles.profilepicWrap}>
-                {image ? <CachedImage style={styles.profilepic} uri={image.uri} uid={email} /> : null}
+                {
+                  image === null ?
+                  <PlaceHolder  style={styles.profilepic} /> : 
+                  <CachedImage style={styles.profilepic} uri={image.uri} uid={email} />
+                }
+               {/* <Image style={styles.profilepic} 
+                  source={image} /> */}
+                <TouchableOpacity onPress={() => this.chooseImage()}>
+                  <View style={styles.penProfile}>
+							      <Pen width={20} height={20}/>
+                  </View>
+							  </TouchableOpacity>
               </View>
             </View>
             <View style={{paddingHorizontal: 10}}>
               <View style={{marginTop: DIMENSION_HEIGHT * 0.21}}>
                 <ProfileItem
                   name={name}
-                  age={age}
+                  age={this._getAge(age)}
                   uni={location}
-                  gender={gender == "M" ? "Male" : "Female"}
+                  gender={this._getFormattedGender(gender)}
                   email={email}
                   keywords={keywords}
                   clubs={clubs}
                   courses={courses}
                   major={major}
+                  bio={bio}
                 />
               </View>
             </View>
@@ -143,7 +223,7 @@ const styles = StyleSheet.create({
     marginTop: DIMENSION_HEIGHT * 0.02
   },
   profilepicWrap: {
-    width: 280,
+    width: 265,
     height: 280,
   },
   profilepic: {
