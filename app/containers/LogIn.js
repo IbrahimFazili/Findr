@@ -108,6 +108,11 @@ class LogIn extends React.Component {
       // store email
       await AsyncStorage.setItem("storedEmail", logInAttempt.user.email);
       APIConnection.initSocketConnection();
+      APIConnection.HomePage ? APIConnection.HomePage.notify() : null;
+      APIConnection.MatchesPage ? APIConnection.MatchesPage.notify() : null;
+      APIConnection.MessagesPage ? APIConnection.MessagesPage.notify() : null;
+      APIConnection.ProfilePage ? APIConnection.ProfilePage.notify() : null;
+      APIConnection.ChatPage ? APIConnection.ChatPage.notify() : null;
       this.props.navigation.navigate("AppScreen");
     } else {
       // let user know they fucked up

@@ -320,7 +320,6 @@ app.post("/updateUserInfo", (req, res) => {
 		res.status(400).send("missing user email");
 		return;
 	}
-
 	if (user.keywords) delete user.keywords;
 	if (user.gender) {
 		if (user.gender !== 'M' && user.gender !== 'F' &&

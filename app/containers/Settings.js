@@ -29,7 +29,7 @@ class Settings extends React.Component{
               <View style={{borderBottomWidth:1, backgroundColor:'#f7f7f8',borderColor:'#c8c7cc'}}>
                 <Text style={{alignSelf:'center',top: 37,marginBottom:20,fontSize:20,color: "black"}}>Settings</Text>
                 <TouchableOpacity
-                  style={{marginLeft: DIMENTIONS.height * 0.01, marginBottom: DIMENTIONS.height * 0.02}}
+                  style={{marginLeft: DIMENTIONS.height * 0.02, marginBottom: DIMENTIONS.height * 0.02}}
                   onPress={() => this.props.navigation.navigate("Profile")}
                 >
                   <BackButton width={DIMENTIONS.height * 0.02} height={DIMENTIONS.height * 0.02}/>
@@ -83,7 +83,9 @@ class Settings extends React.Component{
                     title='Logout'
                     onPress={(() => {
                       AsyncStorage.removeItem('storedEmail');
-                      this.props.navigation.navigate("LogIn")
+                      APIConnection.MESSAGE_QUEUES = {};
+                      APIConnection.observers = [];
+                      this.props.navigation.navigate("LogIn");
                     }).bind(this)
                   }
                     hasNavArrow={false}

@@ -75,6 +75,8 @@ class Home extends React.Component {
       const data = await this.state.API.loadData(storedEmail);
       this.setState({ cards: data, dataLoadRequired: false });
     }
+
+    APIConnection.attachHomePageNotifier(this.loadData.bind(this));
   }
 
   async loadData() {
@@ -92,7 +94,10 @@ class Home extends React.Component {
 
     if (swipeStatus.success) {
       !swiped ? this.swiper.swipeRight() : null;
-      if (swipeStatus.isMatch) this.setState({ matchPossible: true });
+      APIConnection.MatchesPage ? APIConnection.MatchesPage.notify() : null;
+      if (swipeStatus.isMatch){
+        this.setState({ matchPossible: true });
+      }
     } else {
       // server didn't register the right swipe or the request didn't make sense.
       // TODO: display some sort of error message to the user that something's wrong
@@ -140,7 +145,7 @@ class Home extends React.Component {
         <View style={styles.containerHome}>
           <View style={styles.homeCards}>
             <CardStack
-              loop={true}
+              loop={false}
               verticalSwipe={false}
               renderNoMoreCards={() => null}
               ref={(swiper) => (this.swiper = swiper)}

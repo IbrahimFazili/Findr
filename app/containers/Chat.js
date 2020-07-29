@@ -115,7 +115,8 @@ export default class Chat extends Component {
     );
 
     APIConnection.attachObserver(this.onNewMessage.bind(this), this.state.other_user_email);
-    this.onNewMessage();
+	this.onNewMessage();
+	
   }
 
   //this is a bit sloppy: this is to make sure it scrolls to the bottom when a message is added, but
@@ -322,15 +323,22 @@ export default class Chat extends Component {
 
 //The bubbles that appear on the left or the right for the messages.
 class MessageBubble extends Component {
+	_computeBubbleWidth() {
+		let initLen = this.props.text.length;
+		const maxWidth = DIMENSION_WIDTH * 0.38;
+		// 4/3 
+		return Math.max(maxWidth, DIMENSION_WIDTH - (initLen * (maxWidth / 29)));
+	}
+
 	render() {
 		//These spacers make the message bubble stay to the left or the right, depending on who is speaking, even if the message is multiple lines.
 		var rightSpacer =
 			this.props.direction === "left" ? null : (
-				<View style={{ width: "40%" }} />
+				<View style={{ width: "10%" }} />
 			);
 		var leftSpacer =
 			this.props.direction === "left" ? (
-				<View style={{ width: "40%" }} />
+				<View style={{ width: "10%" }} />
 			) : null;
 
 		var bubbleStyles =
@@ -509,14 +517,12 @@ const styles = StyleSheet.create({
 	//MessageBubble
 
 	messageBubble: {
-		maxWidth: moderateScale(250, 2),
+		maxWidth: DIMENSION_WIDTH * 0.8,
 		paddingHorizontal: moderateScale(10, 2),
 		paddingTop: moderateScale(5, 2),
 		paddingBottom: moderateScale(7, 2),
 		borderRadius: 20,
 		marginTop: DIMENSION_HEIGHT * 0.015,
-		flexDirection: "row",
-		flex: 1,
 		elevation: 5,
 	},
 
