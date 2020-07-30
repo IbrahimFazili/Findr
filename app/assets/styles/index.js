@@ -427,7 +427,7 @@ export default StyleSheet.create({
     fontSize: 15,
     color: TEAL,
     // paddingHorizontal: 10,
-    left: 260
+    left: DIMENSION_WIDTH * 0.63
   },
   profileTitle2: {
     fontSize: 15,
@@ -498,10 +498,9 @@ export default StyleSheet.create({
   infoContentOther: {
     color: BLACK,
     fontSize: 13,
-    left: 55,
-    position: 'absolute',
+    left: DIMENSION_WIDTH * 0.46,
+    bottom: DIMENSION_WIDTH * 0.01 ,
     width: 350,
-    bottom: 40
   },
   infoContentMajorOther: {
     color: BLACK,
@@ -568,14 +567,14 @@ export default StyleSheet.create({
     fontSize: 15,
     color: TEAL,
     paddingHorizontal: 10,
-    left: 140,
+    left: DIMENSION_WIDTH * 0.33,
     // fontWeight: 'bold'
   },
   profileTitleCourseOther: {
     fontSize: 15,
     color: TEAL,
     paddingHorizontal: 10,
-    left: 18
+    left: DIMENSION_WIDTH * 0.04
     // fontWeight: 'bold'
   },
   profileTitleGender: {
@@ -605,8 +604,8 @@ export default StyleSheet.create({
     fontSize: 15,
     color: TEAL,
     paddingHorizontal: 15,
-    position: 'absolute',
-    left: -47
+    left: DIMENSION_WIDTH * 0.39,
+    bottom: DIMENSION_WIDTH * 0.01
     // fontWeight: 'bold'
   },
   profileButtons: {

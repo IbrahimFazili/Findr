@@ -414,7 +414,7 @@ class ProfileItem extends React.Component {
 					</View>
 
 					<View style={styles.info}>
-						<Text style={styles.profileTitleKeywordOther}>Keywords</Text>
+						<Text style={styles.profileTitleKeywordOther}>Interests</Text>
 						<OtherTag
 							keywords={this.state.keywords}
 							type="keyword"
