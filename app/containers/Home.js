@@ -27,6 +27,7 @@ class Home extends React.Component {
       isConnected: true,
       visible: false,
       name: "",
+      image: "",
       keywords: [],
       bio: "",
       uni: "",
@@ -162,7 +163,8 @@ class Home extends React.Component {
                     name: item.name,
                     keywords: item.keywords, 
                     bio: item.bio,
-                    uni: item.uni
+                    uni: item.uni,
+                    image: item.image
                   })}>
                     <CardItem
                       image={{ uri: item.image, checksum: item.checksum }}
@@ -184,15 +186,15 @@ class Home extends React.Component {
             </CardStack>
           </View>
 
-          <MatchPopup name={this.state.name} visible={this.state.matchPossible} />
+          <MatchPopup name={this.state.name} image={this.state.image} visible={this.state.matchPossible} />
 
-          {/* <ProfilePopup 
+          <ProfilePopup 
             visible={this.state.visible} 
             name={this.state.name}
             keywords={this.state.keywords}
             bio={this.state.bio}
             uni={this.state.uni}
-          /> */}
+          />
  
         </View>
       </ImageBackground>

@@ -11,6 +11,7 @@ import {
 	FlatList,
 	AsyncStorage,
 	NetInfo,
+	Dimensions,
 } from "react-native";
 import CardItem from "../components/CardItem";
 import APIConnection from "../assets/data/APIConnection";
@@ -121,7 +122,7 @@ class Matches extends React.Component {
 						<View style={styles.matchTopSub}>
 							<Text style={styles.matchTitle}>Matches</Text>
 						</View>
-						<View style={{paddingHorizontal: 10}}>
+						<View style={{ paddingHorizontal: 10 }}>
 							<FlatList
 								numColumns={2}
 								data={this.state.cards}

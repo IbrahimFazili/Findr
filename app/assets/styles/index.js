@@ -231,6 +231,7 @@ export default StyleSheet.create({
     width: DIMENSION_WIDTH * 0.85,
     alignSelf: "center",
     borderRadius: 30,
+    position: "relative"
   },
 
   blurredView: {
@@ -850,23 +851,27 @@ export default StyleSheet.create({
     marginTop: 0,
     color: '#363636',
     fontSize: 20,
+    fontFamily: "-apple-system, BlinkMacSystemFont, sans-serif;",
     alignSelf: 'center',
-    top: DIMENSION_HEIGHT * 0.05,
+    top: DIMENSION_HEIGHT * 0.035,
   },
 
   buttonText: {
     paddingBottom: 7,
     marginTop: 0,
-    fontSize: 20,
+    fontSize: 15,
+    fontFamily: "sans-serif",
+    color: "#1a5d57",
     alignSelf: 'center',
   },
 
   ignoreText:{
     paddingBottom: 7,
     marginTop: 0,
-    fontSize: 20,
+    fontSize: 15,
+    fontFamily: "sans-serif",
     alignSelf: 'center',
-    color: "red",
+    color: "#d16969",
   },
 
   ignoreButtonStyle: {
@@ -891,15 +896,18 @@ export default StyleSheet.create({
   },
 
   chatButton:{
-    maxWidth: DIMENSION_WIDTH * 0.45,
-    top: DIMENSION_HEIGHT * 0.114,
+    width: DIMENSION_WIDTH * 0.425,
+    position: 'absolute',
+    bottom: 0,
+    left: 0,
     borderBottomLeftRadius: 20,
   },
 
   ignoreButton:{
-    maxWidth: DIMENSION_WIDTH * 0.4,
-    left: DIMENSION_WIDTH * 0.45,
-    top: DIMENSION_HEIGHT * 0.05,
+    width: DIMENSION_WIDTH * 0.425,
+    position: 'absolute',
+    bottom: 0,
+    right: 0
   },
 
   slide0: {
