@@ -225,9 +225,15 @@ export default class Chat extends Component {
 								<View>
 									<TouchableOpacity
 										onPress={() =>
-											this.setState({
-												showPopup: true,
-											})
+											this.props.navigation.navigate(
+												"OtherProfile",
+												{
+													own_email: this.state
+														.own_email,
+													email: this.state
+														.other_user_email,
+												}
+											)
 										}
 									>
 										<SendIcon
@@ -235,12 +241,6 @@ export default class Chat extends Component {
 											height={DIMENSION_HEIGHT * 0.09}
 										/>
 									</TouchableOpacity>
-									<ChatPopup
-										visible={this.state.showPopup}
-										email={this.state.other_user_email}
-										navigation={this.props.navigation}
-										own_email={this.state.own_email}
-									/>
 								</View>
 							);
 						}}

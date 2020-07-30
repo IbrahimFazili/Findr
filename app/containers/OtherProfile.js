@@ -32,6 +32,7 @@ class OtherProfile extends React.Component {
 			API: new APIConnection(),
 			profile: null,
 			isConnected: true,
+			own_email: props.navigation.state.params.own_email,
 			user_email: props.navigation.state.params.email,
 		};
 	}
