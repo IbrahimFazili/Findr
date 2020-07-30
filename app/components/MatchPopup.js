@@ -1,10 +1,11 @@
 import React from 'react';
-import { Text, View, Dimensions } from 'react-native';
+import { Text, View, Dimensions, Image } from 'react-native';
 import Modal from 'react-native-modal';
 import styles from "../assets/styles";
 import Swiper from 'react-native-swiper';
-// import { BlurView } from '@react-native-community/blur';
+import PlaceHolder from "../assets/icons/placeholder_icon.svg"
 import { Overlay, Button } from 'react-native-elements';
+import CachedImage from './CachedImage';
 
 const DIMENTIONS = Dimensions.get("window");
 
@@ -24,7 +25,7 @@ class MatchPopup extends React.Component {
 		this.state = {
 			isVisible: props.visible,
 			Name: props.name,
-
+			image: props.image,
 		};
 	}
 
@@ -34,6 +35,9 @@ class MatchPopup extends React.Component {
 		}
 		if (props.name !== this.state.Name) {
 			this.setState({ Name: props.name });
+		}
+		if (props.image !== this.state.image) {
+			this.setState({ image: props.image });
 		}
 	}
 
@@ -45,8 +49,24 @@ class MatchPopup extends React.Component {
             style={styles.matchPop}
             transparent={true}
             animationType={"fade"}
-			>
-                <Text style={styles.usernameHome}>{this.state.Name}</Text>
+			>	
+				{/* { this.props.image.length === 0 ? <PlaceHolder width={30} height={30}/> 
+				: <Image source={require('../assets/images/Findr_logo2x.png')} />
+				} */}
+				<Image 
+				source={require('../assets/images/Findr_logo2x.png')}
+				style={{
+					position: 'absolute',
+					top: DIMENTIONS.height * 0.03,
+					width: DIMENTIONS.width * 0.2,
+					height: DIMENTIONS.height * 0.1,
+					borderColor: 'black',
+					borderWidth: 1,
+					borderRadius: 50,
+					alignSelf: "center"
+				}}
+				/>
+                <Text style={styles.usernameHome}>{"Scott Middough"}</Text>
                 <Text style={styles.match}>It's a Match!</Text>
                 <View style={styles.chatButton}>
                     <Button title="Chat" type="outline" titleStyle={styles.buttonText}

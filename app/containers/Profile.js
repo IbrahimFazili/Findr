@@ -171,18 +171,13 @@ class Profile extends React.Component {
             </View>
             <View style={styles.header}>
               <View style={styles.profilepicWrap}>
-                {
-                  image === null ?
-                  <PlaceHolder  style={styles.profilepic} /> : 
-                  <CachedImage style={styles.profilepic} uri={image.uri} uid={email} />
-                }
-               {/* <Image style={styles.profilepic} 
-                  source={image} /> */}
-                <TouchableOpacity onPress={() => this.chooseImage()}>
-                  <View style={styles.penProfile}>
-							      <Pen width={20} height={20}/>
-                  </View>
-							  </TouchableOpacity>
+                <TouchableOpacity style={{ height: styles.profilepicWrap.height }} onPress={() => this.chooseImage()}>
+                  {
+                    image === null ?
+                    <PlaceHolder style={styles.profilepic} /> : 
+                    <CachedImage style={styles.profilepic} uri={image.uri} uid={email} />
+                  }
+                </TouchableOpacity>
               </View>
             </View>
             <View style={{paddingHorizontal: 10}}>
@@ -217,14 +212,12 @@ const styles = StyleSheet.create({
     backgroundColor: "rgba(26, 93, 87, 0.15)",
   },
   header: {
-    flex: 1,
     alignItems: "center",
-    justifyContent: "center",
     marginTop: DIMENSION_HEIGHT * 0.02
   },
   profilepicWrap: {
-    width: 265,
-    height: 280,
+    width: DIMENSION_WIDTH * 0.6,
+    height: DIMENSION_HEIGHT * 0.3,
   },
   profilepic: {
     flex: 1,

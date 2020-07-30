@@ -143,6 +143,7 @@ export default class Chat extends Component {
       });
     }
     if (newMessages.length > 0) {
+	  APIConnection.MessagesPage ? APIConnection.MessagesPage.notify() : null;
       this.setState({ messages: this.state.messages.concat(newMessages) });
     }
   }
@@ -171,7 +172,9 @@ export default class Chat extends Component {
       public_key: null
     }
 
-    APIConnection.socket.emit("new msg", msg);
+	APIConnection.socket.emit("new msg", msg);
+	
+	APIConnection.MessagesPage ? APIConnection.MessagesPage.notify() : null;
 
     this.setState({
       messages: this.state.messages,

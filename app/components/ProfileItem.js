@@ -373,10 +373,10 @@ class ProfileItem extends React.Component{
 					</View>
 					) 
 				: (
-					<View style={{right: FULL_WIDTH * 0.05}}>
+					<View style={{ right: FULL_WIDTH * 0.05 }}>
 						<TouchableOpacity style={styles.profileButtons} onPress={this.handleEditClick1.bind(this)}>
 							<Pen width={20} height={20}/>
-							</TouchableOpacity>
+						</TouchableOpacity>
 					</View>)
 				}
 			</View>
@@ -385,7 +385,7 @@ class ProfileItem extends React.Component{
 			</Text>
 
 			<View style={styles.info}>
-				<Text style={styles.profileTitleGender}>Gender </Text>
+				<Text style={styles.profileTitleGender}>Gender</Text>
 
 				{this.state.isEditable1 ? 
 				<Dropdown data={genders}
@@ -406,12 +406,12 @@ class ProfileItem extends React.Component{
 			</View>
 
 			<View style={styles.info2}>
-				<Text style={styles.profileTitleEmail}>Email </Text>
+				<Text style={styles.profileTitleEmail}>Email</Text>
 				<Text style={styles.infoContentEmail}>{this.props.email}</Text>
 			</View>
 
 			<View style={styles.info3}>
-				<Text style={styles.profileTitle}>Keywords </Text>
+				<Text style={styles.profileTitle}>Keywords</Text>
 				<Tag 
 					keywords={this.state.keywords} editable={this.state.isEditable1}
 					type="keyword"
@@ -420,7 +420,7 @@ class ProfileItem extends React.Component{
 			</View>
 
 			<View style={styles.info2}>
-				<Text style={styles.profileTitleBio}>Bio </Text>
+				<Text style={styles.profileTitleBio}>Bio</Text>
 				{this.state.isEditable1
 				? (<TextInput
 					underlineColor="transparent"
