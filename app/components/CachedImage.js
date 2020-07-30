@@ -62,7 +62,10 @@ class CachedImage extends React.Component {
      * @param {String} existingPath path of the cached image
      */
     async cacheRefreshRequired(checksum, existingPath) {
-        if (checksum !== (await RNFS.hash(existingPath, "md5"))) return true;
+        console.log('inside checksum', checksum);
+        const computedChecksum = await RNFS.hash(existingPath, "md5");
+        console.log('computed', computedChecksum);
+        if (checksum !== computedChecksum) return true;
         return false;
     }
 
@@ -73,13 +76,15 @@ class CachedImage extends React.Component {
         const extension = (Platform.OS === 'android') ? 'file://' : '' 
         const path =`${extension}${RNFS.CachesDirectoryPath}/${name}`;
         this.updateExpiryTime(name);
-        RNFS.exists(path).then((exists) => {
-            if (exists && !this.cacheRefreshRequired(checksum, path)) {
+        RNFS.exists(path).then(async (exists) => {
+            if (exists && !(await this.cacheRefreshRequired(checksum, path))) {
                 // image exists in cache
+                console.log('loading locally');
                 this.loadFile(path);
             }
             else {
                 // image doesn't exist in cache, download it
+                console.log("downloading")
                 this.downloadFile(uri, path);
             }
         });

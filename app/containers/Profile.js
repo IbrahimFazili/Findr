@@ -108,7 +108,6 @@ class Profile extends React.Component {
         console.log('User tapped custom button: ', response.customButton);
         alert(response.customButton);
       } else {
-        const source = { uri: response.uri };
 
         // file type: response.type
         // file name: response.fileName
