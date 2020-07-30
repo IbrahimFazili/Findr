@@ -90,6 +90,20 @@ class CachedImage extends React.Component {
         });
     }
 
+    componentWillReceiveProps(props) {
+        const updatedProps = {};
+        if (props.uri !== this.state.uri) {
+            updatedProps.uri = props.uri;
+        }
+        if (props.uid !== this.state.uid){
+            updatedProps.uid = props.uid;
+        }
+        if (props.checksum !== this.state.checksum){
+            updatedProps.checksum = props.checksum;
+        }
+        this.setState({source : { uri: updatedProps.uri } })
+    }
+
     render() {
         return (<Image style={this.props.style} source={this.state.source}/>)
     }

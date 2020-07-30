@@ -85,7 +85,8 @@ class Profile extends React.Component {
 
     APIConnection.uploadPicture(url, media);
     var profile = {...this.state.profile}
-    profile.image = media.uri
+    profile.image = media.uri;
+    profile.checksum = null;
     this.setState({profile})
     // this.setState({ image: media.uri });
   }
