@@ -76,7 +76,7 @@ class Profile extends React.Component {
     };
 
     const checksumImage = RNFS.hash(selection.path, "md5");
-    
+
     const url = await this.state.API.updateProfilePicture(
       await AsyncStorage.getItem('storedEmail'),
       media.type,
@@ -136,6 +136,7 @@ class Profile extends React.Component {
   }
 
   render() {
+    const checksum = this.state.profile ? this.state.profile.checksum : null;
     const image = this.state.profile ? { uri: this.state.profile.image } : null;
     const name = this.state.profile ? this.state.profile.name : "";
     const age = this.state.profile ? this.state.profile.age : -1;
@@ -177,7 +178,7 @@ class Profile extends React.Component {
                 {
                   image === null ?
                   <PlaceHolder  style={styles.profilepic} /> : 
-                  <CachedImage style={styles.profilepic} uri={image.uri} uid={email} />
+                  <CachedImage style={styles.profilepic} uri={image.uri} uid={email} checksum={checksum}/>
                 }
                {/* <Image style={styles.profilepic} 
                   source={image} /> */}
