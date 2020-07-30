@@ -16,6 +16,7 @@ import ProfileItem from "../components/ProfileItem";
 import Icon from "../components/Icon";
 import APIConnection from "../assets/data/APIConnection";
 import { ScrollView } from "react-navigation";
+import Settings from "../assets/icons/settings_fill.svg";
 
 const PRIMARY_COLOR = "#7444C0";
 const WHITE = "#FFFFFF";
@@ -33,6 +34,7 @@ class OtherProfile extends React.Component {
 			profile: null,
 			isConnected: true,
 			user_email: props.navigation.state.params.email,
+			own_email: props.navigation.state.params.own_email,
 		};
 	}
 
@@ -84,10 +86,29 @@ class OtherProfile extends React.Component {
 			>
 				<View style={styles.profileContainer}>
 					<ScrollView>
-						<Image
-							source={require("../assets/images/Findr_logo2x.png")}
-							style={globalStyles.profileLogo}
-						/>
+						<View style={styles.profileLogoTop}>
+							<Image
+								source={require("../assets/images/Findr_logo2x.png")}
+								style={globalStyles.profileLogo}
+							/>
+							<TouchableOpacity
+								style={styles.profileSettings}
+								onPress={() =>
+									this.props.navigation.navigate("ChatPage", {
+										user_name: name,
+										user_image: image,
+										user_email: this.state.user_email,
+										own_email: this.state.own_email,
+										messages: [],
+									})
+								}
+							>
+								<Settings
+									width={DIMENSION_HEIGHT * 0.04}
+									height={DIMENSION_HEIGHT * 0.04}
+								/>
+							</TouchableOpacity>
+						</View>
 						<View style={styles.header}>
 							<View style={styles.profilepicWrap}>
 								<Image
@@ -96,7 +117,6 @@ class OtherProfile extends React.Component {
 								/>
 							</View>
 						</View>
-
 						<View style={{ paddingHorizontal: 10 }}>
 							<View
 								style={{ marginTop: DIMENSION_HEIGHT * 0.21 }}
@@ -105,12 +125,12 @@ class OtherProfile extends React.Component {
 									name={name}
 									age={age}
 									uni={location}
-									gender={gender}
-									major={major}
+									gender={gender == "M" ? "Male" : "Female"}
 									email={email}
 									keywords={keywords}
 									clubs={clubs}
 									courses={courses}
+									major={major}
 								/>
 							</View>
 						</View>
@@ -138,15 +158,6 @@ const styles = StyleSheet.create({
 	profilepicWrap: {
 		width: 280,
 		height: 280,
-		padding: 20,
-	},
-	profilepicWrap: {
-		width: 240,
-		height: 240,
-		borderRadius: 100,
-		borderColor: "rgba(26, 93, 87, 0.15)",
-		marginBottom: 160,
-		elevation: 10,
 	},
 	profilepic: {
 		flex: 1,
@@ -221,6 +232,15 @@ const styles = StyleSheet.create({
 	profileContainer: {
 		justifyContent: "space-between",
 		flex: 1,
+		// paddingHorizontal: 10,
+	},
+	profileLogoTop: {
+		flexDirection: "row",
+		alignItems: "center",
+	},
+	profileSettings: {
+		marginLeft: DIMENSION_HEIGHT * 0.15,
+		marginTop: DIMENSION_HEIGHT * 0.01,
 	},
 	bg: {
 		flex: 1,
