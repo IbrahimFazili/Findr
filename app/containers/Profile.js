@@ -20,8 +20,7 @@ import Settings from "../assets/icons/settings_fill.svg";
 import ImagePicker from 'react-native-image-picker';
 import PlaceHolder from "../assets/icons/placeholder_icon.svg"
 import Pen from '../assets/icons/pen.svg';
-
-
+let RNFS = require('react-native-fs');
 
 const PRIMARY_COLOR = "#7444C0";
 const WHITE = "#FFFFFF";
@@ -75,9 +74,13 @@ class Profile extends React.Component {
       type: selection.type,
       uri: selection.uri
     };
+
+    const checksumImage = await RNFS.hash(selection.path, "md5");
+
     const url = await this.state.API.updateProfilePicture(
       await AsyncStorage.getItem('storedEmail'),
-      media.type
+      media.type,
+      checksumImage
     )
 
     APIConnection.uploadPicture(url, media);
@@ -133,6 +136,7 @@ class Profile extends React.Component {
   }
 
   render() {
+    const checksum = this.state.profile ? this.state.profile.checksum : null;
     const image = this.state.profile ? { uri: this.state.profile.image } : null;
     const name = this.state.profile ? this.state.profile.name : "";
     const age = this.state.profile ? this.state.profile.age : -1;
@@ -174,7 +178,7 @@ class Profile extends React.Component {
                 {
                   image === null ?
                   <PlaceHolder  style={styles.profilepic} /> : 
-                  <CachedImage style={styles.profilepic} uri={image.uri} uid={email} />
+                  <CachedImage style={styles.profilepic} uri={image.uri} uid={email} checksum={checksum}/>
                 }
                {/* <Image style={styles.profilepic} 
                   source={image} /> */}

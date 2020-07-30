@@ -165,7 +165,7 @@ class Home extends React.Component {
                     uni: item.uni
                   })}>
                     <CardItem
-                      image={{ uri: item.image }}
+                      image={{ uri: item.image, checksum: item.checksum }}
                       name={item.name}
                       keywords={item.keywords}
                       email={item.email}

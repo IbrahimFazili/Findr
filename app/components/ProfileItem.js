@@ -1,8 +1,8 @@
 import React from 'react';
 import styles from '../assets/styles';
 
-import { Text, View, Image, Button, Dimensions, TouchableOpacity, AsyncStorage} from 'react-native';
-import { DefaultTheme, Provider as PaperProvider, TextInput, RadioButton, Dialog} from 'react-native-paper';
+import { Text, View, Dimensions, TouchableOpacity, AsyncStorage} from 'react-native';
+import { DefaultTheme, TextInput } from 'react-native-paper';
 const FULL_HEIGHT = Dimensions.get('window').height;
 const FULL_WIDTH = Dimensions.get('window').width;
 

@@ -139,7 +139,7 @@ class Matches extends React.Component {
 										}
 									>
 										<CardItem
-											image={{ uri: item.image }}
+											image={{ uri: item.image, checksum: item.checksum }}
 											name={item.name}
 											status={"Online"}
 											email={item.email}
