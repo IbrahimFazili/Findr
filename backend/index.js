@@ -394,6 +394,7 @@ app.get("/deleteUser", (req, res) => {
 app.get("/user/:user_email/updateProfilePicture", async (req, res) => {
 	const email = req.params.user_email;
 	var url = await AWS_Presigner.generateSignedPutUrl("user_images/" + email, req.query.type);
+	DB.updateUser({ checksum: req.query.checksum }, { email });
 	res.status(200).send(url);
 });
 
