@@ -65,8 +65,8 @@ class APIConnection {
     return response.status;
   }
 
-  async updateProfilePicture(email, type) {
-    return (await fetch(`${this.ENDPOINT}:${this.PORT}/user/${email}/updateProfilePicture?type=${type}`)).text();
+  async updateProfilePicture(email, type, checksum) {
+    return (await fetch(`${this.ENDPOINT}:${this.PORT}/user/${email}/updateProfilePicture?type=${type}&checksum=${checksum}`)).text();
   }
 
   static uploadPicture(url, img) {

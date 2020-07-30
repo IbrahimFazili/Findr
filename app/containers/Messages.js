@@ -89,7 +89,7 @@ class Messages extends React.Component {
                   }
                 >
                   <Message
-                    image={{ uri: item.image }}
+                    image={{ uri: item.image, checksum: item.checksum }}
                     name={item.name}
                     email={item.email}
                     lastMessage={APIConnection.MESSAGE_QUEUES[item.email] ?
