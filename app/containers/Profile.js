@@ -75,7 +75,7 @@ class Profile extends React.Component {
       uri: selection.uri
     };
 
-    const checksumImage = RNFS.hash(selection.path, "md5");
+    const checksumImage = await RNFS.hash(selection.path, "md5");
 
     const url = await this.state.API.updateProfilePicture(
       await AsyncStorage.getItem('storedEmail'),

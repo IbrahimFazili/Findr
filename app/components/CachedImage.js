@@ -55,15 +55,26 @@ class CachedImage extends React.Component {
         RNFS.downloadFile({ fromUrl: uri, toFile: path }).promise.then((res) => this.loadFile(path));
     }
 
+    /**
+     * Compute checksum of existing image in cache and compare it with the recieved checksum to check
+     * if the cached image needs to be updated
+     * @param {String} checksum checksum of the image that exists on the provided url
+     * @param {String} existingPath path of the cached image
+     */
+    async cacheRefreshRequired(checksum, existingPath) {
+        if (checksum !== (await RNFS.hash(existingPath, "md5"))) return true;
+        return false;
+    }
+
     componentDidMount = () => {;
-        const { uri, uid } = this.props;
+        const { uri, uid, checksum } = this.props;
         if (uid === undefined) return;
         const name = shorthash.unique(uid);
         const extension = (Platform.OS === 'android') ? 'file://' : '' 
         const path =`${extension}${RNFS.CachesDirectoryPath}/${name}`;
         this.updateExpiryTime(name);
         RNFS.exists(path).then((exists) => {
-            if (exists) {
+            if (exists && !this.cacheRefreshRequired(checksum, path)) {
                 // image exists in cache
                 this.loadFile(path);
             }
