@@ -8,6 +8,7 @@ import {
 import TagInput from 'react-native-tags-input';
 
 const mainColor = '#3ca897';
+const DIMENTIONS = Dimensions.get('window');
 
 class TagEducation extends React.Component {
   constructor(props) {
@@ -19,19 +20,25 @@ class TagEducation extends React.Component {
       },
       edit: this.props.editable,
       keywords: props.keywords,
-      type: props.type
+      type: props.type,
+      tagCSS: { top: -DIMENTIONS.height * 0.07 }
     };
   }
+
   componentWillReceiveProps(props){
     if (props.editable !== this.state.edit){
       this.state.edit = props.editable
+      this.setState({
+        tagCSS: props.editable ? { top: 0 } : { top: -DIMENTIONS.height * 0.07 }
+      });
     }
     if (props.keywords !== this.state.keywords){
       this.state.keywords = props.keywords
+      this.state.tags.tagsArray = props.keywords
     }
     if (props.type !== this.state.type){
-        this.state.type = props.type
-      }
+      this.state.type = props.type;
+    }  
   }
 
   updateTagState = (state) => {
@@ -49,33 +56,41 @@ class TagEducation extends React.Component {
           updateState={this.updateTagState}
           tags={this.state.tags}
           placeholder=
-          { this.state.edit? 
-            `Enter a ${this.state.type}` : "What are you interested in?"}    
+          { !this.state.edit ?
+            `Add ${this.state.type}` : ""}
           inputContainerStyle={styles.textInput}
           inputStyle={{color: 'black'}}
-          onFocus={() => this.setState({tagsColor: '#fff', tagsText: mainColor})}
-          onBlur={() => this.setState({tagsColor: 'white', tagsText: '#fff'})}
+          onFocus={() => this.setState({
+            tagsColor: '#fff',
+            tagsText: mainColor,
+            tagCSS: { top: 0 }
+          })}
+          onBlur={() => this.setState({ 
+            tagsColor: 'white',
+            tagsText: '#fff',
+            tagCSS: { top: -DIMENTIONS.height * 0.07 } }
+          )}
           autoCorrect={false}
-          tagStyle={styles.tag}
+          tagStyle={[ styles.tag, this.state.tagCSS ]}
           tagTextStyle={styles.tagText}
           keysForTag={', '}/>
       </View>
     );
   }
 }
+
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
+    position: 'relative',
     justifyContent: 'center',
-    alignItems: 'center',
   },
   textInput: {
-      height: 30,
+      height: Dimensions.get('window').height * 0.05,
+      width: Dimensions.get('window').width * 0.6,
       backgroundColor: 'white',
-      bottom: 10
   },
   tag: {
-      backgroundColor: 'transparent'
+      backgroundColor: 'transparent',
   },
   tagText: {
       color: 'black'

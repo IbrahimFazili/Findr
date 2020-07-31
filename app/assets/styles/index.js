@@ -409,30 +409,28 @@ export default StyleSheet.create({
   info: {
     paddingVertical: 8,
     flexDirection: "row",
-    height: 60,
     alignSelf: "center",
-    marginLeft: DIMENSION_HEIGHT * - 0.28
+    marginLeft: DIMENSION_HEIGHT * -0.28
   },
-  info2: {
-    paddingVertical: 8,
+  emailContainer: {
     flexDirection: "row",
-    height: 60,
+    marginLeft: DIMENSION_WIDTH * -0.05,
+    marginTop: DIMENSION_HEIGHT * 0.02
+  },
+  infoBio: {
+    flexDirection: "row",
+    height: DIMENSION_HEIGHT * 0.1,
     alignSelf: "center",
-    marginLeft: DIMENSION_HEIGHT * - 0.2
+    marginLeft: DIMENSION_HEIGHT * -0.1,
+    marginTop: DIMENSION_HEIGHT * 0.02
   },
   info3: {
-    paddingVertical: 8,
     flexDirection: "row",
-    height: 60,
-    alignSelf: "center",
-    marginLeft: DIMENSION_HEIGHT * 0.005
+    marginTop: DIMENSION_HEIGHT * 0.02,
   },
   profileTitle: {
     fontSize: 15,
     color: TEAL,
-    // paddingHorizontal: 10,
-    left: 30
-    // fontWeight: 'bold'
   },
   profileTitleKeywordOther: {
     fontSize: 15,
@@ -451,7 +449,7 @@ export default StyleSheet.create({
   },
   textB:{
     width: '65%',
-    height: 50,
+    height: 100,
     backgroundColor: "transparent",
     left: DIMENSION_WIDTH * 0.17,
   },
@@ -541,14 +539,14 @@ export default StyleSheet.create({
   infoContentBio: {
     color: GRAY,
     fontSize: 13,
-    left: 85,
+    marginLeft: DIMENSION_WIDTH * 0.1,
     width: 200,
     height:400
   },
   infoContentEmail: {
     color: GRAY,
     fontSize: 13,
-    left: 50,
+    marginLeft: DIMENSION_WIDTH * 0.125
   },
   profileLogo: {
     width: 65,
@@ -590,26 +588,20 @@ export default StyleSheet.create({
   },
   profileTitleGender: {
     fontSize: 15,
-    color: DARK_GRAY,
-    paddingHorizontal: 10,
-    position: 'absolute',
+    color: TEAL,
     top: 10,
     left: DIMENSION_WIDTH * 0.05
     // fontWeight: 'bold'
   },
   profileTitleBio: {
     fontSize: 15,
-    color: DARK_GRAY,
+    color: TEAL,
     paddingHorizontal: 10,
-    left: 33
-    // fontWeight: 'bold'
   },
   profileTitleEmail: {
     fontSize: 15,
-    color: DARK_GRAY,
-    paddingHorizontal: 15,
-    left: 20
-    // fontWeight: 'bold'
+    color: TEAL,
+    fontFamily: "sans-serif"
   },
   profileTitleEmailOther: {
     fontSize: 15,
