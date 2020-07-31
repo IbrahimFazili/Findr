@@ -2,6 +2,7 @@
   "images" : [
     {
       "idiom" : "iphone",
+<<<<<<< HEAD
       "scale" : "2x",
       "size" : "20x20"
     },
@@ -14,6 +15,10 @@
       "idiom" : "iphone",
       "scale" : "2x",
       "size" : "29x29"
+=======
+      "size" : "29x29",
+      "scale" : "2x"
+>>>>>>> master
     },
     {
       "idiom" : "iphone",
@@ -37,6 +42,7 @@
     },
     {
       "idiom" : "iphone",
+<<<<<<< HEAD
       "scale" : "3x",
       "size" : "60x60"
     },
@@ -44,6 +50,10 @@
       "idiom" : "ios-marketing",
       "scale" : "1x",
       "size" : "1024x1024"
+=======
+      "size" : "60x60",
+      "scale" : "3x"
+>>>>>>> master
     }
   ],
   "info" : {

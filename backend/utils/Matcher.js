@@ -18,7 +18,7 @@ class Matcher {
                 await DB.updateUser({ blueConnections: user.blueConnections, greenConnections: user.greenConnections },
                     { email: srcUser });
 
-                const isMatch = await this.hasIncomingGreenConnection(user._id, rightSwipedUser);
+                const isMatch = this.hasIncomingGreenConnection(user._id, rightSwipedUser);
                 if (isMatch) {
                     rightSwipedUser.eventQueue = new EventQueue(rightSwipedUser.eventQueue.events);
                     rightSwipedUser.eventQueue.enqueue(
@@ -112,7 +112,10 @@ class Matcher {
                 
                 potentialConnections = potentialConnections.filter((value) => {
                     return user.blueConnections.findIndex((conn) => conn._id.equals(value._id)) === -1 &&
-                        !(value._id.equals(user._id));
+                        !(value._id.equals(user._id))
+                        && user.blockedUsers.findIndex((id) => id.equals(value._id)) === -1
+                        && value.blockedUsers.findIndex((id) => id.equals(user._id)) === -1
+                        && user.greenConnections.findIndex((id) => id._id.equals(value._id)) === -1
                 });
 
                 for (var i = 0; i < duplicateConnections.length; i++) {
@@ -182,9 +185,10 @@ class Matcher {
                 });
 
                 try {
-                    connections.forEach((element) => {
-                        DB.updateUser({ blueConnections: element.blueConnections }, { email: element.email })
-                    });
+                    for (let i = 0; i < connections.length; i++) {
+                        const element = connections[i];
+                        await DB.updateUser({ blueConnections: element.blueConnections }, { email: element.email })
+                    }
     
                     return true;
                 } catch (error) {
@@ -215,7 +219,7 @@ class Matcher {
                 j = 0;
                 while (j < user.blueConnections.length) {
 
-                    if (user.blueConnections[j].commonKeywords.includes(removedKeywords[i])) {
+                    if (user.blueConnections[j].commonKeywords.includes(removedKeywords[i])){
 
                         const newCommonKeywords = user.blueConnections[j].commonKeywords.filter((value) => value !== removedKeywords[i])
                         const user2 = (await DB.fetchUsers({ _id : user.blueConnections[j]._id }))[0];
@@ -257,7 +261,7 @@ class Matcher {
         }
     }
 
-    async hasIncomingGreenConnection(srcUserId, user) {
+    hasIncomingGreenConnection(srcUserId, user) {
         try {
             return user.greenConnections.findIndex((id) => id._id.equals(srcUserId)) !== -1;
         } catch (fetchErr) {
@@ -270,9 +274,11 @@ class Matcher {
         try {
             const user = (await DB.fetchUsers({ email }))[0];
             let matches = [];
+            const projection = { greenConnections: 1 };
             for (let i = 0; i < user.greenConnections.length; i++) {
-                if (await this.hasIncomingGreenConnection(user._id, user.greenConnections[i])) {
-                    matches.push(user.greenConnections[i]);
+                const otherUser = (await DB.fetchUsers({ _id: user.greenConnections[i]._id }, { projection }))[0];
+                if (this.hasIncomingGreenConnection(user._id, otherUser)) {
+                    matches.push(otherUser._id);
                 }
             }
 
@@ -282,6 +288,59 @@ class Matcher {
             return [];
         }
     }
+
+    async getPendingMatches(email) {
+        try {
+            const user = (await DB.fetchUsers({ email }))[0];
+            let matches = [];
+            const projection = { greenConnections: 1 };
+            for (let i = 0; i < user.greenConnections.length; i++) {
+                const otherUser = (await DB.fetchUsers({ _id: user.greenConnections[i]._id }, { projection }))[0];
+                if (!this.hasIncomingGreenConnection(user._id, otherUser)) {
+                    matches.push(otherUser._id);
+                }
+            }
+
+            return matches;
+        } catch (fetchErr) {
+            console.log(fetchErr);
+            return [];
+        }
+    }
+
+    async blockUser(srcEmail, blockedEmail) {
+        try {
+            const srcUser = (await DB.fetchUsers({ email: srcEmail }))[0];
+            const blockedUser = (await DB.fetchUsers({ email: blockedEmail}))[0];
+
+            const blueConnectionsIndex = srcUser.blueConnections.findIndex((value) => value._id.equals(blockedUser._id));
+            if ( blueConnectionsIndex !== -1){
+                srcUser.blueConnections.splice(blueConnectionsIndex, 1);
+            }
+            const greenConnectionsIndex = srcUser.greenConnections.findIndex((value) => value._id.equals(blockedUser._id));
+            if ( greenConnectionsIndex !== -1){
+                srcUser.greenConnections.splice(greenConnectionsIndex, 1);
+            }
+            const blueConnectionsIndex2 = blockedUser.blueConnections.findIndex((value) => value._id.equals(srcUser._id));
+            if ( blueConnectionsIndex2 !== -1){
+                blockedUser.blueConnections.splice(blueConnectionsIndex2, 1);
+            }
+            const greenConnectionsIndex2 = blockedUser.greenConnections.findIndex((value) => value._id.equals(srcUser._id));
+            if ( greenConnectionsIndex2 !== -1){
+                blockedUser.greenConnections.splice(greenConnectionsIndex2, 1);
+            }
+
+            srcUser.blockedUsers.push(blockedUser._id);
+            await DB.updateUser(srcUser, { email: srcEmail });
+            await DB.updateUser(blockedUser, { email: blockedEmail });
+            return true;
+        } catch (fetchErr) {
+            console.log(fetchErr);
+            return false;
+        }
+    }
+
+    
 }
 
 module.exports.Matcher = Matcher;

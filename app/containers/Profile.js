@@ -8,11 +8,19 @@ import {
   Image,
   Dimensions,
   AsyncStorage,
+  ImageBackground,
   NetInfo
 } from "react-native";
 import ProfileItem from "../components/ProfileItem";
 import Icon from "../components/Icon";
 import APIConnection from "../assets/data/APIConnection";
+import CachedImage from "../components/CachedImage";
+import { ScrollView } from "react-navigation";
+import Settings from "../assets/icons/settings_fill.svg";
+import ImagePicker from 'react-native-image-picker';
+import PlaceHolder from "../assets/icons/placeholder_icon.svg"
+import Pen from '../assets/icons/pen.svg';
+let RNFS = require('react-native-fs');
 
 const PRIMARY_COLOR = "#7444C0";
 const WHITE = "#FFFFFF";
@@ -23,72 +31,178 @@ const DIMENSION_WIDTH = Dimensions.get("window").width;
 const DIMENSION_HEIGHT = Dimensions.get("window").height;
 
 class Profile extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = { API: new APIConnection(), profile: null, isConnected: true };
+	constructor(props) {
+		super(props);
+		this.state = {
+			API: new APIConnection(),
+			profile: null,
+			isConnected: true,
+		};
   }
-
-  async componentDidMount() {
+  
+  async loadData(){
     let user = await this.state.API.fetchUser(
-      await AsyncStorage.getItem("storedEmail")
+			await AsyncStorage.getItem("storedEmail")
+		);
+		this.setState({ profile: user });
+  }
+
+	async componentDidMount() {
+		this.loadData();
+		NetInfo.isConnected.addEventListener(
+			"connectionChange",
+			this.handleConnectivityChange
     );
-    this.setState({ profile: user });
-    NetInfo.isConnected.addEventListener('connectionChange', this.handleConnectivityChange);
+    
+    APIConnection.attachProfilePageNotifier(this.loadData.bind(this));
+	}
+
+	async componentWillUnmount() {
+		NetInfo.isConnected.removeEventListener(
+			"connectionChange",
+			this.handleConnectivityChange
+		);
+	}
+
+	handleConnectivityChange = (isConnected) => {
+		this.setState({ isConnected });
+	};
+
+  async _onChangeMedia(selection) {
+    const media = {
+      name: selection.fileName,
+      type: selection.type,
+      uri: selection.uri
+    };
+
+    const checksumImage = await RNFS.hash(selection.path, "md5");
+
+    const url = await this.state.API.updateProfilePicture(
+      await AsyncStorage.getItem('storedEmail'),
+      media.type,
+      checksumImage
+    )
+
+    APIConnection.uploadPicture(url, media);
+    var profile = {...this.state.profile}
+    profile.image = media.uri;
+    profile.checksum = null;
+    this.setState({profile})
+    // this.setState({ image: media.uri });
   }
 
-  async componentWillUnmount(){
-    NetInfo.isConnected.removeEventListener('connectionChange', this.handleConnectivityChange);
-  }
+  chooseImage = () => {
+    let options = {
+      title: 'Select Image',
+      storageOptions: {
+        skipBackup: true,
+        path: 'images',
+      },
+    };
+    ImagePicker.showImagePicker(options, (response) => {
 
-  handleConnectivityChange = isConnected => {
-    this.setState({ isConnected });
+      if (response.didCancel) {
+        console.log('User cancelled image picker');
+      } else if (response.error) {
+        console.log('ImagePicker Error: ', response.error);
+      } else if (response.customButton) {
+        console.log('User tapped custom button: ', response.customButton);
+        alert(response.customButton);
+      } else {
+
+        // file type: response.type
+        // file name: response.fileName
+        this._onChangeMedia(response);
+      }
+    });
   };
 
+  _getFormattedGender(gender) {
+    switch (gender) {
+      case "" : return "";
+      case "M": return "Male";
+      case "F": return "Female";
+      case "O": return "Other";
+      case "P": return "Prefer Not To Say";
+      default: return "";
+    }
+  }
+
+  _getAge(age) {
+    if (typeof age === "number"){ return age; }
+    // MM-DD-YYYY
+    const year = Number(age.split("-")[2]);
+    return (new Date()).getFullYear() - year;
+  }
+
   render() {
+    const checksum = this.state.profile ? this.state.profile.checksum : null;
     const image = this.state.profile ? { uri: this.state.profile.image } : null;
     const name = this.state.profile ? this.state.profile.name : "";
     const age = this.state.profile ? this.state.profile.age : -1;
     const location = this.state.profile ? this.state.profile.uni : "";
     const gender = this.state.profile ? this.state.profile.gender : "";
-    const major = this.state.profile ? this.state.profile.major : "";
     const email = this.state.profile ? this.state.profile.email : "";
-    
+    const keywords = this.state.profile ? this.state.profile.keywords : [];
+    const clubs = this.state.profile ? this.state.profile.clubs : [];
+    const courses = this.state.profile ? this.state.profile.courses : [];
+    const major = this.state.profile ? this.state.profile.major : [];
+    const bio = this.state.profile ? this.state.profile.bio : [];
+
+    console.log(this.state);
     if (!this.state.isConnected) {
       this.props.navigation.navigate("Internet");
     }
 
     return (
-      <View style={styles.headerBackground}>
-        <Image
-          source={require("../assets/images/Findr_logo2x.png")}
-          style={globalStyles.profileLogo}
-        />
-        <View style={styles.header}>
-          <View style={styles.profilepicWrap}>
-            <Image style={styles.profilepic} source={image} />
-          </View>
+      <ImageBackground
+      source={require("../assets/images/15.png")}
+      style={styles.bg}
+      >
+        <View style={styles.profileContainer}>
+          <ScrollView>
+            <View style={styles.profileLogoTop}>
+              <Image
+                source={require("../assets/images/Findr_logo2x.png")}
+                style={globalStyles.profileLogo}
+              />
+              <TouchableOpacity
+                style={styles.profileSettings}
+                onPress={() => this.props.navigation.navigate("Settings")}
+              >
+                <Settings width={DIMENSION_HEIGHT * 0.03} height={DIMENSION_HEIGHT * 0.03}/>
+              </TouchableOpacity>
+            </View>
+            <View style={styles.header}>
+              <View style={styles.profilepicWrap}>
+                <TouchableOpacity style={{ height: styles.profilepicWrap.height }} onPress={() => this.chooseImage()}>
+                  {
+                    image === null ?
+                    <PlaceHolder style={styles.profilepic} /> : 
+                    <CachedImage style={styles.profilepic} uri={image.uri} uid={email} checksum={checksum}/>
+                  }
+                </TouchableOpacity>
+              </View>
+            </View>
+            <View style={{paddingHorizontal: 10}}>
+              <View style={{marginTop: DIMENSION_HEIGHT * 0.21}}>
+                <ProfileItem
+                  name={name}
+                  age={this._getAge(age)}
+                  uni={location}
+                  gender={this._getFormattedGender(gender)}
+                  email={email}
+                  keywords={keywords}
+                  clubs={clubs}
+                  courses={courses}
+                  major={major}
+                  bio={bio}
+                />
+              </View>
+            </View>
+          </ScrollView>
         </View>
-
-        <View>
-          <ProfileItem
-            name={name}
-            age={age}
-            location={location}
-            info1={gender == "M" ? "Male" : "Female"}
-            info2={major}
-            info3={email}
-          />
-        </View>
-
-        <View style={styles.actionsProfile}>
-          <TouchableOpacity style={styles.roundedButton}>
-            <Text style={styles.iconButton}>
-              <Icon name="optionsH" />
-            </Text>
-            <Text style={styles.textButton}> Update Profile</Text>
-          </TouchableOpacity>
-        </View>
-      </View>
+      </ImageBackground>
     );
   }
 }
@@ -102,26 +216,18 @@ const styles = StyleSheet.create({
     backgroundColor: "rgba(26, 93, 87, 0.15)",
   },
   header: {
-    flex: 1,
     alignItems: "center",
-    justifyContent: "center",
-    padding: 20,
+    marginTop: DIMENSION_HEIGHT * 0.02
   },
   profilepicWrap: {
-    width: 240,
-    height: 240,
-    borderRadius: 100,
-    borderColor: "rgba(26, 93, 87, 0.15)",
-    marginBottom: 160,
-    elevation: 10,
+    width: DIMENSION_WIDTH * 0.6,
+    height: DIMENSION_HEIGHT * 0.3,
   },
   profilepic: {
     flex: 1,
     width: null,
     alignSelf: "stretch",
-    borderRadius: 100,
-    borderColor: "#fff",
-    borderWidth: 4,
+    borderRadius: 700,
   },
   containerProfile: { marginHorizontal: 0 },
   photo: {
@@ -187,7 +293,27 @@ const styles = StyleSheet.create({
     fontWeight: "300",
     fontStyle: "italic",
   },
-  homeicon: {},
+  profileContainer: {
+    justifyContent: "space-between",
+    flex: 1,
+    // paddingHorizontal: 10,
+  },
+  profileLogoTop: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  profileSettings: {
+    width: DIMENSION_WIDTH * 0.2,
+    height: DIMENSION_WIDTH * 0.1,
+    marginLeft: DIMENSION_HEIGHT * 0.15,
+    marginTop: DIMENSION_HEIGHT * 0.04,
+  },
+  bg: {
+    flex: 1,
+    resizeMode: "cover",
+    width: DIMENSION_WIDTH,
+    height: DIMENSION_HEIGHT,
+  }
 });
 
 export default Profile;

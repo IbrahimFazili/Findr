@@ -1,10 +1,12 @@
 import React from "react";
-import { View, ImageBackground, AsyncStorage, Image, NetInfo } from "react-native";
+import { View, ImageBackground, AsyncStorage, Image, NetInfo, TouchableOpacity } from "react-native";
 import CardStack, { Card } from "react-native-card-stack-swiper";
-import Filters from "../components/Filters";
 import CardItem from "../components/CardItem";
 import styles from "../assets/styles";
 import APIConnection from "../assets/data/APIConnection";
+import ProfilePopup from "../components/ProfilePopup";
+import {Overlay} from "react-native-elements"
+import MatchPopup from "../components/MatchPopup"
 
 const MAX_LENGTH = 150;
 
@@ -15,9 +17,21 @@ class Home extends React.Component {
 
     this.state = {
       cards: [],
+      visible: false,
       API: new APIConnection(),
+      keywords: [],
+      name: "",
+      bio: "",
+      uni: "",
       dataLoadRequired: true,
       isConnected: true,
+      visible: false,
+      name: "",
+      image: "",
+      keywords: [],
+      bio: "",
+      uni: "",
+      matchPossible: false,
     };
   }
 
@@ -31,19 +45,30 @@ class Home extends React.Component {
   };
 
   async componentWillMount() {
+    
     try {
       let storedEmail = await AsyncStorage.getItem('storedEmail');
-      if (storedEmail === null) {
-        this.props.navigation.navigate('LogIn');
+      if (storedEmail === null){
+        if((await AsyncStorage.getItem('onboarding')) === "1") {
+          this.props.navigation.navigate('LogIn');
+        }
+
+        if((await AsyncStorage.getItem('onboarding')) === "0"){
+          await AsyncStorage.setItem('onboarding', '1');
+          this.props.navigation.navigate("Onboarding");
+        }
+      } else {
+        const verified = (await this.state.API.fetchUser(storedEmail)).active;
+        if (!verified) this.props.navigation.navigate("Verify");
       }
-      
-      // this.props.navigation.navigate("Onboarding");
-    } catch (err) {
+    } 
+    catch (err) {
       console.log(err);
     }
   }
 
   async componentDidMount() {
+    await AsyncStorage.setItem('onboarding', '0');
     let storedEmail = await AsyncStorage.getItem("storedEmail");
     NetInfo.isConnected.addEventListener('connectionChange', this.handleConnectivityChange);
 
@@ -51,6 +76,8 @@ class Home extends React.Component {
       const data = await this.state.API.loadData(storedEmail);
       this.setState({ cards: data, dataLoadRequired: false });
     }
+
+    APIConnection.attachHomePageNotifier(this.loadData.bind(this));
   }
 
   async loadData() {
@@ -58,6 +85,37 @@ class Home extends React.Component {
       await AsyncStorage.getItem('storedEmail')
     );
     this.setState({ cards: data, dataLoadRequired: false });
+  }
+
+  async handleRightSwipe(email, image, name, swiped=false) {
+    const swipeStatus = await this.state.API.rightSwipe(
+      await AsyncStorage.getItem('storedEmail'), 
+      email
+    );
+
+    if (swipeStatus.success) {
+      !swiped ? this.swiper.swipeRight() : null;
+      APIConnection.MatchesPage ? APIConnection.MatchesPage.notify() : null;
+      if (swipeStatus.isMatch){
+        this.setState({ matchPossible: true, image, name, email });
+      }
+    } else {
+      // server didn't register the right swipe or the request didn't make sense.
+      // TODO: display some sort of error message to the user that something's wrong
+    }
+  }
+
+  async handleLeftSwipe(email, swiped=false) {
+    const success = await this.state.API.leftSwipe(
+      await AsyncStorage.getItem('storedEmail'), 
+      email
+    );
+
+    if (success) !swiped ? this.swiper.swipeLeft() : null;
+    else {
+      // server didn't register the left swipe or the request didn't make sense.
+      // TODO: display some sort of error message to the user that something's wrong
+    }
   }
 
   render() {
@@ -88,33 +146,63 @@ class Home extends React.Component {
         <View style={styles.containerHome}>
           <View style={styles.homeCards}>
             <CardStack
-              loop={true}
+              loop={false}
               verticalSwipe={false}
               renderNoMoreCards={() => null}
               ref={(swiper) => (this.swiper = swiper)}
             >
               {this.state.cards.map((item, index) => (
-                <Card key={index}>
-                  <CardItem
-                    image={{ uri: item.image }}
-                    name={item.name}
-                    keywords={item.keywords}
-                    description={
-                      item.bio.length > MAX_LENGTH
-                        ? item.bio.substring(0, MAX_LENGTH) + '...'
-                        : item.bio
-                    }
-                    actions
-                    onPressRight={() => this.swiper.swipeRight()}
-                    onPressLeft={() => this.swiper.swipeLeft()}
-                  />
+                <Card key={index}
+                onSwipedLeft={() => this.handleLeftSwipe(item.email, true)}
+                onSwipedRight={() => this.handleRightSwipe(item.email, item.image, item.name, true)}
+                >
+                  <TouchableOpacity 
+                  activeOpacity={1} 
+                  onPress={() => this.setState({
+                    visible: true,
+                    name: item.name,
+                    keywords: item.keywords, 
+                    bio: item.bio,
+                    uni: item.uni,
+                    image: item.image
+                  })}
+                  >
+                    <CardItem
+                      image={{ uri: item.image, checksum: item.checksum }}
+                      name={item.name}
+                      keywords={item.keywords}
+                      email={item.email}
+                      description={
+                        item.bio.length > MAX_LENGTH
+                          ? item.bio.substring(0, MAX_LENGTH) + '...'
+                          : item.bio
+                      }
+                      actions
+                      onPressRight={() => this.handleRightSwipe(item.email)}
+                      onPressLeft={() => this.handleRightSwipe(item.email, item.image, item.name, true)}
+                    />
+                  </TouchableOpacity>
                 </Card>
               ))}
             </CardStack>
           </View>
-          <View style={styles.filterStyle}>
-            <Filters />
-          </View>
+
+          <MatchPopup
+          name={this.state.name}
+          image={this.state.image}
+          email={this.state.email}
+          visible={this.state.matchPossible}
+          navigation={this.props.navigation}
+          />
+
+          <ProfilePopup 
+            visible={this.state.visible} 
+            name={this.state.name}
+            keywords={this.state.keywords}
+            bio={this.state.bio}
+            uni={this.state.uni}
+          />
+ 
         </View>
       </ImageBackground>
     );

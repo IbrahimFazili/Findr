@@ -6,8 +6,10 @@ import {
   TouchableOpacity,
   ImageBackground,
   View,
+  Image,
   FlatList,
   AsyncStorage,
+  Dimensions,
 } from 'react-native';
 import Message from '../components/Message';
 import APIConnection from '../assets/data/APIConnection';
@@ -19,7 +21,7 @@ class Messages extends React.Component {
     this.state = { API: new APIConnection(), chats: [] };
   }
 
-  async componentDidMount() {
+  async loadData(){
     let data = await this.state.API.fetchChats(
       await AsyncStorage.getItem('storedEmail')
     );
@@ -36,21 +38,44 @@ class Messages extends React.Component {
     this.setState({ chats: data });
   }
 
+  async componentDidMount() {
+    this.loadData();
+    APIConnection.attachMessagePageNotifier(this.loadData.bind(this));
+  }
+
+  FlatListItemSeparator = () => {
+    return (
+      <View
+        style={{
+          height: 1,
+          width: "80%",
+          backgroundColor: "lightgrey",
+          marginLeft: Dimensions.get('window').width * 0.21
+        }}
+      />
+    );
+  }
+
   render() {
     return (
       <ImageBackground
-        source={require('../assets/images/bg.png')}
+        source={require('../assets/images/Home.png')}
         style={styles.bg}
       >
         <View style={styles.containerMessages}>
           <ScrollView>
             <View style={styles.top}>
+              <Image
+                style={styles.matchLogo}
+                source={require("../assets/images/Findr_logo2x.png")}
+              />
               <Text style={styles.title}>Messages</Text>
             </View>
 
             <FlatList
               data={this.state.chats}
               keyExtractor={(item, index) => index.toString()}
+              ItemSeparatorComponent = {this.FlatListItemSeparator}
               renderItem={({ item }) => (
                 <TouchableOpacity
                   onPress={async () =>
@@ -64,9 +89,12 @@ class Messages extends React.Component {
                   }
                 >
                   <Message
-                    image={{ uri: item.image }}
+                    image={{ uri: item.image, checksum: item.checksum }}
                     name={item.name}
-                    lastMessage={item.messages[item.messages.length - 1].msg}
+                    email={item.email}
+                    lastMessage={APIConnection.MESSAGE_QUEUES[item.email] ?
+                      APIConnection.MESSAGE_QUEUES[item.email].peekNewest().msg
+                      : item.messages[item.messages.length - 1].msg}
                   />
                 </TouchableOpacity>
               )}

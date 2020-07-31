@@ -6,144 +6,82 @@ const bodyParser = require("body-parser");
 const bcrypt = require("bcrypt");
 const DB = require("./utils/DatabaseManager");
 const AWS_Presigner = require("./utils/AWSPresigner");
-const { bindSocketListeners } = require("./utils/Chat");
+const { bindSocketListeners, Chat } = require("./utils/Chat");
 const matcher = new (require("./utils/Matcher").Matcher)();
 const { EventQueue } = require('./utils/Events');
-const sendEmail = require("./utils/emailer").sendEmail;
 const { CallbackQueue } = require("./utils/DataStructures");
+const { 
+	blockUser, 
+	deleteUser,
+	leftSwipe,
+	rightSwipe,
+	updateKeywords,
+	signUp
+} = require('./utils/Handlers').functions;
+const { SUPPORTED_UNIVERSITIES } = require("./vars");
 
 const callbackQueue = new CallbackQueue();
+const CONNECTIONS_CHUNK_SIZE = 25;
+const MESSAGES_CHUNK_SIZE = 50;
 var isServerOutdated = false;
-
-function validatePassword(password) {
-    const regex = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])[0-9a-zA-Z]{6,}$/;
-    return regex.test(password);
-}
-
-function generateRandomNumber() {
-	var randomNumber = "";
-	var i = 0;
-	for (i = 0; i < 8; i++){
-		randomDigit = Math.floor(Math.random() * 10);
-		randomNumber = randomNumber + randomDigit;
-	}
-	return randomNumber;
-}
-
-function signUp(requestData, res, oncomplete){
-	DB.insertUser(requestData)
-		.then(async (result) => {
-			if (process.env.NODE_ENV !== "test") {
-				sendEmail(requestData.email, requestData.verificationHash);
-			}
-
-			await matcher.generateGraph(requestData.email);
-			process.env.NODE_ENV === "test" ? res.status(201).send(requestData.verificationHash)
-			: res.status(201).send("success");
-			oncomplete();
-		})
-		.catch((err) => {
-			// unsuccessful insert, reply back with unsuccess response code
-			console.log(err);
-			res.status(500).send("Insert Failed");
-			oncomplete();
-		});
-}
-
-function updateKeywords(email, keywords, res, oncomplete){
-	DB.fetchUsers({ email }).then((users) => {
-		const oldKeywords = users[0].keywords;
-
-		DB.updateUser({ keywords }, { email })
-			.then((updateRes) => {
-				matcher.updateGraph(email, oldKeywords).then((value) => {
-					value ? res.status(201).send("success") : res.status(500).send("Server Error");
-					oncomplete();
-				}).catch((err) => {
-					console.log(err);
-					res.status(500).send("Server Error");
-					oncomplete();
-				})
-			})
-			.catch((err) => {
-				console.log(err);
-				res.status(500).send("Database Update Error");
-				oncomplete();
-			});
-	}).catch((err) => {
-		console.log(err);
-		res.status(500).send("Database Fetch Error");
-		oncomplete();
-	})
-}
-
-async function rightSwipe(srcUser, targetUser, res, oncomplete) {
-	try {
-		const swipeResult = await matcher.handleRightSwipe(srcUser, targetUser);
-		if (swipeResult.success) res.status(201).send({ isMatch: swipeResult.isMatch });
-		else res.status(500).send("Right Swipe Failed");
-
-		oncomplete();
-
-	} catch (error) {
-		console.log(error);
-		res.status(500).send("Server Error");
-		oncomplete();
-	}
-	
-}
-
-async function leftSwipe(srcUser, targetUser, res, oncomplete) {
-	try {
-		const success = await matcher.handleLeftSwipe(srcUser, targetUser);
-		if (success) res.status(201).end();
-		else res.status(500).send("Left Swipe Failed");
-
-		oncomplete();
-
-	} catch (error) {
-		console.log(error);
-		res.status(500).send("Server Error");
-		oncomplete();
-	}
-	
-}
-
-async function deleteUser(email, res, oncomplete) {
-	try {
-		const success = await matcher.deleteUser(email);
-		if (success) res.status(201).end();
-		else res.status(500).send("Delete User Failed");
-		oncomplete();
-
-	} catch (eror) {
-		console.log(error);
-		res.status(500).send("Server Error");
-		oncomplete();
-	}
-
-}
 
 app.use(bodyParser.json());
 
 app.get("/", (req, res) => {
 	if (!isServerOutdated) {
-		res.status(200).send("Server is Alive");
+		res.status(200).send((process.env.NODE_ENV === "test") ? "Test Server is Alive"
+				     : "Server is Alive");
 	} else {
 		res.status(503).send("Server is updating...");
 	}
 });
 
-app.get("/fetchUsers", (req, res) => {
-	DB.fetchUsers({ email: req.query.email })
+app.get("/user/:user_email", async (req, res) => {
+	const projection = process.env.NODE_ENV !== "test" ? {
+		_id: 0,
+		password: 0,
+		chats: 0,
+		blueConnections: 0,
+		greenConnections: 0,
+		eventQueue: 0,
+		verificationHash: 0
+	} : {};
+
+	try {
+		const users = await DB.fetchUsers({ email: req.params.user_email }, { projection });
+		if (users.length === 0) {
+			res.status(404).send("user not found");
+			return;
+		}
+
+		const user = users[0];
+		if (process.env.NODE_ENV !== "test") {
+			user.image = await AWS_Presigner.generateSignedGetUrl(
+				"user_images/" + user.email
+			);
+		}
+
+		res.status(200).send(user);
+	} catch (error) {
+		console.log(error);
+		res.status(500).send("Database Fetch Error");
+	}
+});
+
+app.post("/fetchUsers", (req, res) => {
+	const projection = process.env.NODE_ENV !== "test" ? {
+		_id: 0,
+		password: 0,
+		chats: 0,
+		blueConnections: 0,
+		greenConnections: 0,
+		eventQueue: 0,
+		verificationHash: 0
+	} : {};
+	DB.fetchUsers({ email: { $in: req.body.emails } }, { projection })
 		.then(async function (result) {
 			if (process.env.NODE_ENV !== "test") {
 				for (var i = 0; i < result.length; i++) {
-					delete result[i].password;
-					delete result[i].chats;
-					delete result[i].blueConnections;
-					delete result[i].greenConnections;
-					delete result[i].verificationHash;
 
 					result[i].image = await AWS_Presigner.generateSignedGetUrl(
 						"user_images/" + result[i].email
@@ -159,19 +97,22 @@ app.get("/fetchUsers", (req, res) => {
 		});
 });
 
-app.get("/fetchMatches", (req, res) => {
-	matcher
-		.getMatches(req.query.email)
+app.get("/user/:user_email/matches", (req, res) => {
+	matcher.getMatches(req.params.user_email)
 		.then((matches) => {
-			DB.fetchUsers({ _id: { $in: matches } })
+			const projection = {
+				_id: 0,
+				password: 0,
+				chats: 0,
+				blueConnections: 0,
+				greenConnections: 0,
+				eventQueue: 0,
+				verificationHash: 0
+			};
+			DB.fetchUsers({ _id: { $in: matches } }, { projection })
 				.then(async (users) => {
 					if (process.env.NODE_ENV !== "test") {
 						for (var i = 0; i < users.length; i++) {
-							delete users[i].password;
-							delete users[i].chats;
-							delete users[i].blueConnections;
-							delete users[i].greenConnections;
-							delete users[i].verificationHash;
 
 							users[i].image = await AWS_Presigner.generateSignedGetUrl(
 								"user_images/" + users[i].email
@@ -186,15 +127,24 @@ app.get("/fetchMatches", (req, res) => {
 					console.log(err);
 					res.status(500).send("Database Fetch Error");
 				});
-		})
-		.catch((err) => {
-			console.log(err);
-			res.status(500).send("Server Error");
-		});
+			})
+			.catch((err) => {
+				console.log(err);
+				res.status(500).send("Server Error");
+			});
 });
 
-app.get("/fetchConnections", (req, res) => {
-	DB.fetchUsers({ email: req.query.email })
+app.get("/user/:user_email/connections", (req, res) => {
+	var projection = {
+		_id: 0,
+		password: 0,
+		chats: 0,
+		blueConnections: { $slice: CONNECTIONS_CHUNK_SIZE },
+		greenConnections: 0,
+		eventQueue: 0,
+		verificationHash: 0
+	};
+	DB.fetchUsers({ email: req.params.user_email }, { projection })
 		.then((result) => {
 			
 			if (result.length === 0) {
@@ -212,16 +162,20 @@ app.get("/fetchConnections", (req, res) => {
 			user.blueConnections.forEach(element => {
 				ids.push(element._id);
 			});
-			DB.fetchUsers({ _id: { $in: ids } })
+
+			projection = {
+				_id: 0,
+				password: 0,
+				chats: 0,
+				blueConnections: 0,
+				greenConnections: 0,
+				eventQueue: 0,
+				verificationHash: 0
+			};
+			DB.fetchUsers({ _id: { $in: ids } }, { projection })
 				.then(async (connections) => {
 					for (let i = 0; i < connections.length; i++) {
 						const element = connections[i];
-
-						delete element.password;
-						delete element.chats;
-						delete element.blueConnections;
-						delete element.greenConnections;
-						delete element.verificationHash;
 
 						if (process.env.NODE_ENV !== "test") {
 							element.image = await AWS_Presigner.generateSignedGetUrl(
@@ -230,7 +184,7 @@ app.get("/fetchConnections", (req, res) => {
 						}
 					}
 
-					res.status(200).send(JSON.stringify(connections));
+					res.status(200).send(connections);
 				})
 				.catch((err) => {
 					console.log(err);
@@ -243,9 +197,50 @@ app.get("/fetchConnections", (req, res) => {
 		});
 });
 
+app.get("/user/:user_email/pendingMatches", (req, res) => {
+	matcher.getPendingMatches(req.params.user_email)
+	.then((pendingMatches) => {
+		const projection = {
+			_id: 0,
+			password: 0,
+			chats: 0,
+			blueConnections: 0,
+			greenConnections: 0,
+			eventQueue: 0,
+			verificationHash: 0
+		};
+
+		DB.fetchUsers({ _id: { $in: pendingMatches } }, { projection })
+				.then(async (users) => {
+					if (process.env.NODE_ENV !== "test") {
+						for (var i = 0; i < users.length; i++) {
+
+							users[i].image = await AWS_Presigner.generateSignedGetUrl(
+								"user_images/" + users[i].email
+							);
+						}
+					}
+					
+
+					res.status(200).send(users);
+				})
+				.catch((err) => {
+					console.log(err);
+					res.status(500).send("Database Fetch Error");
+				});
+		
+	})
+	.catch((err) => {
+		console.log(err);
+		res.status(500).send("Server Error");
+	})
+});
+
 app.get("/fetchChatData", (req, res) => {
 	const MSG_TO = req.query.to;
-	DB.fetchUsers({ email: req.query.from })
+	var projection = { chats: 1 };
+	const skipCount = Number(req.query.skipCount);
+	DB.fetchUsers({ email: req.query.from }, { projection })
 		.then(async (users) => {
 			const user = users[0];
 			var chatFound = false;
@@ -253,11 +248,16 @@ app.get("/fetchChatData", (req, res) => {
 
 			for (let i = 0; i < user.chats.length && !chatFound; i++) {
 				try {
-					chat = (await DB.fetchChat(user.chats[i]))[0].chat;
+					projection = { 'chat.user1': 1, 'chat.user2': 1 };
+					chat = (await DB.fetchChat(user.chats[i], { projection }))[0].chat;
 
 					if (chat.user1 === MSG_TO || chat.user2 === MSG_TO) {
 						chatFound = true;
+						projection = { "chat.messages": { $slice: [ -skipCount - MESSAGES_CHUNK_SIZE, MESSAGES_CHUNK_SIZE] } }
+						// projection = { chat: { messages: { $slice: [ -skipCount, MESSAGES_CHUNK_SIZE] } } };
+						chat = (await DB.fetchChat(user.chats[i], { projection }))[0].chat;
 						res.status(200).send(JSON.stringify(chat));
+						break;
 					}
 				} catch (err) {
 					console.log("err fetching chats");
@@ -275,8 +275,10 @@ app.get("/fetchChatData", (req, res) => {
 		});
 });
 
-app.get('/fetchChats', (req, res) => {
-	DB.fetchUsers({ email: req.query.email })
+app.get('/user/:user_email/chats', (req, res) => {
+	var projection = { chats: 1, email: 1 };
+
+	DB.fetchUsers({ email: req.params.user_email }, { projection })
 	  .then(async (users) => {
 		const user = users[0];
 		let chat_emails = [];
@@ -286,8 +288,9 @@ app.get('/fetchChats', (req, res) => {
 			chat.chat.user1 === user.email ? chat.chat.user2 : chat.chat.user1
 		  );
 		}
-  
-		DB.fetchUsers({ email: { $in: chat_emails } })
+		
+		projection = { name: 1, email: 1 };
+		DB.fetchUsers({ email: { $in: chat_emails } }, { projection })
 		  .then(async (chat_users) => {
 			let chats = [];
 			for (let i = 0; i < chat_users.length; i++) {
@@ -314,9 +317,9 @@ app.get('/fetchChats', (req, res) => {
 	  });
 });
 
-app.get("/fetchChatMedia", async (req, res) => {
+app.get("/chat_media/:mediaName", async (req, res) => {
 	try {
-		const downUrl = await AWS_Presigner.generateSignedGetUrl("chat_media/" + req.query.name, 30);
+		const downUrl = await AWS_Presigner.generateSignedGetUrl("chat_media/" + req.params.mediaName, 30);
 		res.status(200).send(downUrl);
 	} catch (error) {
 		console.log(error);
@@ -324,8 +327,9 @@ app.get("/fetchChatMedia", async (req, res) => {
 	}
 });
 
-app.get("/fetchNotifications", (req, res) => {
-	DB.fetchUsers({ email: req.query.email })
+app.get("/user/:user_email/notifications", (req, res) => {
+	const projection = { eventQueue: 1 };
+	DB.fetchUsers({ email: req.params.user_email }, { projection })
 		.then(async (users) => {
 			const user = users[0];
 			const userEventQueue = new EventQueue(user.eventQueue.events);
@@ -355,8 +359,16 @@ app.post("/updateUserInfo", (req, res) => {
 		res.status(400).send("missing user email");
 		return;
 	}
+	if (user.keywords) delete user.keywords;
+	if (user.gender) {
+		if (user.gender !== 'M' && user.gender !== 'F' &&
+		user.gender !== 'O' && user.gender !== 'P') {
+			delete user.gender;
+		}
+	}
 
-	DB.fetchUsers({ email: user.email }).then(async (users) => {
+	const projection = { password: 1 };
+	DB.fetchUsers({ email: user.email }, { projection }).then(async (users) => {
 
 		if (user.password !== undefined) {
 			if (!validatePassword(user.password) || !bcrypt.compareSync(user.oldPassword, users[0].password)) {
@@ -391,18 +403,45 @@ app.get("/leftSwipe", (req, res) => {
 	callbackQueue.enqueue(leftSwipe, srcUser, targetUser, res);
 });
 
+app.get("/blockUser", async (req, res) => {
+	const srcUser = req.query.src;
+	const targetUser = req.query.target;
+
+	callbackQueue.enqueue(blockUser, srcUser, targetUser, res);
+
+	try {
+		const user = (await DB.fetchUsers({ email: srcUser }))[0];
+
+		for (let i = 0; i < user.chats.length; i++) {
+			const chat = (await DB.fetchChat(user.chats[i]))[0].chat;
+			if (chat.user1 === targetUser || chat.user2 === targetUser) {
+				chat = Chat.parseJSON(chat);
+				chat.disableChat(targetUser);
+				break;
+			}
+		}
+	} catch (error) {
+		console.log(error);
+	}
+});
+
 app.get("/deleteUser", (req, res) => {
 	const email = req.query.email;
 	callbackQueue.enqueue(deleteUser, email, res);
 });
 
-app.get("/updateProfilePicture", async (req, res) => {
-	const email = req.query.email;
-	var url = await AWS_Presigner.generateSignedPutUrl("user_images/" + email);
+app.get("/user/:user_email/updateProfilePicture", async (req, res) => {
+	const email = req.params.user_email;
+	var url = await AWS_Presigner.generateSignedPutUrl("user_images/" + email, req.query.type);
+	DB.updateUser({ checksum: req.query.checksum }, { email });
 	res.status(200).send(url);
 });
 
-app.post("/new-user", (req, res) => {
+app.get("/supportedUniversities", (req, res) => {
+	res.status(200).send(SUPPORTED_UNIVERSITIES);
+});
+
+app.post("/signup", (req, res) => {
 	if (process.env.NODE_ENV === "test") {
 		for (let i = 0; i < req.body.keywords.length; i++) {
 			req.body.keywords[i] = req.body.keywords[i].toLowerCase();
@@ -413,10 +452,10 @@ app.post("/new-user", (req, res) => {
 		name: req.body.name,
 		email: req.body.email,
 		password: bcrypt.hashSync(req.body.password, 10),
-		gender: req.body.gender,
+		gender: '',
 		uni: req.body.uni,
 		major: req.body.major,
-		age: Number(req.body.age),
+		age: req.body.age,
 		clubs: [],
 		projects: [],
 		experience: [],
@@ -425,9 +464,10 @@ app.post("/new-user", (req, res) => {
 		bio: "",
 		blueConnections: [],
 		greenConnections: [],
+		blockedUsers: [],
 		eventQueue: { events: [] },
 		active: false,
-		verificationHash: bcrypt.hashSync(req.body.email + generateRandomNumber(), 3)
+		verificationHash: generateVerificationHash(req.body.email)
 	};
 	
 	callbackQueue.enqueue(signUp, requestData, res);
@@ -435,7 +475,12 @@ app.post("/new-user", (req, res) => {
 });
 
 app.get("/verifyUserEmail", (req, res) => {
-	DB.fetchUsers({ verificationHash: req.query.key })
+	const projection = { email: 1, active: 1  };
+	if (!req.query.key){
+		res.status(400).send("Verfication key missing");
+		return;
+	}
+	DB.fetchUsers({ verificationHash: req.query.key }, { projection })
 		.then(async (users) => {
 			if (users.length === 0) {
 				res.status(404).send("User doesn't exist");
@@ -459,7 +504,15 @@ app.post("/login", (req, res) => {
 		password: req.body.password,
 	};
 
-	DB.fetchUsers({ email: requestData.email })
+	const projection = { 
+		_id: 0,
+		chats: 0,
+		blueConnections: 0,
+		greenConnections: 0,
+		eventQueue: 0,
+		verificationHash: 0
+	};
+	DB.fetchUsers({ email: requestData.email }, { projection })
 		.then((users) => {
 			if (users.length < 1) {
 				res.status(401).send("Invalid Email");
@@ -469,7 +522,8 @@ app.post("/login", (req, res) => {
 			let user = users[0];
 			if (bcrypt.compareSync(requestData.password, user.password)) {
 				// Passwords match
-				res.status(200).send(JSON.stringify(user));
+				delete user.password;
+				res.status(200).send(user);
 			} else {
 				// Passwords don't match
 				res.status(401).send("Invalid password");
@@ -491,9 +545,34 @@ app.post("/update", (req, res) => {
 	res.end();
 });
 
+function validatePassword(password) {
+    const regex = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])[0-9a-zA-Z]{6,}$/;
+    return regex.test(password);
+}
+
+function generateRandomNumber() {
+	var randomNumber = "";
+	var i = 0;
+	for (i = 0; i < 8; i++){
+		randomDigit = Math.floor(Math.random() * 10);
+		randomNumber = randomNumber + randomDigit;
+	}
+	return randomNumber;
+}
+
+function generateVerificationHash(email) {
+	let hash = bcrypt.hashSync(email + generateRandomNumber(), 3);
+	while (hash.endsWith('.')) {
+		hash = hash.substr(0, hash.length - 1);
+	}
+
+	return hash;
+}
+
 /* Socket Listeners for chat */
 bindSocketListeners(io);
 
-http.listen(3000, () => {
+const port = (process.env.NODE_ENV === "test") ? 8100 : 3000;
+http.listen(port, () => {
 	console.log("Server is running");
 });

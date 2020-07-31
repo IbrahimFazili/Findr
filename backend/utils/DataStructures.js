@@ -25,20 +25,18 @@ class Queue {
 }
 
 /**
- * Special Type of Queue to execute function calls that need to executed in
+ * Special Type of Queue to execute function calls that need to be executed in
  * a synchronized fashion
  */
 class CallbackQueue extends Queue {
 
     constructor() {
-        super();
-        this.isFirst = true;
-        this.onenqueue = function () {
+        super(function () {
             if (this.isFirst) this.dequeue();
-        }
-        this.ondequeue = function () {
+        }, function () {
             this.isFirst = false;
-        }
+        });
+        this.isFirst = true;
     }
 
     /**

@@ -3,12 +3,14 @@ import styles from "../assets/styles";
 
 import { Text, View, Image, Dimensions, TouchableOpacity } from "react-native";
 import Icon from "./Icon";
+import CachedImage from "./CachedImage";
 
 const CardItem = ({
   actions,
   description,
   image,
   name,
+  email,
   keywords,
   onPressLeft,
   onPressRight,
@@ -64,7 +66,7 @@ const CardItem = ({
 
   const theHeight = [
     {
-      height: variant ? fullHeight * 0.2 : fullHeight * 0.685,
+      height: variant ? fullHeight * 0.2 : fullHeight * 0.75,
     },
   ];
 
@@ -77,7 +79,7 @@ const CardItem = ({
     >
       {/* IMAGE */} 
       <View style={imageWrapperStyle}>
-        <Image source={image} style={imageStyle} />
+        <CachedImage uri={image.uri} uid={email} style={imageStyle} checksum={image.checksum}/>
       </View>
 
       {/* NAME */}
