@@ -223,6 +223,17 @@ export default StyleSheet.create({
     // overflow: "hidden",
   },
 
+  matchPop: {
+    backgroundColor: WHITE,
+    borderRadius: 20,
+    top: DIMENSION_HEIGHT * 0.3,
+    maxHeight: DIMENSION_HEIGHT * 0.3,
+    width: DIMENSION_WIDTH * 0.85,
+    alignSelf: "center",
+    borderRadius: 30,
+    position: "relative"
+  },
+
   blurredView: {
     flex: 1, 
     justifyContent: "center", 
@@ -608,6 +619,29 @@ export default StyleSheet.create({
     bottom: DIMENSION_WIDTH * 0.01
     // fontWeight: 'bold'
   },
+  profileTitleGender: {
+    fontSize: 15,
+    color: DARK_GRAY,
+    paddingHorizontal: 10,
+    position: 'absolute',
+    top: 10,
+    left: DIMENSION_WIDTH * 0.05
+    // fontWeight: 'bold'
+  },
+  profileTitleBio: {
+    fontSize: 15,
+    color: DARK_GRAY,
+    paddingHorizontal: 10,
+    left: 33
+    // fontWeight: 'bold'
+  },
+  profileTitleEmail: {
+    fontSize: 15,
+    color: DARK_GRAY,
+    paddingHorizontal: 15,
+    left: 20
+    // fontWeight: 'bold'
+  },
   profileButtons: {
     marginLeft: DIMENSION_WIDTH * 0.13,
     marginTop: DIMENSION_HEIGHT * 0.025,
@@ -850,6 +884,70 @@ export default StyleSheet.create({
     marginLeft: DIMENSION_WIDTH * 0.05,
     width: DIMENSION_WIDTH * 0.25,
     height: DIMENSION_HEIGHT * 0.1,
+  },
+
+  usernameHome: {
+    paddingBottom: 7,
+    marginTop: 0,
+    color: '#363636',
+    fontSize: 20,
+    fontFamily: "-apple-system, BlinkMacSystemFont, sans-serif;",
+    alignSelf: 'center',
+    top: DIMENSION_HEIGHT * 0.035,
+  },
+
+  buttonText: {
+    paddingBottom: 7,
+    marginTop: 0,
+    fontSize: 15,
+    fontFamily: "sans-serif",
+    color: "#1a5d57",
+    alignSelf: 'center',
+  },
+
+  ignoreText:{
+    paddingBottom: 7,
+    marginTop: 0,
+    fontSize: 15,
+    fontFamily: "sans-serif",
+    alignSelf: 'center',
+    color: "#d16969",
+  },
+
+  ignoreButtonStyle: {
+    borderBottomRightRadius: 30,
+    borderColor: "black",
+    borderWidth: 0.06,
+  },
+
+  chatButtonStyle: {
+    borderBottomLeftRadius: 30,
+    borderColor: "black",
+    borderWidth: 0.06,
+  },
+
+  match: {
+    paddingBottom: 7,
+    marginTop: 0,
+    top: DIMENSION_HEIGHT * 0.05,
+    color: '#363636',
+    fontSize: 15,
+    alignSelf: 'center'
+  },
+
+  chatButton:{
+    width: DIMENSION_WIDTH * 0.425,
+    position: 'absolute',
+    bottom: 0,
+    left: 0,
+    borderBottomLeftRadius: 20,
+  },
+
+  ignoreButton:{
+    width: DIMENSION_WIDTH * 0.425,
+    position: 'absolute',
+    bottom: 0,
+    right: 0
   },
 
   slide0: {

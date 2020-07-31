@@ -81,7 +81,7 @@ const CardItem = ({
     >
       {/* IMAGE */} 
       <View style={imageWrapperStyle}>
-        <CachedImage uri={image.uri} uid={email} style={imageStyle} />
+        <CachedImage uri={image.uri} uid={email} style={imageStyle} checksum={image.checksum}/>
       </View>
 
       {/* NAME */}

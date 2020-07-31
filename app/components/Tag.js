@@ -52,7 +52,7 @@ class Tag extends React.Component {
           tags={this.state.tags}
           placeholder=
           { this.state.edit? 
-            `Enter a ${this.state.type}` : "What are you interested in?"}    
+            `Enter a ${this.state.type}` : ""}    
           inputContainerStyle={styles.textInput}
           inputStyle={{color: 'black'}}
           onFocus={() => this.setState({tagsColor: '#fff', tagsText: mainColor})}

@@ -21,7 +21,7 @@ class Messages extends React.Component {
     this.state = { API: new APIConnection(), chats: [] };
   }
 
-  async componentDidMount() {
+  async loadData(){
     let data = await this.state.API.fetchChats(
       await AsyncStorage.getItem('storedEmail')
     );
@@ -36,6 +36,11 @@ class Messages extends React.Component {
     }
 
     this.setState({ chats: data });
+  }
+
+  async componentDidMount() {
+    this.loadData();
+    APIConnection.attachMessagePageNotifier(this.loadData.bind(this));
   }
 
   FlatListItemSeparator = () => {
@@ -84,7 +89,7 @@ class Messages extends React.Component {
                   }
                 >
                   <Message
-                    image={{ uri: item.image }}
+                    image={{ uri: item.image, checksum: item.checksum }}
                     name={item.name}
                     email={item.email}
                     lastMessage={APIConnection.MESSAGE_QUEUES[item.email] ?

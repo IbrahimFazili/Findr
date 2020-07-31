@@ -4,7 +4,7 @@ config:
     - duration: 10
       arrivalRate: 20
   payload:
-      path: "users.csv"
+      path: "test/500.csv"
       fields:
         - "email"
         - "password"
@@ -22,4 +22,14 @@ scenarios:
         url: "/user/{{ email }}/chats"
     - get:
         url: "/fetchChatData?from={{ email }}&to={{ email }}&skipCount=0"
+
+  - flow:
+    - get:
+        url: "/user/{{ email }}/connections"    
+    - get:
+        url: "/rightSwipe?src={{ email }}&target={{ email }}"
+    - get:
+        url: "/leftSwipe?src={{ email }}&target={{ email }}"
+        
+
       

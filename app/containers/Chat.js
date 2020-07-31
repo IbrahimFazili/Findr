@@ -10,7 +10,6 @@ import {
 	Dimensions,
 } from "react-native";
 import { Header, Image, ThemeConsumer } from "react-native-elements";
-import KeyboardSpacer from "react-native-keyboard-spacer";
 import AutogrowInput from "react-native-autogrow-input";
 import { moderateScale } from "react-native-size-matters";
 import ImagePicker from "react-native-image-picker";
@@ -20,25 +19,10 @@ import APIConnection from "../assets/data/APIConnection";
 import AttachIcon from "../assets/icons/attach.svg";
 import SendIcon from "../assets/icons/send_icon.svg";
 import BackButton from "../assets/icons/back_black.svg";
-import InfoIcon from "../assets/icons/i_icon.svg";
 
-import ChatPopup from "../components/ChatPopup";
-
-//beepboop
 const DIMENSION_WIDTH = Dimensions.get("window").width;
 const DIMENSION_HEIGHT = Dimensions.get("window").height;
-const ICON_FONT = "tinderclone";
-const WHITE = "#FFFFFF";
-const BLACK = "#000000";
-
-const renderCustomHeader = () => {
-	return (
-		<Image
-			style={{ width: 50, height: 50 }}
-			source={require("../assets/images/Findr_logo2x.png")}
-		/>
-	);
-};
+const ICON_FONT = "sans-serif";
 
 function convertTimestamptoTime(unixTimestamp) {
 	dateObj = new Date(unixTimestamp);
@@ -48,10 +32,16 @@ function convertTimestamptoTime(unixTimestamp) {
 	if (hours >= 12) {
 		hours = hours % 12;
 		formattedTime =
-			hours.toString() + ":" + minutes.toString().padStart(2, "0") + " PM";
+			hours.toString() +
+			":" +
+			minutes.toString().padStart(2, "0") +
+			" PM";
 	} else {
 		formattedTime =
-			hours.toString() + ":" + minutes.toString().padStart(2, "0") + " AM";
+			hours.toString() +
+			":" +
+			minutes.toString().padStart(2, "0") +
+			" AM";
 	}
 
 	return formattedTime;
@@ -115,7 +105,8 @@ export default class Chat extends Component {
     );
 
     APIConnection.attachObserver(this.onNewMessage.bind(this), this.state.other_user_email);
-    this.onNewMessage();
+	this.onNewMessage();
+	
   }
 
   //this is a bit sloppy: this is to make sure it scrolls to the bottom when a message is added, but
@@ -142,6 +133,7 @@ export default class Chat extends Component {
       });
     }
     if (newMessages.length > 0) {
+	  APIConnection.MessagesPage ? APIConnection.MessagesPage.notify() : null;
       this.setState({ messages: this.state.messages.concat(newMessages) });
     }
   }
@@ -170,7 +162,9 @@ export default class Chat extends Component {
       public_key: null
     }
 
-    APIConnection.socket.emit("new msg", msg);
+	APIConnection.socket.emit("new msg", msg);
+	
+	APIConnection.MessagesPage ? APIConnection.MessagesPage.notify() : null;
 
     this.setState({
       messages: this.state.messages,
@@ -259,33 +253,21 @@ export default class Chat extends Component {
 									source={this.state.other_user_image}
 									key={this.state.own_email}
 								/>
-								<Text style={styles.headerTest}>
-									{this.state.other_user}
-								</Text>
-							</View>
-						);
-					}}
-					rightComponent={() => {
-						return (
-							<View>
 								<TouchableOpacity
 									onPress={() =>
-										this.setState({
-											showPopup: true,
-										})
+										this.props.navigation.navigate(
+											"OtherProfile2",
+											{
+												email: this.state.other_user_email,
+											}
+										)
 									}
+									style={{width: styles.headerTest.width, height: DIMENSION_HEIGHT * 0.05, justifyContent: 'center'}}
 								>
-									<InfoIcon
-										width={DIMENSION_WIDTH * 0.058}
-										height={DIMENSION_HEIGHT * 0.058}
-									/>
+									<Text style={styles.headerTest}>
+										{this.state.other_user}
+									</Text>
 								</TouchableOpacity>
-								<ChatPopup
-									visible={this.state.showPopup}
-									email={this.state.other_user_email}
-									navigation={this.props.navigation}
-									own_email={this.state.own_email}
-								/>
 							</View>
 						);
 					}}
@@ -298,39 +280,46 @@ export default class Chat extends Component {
 					}}
 				/>
 
-				<ScrollView
-					ref={(ref) => {
-						this.scrollView = ref;
-					}}
-					style={styles.messages}
-				>
-					{messages}
-				</ScrollView>
-				<InputBar
-					onSendPressed={() => this._sendMessage()}
-					onSizeChange={() => this._onInputSizeChange()}
-					onChangeText={(text) =>
-						this._onChangeInputBarText(text)
-					}
-					text={this.state.inputBarText}
-				/>
-			</ImageBackground>
-		</View>
-	);
-  }
+					<ScrollView
+						ref={(ref) => {
+							this.scrollView = ref;
+						}}
+						style={styles.messages}
+					>
+						{messages}
+					</ScrollView>
+					<InputBar
+						onSendPressed={() => this._sendMessage()}
+						onSizeChange={() => this._onInputSizeChange()}
+						onChangeText={(text) =>
+							this._onChangeInputBarText(text)
+						}
+						text={this.state.inputBarText}
+					/>
+				</ImageBackground>
+			</View>
+		);
+	}
 }
 
 //The bubbles that appear on the left or the right for the messages.
 class MessageBubble extends Component {
+	_computeBubbleWidth() {
+		let initLen = this.props.text.length;
+		const maxWidth = DIMENSION_WIDTH * 0.38;
+		// 4/3 
+		return Math.max(maxWidth, DIMENSION_WIDTH - (initLen * (maxWidth / 29)));
+	}
+
 	render() {
 		//These spacers make the message bubble stay to the left or the right, depending on who is speaking, even if the message is multiple lines.
 		var rightSpacer =
 			this.props.direction === "left" ? null : (
-				<View style={{ width: "40%" }} />
+				<View style={{ width: "10%" }} />
 			);
 		var leftSpacer =
 			this.props.direction === "left" ? (
-				<View style={{ width: "40%" }} />
+				<View style={{ width: "10%" }} />
 			) : null;
 
 		var bubbleStyles =
@@ -383,74 +372,82 @@ class MessageBubble extends Component {
 
 //The bar at the bottom with a textbox and a send button.
 class InputBar extends Component {
-  //AutogrowInput doesn't change its size when the text is changed from the outside.
-  //Thus, when text is reset to zero, we'll call it's reset function which will take it back to the original size.
-  //Another possible solution here would be if InputBar kept the text as state and only reported it when the Send button
-  //was pressed. Then, resetInputText() could be called when the Send button is pressed. However, this limits the ability
-  //of the InputBar's text to be set from the outside.
-  componentWillReceiveProps(nextProps) {
-    if (nextProps.text === '') {
-      this.autogrowInput.resetInputText();
-    }
-  }
+	//AutogrowInput doesn't change its size when the text is changed from the outside.
+	//Thus, when text is reset to zero, we'll call it's reset function which will take it back to the original size.
+	//Another possible solution here would be if InputBar kept the text as state and only reported it when the Send button
+	//was pressed. Then, resetInputText() could be called when the Send button is pressed. However, this limits the ability
+	//of the InputBar's text to be set from the outside.
+	componentWillReceiveProps(nextProps) {
+		if (nextProps.text === "") {
+			this.autogrowInput.resetInputText();
+		}
+	}
 
-  chooseImage = () => {
-    let options = {
-      title: 'Select Image',
-      storageOptions: {
-        skipBackup: true,
-        path: 'images',
-      },
-    };
-    ImagePicker.showImagePicker(options, (response) => {
+	chooseImage = () => {
+		let options = {
+			title: "Select Image",
+			storageOptions: {
+				skipBackup: true,
+				path: "images",
+			},
+		};
+		ImagePicker.showImagePicker(options, (response) => {
+			if (response.didCancel) {
+				console.log("User cancelled image picker");
+			} else if (response.error) {
+				console.log("ImagePicker Error: ", response.error);
+			} else if (response.customButton) {
+				console.log(
+					"User tapped custom button: ",
+					response.customButton
+				);
+				alert(response.customButton);
+			} else {
+				const source = { uri: response.uri };
 
-      if (response.didCancel) {
-        console.log('User cancelled image picker');
-      } else if (response.error) {
-        console.log('ImagePicker Error: ', response.error);
-      } else if (response.customButton) {
-        console.log('User tapped custom button: ', response.customButton);
-        alert(response.customButton);
-      } else {
-        const source = { uri: response.uri };
+				// file type: response.type
+				// file name: response.fileName
+				this.props.onChangeMedia(response);
+			}
+		});
+	};
 
-        // file type: response.type
-        // file name: response.fileName
-        this.props.onChangeMedia(response);
-      }
-    });
-  };
-
-  render() {
-    return (
-      <View style={styles.inputBar}>
-        <TouchableOpacity
-        style={styles.mediaButton}
-        onPress={() => this.chooseImage()}
-        >
-          <AttachIcon width={DIMENSION_WIDTH * 0.07} height={DIMENSION_HEIGHT * 0.07}/>
-        </TouchableOpacity>
-        <AutogrowInput
-          style={styles.textBox}
-          ref={(ref) => {
-            this.autogrowInput = ref;
-          }}
-          multiline={true}
-          defaultHeight={DIMENSION_HEIGHT * 0.07}
-          onChangeText={(text) => this.props.onChangeText(text)}
-          onContentSizeChange={this.props.onSizeChange}
-          value={this.props.text}
-          placeholder={"Type a message"}
-        />
-        <TouchableOpacity
-          style={styles.sendButton}
-          onPress={() => this.props.onSendPressed()}
-        >
-          <SendIcon width={DIMENSION_WIDTH * 0.1} height={DIMENSION_HEIGHT * 0.1}/>
-        </TouchableOpacity>
-      </View>
-    );
-  }
+	render() {
+		return (
+			<View style={styles.inputBar}>
+				<TouchableOpacity
+					style={styles.mediaButton}
+					onPress={() => this.chooseImage()}
+				>
+					<AttachIcon
+						width={DIMENSION_WIDTH * 0.07}
+						height={DIMENSION_HEIGHT * 0.07}
+					/>
+				</TouchableOpacity>
+				<AutogrowInput
+					style={styles.textBox}
+					ref={(ref) => {
+						this.autogrowInput = ref;
+					}}
+					multiline={true}
+					defaultHeight={DIMENSION_HEIGHT * 0.07}
+					onChangeText={(text) => this.props.onChangeText(text)}
+					onContentSizeChange={this.props.onSizeChange}
+					value={this.props.text}
+					placeholder={"Type a message"}
+				/>
+				<TouchableOpacity
+					style={styles.sendButton}
+					onPress={() => this.props.onSendPressed()}
+				>
+					<SendIcon
+						width={DIMENSION_WIDTH * 0.1}
+						height={DIMENSION_HEIGHT * 0.1}
+					/>
+				</TouchableOpacity>
+			</View>
+		);
+	}
 }
 
 //TODO: separate these out. This is what happens when you're in a hurry!
@@ -509,14 +506,12 @@ const styles = StyleSheet.create({
 	//MessageBubble
 
 	messageBubble: {
-		maxWidth: moderateScale(250, 2),
+		maxWidth: DIMENSION_WIDTH * 0.8,
 		paddingHorizontal: moderateScale(10, 2),
 		paddingTop: moderateScale(5, 2),
 		paddingBottom: moderateScale(7, 2),
 		borderRadius: 20,
 		marginTop: DIMENSION_HEIGHT * 0.015,
-		flexDirection: "row",
-		flex: 1,
 		elevation: 5,
 	},
 
@@ -556,7 +551,7 @@ const styles = StyleSheet.create({
 	},
 	headerTest: {
 		color: "#334856",
-		width: 100,
+		width: DIMENSION_WIDTH * 0.5,
 	},
 	profilepic: {
 		flex: 1,
@@ -624,7 +619,9 @@ const styles = StyleSheet.create({
 		marginRight: DIMENSION_WIDTH * 0.35,
 	},
 	chatBack: {
-		marginRight: DIMENSION_WIDTH * 0.05,
+		marginLeft: DIMENSION_WIDTH * 0.1,
 		width: 30,
+		height: DIMENSION_HEIGHT * 0.05,
+		justifyContent: 'center',
 	},
 });

@@ -11,6 +11,7 @@ import {
 	FlatList,
 	AsyncStorage,
 	NetInfo,
+	Dimensions,
 } from "react-native";
 import CardItem from "../components/CardItem";
 import APIConnection from "../assets/data/APIConnection";
@@ -38,16 +39,22 @@ class Matches extends React.Component {
 		};
 	}
 
-	async componentDidMount() {
+	async loadData(){
 		const data = await this.state.API.fetchMatches(
 			await AsyncStorage.getItem("storedEmail")
 		);
 		this.scrollView.scrollToEnd({ animated: true, duration: 1000 });
 		this.setState({ cards: data });
+	}
+
+	async componentDidMount() {
+		this.loadData();
 		NetInfo.isConnected.addEventListener(
 			"connectionChange",
 			this.handleConnectivityChange
 		);
+
+		APIConnection.attachMatchPageNotifier(this.loadData.bind(this));
 	}
 
 	async componentWillUnmount() {
@@ -115,7 +122,7 @@ class Matches extends React.Component {
 						<View style={styles.matchTopSub}>
 							<Text style={styles.matchTitle}>Matches</Text>
 						</View>
-						<View style={{paddingHorizontal: 10}}>
+						<View style={{ paddingHorizontal: 10 }}>
 							<FlatList
 								numColumns={2}
 								data={this.state.cards}
@@ -133,7 +140,7 @@ class Matches extends React.Component {
 										}
 									>
 										<CardItem
-											image={{ uri: item.image }}
+											image={{ uri: item.image, checksum: item.checksum }}
 											name={item.name}
 											status={"Online"}
 											email={item.email}

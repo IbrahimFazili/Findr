@@ -55,23 +55,53 @@ class CachedImage extends React.Component {
         RNFS.downloadFile({ fromUrl: uri, toFile: path }).promise.then((res) => this.loadFile(path));
     }
 
+    /**
+     * Compute checksum of existing image in cache and compare it with the recieved checksum to check
+     * if the cached image needs to be updated
+     * @param {String} checksum checksum of the image that exists on the provided url
+     * @param {String} existingPath path of the cached image
+     */
+    async cacheRefreshRequired(checksum, existingPath) {
+        console.log('inside checksum', checksum);
+        const computedChecksum = await RNFS.hash(existingPath, "md5");
+        console.log('computed', computedChecksum);
+        if (checksum !== computedChecksum) return true;
+        return false;
+    }
+
     componentDidMount = () => {;
-        const { uri, uid } = this.props;
+        const { uri, uid, checksum } = this.props;
         if (uid === undefined) return;
         const name = shorthash.unique(uid);
         const extension = (Platform.OS === 'android') ? 'file://' : '' 
         const path =`${extension}${RNFS.CachesDirectoryPath}/${name}`;
         this.updateExpiryTime(name);
-        RNFS.exists(path).then((exists) => {
-            if (exists) {
+        RNFS.exists(path).then(async (exists) => {
+            if (exists && !(await this.cacheRefreshRequired(checksum, path))) {
                 // image exists in cache
+                console.log('loading locally');
                 this.loadFile(path);
             }
             else {
                 // image doesn't exist in cache, download it
+                console.log("downloading")
                 this.downloadFile(uri, path);
             }
         });
+    }
+
+    componentWillReceiveProps(props) {
+        const updatedProps = {};
+        if (props.uri !== this.state.uri) {
+            updatedProps.uri = props.uri;
+        }
+        if (props.uid !== this.state.uid){
+            updatedProps.uid = props.uid;
+        }
+        if (props.checksum !== this.state.checksum){
+            updatedProps.checksum = props.checksum;
+        }
+        this.setState({source : { uri: updatedProps.uri } })
     }
 
     render() {

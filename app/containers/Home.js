@@ -27,6 +27,7 @@ class Home extends React.Component {
       isConnected: true,
       visible: false,
       name: "",
+      image: "",
       keywords: [],
       bio: "",
       uni: "",
@@ -75,6 +76,8 @@ class Home extends React.Component {
       const data = await this.state.API.loadData(storedEmail);
       this.setState({ cards: data, dataLoadRequired: false });
     }
+
+    APIConnection.attachHomePageNotifier(this.loadData.bind(this));
   }
 
   async loadData() {
@@ -84,7 +87,7 @@ class Home extends React.Component {
     this.setState({ cards: data, dataLoadRequired: false });
   }
 
-  async handleRightSwipe(email, swiped=false) {
+  async handleRightSwipe(email, image, name, swiped=false) {
     const swipeStatus = await this.state.API.rightSwipe(
       await AsyncStorage.getItem('storedEmail'), 
       email
@@ -92,7 +95,10 @@ class Home extends React.Component {
 
     if (swipeStatus.success) {
       !swiped ? this.swiper.swipeRight() : null;
-      if (swipeStatus.isMatch) this.setState({ matchPossible: true });
+      APIConnection.MatchesPage ? APIConnection.MatchesPage.notify() : null;
+      if (swipeStatus.isMatch){
+        this.setState({ matchPossible: true, image, name, email });
+      }
     } else {
       // server didn't register the right swipe or the request didn't make sense.
       // TODO: display some sort of error message to the user that something's wrong
@@ -140,7 +146,7 @@ class Home extends React.Component {
         <View style={styles.containerHome}>
           <View style={styles.homeCards}>
             <CardStack
-              loop={true}
+              loop={false}
               verticalSwipe={false}
               renderNoMoreCards={() => null}
               ref={(swiper) => (this.swiper = swiper)}
@@ -148,7 +154,7 @@ class Home extends React.Component {
               {this.state.cards.map((item, index) => (
                 <Card key={index}
                 onSwipedLeft={() => this.handleLeftSwipe(item.email, true)}
-                onSwipedRight={() => this.handleRightSwipe(item.email, true)}
+                onSwipedRight={() => this.handleRightSwipe(item.email, item.image, item.name, true)}
                 >
                   <TouchableOpacity 
                   activeOpacity={1} 
@@ -157,10 +163,12 @@ class Home extends React.Component {
                     name: item.name,
                     keywords: item.keywords, 
                     bio: item.bio,
-                    uni: item.uni
-                  })}>
+                    uni: item.uni,
+                    image: item.image
+                  })}
+                  >
                     <CardItem
-                      image={{ uri: item.image }}
+                      image={{ uri: item.image, checksum: item.checksum }}
                       name={item.name}
                       keywords={item.keywords}
                       email={item.email}
@@ -171,7 +179,7 @@ class Home extends React.Component {
                       }
                       actions
                       onPressRight={() => this.handleRightSwipe(item.email)}
-                      onPressLeft={() => this.handleLeftSwipe(item.email)}
+                      onPressLeft={() => this.handleRightSwipe(item.email, item.image, item.name, true)}
                     />
                   </TouchableOpacity>
                 </Card>
@@ -179,15 +187,21 @@ class Home extends React.Component {
             </CardStack>
           </View>
 
-          <MatchPopup name={this.state.name} visible={this.state.matchPossible} />
+          <MatchPopup
+          name={this.state.name}
+          image={this.state.image}
+          email={this.state.email}
+          visible={this.state.matchPossible}
+          navigation={this.props.navigation}
+          />
 
-          {/* <ProfilePopup 
+          <ProfilePopup 
             visible={this.state.visible} 
             name={this.state.name}
             keywords={this.state.keywords}
             bio={this.state.bio}
             uni={this.state.uni}
-          /> */}
+          />
  
         </View>
       </ImageBackground>

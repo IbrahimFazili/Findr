@@ -115,6 +115,7 @@ class Matcher {
                         !(value._id.equals(user._id))
                         && user.blockedUsers.findIndex((id) => id.equals(value._id)) === -1
                         && value.blockedUsers.findIndex((id) => id.equals(user._id)) === -1
+                        && user.greenConnections.findIndex((id) => id._id.equals(value._id)) === -1
                 });
 
                 for (var i = 0; i < duplicateConnections.length; i++) {
@@ -218,7 +219,7 @@ class Matcher {
                 j = 0;
                 while (j < user.blueConnections.length) {
 
-                    if (user.blueConnections[j].commonKeywords.includes(removedKeywords[i])) {
+                    if (user.blueConnections[j].commonKeywords.includes(removedKeywords[i])){
 
                         const newCommonKeywords = user.blueConnections[j].commonKeywords.filter((value) => value !== removedKeywords[i])
                         const user2 = (await DB.fetchUsers({ _id : user.blueConnections[j]._id }))[0];
@@ -277,6 +278,25 @@ class Matcher {
             for (let i = 0; i < user.greenConnections.length; i++) {
                 const otherUser = (await DB.fetchUsers({ _id: user.greenConnections[i]._id }, { projection }))[0];
                 if (this.hasIncomingGreenConnection(user._id, otherUser)) {
+                    matches.push(otherUser._id);
+                }
+            }
+
+            return matches;
+        } catch (fetchErr) {
+            console.log(fetchErr);
+            return [];
+        }
+    }
+
+    async getPendingMatches(email) {
+        try {
+            const user = (await DB.fetchUsers({ email }))[0];
+            let matches = [];
+            const projection = { greenConnections: 1 };
+            for (let i = 0; i < user.greenConnections.length; i++) {
+                const otherUser = (await DB.fetchUsers({ _id: user.greenConnections[i]._id }, { projection }))[0];
+                if (!this.hasIncomingGreenConnection(user._id, otherUser)) {
                     matches.push(otherUser._id);
                 }
             }

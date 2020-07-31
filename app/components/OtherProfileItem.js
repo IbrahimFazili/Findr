@@ -4,30 +4,20 @@ import styles from "../assets/styles";
 import {
 	Text,
 	View,
-	Image,
-	Button,
 	Dimensions,
 	TouchableOpacity,
 	AsyncStorage,
 } from "react-native";
 import {
 	DefaultTheme,
-	Provider as PaperProvider,
 	TextInput,
-	RadioButton,
-	Dialog,
 } from "react-native-paper";
 const FULL_HEIGHT = Dimensions.get("window").height;
 const FULL_WIDTH = Dimensions.get("window").width;
 
 import APIConnection from "../assets/data/APIConnection";
-import Pen from "../assets/icons/pen.svg";
 import Check from "../assets/icons/check.svg";
-import Tag from "./Tag";
-import TagCourses from "./TagCourses";
-import TagClubs from "./TagClubs";
 import Plus from "../assets/icons/Plus.svg";
-import Minus from "../assets/icons/minus_green.svg";
 
 import OtherTag from "./OtherTag";
 import OtherTagClubs from "./OtherTagClubs";
