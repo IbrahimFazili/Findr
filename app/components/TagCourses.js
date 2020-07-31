@@ -41,7 +41,6 @@ class TagEducation extends React.Component {
       let {courseChange} = this.props;
       courseChange(this.state.tags.tag , this.state.tags.tagsArray)
     };
-
   render() {
     return (
       <View style={styles.container}>
@@ -64,7 +63,6 @@ class TagEducation extends React.Component {
     );
   }
 }
-
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -74,6 +72,7 @@ const styles = StyleSheet.create({
   textInput: {
       height: 30,
       backgroundColor: 'white',
+      bottom: 10
   },
   tag: {
       backgroundColor: 'transparent'

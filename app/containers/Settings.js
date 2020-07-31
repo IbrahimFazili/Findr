@@ -5,6 +5,7 @@ import SettingsList from 'react-native-settings-list';
 import styles from "../assets/styles";
 import {Button} from "react-native-paper"
 import BackButton from "../assets/icons/back_black.svg";
+import APIConnection from "../assets/data/APIConnection";
 
 const DIMENTIONS = Dimensions.get('window');
 
@@ -15,6 +16,8 @@ class Settings extends React.Component{
     constructor(){
         super();
         this.state = {switchValue: false};
+        const API = new APIConnection();
+        visible: false;
       }
       render() {
         var bgColor = '#DCE3F4';
@@ -26,7 +29,7 @@ class Settings extends React.Component{
               <View style={{borderBottomWidth:1, backgroundColor:'#f7f7f8',borderColor:'#c8c7cc'}}>
                 <Text style={{alignSelf:'center',top: 37,marginBottom:20,fontSize:20,color: "black"}}>Settings</Text>
                 <TouchableOpacity
-                  style={{marginLeft: DIMENTIONS.height * 0.01, marginBottom: DIMENTIONS.height * 0.02}}
+                  style={{marginLeft: DIMENTIONS.height * 0.02, marginBottom: DIMENTIONS.height * 0.02}}
                   onPress={() => this.props.navigation.navigate("Profile")}
                 >
                   <BackButton width={DIMENTIONS.height * 0.02} height={DIMENTIONS.height * 0.02}/>
@@ -35,7 +38,7 @@ class Settings extends React.Component{
               <View style={{backgroundColor:'#EFEFF4',flex:1}}>
                 <SettingsList borderColor='#c8c7cc' defaultItemSize={50}>
 
-                  <SettingsList.Header headerStyle={{marginTop:15}}
+                  <SettingsList.Header headerStyle={{marginTop:15}} 
                   headerText="Contact Us"/>
                   <SettingsList.Item
                     title='Help and Support'
@@ -78,7 +81,13 @@ class Settings extends React.Component{
 
                   <SettingsList.Item
                     title='Logout'
-                    onPress={() => {}}
+                    onPress={(() => {
+                      AsyncStorage.removeItem('storedEmail');
+                      APIConnection.MESSAGE_QUEUES = {};
+                      APIConnection.observers = [];
+                      this.props.navigation.navigate("LogIn");
+                    }).bind(this)
+                  }
                     hasNavArrow={false}
                     titleStyle={styles.LogoutSettings}
                   />
@@ -90,16 +99,11 @@ class Settings extends React.Component{
               <View style={styles.deleteAccountButton}>
                 <SettingsList borderColor='#c8c7cc' defaultItemSize={50}>
                     <SettingsList.Item 
-                    title="Delete Account"
-                    onPress={()=> {}}
-                    hasNavArrow={false}
-                    titleStyle={styles.deleteAccount}
-
+                      title="Delete Account"
                     />
-
                 </SettingsList>
               </View>
-              </View>
+            </View>
           </ImageBackground>
         );
     }

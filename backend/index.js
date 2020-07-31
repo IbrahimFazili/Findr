@@ -29,7 +29,8 @@ app.use(bodyParser.json());
 
 app.get("/", (req, res) => {
 	if (!isServerOutdated) {
-		res.status(200).send("Server is Alive");
+		res.status(200).send((process.env.NODE_ENV === "test") ? "Test Server is Alive"
+				     : "Server is Alive");
 	} else {
 		res.status(503).send("Server is updating...");
 	}
@@ -358,8 +359,13 @@ app.post("/updateUserInfo", (req, res) => {
 		res.status(400).send("missing user email");
 		return;
 	}
-
 	if (user.keywords) delete user.keywords;
+	if (user.gender) {
+		if (user.gender !== 'M' && user.gender !== 'F' &&
+		user.gender !== 'O' && user.gender !== 'P') {
+			delete user.gender;
+		}
+	}
 
 	const projection = { password: 1 };
 	DB.fetchUsers({ email: user.email }, { projection }).then(async (users) => {
@@ -427,6 +433,7 @@ app.get("/deleteUser", (req, res) => {
 app.get("/user/:user_email/updateProfilePicture", async (req, res) => {
 	const email = req.params.user_email;
 	var url = await AWS_Presigner.generateSignedPutUrl("user_images/" + email, req.query.type);
+	DB.updateUser({ checksum: req.query.checksum }, { email });
 	res.status(200).send(url);
 });
 
@@ -445,10 +452,10 @@ app.post("/signup", (req, res) => {
 		name: req.body.name,
 		email: req.body.email,
 		password: bcrypt.hashSync(req.body.password, 10),
-		gender: req.body.gender,
+		gender: '',
 		uni: req.body.uni,
 		major: req.body.major,
-		age: Number(req.body.age),
+		age: req.body.age,
 		clubs: [],
 		projects: [],
 		experience: [],
