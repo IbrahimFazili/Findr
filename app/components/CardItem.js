@@ -61,6 +61,8 @@ const CardItem = ({
       color: "#757E90",
       fontSize: variant ? 5 : 19,
       alignSelf: "center",
+      paddingLeft: Dimensions.get('window').width * 0.075,
+      paddingRight: Dimensions.get('window').width * 0.02
     },
   ];
 
@@ -89,7 +91,7 @@ const CardItem = ({
       {keywords && (
         <Text style={CourseHeaderStyle}>
           {keywords.map((item, index) => (
-            <Text key={String(index)}>
+            <Text key={String(index)} style={{ fontFamily: "sans-serif" }}>
               {index === keywords.length - 1 ? " " + item.toUpperCase() : " " + item.toUpperCase() + ","}
             </Text>
           ))}
@@ -97,9 +99,7 @@ const CardItem = ({
       )}
 
       {/* DESCRIPTION */}
-      {description && (
-        <Text style={styles.descriptionCardItem}>{description}</Text>
-      )}
+      {description ? <Text style={styles.descriptionCardItem}>{description}</Text> : null}
 
       {/* STATUS */}
       {status && (
