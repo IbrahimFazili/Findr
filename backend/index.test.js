@@ -3,6 +3,7 @@ const sendEmail = require("./utils/emailer").sendEmail;
 const bcrypt = require("bcrypt");
 const DB = require("./utils/DatabaseManager");
 const matcher = new (require("./utils/Matcher").Matcher)();
+const TEST_DATA = require('./test/500.json');
 
 function addDummyUser() {
 	const requestData = {
@@ -88,9 +89,18 @@ function update_all_users() {
     });   
 }
 
-function test() {
-
+async function loadTestData() {
+	for (let index = 0; index < TEST_DATA.length; index++) {
+		try {
+			await DB.insertUser(TEST_DATA[index]);		
+		} catch(err) {
+			console.log(err);
+			break;
+		}
+	}
 }
 
-// test_sendEmail();
+DB.deleteAllUsers();
+// loadTestData()
+/// test_sendEmail();
 // update_all_users();
