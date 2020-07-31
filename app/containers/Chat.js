@@ -10,7 +10,6 @@ import {
 	Dimensions,
 } from "react-native";
 import { Header, Image, ThemeConsumer } from "react-native-elements";
-import KeyboardSpacer from "react-native-keyboard-spacer";
 import AutogrowInput from "react-native-autogrow-input";
 import { moderateScale } from "react-native-size-matters";
 import ImagePicker from "react-native-image-picker";
@@ -20,25 +19,10 @@ import APIConnection from "../assets/data/APIConnection";
 import AttachIcon from "../assets/icons/attach.svg";
 import SendIcon from "../assets/icons/send_icon.svg";
 import BackButton from "../assets/icons/back_black.svg";
-import InfoIcon from "../assets/icons/i_icon.svg";
 
-import ChatPopup from "../components/ChatPopup";
-
-//beepboop
 const DIMENSION_WIDTH = Dimensions.get("window").width;
 const DIMENSION_HEIGHT = Dimensions.get("window").height;
-const ICON_FONT = "tinderclone";
-const WHITE = "#FFFFFF";
-const BLACK = "#000000";
-
-const renderCustomHeader = () => {
-	return (
-		<Image
-			style={{ width: 50, height: 50 }}
-			source={require("../assets/images/Findr_logo2x.png")}
-		/>
-	);
-};
+const ICON_FONT = "sans-serif";
 
 function convertTimestamptoTime(unixTimestamp) {
 	dateObj = new Date(unixTimestamp);
@@ -269,33 +253,21 @@ export default class Chat extends Component {
 									source={this.state.other_user_image}
 									key={this.state.own_email}
 								/>
-								<Text style={styles.headerTest}>
-									{this.state.other_user}
-								</Text>
-							</View>
-						);
-					}}
-					rightComponent={() => {
-						return (
-							<View>
 								<TouchableOpacity
 									onPress={() =>
-										this.setState({
-											showPopup: true,
-										})
+										this.props.navigation.navigate(
+											"OtherProfile2",
+											{
+												email: this.state.other_user_email,
+											}
+										)
 									}
+									style={{width: styles.headerTest.width, height: DIMENSION_HEIGHT * 0.05, justifyContent: 'center'}}
 								>
-									<InfoIcon
-										width={DIMENSION_WIDTH * 0.058}
-										height={DIMENSION_HEIGHT * 0.058}
-									/>
+									<Text style={styles.headerTest}>
+										{this.state.other_user}
+									</Text>
 								</TouchableOpacity>
-								<ChatPopup
-									visible={this.state.showPopup}
-									email={this.state.other_user_email}
-									navigation={this.props.navigation}
-									own_email={this.state.own_email}
-								/>
 							</View>
 						);
 					}}
@@ -579,7 +551,7 @@ const styles = StyleSheet.create({
 	},
 	headerTest: {
 		color: "#334856",
-		width: 100,
+		width: DIMENSION_WIDTH * 0.5,
 	},
 	profilepic: {
 		flex: 1,
@@ -647,7 +619,9 @@ const styles = StyleSheet.create({
 		marginRight: DIMENSION_WIDTH * 0.35,
 	},
 	chatBack: {
-		marginRight: DIMENSION_WIDTH * 0.05,
+		marginLeft: DIMENSION_WIDTH * 0.1,
 		width: 30,
+		height: DIMENSION_HEIGHT * 0.05,
+		justifyContent: 'center',
 	},
 });

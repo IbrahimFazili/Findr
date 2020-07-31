@@ -7,12 +7,15 @@ import {
 	Dimensions,
 	ImageBackground,
 	NetInfo,
+	TouchableOpacity,
+	AsyncStorage
 } from "react-native";
 import OtherProfileItem from "../components/OtherProfileItem";
 import APIConnection from "../assets/data/APIConnection";
 import { ScrollView } from "react-navigation";
 import CachedImage from "../components/CachedImage";
 import PlaceHolder from "../assets/icons/placeholder_icon.svg"
+import Settings from "../assets/icons/settings_fill.svg";
 
 const PRIMARY_COLOR = "#7444C0";
 const WHITE = "#FFFFFF";
@@ -84,6 +87,7 @@ class OtherProfile2 extends React.Component {
 							source={require("../assets/images/Findr_logo2x.png")}
 							style={globalStyles.profileLogo}
 						/>
+						
 						<View style={styles.header}>
 							<View style={styles.profilepicWrap}>
 								{
