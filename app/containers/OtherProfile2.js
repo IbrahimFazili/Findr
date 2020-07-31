@@ -2,26 +2,21 @@ import React from "react";
 import globalStyles from "../assets/styles";
 import {
 	View,
-	Text,
-	TouchableOpacity,
 	StyleSheet,
 	Image,
 	Dimensions,
-	AsyncStorage,
 	ImageBackground,
 	NetInfo,
 } from "react-native";
 import OtherProfileItem from "../components/OtherProfileItem";
-import ProfileItem from "../components/ProfileItem";
-import Icon from "../components/Icon";
 import APIConnection from "../assets/data/APIConnection";
 import { ScrollView } from "react-navigation";
 import CachedImage from "../components/CachedImage";
+import PlaceHolder from "../assets/icons/placeholder_icon.svg"
 
 const PRIMARY_COLOR = "#7444C0";
 const WHITE = "#FFFFFF";
 
-const ICON_FONT = "tinderclone";
 
 const DIMENSION_WIDTH = Dimensions.get("window").width;
 const DIMENSION_HEIGHT = Dimensions.get("window").height;
@@ -91,12 +86,16 @@ class OtherProfile2 extends React.Component {
 						/>
 						<View style={styles.header}>
 							<View style={styles.profilepicWrap}>
-								<CachedImage
+								{
+                    				image === null ?
+									<PlaceHolder style={styles.profilepic} /> : 
+									<CachedImage
 									style={styles.profilepic}
 									uri={image.uri}
 									uid={email}
 									checksum={image.checksum}
-								/>
+									/>
+                  				}
 							</View>
 						</View>
 
@@ -163,7 +162,7 @@ const styles = StyleSheet.create({
 		height: 450,
 	},
 	topIconLeft: {
-		fontFamily: ICON_FONT,
+		fontFamily: "sans-serif",
 		fontSize: 20,
 		color: WHITE,
 		paddingLeft: 20,
@@ -171,7 +170,7 @@ const styles = StyleSheet.create({
 		transform: [{ rotate: "90deg" }],
 	},
 	topIconRight: {
-		fontFamily: ICON_FONT,
+		fontFamily: "sans-serif",
 		fontSize: 20,
 		color: WHITE,
 		paddingRight: 20,
@@ -182,9 +181,9 @@ const styles = StyleSheet.create({
 		alignItems: "center",
 		marginBottom: 10,
 	},
-	iconButton: { fontFamily: ICON_FONT, fontSize: 20, color: "#1a5d57" },
+	iconButton: { fontFamily: "sans-serif", fontSize: 20, color: "#1a5d57" },
 	textButton: {
-		fontFamily: ICON_FONT,
+		fontFamily: "sans-serif",
 		fontSize: 15,
 		color: "#1a5d57",
 		paddingLeft: 5,
