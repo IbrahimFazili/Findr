@@ -146,6 +146,10 @@ class APIConnection {
     return (await fetch(`${this.ENDPOINT}:${this.PORT}/user/${email}/matches`)).json();
   }
 
+  async fetchPendingMatches(email) {
+    return (await fetch(`${this.ENDPOINT}:${this.PORT}/user/${email}/pendingMatches`)).json();
+  }
+
   /**
    * Request the API to send potential connections for the user with the email provided
    * @param {String} email E-mail of the user for whom to obtain potential connections for
