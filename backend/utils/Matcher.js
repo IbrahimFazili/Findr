@@ -115,7 +115,7 @@ class Matcher {
                         !(value._id.equals(user._id))
                         && user.blockedUsers.findIndex((id) => id.equals(value._id)) === -1
                         && value.blockedUsers.findIndex((id) => id.equals(user._id)) === -1
-                        && user.greenConnections.findIndex((id) => id.equals(value._id)) === -1
+                        && user.greenConnections.findIndex((id) => id._id.equals(value._id)) === -1
                 });
 
                 for (var i = 0; i < duplicateConnections.length; i++) {
@@ -292,14 +292,16 @@ class Matcher {
     async getPendingMatches(email) {
         try {
             const user = (await DB.fetchUsers({ email }))[0];
-            let pendingMatches = [];
+            let matches = [];
+            const projection = { greenConnections: 1 };
             for (let i = 0; i < user.greenConnections.length; i++) {
-                if (!this.hasIncomingGreenConnection(user._id, user.greenConnections[i])) {
-                    pendingMatches.push(user.greenConnections[i]);
+                const otherUser = (await DB.fetchUsers({ _id: user.greenConnections[i]._id }, { projection }))[0];
+                if (!this.hasIncomingGreenConnection(user._id, otherUser)) {
+                    matches.push(otherUser._id);
                 }
             }
 
-            return pendingMatches;
+            return matches;
         } catch (fetchErr) {
             console.log(fetchErr);
             return [];
