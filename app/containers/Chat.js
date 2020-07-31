@@ -64,253 +64,249 @@ function convertTimestamptoTime(unixTimestamp) {
 }
 
 export default class Chat extends Component {
-	constructor(props) {
-		super(props);
+  constructor(props) {
+    super(props);
 
-		this.state = {
-			showPopup: false,
-			own_email: props.navigation.state.params.own_email,
-			messages: props.navigation.state.params.messages,
-			inputBarText: "",
-			selectedMedia: [],
-			other_user: props.navigation.state.params.user_name,
-			other_user_image: props.navigation.state.params.user_image,
-			other_user_email: props.navigation.state.params.user_email,
-		};
-	}
+    this.state = {
+	  showPopup: false,
+      own_email: props.navigation.state.params.own_email,
+      messages: props.navigation.state.params.messages,
+      inputBarText: '',
+      selectedMedia: [],
+      other_user: props.navigation.state.params.user_name,
+      other_user_image: props.navigation.state.params.user_image,
+      other_user_email: props.navigation.state.params.user_email
+    };
+  }
 
-	static navigationOptions = {
-		title: "Chat",
-	};
+  static navigationOptions = {
+    title: 'Chat',
+  };
 
-	//fun keyboard stuff- we use these to get the end of the ScrollView to "follow" the top of the InputBar as the keyboard rises and falls
-	componentWillMount() {
-		this.keyboardDidShowListener = Keyboard.addListener(
-			"keyboardDidShow",
-			this.keyboardDidShow.bind(this)
-		);
-		this.keyboardDidHideListener = Keyboard.addListener(
-			"keyboardDidHide",
-			this.keyboardDidHide.bind(this)
-		);
-	}
+  //fun keyboard stuff- we use these to get the end of the ScrollView to "follow" the top of the InputBar as the keyboard rises and falls
+  componentWillMount() {
+    this.keyboardDidShowListener = Keyboard.addListener(
+      'keyboardDidShow',
+      this.keyboardDidShow.bind(this)
+    );
+    this.keyboardDidHideListener = Keyboard.addListener(
+      'keyboardDidHide',
+      this.keyboardDidHide.bind(this)
+    );
+  }
 
-	componentWillUnmount() {
-		this.keyboardDidShowListener.remove();
-		this.keyboardDidHideListener.remove();
-	}
+  componentWillUnmount() {
+    this.keyboardDidShowListener.remove();
+    this.keyboardDidHideListener.remove();
+  }
 
-	//When the keyboard appears, this gets the ScrollView to move the end back "up" so the last message is visible with the keyboard up
-	//Without this, whatever message is the keyboard's height from the bottom will look like the last message.
-	keyboardDidShow(e) {
-		this.scrollView.scrollToEnd();
-	}
+  //When the keyboard appears, this gets the ScrollView to move the end back "up" so the last message is visible with the keyboard up
+  //Without this, whatever message is the keyboard's height from the bottom will look like the last message.
+  keyboardDidShow(e) {
+    this.scrollView.scrollToEnd();
+  }
 
-	//When the keyboard dissapears, this gets the ScrollView to move the last message back down.
-	keyboardDidHide(e) {
-		this.scrollView.scrollToEnd();
-	}
+  //When the keyboard dissapears, this gets the ScrollView to move the last message back down.
+  keyboardDidHide(e) {
+    this.scrollView.scrollToEnd();
+  }
 
-	//scroll to bottom when first showing the view
-	componentDidMount() {
-		this._isMounted = true;
-		setTimeout(
-			function () {
-				this.scrollView.scrollToEnd();
-			}.bind(this)
-		);
+  //scroll to bottom when first showing the view
+  componentDidMount() {
+    this._isMounted = true;
+    setTimeout(
+      function () {
+        this.scrollView.scrollToEnd();
+      }.bind(this)
+    );
 
-		APIConnection.attachObserver(
-			this.onNewMessage.bind(this),
-			this.state.other_user_email
-		);
-		this.onNewMessage();
-	}
+    APIConnection.attachObserver(this.onNewMessage.bind(this), this.state.other_user_email);
+	this.onNewMessage();
+	
+  }
 
-	//this is a bit sloppy: this is to make sure it scrolls to the bottom when a message is added, but
-	//the component could update for other reasons, for which we wouldn't want it to scroll to the bottom.
-	componentDidUpdate() {
-		setTimeout(
-			function () {
-				this.scrollView.scrollToEnd();
-			}.bind(this)
-		);
-		this.onNewMessage();
-	}
+  //this is a bit sloppy: this is to make sure it scrolls to the bottom when a message is added, but
+  //the component could update for other reasons, for which we wouldn't want it to scroll to the bottom.
+  componentDidUpdate() {
+    setTimeout(
+      function () {
+        this.scrollView.scrollToEnd();
+      }.bind(this)
+    );
+    this.onNewMessage();
+  }
 
-	onNewMessage() {
-		const msgQueue =
-			APIConnection.MESSAGE_QUEUES[this.state.other_user_email];
-		if (!msgQueue) return;
-		const newMessages = [];
-		while (!msgQueue.isEmpty()) {
-			const msg = msgQueue.dequeue();
-			newMessages.push({
-				user: msg.from,
-				msg: msg.msg,
-				timestamp: msg.time,
-			});
-		}
-		if (newMessages.length > 0) {
-			this.setState({
-				messages: this.state.messages.concat(newMessages),
-			});
-		}
-	}
+  onNewMessage() {
+    const msgQueue = APIConnection.MESSAGE_QUEUES[this.state.other_user_email];
+    if (!msgQueue) return;
+    const newMessages = [];
+    while (!msgQueue.isEmpty()) {
+      const msg = msgQueue.dequeue();
+      newMessages.push({
+        user: msg.from,
+        msg: msg.msg,
+        timestamp: msg.time
+      });
+    }
+    if (newMessages.length > 0) {
+	  APIConnection.MessagesPage ? APIConnection.MessagesPage.notify() : null;
+      this.setState({ messages: this.state.messages.concat(newMessages) });
+    }
+  }
 
-	_sendMessage() {
-		const timestamp = new Date().getTime();
-		this.state.messages.push({
-			user: this.state.own_email,
-			msg: this.state.inputBarText,
-			timestamp,
-		});
+  _sendMessage() {
+	if (this.state.inputBarText.trim().length === 0) return;
+    const timestamp = (new Date()).getTime();
+    this.state.messages.push({
+      user: this.state.own_email,
+      msg: this.state.inputBarText,
+      timestamp
+    });
 
-		for (let i = 0; i < this.state.selectedMedia.length; i++) {
-			const media = this.state.selectedMedia[i];
-			APIConnection.mediaStore[media.name] = {
-				uri: media.uri,
-				type: media.type,
-			};
-			delete media.uri;
-		}
+    for (let i = 0; i < this.state.selectedMedia.length; i++) {
+      const media = this.state.selectedMedia[i];
+      APIConnection.mediaStore[media.name] = { uri: media.uri, type: media.type };
+      delete media.uri;      
+    }
 
-		const msg = {
-			from: this.state.own_email,
-			to: this.state.other_user_email,
-			msg: this.state.inputBarText,
-			media: this.state.selectedMedia,
-			time: timestamp,
-			public_key: null,
-		};
+    const msg = {
+      from: this.state.own_email,
+      to: this.state.other_user_email,
+      msg: this.state.inputBarText,
+      media: this.state.selectedMedia,
+      time: timestamp,
+      public_key: null
+    }
 
-		APIConnection.socket.emit("new msg", msg);
+	APIConnection.socket.emit("new msg", msg);
+	
+	APIConnection.MessagesPage ? APIConnection.MessagesPage.notify() : null;
 
-		this.setState({
-			messages: this.state.messages,
-			inputBarText: "",
-			selectedMedia: [],
-		});
-	}
+    this.setState({
+      messages: this.state.messages,
+      inputBarText: '',
+      selectedMedia: []
+    });
+  }
 
-	_onChangeInputBarText(text) {
-		this.setState({
-			inputBarText: text,
-		});
-	}
+  _onChangeInputBarText(text) {
+    this.setState({
+      inputBarText: text,
+    });
+  }
 
-	_onChangeMedia(selection) {
-		const media = {
-			name: selection.fileName,
-			type: selection.type,
-			uri: selection.uri,
-		};
+  _onChangeMedia(selection) {
+    const media = {
+      name: selection.fileName,
+      type: selection.type,
+      uri: selection.uri
+    };
 
-		if (this.state.selectedMedia.length > 0) {
-			this.state.selectedMedia[0] = media;
-		} else this.state.selectedMedia.push(media);
+    if (this.state.selectedMedia.length > 0) {
+      this.state.selectedMedia[0] = media
+    } else this.state.selectedMedia.push(media);
 
-		this.setState({ selectedMedia: this.state.selectedMedia });
-	}
+    this.setState({ selectedMedia: this.state.selectedMedia });
+  }
 
-	//This event fires way too often.
-	//We need to move the last message up if the input bar expands due to the user's new message exceeding the height of the box.
-	//We really only need to do anything when the height of the InputBar changes, but AutogrowInput can't tell us that.
-	//The real solution here is probably a fork of AutogrowInput that can provide this information.
-	_onInputSizeChange() {
-		setTimeout(
-			function () {
-				this.scrollView.scrollToEnd({ animated: false });
-			}.bind(this)
-		);
-	}
+  //This event fires way too often.
+  //We need to move the last message up if the input bar expands due to the user's new message exceeding the height of the box.
+  //We really only need to do anything when the height of the InputBar changes, but AutogrowInput can't tell us that.
+  //The real solution here is probably a fork of AutogrowInput that can provide this information.
+  _onInputSizeChange() {
+    setTimeout(
+      function () {
+        this.scrollView.scrollToEnd({ animated: false });
+      }.bind(this)
+    );
+  }
 
-	render() {
-		var messages = [];
-		const own_email = this.state.own_email;
+  render() {
+    var messages = [];
+    const own_email = this.state.own_email;
 
-		this.state.messages.forEach(function (message, index) {
-			messages.push(
-				<MessageBubble
-					key={index}
-					direction={message.user === own_email ? "left" : "right"}
-					text={message.msg}
-					time={message.timestamp}
-				/>
-			);
-		});
+    this.state.messages.forEach(function (message, index) {
+      messages.push(
+        <MessageBubble
+          key={index}
+          direction={message.user === own_email ? 'left' : 'right'}
+          text={message.msg}
+          time={message.timestamp}
+        />
+      );
+    });
 
-		return (
-			<View style={styles.outer}>
-				<ImageBackground
-					source={require("../assets/images/15.png")}
-					style={styles.bg}
-				>
-					<Header
-						statusBarProps={{ barStyle: "light-content" }}
-						barStyle="light-content" // or directly
-						centerComponent={() => {
-							return (
-								<View style={styles.chatHeader}>
-									<TouchableOpacity
-										style={styles.chatBack}
-										onPress={() =>
-											this.props.navigation.goBack()
-										}
-									>
-										<BackButton
-											width={DIMENSION_WIDTH * 0.02}
-											height={DIMENSION_HEIGHT * 0.02}
-										/>
-									</TouchableOpacity>
-									<Thumbnail
-										small
-										style={{
-											alignSelf: "center",
-											marginTop: 0,
-											marginRight: DIMENSION_WIDTH * 0.02,
-										}}
-										source={this.state.other_user_image}
-										key={this.state.own_email}
+    return (
+		<View style={styles.outer}>
+			<ImageBackground
+				source={require("../assets/images/15.png")}
+				style={styles.bg}
+			>
+				<Header
+					statusBarProps={{ barStyle: "light-content" }}
+					barStyle="light-content" // or directly
+					centerComponent={() => {
+						return (
+							<View style={styles.chatHeader}>
+								<TouchableOpacity
+									style={styles.chatBack}
+									onPress={() =>
+										this.props.navigation.goBack()
+									}
+								>
+									<BackButton
+										width={DIMENSION_WIDTH * 0.02}
+										height={DIMENSION_HEIGHT * 0.02}
 									/>
-									<Text style={styles.headerTest}>
-										{this.state.other_user}
-									</Text>
-								</View>
-							);
-						}}
-						rightComponent={() => {
-							return (
-								<View>
-									<TouchableOpacity
-										onPress={() =>
-											this.props.navigation.navigate(
-												"OtherProfile",
-												{
-													email: this.state
-														.other_user_email,
-													own_email: this.state
-														.own_email,
-												}
-											)
-										}
-									>
-										<InfoIcon
-											width={DIMENSION_WIDTH * 0.058}
-											height={DIMENSION_HEIGHT * 0.058}
-										/>
-									</TouchableOpacity>
-								</View>
-							);
-						}}
-						containerStyle={{
-							backgroundColor: "white",
-							justifyContent: "space-around",
-							elevation: 15,
-							paddingBottom: DIMENSION_HEIGHT * 0.03,
-							height: DIMENSION_HEIGHT * 0.08,
-						}}
-					/>
+								</TouchableOpacity>
+								<Thumbnail
+									small
+									style={{
+										alignSelf: "center",
+										marginTop: 0,
+										marginRight: DIMENSION_WIDTH * 0.02,
+									}}
+									source={this.state.other_user_image}
+									key={this.state.own_email}
+								/>
+								<Text style={styles.headerTest}>
+									{this.state.other_user}
+								</Text>
+							</View>
+						);
+					}}
+					rightComponent={() => {
+						return (
+							<View>
+								<TouchableOpacity
+									onPress={() =>
+										this.setState({
+											showPopup: true,
+										})
+									}
+								>
+									<InfoIcon
+										width={DIMENSION_WIDTH * 0.058}
+										height={DIMENSION_HEIGHT * 0.058}
+									/>
+								</TouchableOpacity>
+								<ChatPopup
+									visible={this.state.showPopup}
+									email={this.state.other_user_email}
+									navigation={this.props.navigation}
+									own_email={this.state.own_email}
+								/>
+							</View>
+						);
+					}}
+					containerStyle={{
+						backgroundColor: "white",
+						justifyContent: "space-around",
+						elevation: 15,
+						paddingBottom: DIMENSION_HEIGHT * 0.03,
+						height: DIMENSION_HEIGHT * 0.08,
+					}}
+				/>
 
 					<ScrollView
 						ref={(ref) => {
@@ -336,15 +332,22 @@ export default class Chat extends Component {
 
 //The bubbles that appear on the left or the right for the messages.
 class MessageBubble extends Component {
+	_computeBubbleWidth() {
+		let initLen = this.props.text.length;
+		const maxWidth = DIMENSION_WIDTH * 0.38;
+		// 4/3 
+		return Math.max(maxWidth, DIMENSION_WIDTH - (initLen * (maxWidth / 29)));
+	}
+
 	render() {
 		//These spacers make the message bubble stay to the left or the right, depending on who is speaking, even if the message is multiple lines.
 		var rightSpacer =
 			this.props.direction === "left" ? null : (
-				<View style={{ width: "40%" }} />
+				<View style={{ width: "10%" }} />
 			);
 		var leftSpacer =
 			this.props.direction === "left" ? (
-				<View style={{ width: "40%" }} />
+				<View style={{ width: "10%" }} />
 			) : null;
 
 		var bubbleStyles =
@@ -495,8 +498,8 @@ const styles = StyleSheet.create({
 	inputBar: {
 		flexDirection: "row",
 		justifyContent: "space-between",
-		padding: DIMENSION_HEIGHT * 0.01,
-		height: DIMENSION_HEIGHT * 0.075,
+		// padding: DIMENSION_HEIGHT * 0.015,
+		height: DIMENSION_HEIGHT * 0.07,
 		elevation: 15,
 		backgroundColor: "white",
 	},
@@ -509,32 +512,34 @@ const styles = StyleSheet.create({
 		fontSize: 16,
 		paddingHorizontal: 10,
 		maxWidth: DIMENSION_WIDTH * 0.7,
+		maxHeight: DIMENSION_HEIGHT * 0.05,
+		top: DIMENSION_HEIGHT * 0.01,
 	},
 
 	sendButton: {
 		justifyContent: "center",
 		backgroundColor: "transparent",
-		marginBottom: DIMENSION_HEIGHT * 0.01,
+		marginBottom: DIMENSION_HEIGHT * 0.003,
+		marginRight: DIMENSION_WIDTH * 0.01,
 		elevation: 8,
 	},
 
 	mediaButton: {
 		backgroundColor: "transparent",
 		marginLeft: DIMENSION_WIDTH * 0.05,
+		marginTop: DIMENSION_HEIGHT * 0.008,
 		bottom: 5,
 	},
 
 	//MessageBubble
 
 	messageBubble: {
-		maxWidth: moderateScale(250, 2),
+		maxWidth: DIMENSION_WIDTH * 0.8,
 		paddingHorizontal: moderateScale(10, 2),
 		paddingTop: moderateScale(5, 2),
 		paddingBottom: moderateScale(7, 2),
 		borderRadius: 20,
 		marginTop: DIMENSION_HEIGHT * 0.015,
-		flexDirection: "row",
-		flex: 1,
 		elevation: 5,
 	},
 
@@ -632,6 +637,7 @@ const styles = StyleSheet.create({
 	},
 	timeText: {
 		color: "#969693",
+		fontSize: 11,
 	},
 
 	//Header

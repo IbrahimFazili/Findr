@@ -29,7 +29,8 @@ app.use(bodyParser.json());
 
 app.get("/", (req, res) => {
 	if (!isServerOutdated) {
-		res.status(200).send("Server is Alive");
+		res.status(200).send((process.env.NODE_ENV === "test") ? "Test Server is Alive"
+				     : "Server is Alive");
 	} else {
 		res.status(503).send("Server is updating...");
 	}
@@ -126,11 +127,11 @@ app.get("/user/:user_email/matches", (req, res) => {
 					console.log(err);
 					res.status(500).send("Database Fetch Error");
 				});
-		})
-		.catch((err) => {
-			console.log(err);
-			res.status(500).send("Server Error");
-		});
+			})
+			.catch((err) => {
+				console.log(err);
+				res.status(500).send("Server Error");
+			});
 });
 
 app.get("/user/:user_email/connections", (req, res) => {
@@ -194,6 +195,45 @@ app.get("/user/:user_email/connections", (req, res) => {
 			console.log(err);
 			res.status(500).send("Server Error");
 		});
+});
+
+app.get("/user/:user_email/pendingMatches", (req, res) => {
+	matcher.getPendingMatches(req.params.user_email)
+	.then((pendingMatches) => {
+		const projection = {
+			_id: 0,
+			password: 0,
+			chats: 0,
+			blueConnections: 0,
+			greenConnections: 0,
+			eventQueue: 0,
+			verificationHash: 0
+		};
+
+		DB.fetchUsers({ _id: { $in: pendingMatches } }, { projection })
+				.then(async (users) => {
+					if (process.env.NODE_ENV !== "test") {
+						for (var i = 0; i < users.length; i++) {
+
+							users[i].image = await AWS_Presigner.generateSignedGetUrl(
+								"user_images/" + users[i].email
+							);
+						}
+					}
+					
+
+					res.status(200).send(users);
+				})
+				.catch((err) => {
+					console.log(err);
+					res.status(500).send("Database Fetch Error");
+				});
+		
+	})
+	.catch((err) => {
+		console.log(err);
+		res.status(500).send("Server Error");
+	})
 });
 
 app.get("/fetchChatData", (req, res) => {
@@ -319,8 +359,13 @@ app.post("/updateUserInfo", (req, res) => {
 		res.status(400).send("missing user email");
 		return;
 	}
-
 	if (user.keywords) delete user.keywords;
+	if (user.gender) {
+		if (user.gender !== 'M' && user.gender !== 'F' &&
+		user.gender !== 'O' && user.gender !== 'P') {
+			delete user.gender;
+		}
+	}
 
 	const projection = { password: 1 };
 	DB.fetchUsers({ email: user.email }, { projection }).then(async (users) => {
@@ -388,6 +433,7 @@ app.get("/deleteUser", (req, res) => {
 app.get("/user/:user_email/updateProfilePicture", async (req, res) => {
 	const email = req.params.user_email;
 	var url = await AWS_Presigner.generateSignedPutUrl("user_images/" + email, req.query.type);
+	DB.updateUser({ checksum: req.query.checksum }, { email });
 	res.status(200).send(url);
 });
 
@@ -406,10 +452,10 @@ app.post("/signup", (req, res) => {
 		name: req.body.name,
 		email: req.body.email,
 		password: bcrypt.hashSync(req.body.password, 10),
-		gender: req.body.gender,
+		gender: '',
 		uni: req.body.uni,
 		major: req.body.major,
-		age: Number(req.body.age),
+		age: req.body.age,
 		clubs: [],
 		projects: [],
 		experience: [],
@@ -526,6 +572,7 @@ function generateVerificationHash(email) {
 /* Socket Listeners for chat */
 bindSocketListeners(io);
 
-http.listen(3000, () => {
+const port = (process.env.NODE_ENV === "test") ? 8100 : 3000;
+http.listen(port, () => {
 	console.log("Server is running");
 });

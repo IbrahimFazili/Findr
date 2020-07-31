@@ -84,6 +84,7 @@ class SignUp extends React.Component {
       showDots: true,
       dropdownVisible: false,
       goingToPrivacy: false,
+      emailUse: false,
 
       isConnected: true,
       universityArray: []
@@ -99,13 +100,23 @@ class SignUp extends React.Component {
     this.setState({ isNameValid: false, name: text });
   }
 
-  handleEmailChange(text) {
-    if (validateEmail(text.toLowerCase())) {
-      this.setState({ isEmailValid: true, email: text });
-      return;
+  async checkDuplicateEmail(email){
+    try{
+      let user = await(new APIConnection().fetchUser(email))
+      this.setState({emailUse: true})
     }
+    catch(err){
+      this.setState({emailUse: false})
+    }
+  }
 
-    this.setState({ isEmailValid: false, email: text.toLowerCase() });
+  handleEmailChange(text) {
+    this.checkDuplicateEmail(text)
+    if (validateEmail(text.toLowerCase())) {
+        this.setState({ isEmailValid: true, email: text });
+        return;
+    }
+    this.setState({ isEmailValid: false, emailUse: false, email: text.toLowerCase() });
   }
 
   handlePasswordChange(text) {
@@ -156,7 +167,8 @@ class SignUp extends React.Component {
       !this.state.isEmailValid ||
       !this.state.isPasswordValid ||
       !this.state.date ||
-      !this.state.isUniValid
+      !this.state.isUniValid ||
+      this.state.emailUse
       ) 
     {
       console.log("invalid inputs");
@@ -183,7 +195,7 @@ class SignUp extends React.Component {
         if (!this.state.isConnected) {
           this.props.navigation.navigate("Internet");
         }
-        console.log(this.state.universityArray)
+        console.log(this.state)
         return (
             <View style={{backgroundColor: "#164e48", width: "100%", height: "100%", padding: '3%' }}>
                 <Image style={styles.logo} source={require('../assets/images/Findr_white2x.png')}/>
@@ -306,6 +318,9 @@ class SignUp extends React.Component {
 
                         {this.state.isEmailValid === true || this.state.email == "" ? null : 
                         <Text style={styles.errorMail}>Email provided is not valid</Text>} 
+                        {this.state.emailUse === true ? 
+                        <Text style={styles.errorMail}>Email is already taken</Text> : 
+                        null}
                         
                         <TextInput
                             underlineColor="transparent"

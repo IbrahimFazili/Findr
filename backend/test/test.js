@@ -5,16 +5,46 @@ const TestData = require('./testData').testData;
 const server = require("../index");
 const DB = require("../utils/DatabaseManager");
 const bcrypt = require("bcrypt");
+const TestData_Big = require('./500.json')
 
 chai.use(chatHttp);
 chai.use(deepEqualInAnyOrder);
 chai.should();
 
-const SERVER_URL = "http://localhost:3000";
+const SERVER_URL = "http://localhost:8100";
 
 function getRandomEntry(data) {
     return data[Math.floor(Math.random() * data.length)];
 }
+
+// describe("Load Test Data", () => {
+
+//     before((done) => {
+//         var insertCount = 0;
+//         for (var i = 0; i < TestData_Big.length; i++) {
+//             chai.request("http://ec2-52-23-185-43.compute-1.amazonaws.com:8100").post("/signup")
+//             .set('content-type', 'application/json')
+//             .send(TestData_Big[i])
+//             .end(function(err, res) {            
+//                 res.should.have.status(201);
+//                 if (insertCount === TestData_Big.length) {
+//                     done();
+//                 }
+//             });
+//         }
+//     });
+
+//     it("Check server is alive", (done) => {
+//         chai.request(SERVER_URL)
+//         .get('/')
+//         .end((err, res) => {
+//             res.should.have.status(200);
+//             done();
+//         });
+//     });
+    
+// });
+
 
 describe("Test Cases", () => {
     before((done) => {

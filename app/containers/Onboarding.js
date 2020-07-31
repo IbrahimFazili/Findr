@@ -116,7 +116,8 @@ class Onboarding extends React.Component {
                       <CardItem
                         variant
                         key={user.name}
-                        image={{ uri: user.image }}
+                        image={{ uri: user.image, checksum: user.checksum }}
+                        email={user.email}
                         name={user.name}
                         status={"Online"}
                       />

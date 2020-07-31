@@ -57,7 +57,16 @@ class APIConnection {
         body: JSON.stringify({ keywords: data.keywords, email: data.email })
     }));
 
+    if(response.status === 201){
+      APIConnection.HomePage ? APIConnection.HomePage.notify() : null;
+      APIConnection.ProfilePage ? APIConnection.ProfilePage.notify() : null;
+    }
+
     return response.status;
+  }
+
+  async updateProfilePicture(email, type, checksum) {
+    return (await fetch(`${this.ENDPOINT}:${this.PORT}/user/${email}/updateProfilePicture?type=${type}&checksum=${checksum}`)).text();
   }
 
   static uploadPicture(url, img) {
@@ -106,6 +115,23 @@ class APIConnection {
     }
     let user = await logInRes.json();
     return { success: true, user };
+  }
+
+  async rightSwipe(src, target) {
+    const swipeResult = (await fetch(`${this.ENDPOINT}:${this.PORT}/rightSwipe?src=${src}&target=${target}`));
+    if (swipeResult.status === 201) { 
+      return { 
+        isMatch: (await swipeResult.json()).isMatch,
+        success: true
+      }
+    }
+    return { success: false, isMatch: false };
+  }
+
+  async leftSwipe(src, target) {
+    const swipeResult = (await fetch(`${this.ENDPOINT}:${this.PORT}/leftSwipe?src=${src}&target=${target}`));
+    if (swipeResult.status === 201) return true;
+    return false;
   }
 
   /**
@@ -204,6 +230,23 @@ class APIConnection {
       this.observers[existingIndex] = { observer, uid };
     }
   }
+
+  static attachHomePageNotifier(notify) {
+    this.HomePage = { notify };
+  }
+
+  static attachMatchPageNotifier(notify) {
+    this.MatchesPage = { notify };
+  }
+
+  static attachMessagePageNotifier(notify) {
+    this.MessagesPage = { notify };
+  }
+
+  static attachProfilePageNotifier(notify) {
+    this.ProfilePage = { notify };
+  }
+
 }
 
 class Queue {
@@ -223,5 +266,10 @@ APIConnection.MESSAGE_QUEUES = {}
 APIConnection.observers = [];
 APIConnection.socket = null;
 APIConnection.mediaStore = {};
+
+APIConnection.HomePage = null;
+APIConnection.MatchesPage = null;
+APIConnection.MessagesPage = null;
+APIConnection.ProfilePage = null;
 
 export default APIConnection;

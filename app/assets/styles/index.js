@@ -215,12 +215,23 @@ export default StyleSheet.create({
   popupCard: {
     backgroundColor: WHITE,
     borderRadius: 20,
-    maxHeight: DIMENSION_HEIGHT * 0.7,
+    maxHeight: DIMENSION_HEIGHT * 0.76,
     maxWidth: DIMENSION_WIDTH * 0.85,
     alignSelf: "center",
-    marginVertical: DIMENSION_HEIGHT * 0.13,
+    marginTop: DIMENSION_HEIGHT * 0.15,
     borderRadius: 30,
     // overflow: "hidden",
+  },
+
+  matchPop: {
+    backgroundColor: WHITE,
+    borderRadius: 20,
+    top: DIMENSION_HEIGHT * 0.3,
+    maxHeight: DIMENSION_HEIGHT * 0.3,
+    width: DIMENSION_WIDTH * 0.85,
+    alignSelf: "center",
+    borderRadius: 30,
+    position: "relative"
   },
 
   blurredView: {
@@ -398,11 +409,11 @@ export default StyleSheet.create({
     width: DIMENSION_WIDTH * 0.5
   },
   textBoxStyle: {
-    width: '75%',
+    width: '55%',
     height: 50,
     alignSelf: 'center',
     backgroundColor: "transparent",
-    left: DIMENSION_WIDTH * 0.22
+    left: DIMENSION_WIDTH * 0.2
   },
   name_secondary: {
     marginLeft: DIMENSION_WIDTH * 0.33,
@@ -453,22 +464,43 @@ export default StyleSheet.create({
   profileTitle: {
     fontSize: 15,
     color: DARK_GRAY,
-    paddingHorizontal: 10,
+    // paddingHorizontal: 10,
+    left: 30
     // fontWeight: 'bold'
   },
   profileTitle2: {
     fontSize: 15,
     color: DARK_GRAY,
     paddingHorizontal: 10,
-    marginLeft: DIMENSION_HEIGHT * -0.033
+    top: DIMENSION_WIDTH * 0.014 ,
+    position: 'absolute',
+    left: DIMENSION_WIDTH * 0.17
     // fontWeight: 'bold'
   },
   textB:{
-    width: '75%',
+    width: '65%',
     height: 50,
-    alignSelf: 'center',
     backgroundColor: "transparent",
-    left: DIMENSION_WIDTH * 0.37
+    left: DIMENSION_WIDTH * 0.17,
+  },
+  textMajor:{
+    width: '45%',
+    height: 50,
+    backgroundColor: "transparent",
+    left: DIMENSION_WIDTH * 0.35,
+    bottom: 14
+  },
+  genderDrop: {
+    width: DIMENSION_WIDTH * 0.45, 
+    left: DIMENSION_WIDTH * 0.32,
+    borderColor: "white", 
+    borderWidth: 0.4, 
+    borderRadius: 35,
+    paddingLeft: 20, 
+    paddingRight: 20, 
+    paddingTop: -30,
+    height: 50,
+    bottom: 20
   },
   profileButtons: {
     marginLeft: DIMENSION_WIDTH * 0.13,
@@ -500,6 +532,33 @@ export default StyleSheet.create({
   infoContent: {
     color: GRAY,
     fontSize: 13,
+    left: 28
+  },
+  infoContentGender: {
+    color: GRAY,
+    fontSize: 13,
+    left: 118,
+    top: 4,
+    width: 150
+  },
+  infoContentMajor: {
+    color: GRAY,
+    fontSize: 13,
+    left: DIMENSION_WIDTH * 0.42,
+    top: 1,
+    width: DIMENSION_WIDTH * 0.6
+  },
+  infoContentBio: {
+    color: GRAY,
+    fontSize: 13,
+    left: 85,
+    width: 200,
+    height:400
+  },
+  infoContentEmail: {
+    color: GRAY,
+    fontSize: 13,
+    left: 50,
   },
   profileLogo: {
     width: 65,
@@ -516,6 +575,29 @@ export default StyleSheet.create({
     fontSize: 15,
     color: DARK_GRAY,
     paddingHorizontal: 10,
+    // fontWeight: 'bold'
+  },
+  profileTitleGender: {
+    fontSize: 15,
+    color: DARK_GRAY,
+    paddingHorizontal: 10,
+    position: 'absolute',
+    top: 10,
+    left: DIMENSION_WIDTH * 0.05
+    // fontWeight: 'bold'
+  },
+  profileTitleBio: {
+    fontSize: 15,
+    color: DARK_GRAY,
+    paddingHorizontal: 10,
+    left: 33
+    // fontWeight: 'bold'
+  },
+  profileTitleEmail: {
+    fontSize: 15,
+    color: DARK_GRAY,
+    paddingHorizontal: 15,
+    left: 20
     // fontWeight: 'bold'
   },
   profileButtons: {
@@ -649,7 +731,7 @@ export default StyleSheet.create({
   containerMatches: {
     justifyContent: "space-between",
     flex: 1,
-    paddingHorizontal: 10,
+    // paddingHorizontal: 10,
   },
 
   matchTop: {
@@ -764,6 +846,70 @@ export default StyleSheet.create({
     height: DIMENSION_HEIGHT * 0.1,
   },
 
+  usernameHome: {
+    paddingBottom: 7,
+    marginTop: 0,
+    color: '#363636',
+    fontSize: 20,
+    fontFamily: "-apple-system, BlinkMacSystemFont, sans-serif;",
+    alignSelf: 'center',
+    top: DIMENSION_HEIGHT * 0.035,
+  },
+
+  buttonText: {
+    paddingBottom: 7,
+    marginTop: 0,
+    fontSize: 15,
+    fontFamily: "sans-serif",
+    color: "#1a5d57",
+    alignSelf: 'center',
+  },
+
+  ignoreText:{
+    paddingBottom: 7,
+    marginTop: 0,
+    fontSize: 15,
+    fontFamily: "sans-serif",
+    alignSelf: 'center',
+    color: "#d16969",
+  },
+
+  ignoreButtonStyle: {
+    borderBottomRightRadius: 30,
+    borderColor: "black",
+    borderWidth: 0.06,
+  },
+
+  chatButtonStyle: {
+    borderBottomLeftRadius: 30,
+    borderColor: "black",
+    borderWidth: 0.06,
+  },
+
+  match: {
+    paddingBottom: 7,
+    marginTop: 0,
+    top: DIMENSION_HEIGHT * 0.05,
+    color: '#363636',
+    fontSize: 15,
+    alignSelf: 'center'
+  },
+
+  chatButton:{
+    width: DIMENSION_WIDTH * 0.425,
+    position: 'absolute',
+    bottom: 0,
+    left: 0,
+    borderBottomLeftRadius: 20,
+  },
+
+  ignoreButton:{
+    width: DIMENSION_WIDTH * 0.425,
+    position: 'absolute',
+    bottom: 0,
+    right: 0
+  },
+
   slide0: {
     marginTop: DIMENSION_HEIGHT * 0.08
   },
@@ -784,6 +930,7 @@ export default StyleSheet.create({
     paddingTop: -30,
     height: 50,
   },
+
 
   slide4: {
     flex: 1,

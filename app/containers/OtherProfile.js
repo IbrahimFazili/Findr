@@ -17,6 +17,7 @@ import Icon from "../components/Icon";
 import APIConnection from "../assets/data/APIConnection";
 import { ScrollView } from "react-navigation";
 import Settings from "../assets/icons/settings_fill.svg";
+import CachedImage from "../components/CachedImage";
 
 const PRIMARY_COLOR = "#7444C0";
 const WHITE = "#FFFFFF";
@@ -63,7 +64,7 @@ class OtherProfile extends React.Component {
 		console.log(this.state.user_email);
 		console.log(this.state.profile);
 		const image = this.state.profile
-			? { uri: this.state.profile.image }
+			? { uri: this.state.profile.image, checksum: this.state.profile.checksum }
 			: null;
 		const name = this.state.profile ? this.state.profile.name : "";
 		const age = this.state.profile ? this.state.profile.age : -1;
@@ -111,9 +112,11 @@ class OtherProfile extends React.Component {
 						</View>
 						<View style={styles.header}>
 							<View style={styles.profilepicWrap}>
-								<Image
+								<CachedImage
 									style={styles.profilepic}
-									source={image}
+									uri={image.uri}
+									uid={email}
+									checksum={image.checksum}
 								/>
 							</View>
 						</View>
