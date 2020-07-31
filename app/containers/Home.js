@@ -87,7 +87,7 @@ class Home extends React.Component {
     this.setState({ cards: data, dataLoadRequired: false });
   }
 
-  async handleRightSwipe(email, swiped=false) {
+  async handleRightSwipe(email, image, name, swiped=false) {
     const swipeStatus = await this.state.API.rightSwipe(
       await AsyncStorage.getItem('storedEmail'), 
       email
@@ -97,7 +97,7 @@ class Home extends React.Component {
       !swiped ? this.swiper.swipeRight() : null;
       APIConnection.MatchesPage ? APIConnection.MatchesPage.notify() : null;
       if (swipeStatus.isMatch){
-        this.setState({ matchPossible: true });
+        this.setState({ matchPossible: true, image, name, email });
       }
     } else {
       // server didn't register the right swipe or the request didn't make sense.
@@ -154,7 +154,7 @@ class Home extends React.Component {
               {this.state.cards.map((item, index) => (
                 <Card key={index}
                 onSwipedLeft={() => this.handleLeftSwipe(item.email, true)}
-                onSwipedRight={() => this.handleRightSwipe(item.email, true)}
+                onSwipedRight={() => this.handleRightSwipe(item.email, item.image, item.name, true)}
                 >
                   <TouchableOpacity 
                   activeOpacity={1} 
@@ -165,7 +165,8 @@ class Home extends React.Component {
                     bio: item.bio,
                     uni: item.uni,
                     image: item.image
-                  })}>
+                  })}
+                  >
                     <CardItem
                       image={{ uri: item.image, checksum: item.checksum }}
                       name={item.name}
@@ -178,7 +179,7 @@ class Home extends React.Component {
                       }
                       actions
                       onPressRight={() => this.handleRightSwipe(item.email)}
-                      onPressLeft={() => this.handleLeftSwipe(item.email)}
+                      onPressLeft={() => this.handleRightSwipe(item.email, item.image, item.name, true)}
                     />
                   </TouchableOpacity>
                 </Card>
@@ -186,7 +187,13 @@ class Home extends React.Component {
             </CardStack>
           </View>
 
-          <MatchPopup name={this.state.name} image={this.state.image} visible={this.state.matchPossible} />
+          <MatchPopup
+          name={this.state.name}
+          image={this.state.image}
+          email={this.state.email}
+          visible={this.state.matchPossible}
+          navigation={this.props.navigation}
+          />
 
           <ProfilePopup 
             visible={this.state.visible} 
