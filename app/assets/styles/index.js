@@ -234,6 +234,17 @@ export default StyleSheet.create({
     position: "relative"
   },
 
+  noCardPop:{
+    backgroundColor: WHITE,
+    borderRadius: 20,
+    top: DIMENSION_HEIGHT * 0.35,
+    maxHeight: DIMENSION_HEIGHT * 0.2,
+    width: DIMENSION_WIDTH * 0.8,
+    alignSelf: "center",
+    borderRadius: 30,
+    position: "relative"
+  },
+
   blurredView: {
     flex: 1, 
     justifyContent: "center", 
@@ -895,6 +906,22 @@ export default StyleSheet.create({
     alignSelf: 'center'
   },
 
+  noCardText: {
+    paddingBottom: 7,
+    marginTop: DIMENSION_HEIGHT * 0.05,
+    color: '#363636',
+    fontSize: 15,
+    alignSelf: 'center'
+  },
+
+  noCardText1: {
+    paddingBottom: 7,
+    // marginTop: DIMENSION_HEIGHT * 0.05,
+    color: '#363636',
+    fontSize: 15,
+    alignSelf: 'center'
+  },
+
   chatButton:{
     width: DIMENSION_WIDTH * 0.425,
     position: 'absolute',
@@ -908,6 +935,12 @@ export default StyleSheet.create({
     position: 'absolute',
     bottom: 0,
     right: 0
+  },
+
+  viewProfileButton:{
+    width: DIMENSION_WIDTH * 0.425,
+    marginLeft: DIMENSION_WIDTH * 0.21,
+    marginTop: DIMENSION_HEIGHT * 0.01,
   },
 
   slide0: {

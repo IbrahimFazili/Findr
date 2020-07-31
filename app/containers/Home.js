@@ -7,6 +7,7 @@ import APIConnection from "../assets/data/APIConnection";
 import ProfilePopup from "../components/ProfilePopup";
 import {Overlay} from "react-native-elements"
 import MatchPopup from "../components/MatchPopup"
+import NoCardsPopup from "../components/OutOfCardsPopup"
 
 const MAX_LENGTH = 150;
 
@@ -118,6 +119,19 @@ class Home extends React.Component {
     }
   }
 
+  async handleOutOfCards(){
+    const data = await this.state.API.fetchConnections(
+      await AsyncStorage.getItem('storedEmail')
+    );
+
+    if(data === []){
+      this.setState({visible: true});
+    }
+    else{
+      this.setState({ cards: data, dataLoadRequired: false });
+    }
+  }
+
   render() {
     AsyncStorage.getItem('storedEmail')
       .then((value) => {
@@ -150,6 +164,7 @@ class Home extends React.Component {
               verticalSwipe={false}
               renderNoMoreCards={() => null}
               ref={(swiper) => (this.swiper = swiper)}
+              onSwipedAll={() => this.handleOutOfCards()}
             >
               {this.state.cards.map((item, index) => (
                 <Card key={index}
@@ -201,6 +216,12 @@ class Home extends React.Component {
             keywords={this.state.keywords}
             bio={this.state.bio}
             uni={this.state.uni}
+          />
+
+          <NoCardsPopup
+            visible={true} 
+            email={this.state.email}
+            navigation={this.props.navigation}
           />
  
         </View>
