@@ -392,7 +392,7 @@ class ProfileItem extends React.Component{
 				dropdownPosition={-5}
 				containerStyle={styles.genderDrop}
 				pickerStyle={{borderRadius: 35,}}
-				dropdownOffset={{top: 20, left: 10}}
+				dropdownOffset={{ top: 20, left: 10 }}
 				itemCount={4}
 				textColor="black"
 				itemColor="black"
@@ -405,22 +405,13 @@ class ProfileItem extends React.Component{
 				}
 			</View>
 
-			<View style={styles.info2}>
+			<View style={styles.emailContainer}>
 				<Text style={styles.profileTitleEmail}>Email</Text>
 				<Text style={styles.infoContentEmail}>{this.props.email}</Text>
 			</View>
 
-			<View style={styles.info3}>
-				<Text style={styles.profileTitle}>Keywords</Text>
-				<Tag 
-					keywords={this.state.keywords} editable={this.state.isEditable1}
-					type="keyword"
-					wordChange={this.handleKeywordChange.bind(this)}
-				/>
-			</View>
-
-			<View style={styles.info2}>
-				<Text style={styles.profileTitleBio}>Bio</Text>
+			<View style={styles.infoBio}>
+				<Text style={styles.profileTitleBio}>About Me</Text>
 				{this.state.isEditable1
 				? (<TextInput
 					underlineColor="transparent"
@@ -437,6 +428,15 @@ class ProfileItem extends React.Component{
 					/>)
 				: (<Text style={styles.infoContentBio}>{this.state.bio}</Text>)
 				}
+			</View>
+
+			<View style={styles.info3}>
+				<Text style={styles.profileTitle}>Interests</Text>
+				<Tag 
+					keywords={this.state.keywords} editable={this.state.isEditable1}
+					type="interests"
+					wordChange={this.handleKeywordChange.bind(this)}
+				/>
 			</View>
 		</View>
 
@@ -469,12 +469,12 @@ class ProfileItem extends React.Component{
 			<View style={styles.info3}>
 				<Text style={styles.profileTitle}>Courses: </Text>
 				<TagCourses keywords={this.state.courses} editable={this.state.isEditable2} 
-			    courseChange={this.handleCourseChange.bind(this)} type="course"/>
+			    courseChange={this.handleCourseChange.bind(this)} type="courses"/>
 			</View>
 
 			<View style={styles.info3}>
 				<Text style={styles.profileTitle}>Clubs: </Text>
-				<TagClubs keywords={this.state.clubs} editable={this.state.isEditable2} type="club"
+				<TagClubs keywords={this.state.clubs} editable={this.state.isEditable2} type="clubs"
 				clubChange={this.handleClubChange.bind(this)}/>
 			</View>
 		</View>

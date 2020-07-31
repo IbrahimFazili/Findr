@@ -122,7 +122,7 @@ class OtherProfile extends React.Component {
 						</View>
 						<View style={{ paddingHorizontal: 10 }}>
 							<View
-								style={{ marginTop: DIMENSION_HEIGHT * 0.21 }}
+								style={{ marginTop: DIMENSION_HEIGHT *  0.21 }}
 							>
 								<OtherProfileItem
 									name={name}

@@ -52,6 +52,14 @@ class OtherProfile2 extends React.Component {
 		);
 	}
 
+	_getAge(age) {
+		if (typeof age === "number"){ return age; }
+		// MM-DD-YYYY
+		const year = Number(age.split("-")[2]);
+		return (new Date()).getFullYear() - year;
+	  }
+	
+
 	handleConnectivityChange = (isConnected) => {
 		this.setState({ isConnected });
 	};
@@ -85,7 +93,7 @@ class OtherProfile2 extends React.Component {
 					<ScrollView>
 						<Image
 							source={require("../assets/images/Findr_logo2x.png")}
-							style={globalStyles.profileLogo}
+							style={globalStyles.otherProfileLogo}
 						/>
 						
 						<View style={styles.header}>
@@ -105,11 +113,11 @@ class OtherProfile2 extends React.Component {
 
 						<View style={{ paddingHorizontal: 10 }}>
 							<View
-								style={{ marginTop: DIMENSION_HEIGHT * 0.21 }}
+								style={{ marginTop: DIMENSION_HEIGHT * 0.01 }}
 							>
 								<OtherProfileItem
 									name={name}
-									age={age}
+									age={this._getAge(age)}
 									uni={location}
 									gender={gender}
 									major={major}
