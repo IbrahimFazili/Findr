@@ -956,15 +956,15 @@ export default StyleSheet.create({
   },
 
   slide1: {
-    marginTop: DIMENSION_HEIGHT * 0.08
+    marginTop: DIMENSION_HEIGHT * 0.07
   },
 
   uniDropDown: {
     width: DIMENSION_WIDTH * 0.7, 
     left: DIMENSION_WIDTH * 0.12,
     marginBottom:20, 
-    borderColor: "white", 
-    borderWidth: 0.4, 
+    borderColor: "darkgrey",
+    borderWidth: 1, 
     borderRadius: 35,
     paddingLeft: 20, 
     paddingRight: 20, 
@@ -992,7 +992,7 @@ export default StyleSheet.create({
     borderBottomRightRadius: 10,
     borderTopLeftRadius: 10,
     borderTopRightRadius: 10,
-    marginTop: DIMENSION_HEIGHT * 0.16,
+    marginTop: DIMENSION_HEIGHT * 0.13,
     marginBottom: DIMENSION_HEIGHT * 0.05,
     width: DIMENSION_WIDTH * 0.35,
     alignSelf: 'center',
