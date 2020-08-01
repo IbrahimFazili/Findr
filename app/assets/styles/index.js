@@ -888,6 +888,15 @@ export default StyleSheet.create({
     top: DIMENSION_HEIGHT * 0.035,
   },
 
+  logoSplash:{
+    alignSelf: "center",
+    marginTop: DIMENSION_HEIGHT * 0.4,
+    marginLeft: DIMENSION_WIDTH * 0.05,
+    marginBottom: DIMENSION_HEIGHT * 0.13,
+    width: DIMENSION_WIDTH * 0.35,
+    height: DIMENSION_HEIGHT * 0.15,
+  },
+
   buttonText: {
     paddingBottom: 7,
     marginTop: 0,
