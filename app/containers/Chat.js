@@ -10,35 +10,20 @@ import {
 	Dimensions,
 } from "react-native";
 import { Header, Image, ThemeConsumer } from "react-native-elements";
-import KeyboardSpacer from "react-native-keyboard-spacer";
 import AutogrowInput from "react-native-autogrow-input";
 import { moderateScale } from "react-native-size-matters";
 import ImagePicker from "react-native-image-picker";
 import { Thumbnail } from "native-base";
+import io from "socket.io-client";
 import APIConnection from "../assets/data/APIConnection";
 
 import AttachIcon from "../assets/icons/attach.svg";
 import SendIcon from "../assets/icons/send_icon.svg";
 import BackButton from "../assets/icons/back_black.svg";
-import InfoIcon from "../assets/icons/i_icon.svg";
 
-import ChatPopup from "../components/ChatPopup";
-
-//beepboop
 const DIMENSION_WIDTH = Dimensions.get("window").width;
 const DIMENSION_HEIGHT = Dimensions.get("window").height;
-const ICON_FONT = "tinderclone";
-const WHITE = "#FFFFFF";
-const BLACK = "#000000";
-
-const renderCustomHeader = () => {
-	return (
-		<Image
-			style={{ width: 50, height: 50 }}
-			source={require("../assets/images/Findr_logo2x.png")}
-		/>
-	);
-};
+const ICON_FONT = "sans-serif";
 
 function convertTimestamptoTime(unixTimestamp) {
 	dateObj = new Date(unixTimestamp);
@@ -48,10 +33,16 @@ function convertTimestamptoTime(unixTimestamp) {
 	if (hours >= 12) {
 		hours = hours % 12;
 		formattedTime =
-			hours.toString() + ":" + minutes.toString().padStart(2, "0") + " PM";
+			hours.toString() +
+			":" +
+			minutes.toString().padStart(2, "0") +
+			" PM";
 	} else {
 		formattedTime =
-			hours.toString() + ":" + minutes.toString().padStart(2, "0") + " AM";
+			hours.toString() +
+			":" +
+			minutes.toString().padStart(2, "0") +
+			" AM";
 	}
 
 	return formattedTime;
@@ -149,7 +140,8 @@ export default class Chat extends Component {
   }
 
   _sendMessage() {
-	if (this.state.inputBarText.trim().length === 0) return;
+	if (this.state.inputBarText.trim().length === 0 
+	&& this.state.selectedMedia.length === 0) return;
     const timestamp = (new Date()).getTime();
     this.state.messages.push({
       user: this.state.own_email,
@@ -220,15 +212,33 @@ export default class Chat extends Component {
     const own_email = this.state.own_email;
 
     this.state.messages.forEach(function (message, index) {
-      messages.push(
-        <MessageBubble
-          key={index}
-          direction={message.user === own_email ? 'left' : 'right'}
-          text={message.msg}
-          time={message.timestamp}
-        />
-      );
-    });
+		if (message.media && (message.media.length > 0)) {
+			messages.push(
+				<MessageBubble
+					key={index}
+					direction={
+						message.user === own_email ? "left" : "right"
+					}
+					text={message.msg}
+					image={message.media[0]}
+					time={message.timestamp}
+				/>
+			);
+		} else {
+			messages.push(
+				<MessageBubble
+					key={index}
+					direction={
+						message.user === own_email ? "left" : "right"
+					}
+					text={message.msg}
+					image={null}
+					time={message.timestamp}
+				/>
+			);
+		}
+	});
+
 
     return (
 		<View style={styles.outer}>
@@ -263,33 +273,21 @@ export default class Chat extends Component {
 									source={this.state.other_user_image}
 									key={this.state.own_email}
 								/>
-								<Text style={styles.headerTest}>
-									{this.state.other_user}
-								</Text>
-							</View>
-						);
-					}}
-					rightComponent={() => {
-						return (
-							<View>
 								<TouchableOpacity
 									onPress={() =>
-										this.setState({
-											showPopup: true,
-										})
+										this.props.navigation.navigate(
+											"OtherProfile2",
+											{
+												email: this.state.other_user_email,
+											}
+										)
 									}
+									style={{width: styles.headerTest.width, height: DIMENSION_HEIGHT * 0.05, justifyContent: 'center'}}
 								>
-									<InfoIcon
-										width={DIMENSION_WIDTH * 0.058}
-										height={DIMENSION_HEIGHT * 0.058}
-									/>
+									<Text style={styles.headerTest}>
+										{this.state.other_user}
+									</Text>
 								</TouchableOpacity>
-								<ChatPopup
-									visible={this.state.showPopup}
-									email={this.state.other_user_email}
-									navigation={this.props.navigation}
-									own_email={this.state.own_email}
-								/>
 							</View>
 						);
 					}}
@@ -302,35 +300,44 @@ export default class Chat extends Component {
 					}}
 				/>
 
-				<ScrollView
-					ref={(ref) => {
-						this.scrollView = ref;
-					}}
-					style={styles.messages}
-				>
-					{messages}
-				</ScrollView>
-				<InputBar
-					onSendPressed={() => this._sendMessage()}
-					onSizeChange={() => this._onInputSizeChange()}
-					onChangeText={(text) =>
-						this._onChangeInputBarText(text)
-					}
-					text={this.state.inputBarText}
-				/>
-			</ImageBackground>
-		</View>
-	);
-  }
+					<ScrollView
+						ref={(ref) => {
+							this.scrollView = ref;
+						}}
+						style={styles.messages}
+					>
+						{messages}
+					</ScrollView>
+					<InputBar
+						onSendPressed={() => this._sendMessage()}
+						onSizeChange={() => this._onInputSizeChange()}
+						onChangeText={(text) =>
+							this._onChangeInputBarText(text)
+						}
+						onChangeMedia={this._onChangeMedia.bind(this)}
+						text={this.state.inputBarText}
+					/>
+				</ImageBackground>
+			</View>
+		);
+	}
 }
 
 //The bubbles that appear on the left or the right for the messages.
 class MessageBubble extends Component {
-	_computeBubbleWidth() {
-		let initLen = this.props.text.length;
-		const maxWidth = DIMENSION_WIDTH * 0.38;
-		// 4/3 
-		return Math.max(maxWidth, DIMENSION_WIDTH - (initLen * (maxWidth / 29)));
+
+	constructor(props) {
+		super(props);
+		this.state = {
+			image: null
+		};
+	}
+
+	async componentDidMount() {
+		const url = this.props.image ? await (new APIConnection()).fetchChatImage(this.props.image) : null;
+		if (url) {
+			this.setState({ image: url });
+		}
 	}
 
 	render() {
@@ -381,6 +388,21 @@ class MessageBubble extends Component {
 				>
 					{leftSpacer}
 					<View style={bubbleStyles}>
+						{this.state.image ? <View style={{
+							maxWidth: DIMENSION_WIDTH * 0.8,
+							maxHeight: DIMENSION_HEIGHT * 0.3,
+							alignItems: "center",
+						}}>
+							<Image
+							source={{ uri: this.state.image }}
+							style={{
+								width: DIMENSION_WIDTH * 0.75,
+								height: DIMENSION_HEIGHT * 0.3,
+								resizeMode: "contain",
+								borderRadius: 5
+							}}
+							/>
+						</View> : null}
 						<Text style={bubbleTextStyle}>{this.props.text}</Text>
 					</View>
 					{rightSpacer}
@@ -392,76 +414,85 @@ class MessageBubble extends Component {
 	}
 }
 
+
 //The bar at the bottom with a textbox and a send button.
 class InputBar extends Component {
-  //AutogrowInput doesn't change its size when the text is changed from the outside.
-  //Thus, when text is reset to zero, we'll call it's reset function which will take it back to the original size.
-  //Another possible solution here would be if InputBar kept the text as state and only reported it when the Send button
-  //was pressed. Then, resetInputText() could be called when the Send button is pressed. However, this limits the ability
-  //of the InputBar's text to be set from the outside.
-  componentWillReceiveProps(nextProps) {
-    if (nextProps.text === '') {
-      this.autogrowInput.resetInputText();
-    }
-  }
+	//AutogrowInput doesn't change its size when the text is changed from the outside.
+	//Thus, when text is reset to zero, we'll call it's reset function which will take it back to the original size.
+	//Another possible solution here would be if InputBar kept the text as state and only reported it when the Send button
+	//was pressed. Then, resetInputText() could be called when the Send button is pressed. However, this limits the ability
+	//of the InputBar's text to be set from the outside.
+	componentWillReceiveProps(nextProps) {
+		if (nextProps.text === "") {
+			this.autogrowInput.resetInputText();
+		}
+	}
 
-  chooseImage = () => {
-    let options = {
-      title: 'Select Image',
-      storageOptions: {
-        skipBackup: true,
-        path: 'images',
-      },
-    };
-    ImagePicker.showImagePicker(options, (response) => {
+	chooseImage = () => {
+		let options = {
+			title: "Select Image",
+			storageOptions: {
+				skipBackup: true,
+				path: "images",
+			},
+		};
+		ImagePicker.showImagePicker(options, (response) => {
+			if (response.didCancel) {
+				console.log("User cancelled image picker");
+			} else if (response.error) {
+				console.log("ImagePicker Error: ", response.error);
+			} else if (response.customButton) {
+				console.log(
+					"User tapped custom button: ",
+					response.customButton
+				);
+				alert(response.customButton);
+			} else {
+				const source = { uri: response.uri };
 
-      if (response.didCancel) {
-        console.log('User cancelled image picker');
-      } else if (response.error) {
-        console.log('ImagePicker Error: ', response.error);
-      } else if (response.customButton) {
-        console.log('User tapped custom button: ', response.customButton);
-        alert(response.customButton);
-      } else {
-        const source = { uri: response.uri };
+				// file type: response.type
+				// file name: response.fileName
+				this.props.onChangeMedia(response);
+			}
+		});
+	};
 
-        // file type: response.type
-        // file name: response.fileName
-        this.props.onChangeMedia(response);
-      }
-    });
-  };
-
-  render() {
-    return (
-      <View style={styles.inputBar}>
-        <TouchableOpacity
-        style={styles.mediaButton}
-        onPress={() => this.chooseImage()}
-        >
-          <AttachIcon width={DIMENSION_WIDTH * 0.07} height={DIMENSION_HEIGHT * 0.07}/>
-        </TouchableOpacity>
-        <AutogrowInput
-          style={styles.textBox}
-          ref={(ref) => {
-            this.autogrowInput = ref;
-          }}
-          multiline={true}
-          defaultHeight={DIMENSION_HEIGHT * 0.07}
-          onChangeText={(text) => this.props.onChangeText(text)}
-          onContentSizeChange={this.props.onSizeChange}
-          value={this.props.text}
-          placeholder={"Type a message"}
-        />
-        <TouchableOpacity
-          style={styles.sendButton}
-          onPress={() => this.props.onSendPressed()}
-        >
-          <SendIcon width={DIMENSION_WIDTH * 0.1} height={DIMENSION_HEIGHT * 0.1}/>
-        </TouchableOpacity>
-      </View>
-    );
-  }
+	render() {
+		return (
+			<View style={styles.inputBar}>
+				<TouchableOpacity
+					style={styles.mediaButton}
+					onPress={() => this.chooseImage()}
+				>
+					<AttachIcon
+						width={DIMENSION_WIDTH * 0.07}
+						height={DIMENSION_HEIGHT * 0.07}
+					/>
+				</TouchableOpacity>
+				<AutogrowInput
+					style={styles.textBox}
+					ref={(ref) => {
+						this.autogrowInput = ref;
+					}}
+					multiline={true}
+					defaultHeight={DIMENSION_HEIGHT * 0.07}
+					onChangeText={(text) => this.props.onChangeText(text)}
+					onContentSizeChange={this.props.onSizeChange}
+					value={this.props.text}
+					placeholder={"Type a message"}
+				/>
+				<TouchableOpacity
+					style={styles.sendButton}
+					onPress={() => this.props.onSendPressed()}
+				>
+					<SendIcon
+						width={DIMENSION_WIDTH * 0.1}
+						height={DIMENSION_HEIGHT * 0.1}
+					/>
+				</TouchableOpacity>
+			</View>
+		);
+	}
 }
 
 //TODO: separate these out. This is what happens when you're in a hurry!
@@ -565,7 +596,7 @@ const styles = StyleSheet.create({
 	},
 	headerTest: {
 		color: "#334856",
-		width: 100,
+		width: DIMENSION_WIDTH * 0.5,
 	},
 	profilepic: {
 		flex: 1,
@@ -633,7 +664,9 @@ const styles = StyleSheet.create({
 		marginRight: DIMENSION_WIDTH * 0.35,
 	},
 	chatBack: {
-		marginRight: DIMENSION_WIDTH * 0.05,
+		marginLeft: DIMENSION_WIDTH * 0.1,
 		width: 30,
+		height: DIMENSION_HEIGHT * 0.05,
+		justifyContent: 'center',
 	},
 });

@@ -164,6 +164,12 @@ class APIConnection {
     ).json();
   }
 
+  async fetchChatImage(name){
+    return (
+      await fetch(`${this.ENDPOINT}:${this.PORT}/chat_media/${name}`)
+    ).text();
+  }
+
   /**
    * Fetch the user profile given the email
    * @param {String} email email of the user whose profile to fetch
