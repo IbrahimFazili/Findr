@@ -5,7 +5,6 @@
 	};
 	objectVersion = 46;
 	objects = {
-
 /* Begin PBXBuildFile section */
 		00C302E51ABCBA2D00DB3ED1 /* libRCTActionSheet.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 00C302AC1ABCB8CE00DB3ED1 /* libRCTActionSheet.a */; };
 		00C302E71ABCBA2D00DB3ED1 /* libRCTGeolocation.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 00C302BA1ABCB90400DB3ED1 /* libRCTGeolocation.a */; };
@@ -69,6 +68,8 @@
 		F42E83433F9E437C8291EE6A /* libBVLinearGradient.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 43CB586B83994F34BAEFD19F /* libBVLinearGradient.a */; };
 		FAE9855573304D3195302A8D /* tinderclone.ttf in Resources */ = {isa = PBXBuildFile; fileRef = FAE076CBB11444DFB1C0E3EE /* tinderclone.ttf */; };
 		FC8EF9695AC14EC2AB28FED0 /* FontAwesome5_Solid.ttf in Resources */ = {isa = PBXBuildFile; fileRef = F37A90F1DE8F4C1093B3E580 /* FontAwesome5_Solid.ttf */; };
+		BDDB9D5C91DC4CD0BC1131BC /* libRNFS.a in Frameworks */ = {isa = PBXBuildFile; fileRef = C8FBF60D94964FCF99EE333E /* libRNFS.a */; };
+		DFBB54A304074B8DB7CF729D /* libimageCropPicker.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 7CC97366B1AF4CACA71CE84A /* libimageCropPicker.a */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -503,6 +504,10 @@
 		F63B5458E8B741D3B624AA2F /* Zocial.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Zocial.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Zocial.ttf"; sourceTree = "<group>"; };
 		F8321D2072C14BC49C6B7788 /* libRNVectorIcons.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libRNVectorIcons.a; sourceTree = "<group>"; };
 		FAE076CBB11444DFB1C0E3EE /* tinderclone.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = tinderclone.ttf; path = ../assets/fonts/tinderclone.ttf; sourceTree = "<group>"; };
+		E1BDA3FD62FC497797D83093 /* RNFS.xcodeproj */ = {isa = PBXFileReference; name = "RNFS.xcodeproj"; path = "../node_modules/react-native-fs/RNFS.xcodeproj"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = wrapper.pb-project; explicitFileType = undefined; includeInIndex = 0; };
+		C8FBF60D94964FCF99EE333E /* libRNFS.a */ = {isa = PBXFileReference; name = "libRNFS.a"; path = "libRNFS.a"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = archive.ar; explicitFileType = undefined; includeInIndex = 0; };
+		CD49E440C4F44616805B1454 /* imageCropPicker.xcodeproj */ = {isa = PBXFileReference; name = "imageCropPicker.xcodeproj"; path = "../node_modules/react-native-image-crop-picker/ios/imageCropPicker.xcodeproj"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = wrapper.pb-project; explicitFileType = undefined; includeInIndex = 0; };
+		7CC97366B1AF4CACA71CE84A /* libimageCropPicker.a */ = {isa = PBXFileReference; name = "libimageCropPicker.a"; path = "libimageCropPicker.a"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = archive.ar; explicitFileType = undefined; includeInIndex = 0; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -538,6 +543,8 @@
 				F42E83433F9E437C8291EE6A /* libBVLinearGradient.a in Frameworks */,
 				E02F6239EBC945B5A544AB8A /* libRNSVG.a in Frameworks */,
 				4E12CF5F5D98491BA118B666 /* libRNVectorIcons.a in Frameworks */,
+				BDDB9D5C91DC4CD0BC1131BC /* libRNFS.a in Frameworks */,
+				DFBB54A304074B8DB7CF729D /* libimageCropPicker.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -739,6 +746,8 @@
 				39FEBD11C00345D5AB5DF420 /* BVLinearGradient.xcodeproj */,
 				B751FB417DE64E72847F629C /* RNSVG.xcodeproj */,
 				65FA4078676448968AFF1E68 /* RNVectorIcons.xcodeproj */,
+				E1BDA3FD62FC497797D83093 /* RNFS.xcodeproj */,
+				CD49E440C4F44616805B1454 /* imageCropPicker.xcodeproj */,
 			);
 			name = Libraries;
 			sourceTree = "<group>";
@@ -1615,12 +1624,16 @@
 					"$(SRCROOT)..\node_modules\neact-native-linear-gradientBVLinearGradient",
 					"$(SRCROOT)..\node_modules\neact-native-svgios/**",
 					"$(SRCROOT)..\node_modules\neact-native-vector-iconsRNVectorIconsManager",
+					"$(SRCROOT)\..\node_modules\react-native-fs/**",
+					"$(SRCROOT)\..\node_modules\react-native-image-crop-picker\ios/**",
 				);
 				INFOPLIST_FILE = FindrTests/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
@@ -1658,12 +1671,16 @@
 					"$(SRCROOT)..\node_modules\neact-native-linear-gradientBVLinearGradient",
 					"$(SRCROOT)..\node_modules\neact-native-svgios/**",
 					"$(SRCROOT)..\node_modules\neact-native-vector-iconsRNVectorIconsManager",
+					"$(SRCROOT)\..\node_modules\react-native-fs/**",
+					"$(SRCROOT)\..\node_modules\react-native-image-crop-picker\ios/**",
 				);
 				INFOPLIST_FILE = FindrTests/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
@@ -1702,6 +1719,8 @@
 					"$(SRCROOT)..\node_modules\neact-native-linear-gradientBVLinearGradient",
 					"$(SRCROOT)..\node_modules\neact-native-svgios/**",
 					"$(SRCROOT)..\node_modules\neact-native-vector-iconsRNVectorIconsManager",
+					"$(SRCROOT)\..\node_modules\react-native-fs/**",
+					"$(SRCROOT)\..\node_modules\react-native-image-crop-picker\ios/**",
 				);
 				INFOPLIST_FILE = Findr/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
@@ -1731,6 +1750,8 @@
 					"$(SRCROOT)..\node_modules\neact-native-linear-gradientBVLinearGradient",
 					"$(SRCROOT)..\node_modules\neact-native-svgios/**",
 					"$(SRCROOT)..\node_modules\neact-native-vector-iconsRNVectorIconsManager",
+					"$(SRCROOT)\..\node_modules\react-native-fs/**",
+					"$(SRCROOT)\..\node_modules\react-native-image-crop-picker\ios/**",
 				);
 				INFOPLIST_FILE = Findr/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
@@ -1767,11 +1788,15 @@
 					"$(SRCROOT)..\node_modules\neact-native-linear-gradientBVLinearGradient",
 					"$(SRCROOT)..\node_modules\neact-native-svgios/**",
 					"$(SRCROOT)..\node_modules\neact-native-vector-iconsRNVectorIconsManager",
+					"$(SRCROOT)\..\node_modules\react-native-fs/**",
+					"$(SRCROOT)\..\node_modules\react-native-image-crop-picker\ios/**",
 				);
 				INFOPLIST_FILE = "Findr-tvOS/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
@@ -1818,11 +1843,15 @@
 					"$(SRCROOT)..\node_modules\neact-native-linear-gradientBVLinearGradient",
 					"$(SRCROOT)..\node_modules\neact-native-svgios/**",
 					"$(SRCROOT)..\node_modules\neact-native-vector-iconsRNVectorIconsManager",
+					"$(SRCROOT)\..\node_modules\react-native-fs/**",
+					"$(SRCROOT)\..\node_modules\react-native-image-crop-picker\ios/**",
 				);
 				INFOPLIST_FILE = "Findr-tvOS/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
@@ -1868,11 +1897,15 @@
 					"$(SRCROOT)..\node_modules\neact-native-linear-gradientBVLinearGradient",
 					"$(SRCROOT)..\node_modules\neact-native-svgios/**",
 					"$(SRCROOT)..\node_modules\neact-native-vector-iconsRNVectorIconsManager",
+					"$(SRCROOT)\..\node_modules\react-native-fs/**",
+					"$(SRCROOT)\..\node_modules\react-native-image-crop-picker\ios/**",
 				);
 				INFOPLIST_FILE = "Findr-tvOSTests/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
@@ -1918,11 +1951,15 @@
 					"$(SRCROOT)..\node_modules\neact-native-linear-gradientBVLinearGradient",
 					"$(SRCROOT)..\node_modules\neact-native-svgios/**",
 					"$(SRCROOT)..\node_modules\neact-native-vector-iconsRNVectorIconsManager",
+					"$(SRCROOT)\..\node_modules\react-native-fs/**",
+					"$(SRCROOT)\..\node_modules\react-native-image-crop-picker\ios/**",
 				);
 				INFOPLIST_FILE = "Findr-tvOSTests/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",

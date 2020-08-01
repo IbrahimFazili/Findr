@@ -9,13 +9,13 @@ import {
 	ImageBackground,
 	Dimensions,
 } from "react-native";
-import { Header, Image, ThemeConsumer } from "react-native-elements";
+import { Header, Image } from "react-native-elements";
 import AutogrowInput from "react-native-autogrow-input";
 import { moderateScale } from "react-native-size-matters";
-import ImagePicker from "react-native-image-picker";
 import { Thumbnail } from "native-base";
-import io from "socket.io-client";
 import APIConnection from "../assets/data/APIConnection";
+import ImagePicker from 'react-native-image-crop-picker';
+import shorthash from "shorthash";
 
 import AttachIcon from "../assets/icons/attach.svg";
 import SendIcon from "../assets/icons/send_icon.svg";
@@ -182,15 +182,18 @@ export default class Chat extends Component {
   }
 
   _onChangeMedia(selection) {
-    const media = {
-      name: selection.fileName,
-      type: selection.type,
-      uri: selection.uri
-    };
+	
+	this.state.selectedMedia = [];
+	for (let index = 0; index < selection.length; index++) {
+		const img = selection[index];
+		const media = {
+			name: shorthash.unique(img.path),
+			type: img.mime,
+			uri: img.path
+		};
 
-    if (this.state.selectedMedia.length > 0) {
-      this.state.selectedMedia[0] = media
-    } else this.state.selectedMedia.push(media);
+		this.state.selectedMedia.push(media);
+	}
 
     this.setState({ selectedMedia: this.state.selectedMedia });
   }
@@ -429,32 +432,13 @@ class InputBar extends Component {
 	}
 
 	chooseImage = () => {
-		let options = {
-			title: "Select Image",
-			storageOptions: {
-				skipBackup: true,
-				path: "images",
-			},
-		};
-		ImagePicker.showImagePicker(options, (response) => {
-			if (response.didCancel) {
-				console.log("User cancelled image picker");
-			} else if (response.error) {
-				console.log("ImagePicker Error: ", response.error);
-			} else if (response.customButton) {
-				console.log(
-					"User tapped custom button: ",
-					response.customButton
-				);
-				alert(response.customButton);
-			} else {
-				const source = { uri: response.uri };
-
-				// file type: response.type
-				// file name: response.fileName
-				this.props.onChangeMedia(response);
-			}
-		});
+		ImagePicker.openPicker({
+			multiple: true,
+			maxFiles: 4,
+			compressImageQuality: 0.8,
+		  }).then((images) => {
+			  this.props.onChangeMedia(images);
+		  });
 	};
 
 	render() {
