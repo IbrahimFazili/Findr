@@ -163,7 +163,8 @@ export default class Chat extends Component {
 	}
 
 	_sendMessage() {
-		if (this.state.inputBarText.trim().length === 0) return;
+		if (this.state.inputBarText.trim().length === 0 
+		&& this.state.selectedMedia.length === 0) return;
 		const timestamp = new Date().getTime();
 		this.state.messages.push({
 			user: this.state.own_email,
@@ -237,7 +238,7 @@ export default class Chat extends Component {
 		const own_email = this.state.own_email;
 
 		this.state.messages.forEach(function (message, index) {
-			if (message.media == []) {
+			if (message.media && (message.media.length > 0)) {
 				messages.push(
 					<MessageBubble
 						key={index}
@@ -245,17 +246,19 @@ export default class Chat extends Component {
 							message.user === own_email ? "left" : "right"
 						}
 						text={message.msg}
+						image={message.media[0]}
 						time={message.timestamp}
 					/>
 				);
 			} else {
 				messages.push(
-					<ImageBubble
+					<MessageBubble
 						key={index}
-						image={message.media[0]}
 						direction={
 							message.user === own_email ? "left" : "right"
 						}
+						text={message.msg}
+						image={null}
 						time={message.timestamp}
 					/>
 				);
@@ -348,6 +351,7 @@ export default class Chat extends Component {
 						onChangeText={(text) =>
 							this._onChangeInputBarText(text)
 						}
+						onChangeMedia={this._onChangeMedia.bind(this)}
 						text={this.state.inputBarText}
 					/>
 				</ImageBackground>
@@ -358,11 +362,19 @@ export default class Chat extends Component {
 
 //The bubbles that appear on the left or the right for the messages.
 class MessageBubble extends Component {
-	_computeBubbleWidth() {
-		let initLen = this.props.text.length;
-		const maxWidth = DIMENSION_WIDTH * 0.38;
-		// 4/3
-		return Math.max(maxWidth, DIMENSION_WIDTH - initLen * (maxWidth / 29));
+
+	constructor(props) {
+		super(props);
+		this.state = {
+			image: null
+		};
+	}
+
+	async componentDidMount() {
+		const url = this.props.image ? await (new APIConnection()).fetchChatImage(this.props.image) : null;
+		if (url) {
+			this.setState({ image: url });
+		}
 	}
 
 	render() {
@@ -413,6 +425,21 @@ class MessageBubble extends Component {
 				>
 					{leftSpacer}
 					<View style={bubbleStyles}>
+						{this.state.image ? <View style={{
+							maxWidth: DIMENSION_WIDTH * 0.8,
+							maxHeight: DIMENSION_HEIGHT * 0.3,
+							alignItems: "center",
+						}}>
+							<Image
+							source={{ uri: this.state.image }}
+							style={{
+								width: DIMENSION_WIDTH * 0.75,
+								height: DIMENSION_HEIGHT * 0.3,
+								resizeMode: "contain",
+								borderRadius: 5
+							}}
+							/>
+						</View> : null}
 						<Text style={bubbleTextStyle}>{this.props.text}</Text>
 					</View>
 					{rightSpacer}
@@ -424,30 +451,7 @@ class MessageBubble extends Component {
 	}
 }
 
-class ImageBubble extends Component {
-	render() {
-		var rightSpacer =
-			this.props.direction === "left" ? null : (
-				<View style={{ width: "40%" }} />
-			);
-		var leftSpacer =
-			this.props.direction === "left" ? (
-				<View style={{ width: "40%" }} />
-			) : null;
-		return (
-			<View
-				style={{
-					justifyContent: "space-between",
-					flexDirection: "row",
-				}}
-			>
-				{leftSpacer}
-				<Image source={{ uri: props.image }} />
-				{rightSpacer}
-			</View>
-		);
-	}
-}
+
 //The bar at the bottom with a textbox and a send button.
 class InputBar extends Component {
 	//AutogrowInput doesn't change its size when the text is changed from the outside.
