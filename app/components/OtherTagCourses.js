@@ -43,21 +43,11 @@ class TagEducation extends React.Component {
 			<View style={styles.container}>
 				<TagInput
 					tags={this.state.tags}
-					inputContainerStyle={styles.textInput}
-					inputStyle={{ color: "black" }}
-					onFocus={() =>
-						this.setState({
-							tagsColor: "#fff",
-							tagsText: mainColor,
-						})
-					}
-					onBlur={() =>
-						this.setState({ tagsColor: "white", tagsText: "#fff" })
-					}
-					autoCorrect={false}
-					tagStyle={styles.tag}
+					containerStyle={styles.textInput}
+					readonly={true}
+					initialTags={this.state.tags.tagsArray}
 					tagTextStyle={styles.tagText}
-					keysForTag={", "}
+					tagContainerStyle={styles.tag}
 				/>
 			</View>
 		);

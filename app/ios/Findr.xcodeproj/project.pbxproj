@@ -310,124 +310,124 @@
 			remoteGlobalIDString = 58B5119B1A9E6C1200147676;
 			remoteInfo = RCTText;
 		};
-		93D779E524D4C40F007C44E0 /* PBXContainerItemProxy */ = {
+		931CD60024D30C690052313A /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 146833FF1AC3E56700842450 /* React.xcodeproj */;
 			proxyType = 2;
 			remoteGlobalIDString = EDEBC6D6214B3E7000DD5AC8;
 			remoteInfo = jsi;
 		};
-		93D779E724D4C40F007C44E0 /* PBXContainerItemProxy */ = {
+		931CD60224D30C690052313A /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 146833FF1AC3E56700842450 /* React.xcodeproj */;
 			proxyType = 2;
 			remoteGlobalIDString = EDEBC73B214B45A300DD5AC8;
 			remoteInfo = jsiexecutor;
 		};
-		93D779E924D4C40F007C44E0 /* PBXContainerItemProxy */ = {
+		931CD60424D30C690052313A /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 146833FF1AC3E56700842450 /* React.xcodeproj */;
 			proxyType = 2;
 			remoteGlobalIDString = ED296FB6214C9A0900B7C4FE;
 			remoteInfo = "jsi-tvOS";
 		};
-		93D779EB24D4C40F007C44E0 /* PBXContainerItemProxy */ = {
+		931CD60624D30C690052313A /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 146833FF1AC3E56700842450 /* React.xcodeproj */;
 			proxyType = 2;
 			remoteGlobalIDString = ED296FEE214C9CF800B7C4FE;
 			remoteInfo = "jsiexecutor-tvOS";
 		};
-		93D779F124D4C48A007C44E0 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 65FA4078676448968AFF1E68 /* RNVectorIcons.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 5DBEB1501B18CEA900B34395;
-			remoteInfo = RNVectorIcons;
-		};
-		93D779F324D4C48A007C44E0 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 65FA4078676448968AFF1E68 /* RNVectorIcons.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = A39873CE1EA65EE60051E01A;
-			remoteInfo = "RNVectorIcons-tvOS";
-		};
-		93D779F924D4C48A007C44E0 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = E9D5749A31DD4F898089E151 /* RNCNetInfo.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 134814201AA4EA6300B7C361;
-			remoteInfo = RNCNetInfo;
-		};
-		93D779FB24D4C48A007C44E0 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = E9D5749A31DD4F898089E151 /* RNCNetInfo.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = B5027B1B2237B30F00F1AABA;
-			remoteInfo = "RNCNetInfo-tvOS";
-		};
-		93D77A0124D4C48A007C44E0 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = B751FB417DE64E72847F629C /* RNSVG.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 0CF68AC11AF0540F00FF9E5C;
-			remoteInfo = RNSVG;
-		};
-		93D77A0324D4C48A007C44E0 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = B751FB417DE64E72847F629C /* RNSVG.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 94DDAC5C1F3D024300EED511;
-			remoteInfo = "RNSVG-tvOS";
-		};
-		93D77A0924D4C48A007C44E0 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = A8E2AF81D45846FD9FF9D0ED /* RNGestureHandler.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 134814201AA4EA6300B7C361;
-			remoteInfo = RNGestureHandler;
-		};
-		93D77A0B24D4C48A007C44E0 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = A8E2AF81D45846FD9FF9D0ED /* RNGestureHandler.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = B5C32A36220C603B000FFB8D;
-			remoteInfo = "RNGestureHandler-tvOS";
-		};
-		93D77A1124D4C48A007C44E0 /* PBXContainerItemProxy */ = {
+		931CD60E24D30C6A0052313A /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 37142C1BCB95469DA4705508 /* RNBlur.xcodeproj */;
 			proxyType = 2;
 			remoteGlobalIDString = A68BD7BC1BC31318005F02DF;
 			remoteInfo = RNBlur;
 		};
-		93D77A1324D4C48A007C44E0 /* PBXContainerItemProxy */ = {
+		931CD61024D30C6A0052313A /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 37142C1BCB95469DA4705508 /* RNBlur.xcodeproj */;
 			proxyType = 2;
 			remoteGlobalIDString = 64D1BD361EEFE88700F3F219;
 			remoteInfo = "RNBlur-tvOS";
 		};
-		93D77A1924D4C48A007C44E0 /* PBXContainerItemProxy */ = {
+		931CD61424D30C6A0052313A /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = E9D5749A31DD4F898089E151 /* RNCNetInfo.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 134814201AA4EA6300B7C361;
+			remoteInfo = RNCNetInfo;
+		};
+		931CD61624D30C6A0052313A /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = E9D5749A31DD4F898089E151 /* RNCNetInfo.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = B5027B1B2237B30F00F1AABA;
+			remoteInfo = "RNCNetInfo-tvOS";
+		};
+		931CD61C24D30C6A0052313A /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = A8E2AF81D45846FD9FF9D0ED /* RNGestureHandler.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 134814201AA4EA6300B7C361;
+			remoteInfo = RNGestureHandler;
+		};
+		931CD61E24D30C6A0052313A /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = A8E2AF81D45846FD9FF9D0ED /* RNGestureHandler.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = B5C32A36220C603B000FFB8D;
+			remoteInfo = "RNGestureHandler-tvOS";
+		};
+		931CD62324D30C6A0052313A /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 6AB55527290F47F7B91056F7 /* RNImagePicker.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 014A3B5C1C6CF33500B6D375;
+			remoteInfo = RNImagePicker;
+		};
+		931CD62924D30C6A0052313A /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 39FEBD11C00345D5AB5DF420 /* BVLinearGradient.xcodeproj */;
 			proxyType = 2;
 			remoteGlobalIDString = 134814201AA4EA6300B7C361;
 			remoteInfo = BVLinearGradient;
 		};
-		93D77A1B24D4C48A007C44E0 /* PBXContainerItemProxy */ = {
+		931CD62B24D30C6A0052313A /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 39FEBD11C00345D5AB5DF420 /* BVLinearGradient.xcodeproj */;
 			proxyType = 2;
 			remoteGlobalIDString = 64AA15081EF7F30100718508;
 			remoteInfo = "BVLinearGradient-tvOS";
 		};
-		93D77A2024D4C48B007C44E0 /* PBXContainerItemProxy */ = {
+		931CD63124D30C6A0052313A /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
-			containerPortal = 6AB55527290F47F7B91056F7 /* RNImagePicker.xcodeproj */;
+			containerPortal = B751FB417DE64E72847F629C /* RNSVG.xcodeproj */;
 			proxyType = 2;
-			remoteGlobalIDString = 014A3B5C1C6CF33500B6D375;
-			remoteInfo = RNImagePicker;
+			remoteGlobalIDString = 0CF68AC11AF0540F00FF9E5C;
+			remoteInfo = RNSVG;
+		};
+		931CD63324D30C6A0052313A /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = B751FB417DE64E72847F629C /* RNSVG.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 94DDAC5C1F3D024300EED511;
+			remoteInfo = "RNSVG-tvOS";
+		};
+		931CD63924D30C6A0052313A /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 65FA4078676448968AFF1E68 /* RNVectorIcons.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 5DBEB1501B18CEA900B34395;
+			remoteInfo = RNVectorIcons;
+		};
+		931CD63B24D30C6A0052313A /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 65FA4078676448968AFF1E68 /* RNVectorIcons.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = A39873CE1EA65EE60051E01A;
+			remoteInfo = "RNVectorIcons-tvOS";
 		};
 		ADBDB9261DFEBF0700ED6528 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -680,10 +680,10 @@
 				2DF0FFE52056DD460020B375 /* libthird-party.a */,
 				2DF0FFE72056DD460020B375 /* libdouble-conversion.a */,
 				2DF0FFE92056DD460020B375 /* libdouble-conversion.a */,
-				93D779E624D4C40F007C44E0 /* libjsi.a */,
-				93D779E824D4C40F007C44E0 /* libjsiexecutor.a */,
-				93D779EA24D4C40F007C44E0 /* libjsi-tvOS.a */,
-				93D779EC24D4C40F007C44E0 /* libjsiexecutor-tvOS.a */,
+				931CD60124D30C690052313A /* libjsi.a */,
+				931CD60324D30C690052313A /* libjsiexecutor.a */,
+				931CD60524D30C690052313A /* libjsi-tvOS.a */,
+				931CD60724D30C690052313A /* libjsiexecutor-tvOS.a */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -759,8 +759,8 @@
 				00E356EF1AD99517003FC87E /* FindrTests */,
 				83CBBA001A601CBA00E9B192 /* Products */,
 				2D16E6871FA4F8E400B85C8A /* Frameworks */,
-				ECB8AB143CF242C195BC8241 /* Products */,
-				93D779BF24D4C40E007C44E0 /* Recovered References */,
+				ECB8AB143CF242C195BC8241 /* Resources */,
+				931CD5DA24D30C680052313A /* Recovered References */,
 			);
 			indentWidth = 2;
 			sourceTree = "<group>";
@@ -778,7 +778,7 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
-		93D779BF24D4C40E007C44E0 /* Recovered References */ = {
+		931CD5DA24D30C680052313A /* Recovered References */ = {
 			isa = PBXGroup;
 			children = (
 				EEB950E59EFE41D68F983D16 /* libRNBlur.a */,
@@ -796,64 +796,64 @@
 			name = "Recovered References";
 			sourceTree = "<group>";
 		};
-		93D779ED24D4C48A007C44E0 /* Products */ = {
+		931CD60824D30C6A0052313A /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				93D779F224D4C48A007C44E0 /* libRNVectorIcons.a */,
-				93D779F424D4C48A007C44E0 /* libRNVectorIcons-tvOS.a */,
+				931CD60F24D30C6A0052313A /* libRNBlur.a */,
+				931CD61124D30C6A0052313A /* libRNBlur.a */,
 			);
 			name = Products;
 			sourceTree = "<group>";
 		};
-		93D779F524D4C48A007C44E0 /* Products */ = {
+		931CD60A24D30C6A0052313A /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				93D779FA24D4C48A007C44E0 /* libRNCNetInfo.a */,
-				93D779FC24D4C48A007C44E0 /* libRNCNetInfo-tvOS.a */,
+				931CD61524D30C6A0052313A /* libRNCNetInfo.a */,
+				931CD61724D30C6A0052313A /* libRNCNetInfo-tvOS.a */,
 			);
 			name = Products;
 			sourceTree = "<group>";
 		};
-		93D779FD24D4C48A007C44E0 /* Products */ = {
+		931CD61824D30C6A0052313A /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				93D77A0224D4C48A007C44E0 /* libRNSVG.a */,
-				93D77A0424D4C48A007C44E0 /* libRNSVG-tvOS.a */,
+				931CD61D24D30C6A0052313A /* libRNGestureHandler.a */,
+				931CD61F24D30C6A0052313A /* libRNGestureHandler-tvOS.a */,
 			);
 			name = Products;
 			sourceTree = "<group>";
 		};
-		93D77A0524D4C48A007C44E0 /* Products */ = {
+		931CD62024D30C6A0052313A /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				93D77A0A24D4C48A007C44E0 /* libRNGestureHandler.a */,
-				93D77A0C24D4C48A007C44E0 /* libRNGestureHandler-tvOS.a */,
+				931CD62424D30C6A0052313A /* libRNImagePicker.a */,
 			);
 			name = Products;
 			sourceTree = "<group>";
 		};
-		93D77A0D24D4C48A007C44E0 /* Products */ = {
+		931CD62524D30C6A0052313A /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				93D77A1224D4C48A007C44E0 /* libRNBlur.a */,
-				93D77A1424D4C48A007C44E0 /* libRNBlur.a */,
+				931CD62A24D30C6A0052313A /* libBVLinearGradient.a */,
+				931CD62C24D30C6A0052313A /* libBVLinearGradient.a */,
 			);
 			name = Products;
 			sourceTree = "<group>";
 		};
-		93D77A1524D4C48A007C44E0 /* Products */ = {
+		931CD62D24D30C6A0052313A /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				93D77A1A24D4C48A007C44E0 /* libBVLinearGradient.a */,
-				93D77A1C24D4C48A007C44E0 /* libBVLinearGradient.a */,
+				931CD63224D30C6A0052313A /* libRNSVG.a */,
+				931CD63424D30C6A0052313A /* libRNSVG-tvOS.a */,
 			);
 			name = Products;
 			sourceTree = "<group>";
 		};
-		93D77A1D24D4C48B007C44E0 /* Products */ = {
+		931CD63524D30C6A0052313A /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				93D77A2124D4C48B007C44E0 /* libRNImagePicker.a */,
+				931CD63A24D30C6A0052313A /* libRNVectorIcons.a */,
+				931CD63C24D30C6A0052313A /* libRNVectorIcons-tvOS.a */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -867,7 +867,7 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
-		ECB8AB143CF242C195BC8241 /* Products */ = {
+		ECB8AB143CF242C195BC8241 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
 				763F794AC0CA471D97E9A66E /* tinderclone.svg */,
@@ -978,14 +978,20 @@
 				TargetAttributes = {
 					00E356ED1AD99517003FC87E = {
 						CreatedOnToolsVersion = 6.2;
+						DevelopmentTeam = 5YY3FWP24V;
 						TestTargetID = 13B07F861A680F5B00A75B9A;
+					};
+					13B07F861A680F5B00A75B9A = {
+						DevelopmentTeam = 5YY3FWP24V;
 					};
 					2D02E47A1E0B4A5D006451C7 = {
 						CreatedOnToolsVersion = 8.2.1;
+						DevelopmentTeam = 5YY3FWP24V;
 						ProvisioningStyle = Automatic;
 					};
 					2D02E48F1E0B4A5D006451C7 = {
 						CreatedOnToolsVersion = 8.2.1;
+						DevelopmentTeam = 5YY3FWP24V;
 						ProvisioningStyle = Automatic;
 						TestTargetID = 2D02E47A1E0B4A5D006451C7;
 					};
@@ -1005,7 +1011,7 @@
 			projectDirPath = "";
 			projectReferences = (
 				{
-					ProductGroup = 93D77A1524D4C48A007C44E0 /* Products */;
+					ProductGroup = 931CD62524D30C6A0052313A /* Products */;
 					ProjectRef = 39FEBD11C00345D5AB5DF420 /* BVLinearGradient.xcodeproj */;
 				},
 				{
@@ -1057,27 +1063,27 @@
 					ProjectRef = 146833FF1AC3E56700842450 /* React.xcodeproj */;
 				},
 				{
-					ProductGroup = 93D77A0D24D4C48A007C44E0 /* Products */;
+					ProductGroup = 931CD60824D30C6A0052313A /* Products */;
 					ProjectRef = 37142C1BCB95469DA4705508 /* RNBlur.xcodeproj */;
 				},
 				{
-					ProductGroup = 93D779F524D4C48A007C44E0 /* Products */;
+					ProductGroup = 931CD60A24D30C6A0052313A /* Products */;
 					ProjectRef = E9D5749A31DD4F898089E151 /* RNCNetInfo.xcodeproj */;
 				},
 				{
-					ProductGroup = 93D77A0524D4C48A007C44E0 /* Products */;
+					ProductGroup = 931CD61824D30C6A0052313A /* Products */;
 					ProjectRef = A8E2AF81D45846FD9FF9D0ED /* RNGestureHandler.xcodeproj */;
 				},
 				{
-					ProductGroup = 93D77A1D24D4C48B007C44E0 /* Products */;
+					ProductGroup = 931CD62024D30C6A0052313A /* Products */;
 					ProjectRef = 6AB55527290F47F7B91056F7 /* RNImagePicker.xcodeproj */;
 				},
 				{
-					ProductGroup = 93D779FD24D4C48A007C44E0 /* Products */;
+					ProductGroup = 931CD62D24D30C6A0052313A /* Products */;
 					ProjectRef = B751FB417DE64E72847F629C /* RNSVG.xcodeproj */;
 				},
 				{
-					ProductGroup = 93D779ED24D4C48A007C44E0 /* Products */;
+					ProductGroup = 931CD63524D30C6A0052313A /* Products */;
 					ProjectRef = 65FA4078676448968AFF1E68 /* RNVectorIcons.xcodeproj */;
 				},
 			);
@@ -1316,123 +1322,123 @@
 			remoteRef = 832341B41AAA6A8300B99B32 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
-		93D779E624D4C40F007C44E0 /* libjsi.a */ = {
+		931CD60124D30C690052313A /* libjsi.a */ = {
 			isa = PBXReferenceProxy;
 			fileType = archive.ar;
 			path = libjsi.a;
-			remoteRef = 93D779E524D4C40F007C44E0 /* PBXContainerItemProxy */;
+			remoteRef = 931CD60024D30C690052313A /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
-		93D779E824D4C40F007C44E0 /* libjsiexecutor.a */ = {
+		931CD60324D30C690052313A /* libjsiexecutor.a */ = {
 			isa = PBXReferenceProxy;
 			fileType = archive.ar;
 			path = libjsiexecutor.a;
-			remoteRef = 93D779E724D4C40F007C44E0 /* PBXContainerItemProxy */;
+			remoteRef = 931CD60224D30C690052313A /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
-		93D779EA24D4C40F007C44E0 /* libjsi-tvOS.a */ = {
+		931CD60524D30C690052313A /* libjsi-tvOS.a */ = {
 			isa = PBXReferenceProxy;
 			fileType = archive.ar;
 			path = "libjsi-tvOS.a";
-			remoteRef = 93D779E924D4C40F007C44E0 /* PBXContainerItemProxy */;
+			remoteRef = 931CD60424D30C690052313A /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
-		93D779EC24D4C40F007C44E0 /* libjsiexecutor-tvOS.a */ = {
+		931CD60724D30C690052313A /* libjsiexecutor-tvOS.a */ = {
 			isa = PBXReferenceProxy;
 			fileType = archive.ar;
 			path = "libjsiexecutor-tvOS.a";
-			remoteRef = 93D779EB24D4C40F007C44E0 /* PBXContainerItemProxy */;
+			remoteRef = 931CD60624D30C690052313A /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
-		93D779F224D4C48A007C44E0 /* libRNVectorIcons.a */ = {
+		931CD60F24D30C6A0052313A /* libRNBlur.a */ = {
 			isa = PBXReferenceProxy;
 			fileType = archive.ar;
-			path = libRNVectorIcons.a;
-			remoteRef = 93D779F124D4C48A007C44E0 /* PBXContainerItemProxy */;
+			path = libRNBlur.a;
+			remoteRef = 931CD60E24D30C6A0052313A /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
-		93D779F424D4C48A007C44E0 /* libRNVectorIcons-tvOS.a */ = {
+		931CD61124D30C6A0052313A /* libRNBlur.a */ = {
 			isa = PBXReferenceProxy;
 			fileType = archive.ar;
-			path = "libRNVectorIcons-tvOS.a";
-			remoteRef = 93D779F324D4C48A007C44E0 /* PBXContainerItemProxy */;
+			path = libRNBlur.a;
+			remoteRef = 931CD61024D30C6A0052313A /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
-		93D779FA24D4C48A007C44E0 /* libRNCNetInfo.a */ = {
+		931CD61524D30C6A0052313A /* libRNCNetInfo.a */ = {
 			isa = PBXReferenceProxy;
 			fileType = archive.ar;
 			path = libRNCNetInfo.a;
-			remoteRef = 93D779F924D4C48A007C44E0 /* PBXContainerItemProxy */;
+			remoteRef = 931CD61424D30C6A0052313A /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
-		93D779FC24D4C48A007C44E0 /* libRNCNetInfo-tvOS.a */ = {
+		931CD61724D30C6A0052313A /* libRNCNetInfo-tvOS.a */ = {
 			isa = PBXReferenceProxy;
 			fileType = archive.ar;
 			path = "libRNCNetInfo-tvOS.a";
-			remoteRef = 93D779FB24D4C48A007C44E0 /* PBXContainerItemProxy */;
+			remoteRef = 931CD61624D30C6A0052313A /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
-		93D77A0224D4C48A007C44E0 /* libRNSVG.a */ = {
-			isa = PBXReferenceProxy;
-			fileType = archive.ar;
-			path = libRNSVG.a;
-			remoteRef = 93D77A0124D4C48A007C44E0 /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		93D77A0424D4C48A007C44E0 /* libRNSVG-tvOS.a */ = {
-			isa = PBXReferenceProxy;
-			fileType = archive.ar;
-			path = "libRNSVG-tvOS.a";
-			remoteRef = 93D77A0324D4C48A007C44E0 /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		93D77A0A24D4C48A007C44E0 /* libRNGestureHandler.a */ = {
+		931CD61D24D30C6A0052313A /* libRNGestureHandler.a */ = {
 			isa = PBXReferenceProxy;
 			fileType = archive.ar;
 			path = libRNGestureHandler.a;
-			remoteRef = 93D77A0924D4C48A007C44E0 /* PBXContainerItemProxy */;
+			remoteRef = 931CD61C24D30C6A0052313A /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
-		93D77A0C24D4C48A007C44E0 /* libRNGestureHandler-tvOS.a */ = {
+		931CD61F24D30C6A0052313A /* libRNGestureHandler-tvOS.a */ = {
 			isa = PBXReferenceProxy;
 			fileType = archive.ar;
 			path = "libRNGestureHandler-tvOS.a";
-			remoteRef = 93D77A0B24D4C48A007C44E0 /* PBXContainerItemProxy */;
+			remoteRef = 931CD61E24D30C6A0052313A /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
-		93D77A1224D4C48A007C44E0 /* libRNBlur.a */ = {
-			isa = PBXReferenceProxy;
-			fileType = archive.ar;
-			path = libRNBlur.a;
-			remoteRef = 93D77A1124D4C48A007C44E0 /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		93D77A1424D4C48A007C44E0 /* libRNBlur.a */ = {
-			isa = PBXReferenceProxy;
-			fileType = archive.ar;
-			path = libRNBlur.a;
-			remoteRef = 93D77A1324D4C48A007C44E0 /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		93D77A1A24D4C48A007C44E0 /* libBVLinearGradient.a */ = {
-			isa = PBXReferenceProxy;
-			fileType = archive.ar;
-			path = libBVLinearGradient.a;
-			remoteRef = 93D77A1924D4C48A007C44E0 /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		93D77A1C24D4C48A007C44E0 /* libBVLinearGradient.a */ = {
-			isa = PBXReferenceProxy;
-			fileType = archive.ar;
-			path = libBVLinearGradient.a;
-			remoteRef = 93D77A1B24D4C48A007C44E0 /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		93D77A2124D4C48B007C44E0 /* libRNImagePicker.a */ = {
+		931CD62424D30C6A0052313A /* libRNImagePicker.a */ = {
 			isa = PBXReferenceProxy;
 			fileType = archive.ar;
 			path = libRNImagePicker.a;
-			remoteRef = 93D77A2024D4C48B007C44E0 /* PBXContainerItemProxy */;
+			remoteRef = 931CD62324D30C6A0052313A /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		931CD62A24D30C6A0052313A /* libBVLinearGradient.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libBVLinearGradient.a;
+			remoteRef = 931CD62924D30C6A0052313A /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		931CD62C24D30C6A0052313A /* libBVLinearGradient.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libBVLinearGradient.a;
+			remoteRef = 931CD62B24D30C6A0052313A /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		931CD63224D30C6A0052313A /* libRNSVG.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libRNSVG.a;
+			remoteRef = 931CD63124D30C6A0052313A /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		931CD63424D30C6A0052313A /* libRNSVG-tvOS.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = "libRNSVG-tvOS.a";
+			remoteRef = 931CD63324D30C6A0052313A /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		931CD63A24D30C6A0052313A /* libRNVectorIcons.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libRNVectorIcons.a;
+			remoteRef = 931CD63924D30C6A0052313A /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		931CD63C24D30C6A0052313A /* libRNVectorIcons-tvOS.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = "libRNVectorIcons-tvOS.a";
+			remoteRef = 931CD63B24D30C6A0052313A /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 		ADBDB9271DFEBF0700ED6528 /* libRCTBlob.a */ = {
@@ -1594,6 +1600,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
+				DEVELOPMENT_TEAM = 5YY3FWP24V;
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"DEBUG=1",
 					"$(inherited)",
@@ -1640,6 +1647,7 @@
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				COPY_PHASE_STRIP = NO;
+				DEVELOPMENT_TEAM = 5YY3FWP24V;
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(SRCROOT)..\node_modules@react-native-community\blurios",
@@ -1683,6 +1691,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CURRENT_PROJECT_VERSION = 1;
 				DEAD_CODE_STRIPPING = NO;
+				DEVELOPMENT_TEAM = 5YY3FWP24V;
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(SRCROOT)..\node_modules@react-native-community\blurios",
@@ -1700,7 +1709,7 @@
 					"-ObjC",
 					"-lc++",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = "org.reactjs.native.example.$(PRODUCT_NAME:rfc1034identifier)";
+				PRODUCT_BUNDLE_IDENTIFIER = FindrApp.react;
 				PRODUCT_NAME = Findr;
 				VERSIONING_SYSTEM = "apple-generic";
 			};
@@ -1711,6 +1720,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 5YY3FWP24V;
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(SRCROOT)..\node_modules@react-native-community\blurios",
@@ -1728,7 +1738,7 @@
 					"-ObjC",
 					"-lc++",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = "org.reactjs.native.example.$(PRODUCT_NAME:rfc1034identifier)";
+				PRODUCT_BUNDLE_IDENTIFIER = FindrApp.react;
 				PRODUCT_NAME = Findr;
 				VERSIONING_SYSTEM = "apple-generic";
 			};
@@ -1744,6 +1754,7 @@
 				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
 				DEBUG_INFORMATION_FORMAT = dwarf;
+				DEVELOPMENT_TEAM = 5YY3FWP24V;
 				ENABLE_TESTABILITY = YES;
 				GCC_NO_COMMON_BLOCKS = YES;
 				HEADER_SEARCH_PATHS = (
@@ -1795,6 +1806,7 @@
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				DEVELOPMENT_TEAM = 5YY3FWP24V;
 				GCC_NO_COMMON_BLOCKS = YES;
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1843,6 +1855,7 @@
 				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
 				DEBUG_INFORMATION_FORMAT = dwarf;
+				DEVELOPMENT_TEAM = 5YY3FWP24V;
 				ENABLE_TESTABILITY = YES;
 				GCC_NO_COMMON_BLOCKS = YES;
 				HEADER_SEARCH_PATHS = (
@@ -1893,6 +1906,7 @@
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				DEVELOPMENT_TEAM = 5YY3FWP24V;
 				GCC_NO_COMMON_BLOCKS = YES;
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
