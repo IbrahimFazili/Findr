@@ -427,6 +427,7 @@ export default StyleSheet.create({
   info3: {
     flexDirection: "row",
     marginTop: DIMENSION_HEIGHT * 0.02,
+    marginLeft: DIMENSION_WIDTH * 0.04,
   },
   profileTitle: {
     fontSize: 15,

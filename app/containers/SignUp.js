@@ -10,16 +10,6 @@ import {Dropdown} from 'react-native-material-dropdown'
 
 const DIMENTIONS = Dimensions.get('window');
 
-// let universities=[
-//     {value: "University of Toronto",},
-//     {value: "University of Waterloo",},
-//     {value: "University of British Columbia",},
-//     {value: "University of Ottawa",},
-//     {value: "York University",},
-//     {value: "McGill University",},
-//     {value: "Trent University",},
-// ];
-
 const theme = {
     colors: {
         ...DefaultTheme.colors,

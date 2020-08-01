@@ -332,6 +332,9 @@ class ProfileItem extends React.Component{
 	}
 
 	handleCourseChange(tag, courseArray){
+		if(!tag || !courseArray){
+			return ;
+		}
 		if (tag.length > 0){
 			this.setState({courses: courseArray.concat([tag])})
 		}
