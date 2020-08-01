@@ -658,6 +658,7 @@
 				13B07FAF1A68108700A75B9A /* AppDelegate.h */,
 				13B07FB01A68108700A75B9A /* AppDelegate.m */,
 				13B07FB51A68108700A75B9A /* Images.xcassets */,
+				936EEC2E24C0CFD10065AA75 /* tinderclone.ttf */,
 				13B07FB61A68108700A75B9A /* Info.plist */,
 				13B07FB11A68108700A75B9A /* LaunchScreen.xib */,
 				13B07FB71A68108700A75B9A /* main.m */,
@@ -889,7 +890,7 @@
 				C202AD5B7C1041D59C648D2C /* SimpleLineIcons.ttf */,
 				F63B5458E8B741D3B624AA2F /* Zocial.ttf */,
 			);
-			name = Resources;
+			name = Products;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */

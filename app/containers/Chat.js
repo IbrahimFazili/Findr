@@ -14,6 +14,7 @@ import AutogrowInput from "react-native-autogrow-input";
 import { moderateScale } from "react-native-size-matters";
 import ImagePicker from "react-native-image-picker";
 import { Thumbnail } from "native-base";
+import io from "socket.io-client";
 import APIConnection from "../assets/data/APIConnection";
 
 import AttachIcon from "../assets/icons/attach.svg";
@@ -139,7 +140,8 @@ export default class Chat extends Component {
   }
 
   _sendMessage() {
-	if (this.state.inputBarText.trim().length === 0) return;
+	if (this.state.inputBarText.trim().length === 0 
+	&& this.state.selectedMedia.length === 0) return;
     const timestamp = (new Date()).getTime();
     this.state.messages.push({
       user: this.state.own_email,
@@ -210,15 +212,33 @@ export default class Chat extends Component {
     const own_email = this.state.own_email;
 
     this.state.messages.forEach(function (message, index) {
-      messages.push(
-        <MessageBubble
-          key={index}
-          direction={message.user === own_email ? 'left' : 'right'}
-          text={message.msg}
-          time={message.timestamp}
-        />
-      );
-    });
+		if (message.media && (message.media.length > 0)) {
+			messages.push(
+				<MessageBubble
+					key={index}
+					direction={
+						message.user === own_email ? "left" : "right"
+					}
+					text={message.msg}
+					image={message.media[0]}
+					time={message.timestamp}
+				/>
+			);
+		} else {
+			messages.push(
+				<MessageBubble
+					key={index}
+					direction={
+						message.user === own_email ? "left" : "right"
+					}
+					text={message.msg}
+					image={null}
+					time={message.timestamp}
+				/>
+			);
+		}
+	});
+
 
     return (
 		<View style={styles.outer}>
@@ -294,6 +314,7 @@ export default class Chat extends Component {
 						onChangeText={(text) =>
 							this._onChangeInputBarText(text)
 						}
+						onChangeMedia={this._onChangeMedia.bind(this)}
 						text={this.state.inputBarText}
 					/>
 				</ImageBackground>
@@ -304,11 +325,19 @@ export default class Chat extends Component {
 
 //The bubbles that appear on the left or the right for the messages.
 class MessageBubble extends Component {
-	_computeBubbleWidth() {
-		let initLen = this.props.text.length;
-		const maxWidth = DIMENSION_WIDTH * 0.38;
-		// 4/3 
-		return Math.max(maxWidth, DIMENSION_WIDTH - (initLen * (maxWidth / 29)));
+
+	constructor(props) {
+		super(props);
+		this.state = {
+			image: null
+		};
+	}
+
+	async componentDidMount() {
+		const url = this.props.image ? await (new APIConnection()).fetchChatImage(this.props.image) : null;
+		if (url) {
+			this.setState({ image: url });
+		}
 	}
 
 	render() {
@@ -359,6 +388,21 @@ class MessageBubble extends Component {
 				>
 					{leftSpacer}
 					<View style={bubbleStyles}>
+						{this.state.image ? <View style={{
+							maxWidth: DIMENSION_WIDTH * 0.8,
+							maxHeight: DIMENSION_HEIGHT * 0.3,
+							alignItems: "center",
+						}}>
+							<Image
+							source={{ uri: this.state.image }}
+							style={{
+								width: DIMENSION_WIDTH * 0.75,
+								height: DIMENSION_HEIGHT * 0.3,
+								resizeMode: "contain",
+								borderRadius: 5
+							}}
+							/>
+						</View> : null}
 						<Text style={bubbleTextStyle}>{this.props.text}</Text>
 					</View>
 					{rightSpacer}
@@ -369,6 +413,7 @@ class MessageBubble extends Component {
 		);
 	}
 }
+
 
 //The bar at the bottom with a textbox and a send button.
 class InputBar extends Component {
