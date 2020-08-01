@@ -9,7 +9,7 @@ import {
 	ImageBackground,
 	Dimensions,
 } from "react-native";
-import { Header, Image } from "react-native-elements";
+import { Header } from "react-native-elements";
 import AutogrowInput from "react-native-autogrow-input";
 import { moderateScale } from "react-native-size-matters";
 import { Thumbnail } from "native-base";
@@ -456,14 +456,24 @@ class InputBar extends Component {
 				maxFiles: 4,
 				compressImageQuality: 0.7,
 			  }).then((images) => {
-				  this.props.onChangeMedia(images);
+				  if (images.length === 1) {
+					ImagePicker.openCropper({ path: images[0].path })
+					.then((croppedImage) => {
+					  this.props.onChangeMedia([croppedImage]);
+					}).catch((err) => null);
+
+				  } else this.props.onChangeMedia(images);
+
 			  }).catch((err) => null);
 
 		} else if (selectionType === "camera") {
 			ImagePicker.openCamera({
 				compressImageQuality: 0.6,
 			  }).then((image) => {
-				  this.props.onChangeMedia([image]);
+				  ImagePicker.openCropper({ path: image.path })
+				  .then((croppedImage) => {
+					this.props.onChangeMedia([croppedImage]);
+				  }).catch((err) => null);
 			  }).catch((err) => null);
 		}
 		
