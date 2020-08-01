@@ -30,6 +30,7 @@ class Matches extends React.Component {
 		this.state = {
 			API: new APIConnection(),
 			cards: [],
+			pending_cards : [],
 			visible: false,
 			name: "",
 			keywords: [],
@@ -43,8 +44,11 @@ class Matches extends React.Component {
 		const data = await this.state.API.fetchMatches(
 			await AsyncStorage.getItem("storedEmail")
 		);
+		const pendingMatches = await this.state.API.fetchPendingMatches(
+			await AsyncStorage.getItem("storedEmail")
+		);
 		this.scrollView.scrollToEnd({ animated: true, duration: 1000 });
-		this.setState({ cards: data });
+		this.setState({ cards: data, pending_cards: pendingMatches });
 	}
 
 	async componentDidMount() {
@@ -100,7 +104,7 @@ class Matches extends React.Component {
 									paddingEnd: 5,
 								}}
 							>
-								{this.state.cards.map((user) => (
+								{this.state.pending_cards.map((user) => (
 									<View>
 										<Thumbnail
 											large
