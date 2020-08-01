@@ -19,6 +19,7 @@ import shorthash from "shorthash";
 import Images from "react-native-chat-images";
 
 import AttachIcon from "../assets/icons/attach.svg";
+import CameraIcon from "../assets/icons/camera.svg";
 import SendIcon from "../assets/icons/send_icon.svg";
 import BackButton from "../assets/icons/back_black.svg";
 
@@ -415,7 +416,7 @@ class MessageBubble extends Component {
 							<Images
 							images={this.state.images}
 							backgroundColor="transparent"
-							width={DIMENSION_WIDTH * 0.75}
+							width="92.5%"
 							style={{
 								borderRadius: 10,
 								borderWidth: 1,
@@ -448,14 +449,24 @@ class InputBar extends Component {
 		}
 	}
 
-	chooseImage = () => {
-		ImagePicker.openPicker({
-			multiple: true,
-			maxFiles: 4,
-			compressImageQuality: 0.8,
-		  }).then((images) => {
-			  this.props.onChangeMedia(images);
-		  });
+	chooseImage = (selectionType) => {
+		if (selectionType === "picker") {
+			ImagePicker.openPicker({
+				multiple: true,
+				maxFiles: 4,
+				compressImageQuality: 0.7,
+			  }).then((images) => {
+				  this.props.onChangeMedia(images);
+			  }).catch((err) => null);
+
+		} else if (selectionType === "camera") {
+			ImagePicker.openCamera({
+				compressImageQuality: 0.6,
+			  }).then((image) => {
+				  this.props.onChangeMedia([image]);
+			  }).catch((err) => null);
+		}
+		
 	};
 
 	render() {
@@ -463,11 +474,21 @@ class InputBar extends Component {
 			<View style={styles.inputBar}>
 				<TouchableOpacity
 					style={styles.mediaButton}
-					onPress={() => this.chooseImage()}
+					onPress={() => this.chooseImage('picker')}
 				>
 					<AttachIcon
-						width={DIMENSION_WIDTH * 0.07}
-						height={DIMENSION_HEIGHT * 0.07}
+						width={DIMENSION_WIDTH * 0.06}
+						height={DIMENSION_HEIGHT * 0.06}
+					/>
+				</TouchableOpacity>
+
+				<TouchableOpacity
+					style={styles.mediaButton}
+					onPress={() => this.chooseImage('camera')}
+				>
+					<CameraIcon
+						width={DIMENSION_WIDTH * 0.06}
+						height={DIMENSION_HEIGHT * 0.06}
 					/>
 				</TouchableOpacity>
 				<AutogrowInput
@@ -529,9 +550,10 @@ const styles = StyleSheet.create({
 		flex: 1,
 		fontSize: 16,
 		paddingHorizontal: 10,
-		maxWidth: DIMENSION_WIDTH * 0.7,
+		maxWidth: DIMENSION_WIDTH * 0.65,
 		maxHeight: DIMENSION_HEIGHT * 0.05,
 		top: DIMENSION_HEIGHT * 0.01,
+		marginLeft: DIMENSION_WIDTH * 0.02
 	},
 
 	sendButton: {
@@ -539,6 +561,7 @@ const styles = StyleSheet.create({
 		backgroundColor: "transparent",
 		marginBottom: DIMENSION_HEIGHT * 0.003,
 		marginRight: DIMENSION_WIDTH * 0.01,
+		marginLeft: DIMENSION_WIDTH * 0.01,
 		elevation: 8,
 	},
 
@@ -549,6 +572,12 @@ const styles = StyleSheet.create({
 		bottom: 5,
 	},
 
+	cameraButton: {
+		backgroundColor: "transparent",
+		marginLeft: DIMENSION_WIDTH * 0.05,
+		marginTop: DIMENSION_HEIGHT * 0.005,
+		bottom: 5,
+	},
 	//MessageBubble
 
 	messageBubble: {
