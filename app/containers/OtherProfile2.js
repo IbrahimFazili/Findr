@@ -7,12 +7,15 @@ import {
 	Dimensions,
 	ImageBackground,
 	NetInfo,
+	TouchableOpacity,
+	AsyncStorage
 } from "react-native";
 import OtherProfileItem from "../components/OtherProfileItem";
 import APIConnection from "../assets/data/APIConnection";
 import { ScrollView } from "react-navigation";
 import CachedImage from "../components/CachedImage";
 import PlaceHolder from "../assets/icons/placeholder_icon.svg"
+import Settings from "../assets/icons/settings_fill.svg";
 
 const PRIMARY_COLOR = "#7444C0";
 const WHITE = "#FFFFFF";
@@ -49,6 +52,14 @@ class OtherProfile2 extends React.Component {
 		);
 	}
 
+	_getAge(age) {
+		if (typeof age === "number"){ return age; }
+		// MM-DD-YYYY
+		const year = Number(age.split("-")[2]);
+		return (new Date()).getFullYear() - year;
+	  }
+	
+
 	handleConnectivityChange = (isConnected) => {
 		this.setState({ isConnected });
 	};
@@ -82,8 +93,9 @@ class OtherProfile2 extends React.Component {
 					<ScrollView>
 						<Image
 							source={require("../assets/images/Findr_logo2x.png")}
-							style={globalStyles.profileLogo}
+							style={globalStyles.otherProfileLogo}
 						/>
+						
 						<View style={styles.header}>
 							<View style={styles.profilepicWrap}>
 								{
@@ -101,11 +113,11 @@ class OtherProfile2 extends React.Component {
 
 						<View style={{ paddingHorizontal: 10 }}>
 							<View
-								style={{ marginTop: DIMENSION_HEIGHT * 0.21 }}
+								style={{ marginTop: DIMENSION_HEIGHT * 0.01 }}
 							>
 								<OtherProfileItem
 									name={name}
-									age={age}
+									age={this._getAge(age)}
 									uni={location}
 									gender={gender}
 									major={major}
