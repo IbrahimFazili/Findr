@@ -2,7 +2,6 @@ import React from "react";
 import globalStyles from "../assets/styles";
 import {
   View,
-  Text,
   TouchableOpacity,
   StyleSheet,
   Image,
@@ -12,20 +11,18 @@ import {
   NetInfo
 } from "react-native";
 import ProfileItem from "../components/ProfileItem";
-import Icon from "../components/Icon";
 import APIConnection from "../assets/data/APIConnection";
 import CachedImage from "../components/CachedImage";
 import { ScrollView } from "react-navigation";
 import Settings from "../assets/icons/settings_fill.svg";
 import ImagePicker from 'react-native-image-picker';
 import PlaceHolder from "../assets/icons/placeholder_icon.svg"
-import Pen from '../assets/icons/pen.svg';
 let RNFS = require('react-native-fs');
 
 const PRIMARY_COLOR = "#7444C0";
 const WHITE = "#FFFFFF";
 
-const ICON_FONT = "tinderclone";
+const ICON_FONT = "sans-serif";
 
 const DIMENSION_WIDTH = Dimensions.get("window").width;
 const DIMENSION_HEIGHT = Dimensions.get("window").height;
@@ -148,8 +145,9 @@ class Profile extends React.Component {
     const courses = this.state.profile ? this.state.profile.courses : [];
     const major = this.state.profile ? this.state.profile.major : [];
     const bio = this.state.profile ? this.state.profile.bio : [];
+    const projects = this.state.profile ? this.state.profile.projects : [];
+    const experience = this.state.profile ? this.state.profile.experience : [];
 
-    console.log(this.state);
     if (!this.state.isConnected) {
       this.props.navigation.navigate("Internet");
     }
@@ -195,6 +193,8 @@ class Profile extends React.Component {
                   keywords={keywords}
                   clubs={clubs}
                   courses={courses}
+                  projects={projects}
+                  experience={experience}
                   major={major}
                   bio={bio}
                 />

@@ -399,12 +399,16 @@ export default StyleSheet.create({
   tick: {
     marginLeft: DIMENSION_WIDTH * 0.8,
     bottom: DIMENSION_WIDTH * 0.12,
+    height: DIMENSION_HEIGHT * 0.025,
+    width: DIMENSION_WIDTH * 0.1
   },
 
   cross: {
     marginLeft: DIMENSION_WIDTH * 0.8,
     bottom: DIMENSION_WIDTH * 0.10,
-    marginBottom: -DIMENSION_WIDTH * 0.05
+    marginBottom: -DIMENSION_WIDTH * 0.05,
+    width: DIMENSION_WIDTH * 0.2,
+    height: DIMENSION_HEIGHT * 0.025,
   },
   info: {
     paddingVertical: 8,
