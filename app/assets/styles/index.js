@@ -399,12 +399,16 @@ export default StyleSheet.create({
   tick: {
     marginLeft: DIMENSION_WIDTH * 0.8,
     bottom: DIMENSION_WIDTH * 0.12,
+    height: DIMENSION_HEIGHT * 0.025,
+    width: DIMENSION_WIDTH * 0.1
   },
 
   cross: {
     marginLeft: DIMENSION_WIDTH * 0.8,
     bottom: DIMENSION_WIDTH * 0.10,
-    marginBottom: -DIMENSION_WIDTH * 0.05
+    marginBottom: -DIMENSION_WIDTH * 0.05,
+    width: DIMENSION_WIDTH * 0.2,
+    height: DIMENSION_HEIGHT * 0.025,
   },
   info: {
     paddingVertical: 8,
@@ -427,6 +431,7 @@ export default StyleSheet.create({
   info3: {
     flexDirection: "row",
     marginTop: DIMENSION_HEIGHT * 0.02,
+    marginLeft: DIMENSION_WIDTH * 0.04,
   },
   profileTitle: {
     fontSize: 15,
@@ -986,15 +991,15 @@ export default StyleSheet.create({
   },
 
   slide1: {
-    marginTop: DIMENSION_HEIGHT * 0.08
+    marginTop: DIMENSION_HEIGHT * 0.07
   },
 
   uniDropDown: {
     width: DIMENSION_WIDTH * 0.7, 
     left: DIMENSION_WIDTH * 0.12,
     marginBottom:20, 
-    borderColor: "white", 
-    borderWidth: 0.4, 
+    borderColor: "darkgrey",
+    borderWidth: 1, 
     borderRadius: 35,
     paddingLeft: 20, 
     paddingRight: 20, 
@@ -1022,8 +1027,8 @@ export default StyleSheet.create({
     borderBottomRightRadius: 10,
     borderTopLeftRadius: 10,
     borderTopRightRadius: 10,
-    marginTop: DIMENSION_HEIGHT * 0.16,
-    // marginBottom: DIMENSION_HEIGHT * 0.05,
+    marginTop: DIMENSION_HEIGHT * 0.13,
+    marginBottom: DIMENSION_HEIGHT * 0.05,
     width: DIMENSION_WIDTH * 0.35,
     alignSelf: 'center',
     bottom: DIMENSION_HEIGHT * 0.016
