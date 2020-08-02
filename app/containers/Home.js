@@ -24,7 +24,6 @@ class Home extends React.Component {
       uni: "",
       dataLoadRequired: true,
       isConnected: true,
-      visible: false,
       name: "",
       image: "",
       keywords: [],
@@ -83,7 +82,7 @@ class Home extends React.Component {
     const data = await this.state.API.loadData(
       await AsyncStorage.getItem('storedEmail')
     );
-    this.setState({ cards: data, dataLoadRequired: false });
+    this.setState({ cards: data, dataLoadRequired: false, visible: false, matchPossible: false });
   }
 
   async handleRightSwipe(email, image, name, swiped=false) {

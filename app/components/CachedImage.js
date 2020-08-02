@@ -110,7 +110,7 @@ class CachedImage extends React.Component {
         if (props.checksum !== this.state.checksum){
             updatedProps.checksum = props.checksum;
         }
-        this.setState({source : { uri: updatedProps.uri } })
+        this.setState({source : { uri: updatedProps.uri }, placeholderRequired: false })
     }
 
     render() {
