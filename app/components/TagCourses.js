@@ -34,7 +34,7 @@ class TagEducation extends React.Component {
     }
     if (props.keywords !== this.state.keywords){
       this.state.keywords = props.keywords
-      this.state.tags.tagsArray = props.keywords
+      this.state.tags.tagsArray = props.keywords ? props.keywords : []
     }
     if (props.type !== this.state.type){
       this.state.type = props.type;
@@ -73,7 +73,8 @@ class TagEducation extends React.Component {
           autoCorrect={false}
           tagStyle={[ styles.tag, this.state.tagCSS ]}
           tagTextStyle={styles.tagText}
-          keysForTag={', '}/>
+          keysForTag={', '}
+        />
       </View>
     );
   }
