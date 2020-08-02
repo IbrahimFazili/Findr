@@ -65,7 +65,10 @@ class MatchPopup extends React.Component {
             transparent={true}
             animationType={"fade"}
 			>	
-				{ this.props.image.length === 0 ? <PlaceHolder width={30} height={30}/> 
+				{ this.props.image.length === 0 ?
+				<View style={{ alignSelf: "center" }}>
+					<PlaceHolder width={30} height={30}/>
+				</View>
 				: <Image source={{ uri: this.state.image }} style={imageStyle} />
 				}
 				

@@ -25,13 +25,13 @@ class Home extends React.Component {
       uni: "",
       dataLoadRequired: true,
       isConnected: true,
-      visible: false,
       name: "",
       image: "",
       keywords: [],
       bio: "",
       uni: "",
-      matchPossible: false,
+      matchPossible: true,
+      updateCount: 0,
     };
   }
 
@@ -84,7 +84,7 @@ class Home extends React.Component {
     const data = await this.state.API.loadData(
       await AsyncStorage.getItem('storedEmail')
     );
-    this.setState({ cards: data, dataLoadRequired: false });
+    this.setState({ cards: data, dataLoadRequired: false, updateCount: this.state.updateCount + 1 });
   }
 
   async handleRightSwipe(email, image, name, swiped=false) {
@@ -118,19 +118,6 @@ class Home extends React.Component {
     }
   }
 
-  async handleOutOfCards(){
-    const data = await this.state.API.fetchConnections(
-      await AsyncStorage.getItem('storedEmail')
-    );
-
-    if(data === []){
-      this.setState({visible: true});
-    }
-    else{
-      this.setState({ cards: data, dataLoadRequired: false });
-    }
-  }
-
   render() {
     AsyncStorage.getItem('storedEmail')
       .then((value) => {
@@ -161,14 +148,18 @@ class Home extends React.Component {
             <CardStack
               loop={false}
               verticalSwipe={false}
-              renderNoMoreCards={() => null}
+              renderNoMoreCards={() => (<NoCardsPopup 
+                visible={true} 
+                email={this.state.email}
+                navigation={this.props.navigation}/>)
+              }
               ref={(swiper) => (this.swiper = swiper)}
-              onSwipedAll={() => this.handleOutOfCards()}
+              key={this.state.updateCount}
             >
               {this.state.cards.map((item, index) => (
                 <Card key={index}
-                onSwipedLeft={() => this.handleLeftSwipe(item.email, true)}
-                onSwipedRight={() => this.handleRightSwipe(item.email, item.image, item.name, true)}
+                  onSwipedLeft={() => this.handleLeftSwipe(item.email, true)}
+                  onSwipedRight={() => this.handleRightSwipe(item.email, item.image, item.name, true)}
                 >
                   <TouchableOpacity 
                   activeOpacity={1} 
@@ -215,12 +206,6 @@ class Home extends React.Component {
             keywords={this.state.keywords}
             bio={this.state.bio}
             uni={this.state.uni}
-          />
-
-          <NoCardsPopup
-            visible={true} 
-            email={this.state.email}
-            navigation={this.props.navigation}
           />
  
         </View>

@@ -961,6 +961,31 @@ export default StyleSheet.create({
     color: "#d16969",
   },
 
+  viewProfileText:{
+    paddingBottom: 7,
+    marginTop: 0,
+    fontSize: 15,
+    fontFamily: "sans-serif",
+    alignSelf: 'center',
+    color: "white",
+  },
+
+  viewProfileButtonStyle: {
+    borderRadius: 30,
+    borderColor: "transparent",
+    borderWidth: 0.06,
+    backgroundColor: "#1a5d57"
+  },
+
+  refreshButtonStyle: {
+    borderRadius: 30,
+    borderColor: "transparent",
+    borderWidth: 0.06,
+    backgroundColor: "#1a5d57",
+    marginBottom: DIMENSION_HEIGHT * 0.05,
+    marginTop: DIMENSION_HEIGHT * 0.05
+  },
+
   ignoreButtonStyle: {
     borderBottomRightRadius: 30,
     borderColor: "black",
@@ -1015,8 +1040,8 @@ export default StyleSheet.create({
 
   viewProfileButton:{
     width: DIMENSION_WIDTH * 0.425,
-    marginLeft: DIMENSION_WIDTH * 0.21,
     marginTop: DIMENSION_HEIGHT * 0.01,
+    alignSelf: "center"
   },
 
   slide0: {
