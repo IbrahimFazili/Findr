@@ -1,11 +1,15 @@
 import React from "react";
-import { Image, Platform, AsyncStorage } from "react-native";
+import { Image, Platform, AsyncStorage, View } from "react-native";
 import shorthash from "shorthash";
+import PlaceHolder from "../assets/icons/placeholder_icon.svg"
+
 let RNFS = require('react-native-fs');
+
 
 class CachedImage extends React.Component {
     state = {
-        source: null
+        source: null,
+        placeholderRequired: false
     }
 
     /**
@@ -48,7 +52,7 @@ class CachedImage extends React.Component {
     }
 
     loadFile = (path) => {
-        this.setState({ source: { uri: path }});
+        this.setState({ source: { uri: path }, placeholderRequired: false });
     }
 
     downloadFile = (uri, path) => {
@@ -62,7 +66,6 @@ class CachedImage extends React.Component {
      * @param {String} existingPath path of the cached image
      */
     async cacheRefreshRequired(checksum, existingPath) {
-        console.log('inside checksum', checksum);
         const computedChecksum = await RNFS.hash(existingPath, "md5");
         console.log('computed', computedChecksum);
         if (checksum !== computedChecksum) return true;
@@ -72,6 +75,11 @@ class CachedImage extends React.Component {
     componentDidMount = () => {;
         const { uri, uid, checksum } = this.props;
         if (uid === undefined) return;
+        // Image.getSize(uri, () => {
+            
+        // }, (err) => {
+        //     this.setState({ placeholderRequired: true });
+        // });
         const name = shorthash.unique(uid);
         const extension = (Platform.OS === 'android') ? 'file://' : '' 
         const path =`${extension}${RNFS.CachesDirectoryPath}/${name}`;
@@ -88,6 +96,7 @@ class CachedImage extends React.Component {
                 this.downloadFile(uri, path);
             }
         });
+        
     }
 
     componentWillReceiveProps(props) {
@@ -105,7 +114,21 @@ class CachedImage extends React.Component {
     }
 
     render() {
-        return (<Image style={this.props.style} source={this.state.source}/>)
+        return this.state.placeholderRequired ? 
+        (
+        <View style={this.props.style}>
+            <PlaceHolder 
+            width={this.props.style ? this.props.style.width : undefined}
+            height={this.props.style ? this.props.style.width : undefined}
+            />
+        </View>
+        ) 
+        : (
+        <Image
+        style={this.props.style}
+        source={this.state.source}
+        onError={(err) => this.setState({ placeholderRequired: true })}
+        />);
     }
 }
 

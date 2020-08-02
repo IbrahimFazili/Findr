@@ -119,6 +119,7 @@ class ProfileItem extends React.Component{
 
 	componentWillReceiveProps(props) {
 		let updatedState = {};
+		console.log('recieving props', props);
 
 		if (props.name !== this.state.name) {
 			updatedState.name = props.name;
@@ -141,11 +142,15 @@ class ProfileItem extends React.Component{
 		if (props.clubs !== this.state.clubs) {
 			updatedState.clubs = props.clubs;
 		}
-
 		if (props.courses !== this.state.courses) {
 			updatedState.courses = props.courses;
 		}
-
+		if (props.projects && props.projects.length > 0) {
+			updatedState.allProjects = props.projects.map((value) => { return { value }; })
+		}
+		if (props.experience && props.experience.length > 0) {
+			updatedState.allExp = props.experience.map((value) => { return { value }; })
+		}
 		if (props.bio !== this.state.bio) {
 			updatedState.bio = props.bio;
 		}
@@ -332,6 +337,9 @@ class ProfileItem extends React.Component{
 	}
 
 	handleCourseChange(tag, courseArray){
+		if(!tag || !courseArray){
+			return ;
+		}
 		if (tag.length > 0){
 			this.setState({courses: courseArray.concat([tag])})
 		}
@@ -345,6 +353,7 @@ class ProfileItem extends React.Component{
 	}
 
 	render() {
+		console.log('allprojects', this.state.allProjects);
 		return (
 		<View>
 		<View style={styles.containerProfileItem}>
@@ -366,16 +375,16 @@ class ProfileItem extends React.Component{
 				}
 				{this.state.isEditable1 
 				? (
-					<View style={{left: FULL_WIDTH * 0.20}}>
+					<View style={{left: FULL_WIDTH * 0.20, width: FULL_WIDTH * 0.25}}>
 						<TouchableOpacity style={styles.profileButtons} onPress={this.handleUpdateClick1.bind(this)}>
-							<Check width={20} height={20}/>
-							</TouchableOpacity>
+							<Check width={25} height={25}/>
+						</TouchableOpacity>
 					</View>
 					) 
 				: (
-					<View style={{ right: FULL_WIDTH * 0.05 }}>
+					<View style={{ right: FULL_WIDTH * 0.05, width: FULL_WIDTH * 0.25 }}>
 						<TouchableOpacity style={styles.profileButtons} onPress={this.handleEditClick1.bind(this)}>
-							<Pen width={20} height={20}/>
+							<Pen width={25} height={25}/>
 						</TouchableOpacity>
 					</View>)
 				}
@@ -392,7 +401,7 @@ class ProfileItem extends React.Component{
 				dropdownPosition={-5}
 				containerStyle={styles.genderDrop}
 				pickerStyle={{borderRadius: 35,}}
-				dropdownOffset={{top: 20, left: 10}}
+				dropdownOffset={{ top: 20, left: 10 }}
 				itemCount={4}
 				textColor="black"
 				itemColor="black"
@@ -405,22 +414,13 @@ class ProfileItem extends React.Component{
 				}
 			</View>
 
-			<View style={styles.info2}>
+			<View style={styles.emailContainer}>
 				<Text style={styles.profileTitleEmail}>Email</Text>
 				<Text style={styles.infoContentEmail}>{this.props.email}</Text>
 			</View>
 
-			<View style={styles.info3}>
-				<Text style={styles.profileTitle}>Keywords</Text>
-				<Tag 
-					keywords={this.state.keywords} editable={this.state.isEditable1}
-					type="keyword"
-					wordChange={this.handleKeywordChange.bind(this)}
-				/>
-			</View>
-
-			<View style={styles.info2}>
-				<Text style={styles.profileTitleBio}>Bio</Text>
+			<View style={styles.infoBio}>
+				<Text style={styles.profileTitleBio}>About Me</Text>
 				{this.state.isEditable1
 				? (<TextInput
 					underlineColor="transparent"
@@ -438,15 +438,30 @@ class ProfileItem extends React.Component{
 				: (<Text style={styles.infoContentBio}>{this.state.bio}</Text>)
 				}
 			</View>
+
+			<View style={styles.info3}>
+				<Text style={styles.profileTitle}>Interests</Text>
+				<Tag 
+					keywords={this.state.keywords} editable={this.state.isEditable1}
+					type="interests"
+					wordChange={this.handleKeywordChange.bind(this)}
+				/>
+			</View>
 		</View>
 
 		<View style={styles.containerProfileItem2}>
 			<View style={styles.profileCardHeader}>
 				<Text style={styles.name_secondary}>Education</Text>
-				{this.state.isEditable2 
-				? (<TouchableOpacity style={styles.profileButtons2} onPress={this.handleUpdateClick2.bind(this)}><Check width={20} height={20}/></TouchableOpacity>) 
-				: (<TouchableOpacity style={styles.profileButtons2} onPress={this.handleEditClick2.bind(this)}><Pen width={20} height={20}/></TouchableOpacity>)
-				}
+				<View style={{ width: FULL_WIDTH * 0.4 }}>
+					{this.state.isEditable2 
+					? (<TouchableOpacity style={styles.profileButtons2} onPress={this.handleUpdateClick2.bind(this)}>
+							<Check width={25} height={25}/>
+						</TouchableOpacity>) 
+					: (<TouchableOpacity style={styles.profileButtons2} onPress={this.handleEditClick2.bind(this)}>
+							<Pen width={25} height={25}/>
+						</TouchableOpacity>)
+					}
+				</View>
 			</View>
 			<View style={styles.info}>
 				<Text style={styles.profileTitle2}>Major: </Text>
@@ -469,12 +484,12 @@ class ProfileItem extends React.Component{
 			<View style={styles.info3}>
 				<Text style={styles.profileTitle}>Courses: </Text>
 				<TagCourses keywords={this.state.courses} editable={this.state.isEditable2} 
-			    courseChange={this.handleCourseChange.bind(this)} type="course"/>
+			    courseChange={this.handleCourseChange.bind(this)} type="courses"/>
 			</View>
 
 			<View style={styles.info3}>
 				<Text style={styles.profileTitle}>Clubs: </Text>
-				<TagClubs keywords={this.state.clubs} editable={this.state.isEditable2} type="club"
+				<TagClubs keywords={this.state.clubs} editable={this.state.isEditable2} type="clubs"
 				clubChange={this.handleClubChange.bind(this)}/>
 			</View>
 		</View>
@@ -482,10 +497,16 @@ class ProfileItem extends React.Component{
 		<View style={styles.containerProfileItem2}>
 		<View style={styles.profileCardHeader}>
 			<Text style={styles.name_secondary}>Projects</Text>
-			{this.state.isEditable3 
-				? (<TouchableOpacity style={styles.profileButtons3} onPress={this.handleUpdateClick3}><Check width={20} height={20}/></TouchableOpacity>) 
-				: (<TouchableOpacity style={styles.profileButtons3} onPress={this.handleEditClick3}><Pen width={20} height={20}/></TouchableOpacity>)
-			}
+			<View style={{ width: FULL_WIDTH * 0.45 }}>
+				{this.state.isEditable3 
+					? (<TouchableOpacity style={styles.profileButtons3} onPress={this.handleUpdateClick3}>
+						<Check width={25} height={25}/>
+						</TouchableOpacity>) 
+					: (<TouchableOpacity style={styles.profileButtons3} onPress={this.handleEditClick3}>
+						<Pen width={25} height={25}/>
+						</TouchableOpacity>)
+				}
+			</View>
 		</View>
 
 		<View style={{marginTop: 10}}></View>
@@ -507,18 +528,19 @@ class ProfileItem extends React.Component{
 						theme={theme}
 					 />  
 					 {this.state.isEditable3 ? 
-					 <TouchableOpacity disabled={!this.state.isEditable3} onPress={() => 
-					(this.state.isEditable3 ? this.addProjectInput() : null)}
-					style={styles.tick}>
-						 <Plus width={10} height={10}/>
+					 <TouchableOpacity
+					 disabled={!this.state.isEditable3}
+					 onPress={() => (this.state.isEditable3 ? this.addProjectInput() : null)}
+					 style={styles.tick}>
+							<Plus width={15} height={15}/>
 				     </TouchableOpacity> : null }
 
 					{ this.state.isEditable3 ? 
-					 <TouchableOpacity disabled={!this.state.isEditable3} onPress={() => 
-					(this.state.isEditable3 ? 
-					 (this.state.allProjects.length > 1 ? this.removeProjectInput(index) : null) : null)}
-					style={styles.cross}>
-						 <Minus width={10} height={10}/>
+					 <TouchableOpacity
+					 disabled={!this.state.isEditable3}
+					 onPress={() => (this.state.isEditable3 ? (this.state.allProjects.length > 1 ? this.removeProjectInput(index) : null) : null)}
+					 style={styles.cross}>
+						 <Minus width={15} height={15}/>
 					 </TouchableOpacity> : null}
 				</View>
 				)
@@ -530,10 +552,16 @@ class ProfileItem extends React.Component{
 		<View style={styles.containerProfileItem2}>
 		<View style={styles.profileCardHeader}>
 			<Text style={styles.name_secondary}>Experience</Text>
+			<View style={{ width: FULL_WIDTH * 0.4 }}>
 			{this.state.isEditable4 
-				? (<TouchableOpacity style={styles.profileButtons4} onPress={this.handleUpdateClick4}><Check width={20} height={20}/></TouchableOpacity>) 
-				: (<TouchableOpacity style={styles.profileButtons4} onPress={this.handleEditClick4}><Pen width={20} height={20}/></TouchableOpacity>)
+				? (<TouchableOpacity style={styles.profileButtons4} onPress={this.handleUpdateClick4}>
+					<Check width={25} height={25}/>
+					</TouchableOpacity>) 
+				: (<TouchableOpacity style={styles.profileButtons4} onPress={this.handleEditClick4}>
+					<Pen width={25} height={25}/>
+					</TouchableOpacity>)
 			}
+			</View>
 		</View>
 		<View style={{marginTop: 10}}></View>
 

@@ -92,7 +92,8 @@ class Messages extends React.Component {
                     image={{ uri: item.image, checksum: item.checksum }}
                     name={item.name}
                     email={item.email}
-                    lastMessage={APIConnection.MESSAGE_QUEUES[item.email] ?
+                    lastMessage={APIConnection.MESSAGE_QUEUES[item.email] && 
+                      APIConnection.MESSAGE_QUEUES[item.email].peekNewest() ?
                       APIConnection.MESSAGE_QUEUES[item.email].peekNewest().msg
                       : item.messages[item.messages.length - 1].msg}
                   />

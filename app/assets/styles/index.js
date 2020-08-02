@@ -92,7 +92,6 @@ export default StyleSheet.create({
     height: 60,
     alignSelf: "center",
     marginTop: DIMENSION_HEIGHT * 0.06,
-    marginLeft: DIMENSION_WIDTH * 0.03,
   },
 
   seeAllicon: {
@@ -107,6 +106,7 @@ export default StyleSheet.create({
     paddingBottom: 10,
     fontSize: 20,
     color: "#1a5d57",
+    // fontWeight: "bold",
     letterSpacing: 1,
   },
 
@@ -215,10 +215,10 @@ export default StyleSheet.create({
   popupCard: {
     backgroundColor: WHITE,
     borderRadius: 20,
-    maxHeight: DIMENSION_HEIGHT * 0.76,
+    maxHeight: DIMENSION_HEIGHT * 0.7,
     maxWidth: DIMENSION_WIDTH * 0.85,
     alignSelf: "center",
-    marginTop: DIMENSION_HEIGHT * 0.15,
+    marginVertical: DIMENSION_HEIGHT * 0.13,
     borderRadius: 30,
     // overflow: "hidden",
   },
@@ -296,40 +296,6 @@ export default StyleSheet.create({
     fontSize: 13,
   },
 
-  errorName: {
-    left: DIMENSION_WIDTH * 0.17,
-    top: DIMENSION_HEIGHT * - 0.03,
-    // color: "orange"
-    color: "#d1984b"
-  },
-
-  errorMail: {
-    left: DIMENSION_WIDTH * 0.25,
-    top: DIMENSION_HEIGHT * - 0.03,
-    // color: "orange"
-    color: "#d1984b"
-  },
-
-  loginError: {
-    left: DIMENSION_WIDTH * 0.25,
-    top: DIMENSION_HEIGHT * - 0.03,
-    // color: "orange"
-    color: "#d1984b"
-  },
-
-  passwordNotError:{
-    left: DIMENSION_WIDTH * 0.267,
-    top: DIMENSION_HEIGHT * - 0.03,
-    // color: "orange"
-    color: "#d1984b"
-  },
-
-  errorPassword: {
-    left: DIMENSION_WIDTH * 0.13,
-    top: DIMENSION_HEIGHT * - 0.03,
-    // color: "orange"
-    color: "#d1984b"
-  },
   // COMPONENT - FILTERS
   filters: {
     backgroundColor: WHITE,
@@ -444,44 +410,53 @@ export default StyleSheet.create({
   tick: {
     marginLeft: DIMENSION_WIDTH * 0.8,
     bottom: DIMENSION_WIDTH * 0.12,
+    height: DIMENSION_HEIGHT * 0.025,
+    width: DIMENSION_WIDTH * 0.1
   },
 
   cross: {
     marginLeft: DIMENSION_WIDTH * 0.8,
     bottom: DIMENSION_WIDTH * 0.10,
-    marginBottom: -DIMENSION_WIDTH * 0.05
+    marginBottom: -DIMENSION_WIDTH * 0.05,
+    width: DIMENSION_WIDTH * 0.2,
+    height: DIMENSION_HEIGHT * 0.025,
   },
   info: {
     paddingVertical: 8,
     flexDirection: "row",
-    height: 60,
     alignSelf: "center",
-    marginLeft: DIMENSION_HEIGHT * - 0.28
+    marginLeft: DIMENSION_HEIGHT * -0.28
   },
-  info2: {
-    paddingVertical: 8,
+  emailContainer: {
     flexDirection: "row",
-    height: 60,
+    marginLeft: DIMENSION_WIDTH * -0.05,
+    marginTop: DIMENSION_HEIGHT * 0.02
+  },
+  infoBio: {
+    flexDirection: "row",
+    height: DIMENSION_HEIGHT * 0.1,
     alignSelf: "center",
-    marginLeft: DIMENSION_HEIGHT * - 0.2
+    marginLeft: DIMENSION_HEIGHT * -0.1,
+    marginTop: DIMENSION_HEIGHT * 0.02
   },
   info3: {
-    paddingVertical: 8,
     flexDirection: "row",
-    height: 60,
-    alignSelf: "center",
-    marginLeft: DIMENSION_HEIGHT * 0.005
+    marginTop: DIMENSION_HEIGHT * 0.02,
+    marginLeft: DIMENSION_WIDTH * 0.04,
   },
   profileTitle: {
     fontSize: 15,
-    color: DARK_GRAY,
+    color: TEAL,
+  },
+  profileTitleKeywordOther: {
+    fontSize: 15,
+    color: TEAL,
     // paddingHorizontal: 10,
-    left: 30
-    // fontWeight: 'bold'
+    left: DIMENSION_WIDTH * 0.63
   },
   profileTitle2: {
     fontSize: 15,
-    color: DARK_GRAY,
+    color: TEAL,
     paddingHorizontal: 10,
     top: DIMENSION_WIDTH * 0.014 ,
     position: 'absolute',
@@ -490,7 +465,7 @@ export default StyleSheet.create({
   },
   textB:{
     width: '65%',
-    height: 50,
+    height: 100,
     backgroundColor: "transparent",
     left: DIMENSION_WIDTH * 0.17,
   },
@@ -545,8 +520,26 @@ export default StyleSheet.create({
     fontSize: 13,
     left: 28
   },
+  infoContentOther: {
+    color: BLACK,
+    fontSize: 13,
+    left: DIMENSION_WIDTH * 0.46,
+    bottom: DIMENSION_WIDTH * 0.01 ,
+    width: 350,
+  },
+  infoContentMajorOther: {
+    color: BLACK,
+    fontSize: 13,
+    left: 170,
+    width: 290,
+  },
+  infoContentGenderOther: {
+    color: BLACK,
+    fontSize: 13,
+    left: 22
+  },
   infoContentGender: {
-    color: GRAY,
+    color: BLACK,
     fontSize: 13,
     left: 118,
     top: 4,
@@ -562,14 +555,14 @@ export default StyleSheet.create({
   infoContentBio: {
     color: GRAY,
     fontSize: 13,
-    left: 85,
+    marginLeft: DIMENSION_WIDTH * 0.1,
     width: 200,
     height:400
   },
   infoContentEmail: {
     color: GRAY,
     fontSize: 13,
-    left: 50,
+    marginLeft: DIMENSION_WIDTH * 0.125
   },
   profileLogo: {
     width: 65,
@@ -578,14 +571,60 @@ export default StyleSheet.create({
     marginTop: DIMENSION_HEIGHT * 0.06,
     marginLeft: DIMENSION_HEIGHT * 0.2
   },
+  otherProfileLogo: {
+    width: 65,
+    height: 60,
+    alignSelf: "center",
+    marginTop: DIMENSION_HEIGHT * 0.06,
+    marginLeft: DIMENSION_HEIGHT * 0.02
+  },
   LogoutSettings: {
     left: DIMENSION_WIDTH * 0.425,
     color: "black"
   },
   profileTitle: {
     fontSize: 15,
-    color: DARK_GRAY,
+    color: TEAL,
     paddingHorizontal: 10,
+    // fontWeight: 'bold'
+  },
+  profileTitleMajorOther: {
+    fontSize: 15,
+    color: TEAL,
+    paddingHorizontal: 10,
+    left: DIMENSION_WIDTH * 0.33,
+    // fontWeight: 'bold'
+  },
+  profileTitleCourseOther: {
+    fontSize: 15,
+    color: TEAL,
+    paddingHorizontal: 10,
+    left: DIMENSION_WIDTH * 0.04
+    // fontWeight: 'bold'
+  },
+  profileTitleGender: {
+    fontSize: 15,
+    color: TEAL,
+    top: 10,
+    left: DIMENSION_WIDTH * 0.05
+    // fontWeight: 'bold'
+  },
+  profileTitleBio: {
+    fontSize: 15,
+    color: TEAL,
+    paddingHorizontal: 10,
+  },
+  profileTitleEmail: {
+    fontSize: 15,
+    color: TEAL,
+    fontFamily: "sans-serif"
+  },
+  profileTitleEmailOther: {
+    fontSize: 15,
+    color: TEAL,
+    paddingHorizontal: 15,
+    left: DIMENSION_WIDTH * 0.39,
+    bottom: DIMENSION_WIDTH * 0.01
     // fontWeight: 'bold'
   },
   profileTitleGender: {
@@ -690,9 +729,8 @@ export default StyleSheet.create({
   },
   title: {
     paddingBottom: 10,
-    marginTop: DIMENSION_HEIGHT * 0.02,
     fontSize: 22,
-    color: "#1a5d57",
+    color: DARK_GRAY,
   },
   icon: {
     fontFamily: ICON_FONT,
@@ -719,7 +757,6 @@ export default StyleSheet.create({
     height: 60,
     alignSelf: "center",
     marginTop: DIMENSION_HEIGHT * 0.06,
-    marginLeft: DIMENSION_WIDTH * 0.03,
   },
 
   top: {
@@ -742,7 +779,7 @@ export default StyleSheet.create({
   containerMatches: {
     justifyContent: "space-between",
     flex: 1,
-    // paddingHorizontal: 10,
+    paddingHorizontal: 10,
   },
 
   matchTop: {
@@ -867,6 +904,45 @@ export default StyleSheet.create({
     top: DIMENSION_HEIGHT * 0.035,
   },
 
+  logoSplash:{
+    alignSelf: "center",
+    marginTop: DIMENSION_HEIGHT * 0.4,
+    marginLeft: DIMENSION_WIDTH * 0.05,
+    marginBottom: DIMENSION_HEIGHT * 0.13,
+    width: DIMENSION_WIDTH * 0.35,
+    height: DIMENSION_HEIGHT * 0.15,
+  },
+
+  errorName: {
+    color: 'orange',
+    left: DIMENSION_WIDTH * 0.15,
+    bottom: DIMENSION_WIDTH * 0.05
+  },
+
+  errorMail:{
+    color: 'orange',
+    left: DIMENSION_WIDTH * 0.25,
+    bottom: DIMENSION_WIDTH * 0.05
+  },
+
+  errorMail2:{
+    color: 'orange',
+    left: DIMENSION_WIDTH * 0.3,
+    bottom: DIMENSION_WIDTH * 0.05
+  },
+
+  errorPassword: {
+    color: 'orange',
+    left: DIMENSION_WIDTH * 0.12,
+    bottom: DIMENSION_WIDTH * 0.05
+  },
+
+  passwordNotError: {
+    color: 'orange',
+    left: DIMENSION_WIDTH * 0.27,
+    bottom: DIMENSION_WIDTH * 0.05
+  },
+
   buttonText: {
     paddingBottom: 7,
     marginTop: 0,
@@ -948,15 +1024,15 @@ export default StyleSheet.create({
   },
 
   slide1: {
-    marginTop: DIMENSION_HEIGHT * 0.08
+    marginTop: DIMENSION_HEIGHT * 0.07
   },
 
   uniDropDown: {
     width: DIMENSION_WIDTH * 0.7, 
     left: DIMENSION_WIDTH * 0.12,
     marginBottom:20, 
-    borderColor: "white", 
-    borderWidth: 0.4, 
+    borderColor: "darkgrey",
+    borderWidth: 1, 
     borderRadius: 35,
     paddingLeft: 20, 
     paddingRight: 20, 
@@ -984,15 +1060,27 @@ export default StyleSheet.create({
     borderBottomRightRadius: 10,
     borderTopLeftRadius: 10,
     borderTopRightRadius: 10,
-    marginTop: DIMENSION_HEIGHT * 0.16,
+    marginTop: DIMENSION_HEIGHT * 0.13,
     marginBottom: DIMENSION_HEIGHT * 0.05,
     width: DIMENSION_WIDTH * 0.35,
     alignSelf: 'center',
-    bottom: DIMENSION_HEIGHT * 0.017
+    bottom: DIMENSION_HEIGHT * 0.016
   },
 
   bottomsignup: {
     marginBottom: 35,
+  },
+
+  verifyButt: {
+    width: DIMENSION_WIDTH * 0.4,
+    backgroundColor: TEAL,
+    borderRadius: 20,
+    left: DIMENSION_WIDTH * 0.3
+  },
+
+  loginError: {
+    color: 'orange',
+    left: DIMENSION_WIDTH * 0.235
   },
 
   //COMPONENT - LOGIN

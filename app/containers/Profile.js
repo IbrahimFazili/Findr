@@ -2,7 +2,6 @@ import React from "react";
 import globalStyles from "../assets/styles";
 import {
   View,
-  Text,
   TouchableOpacity,
   StyleSheet,
   Image,
@@ -12,20 +11,19 @@ import {
   NetInfo
 } from "react-native";
 import ProfileItem from "../components/ProfileItem";
-import Icon from "../components/Icon";
 import APIConnection from "../assets/data/APIConnection";
 import CachedImage from "../components/CachedImage";
 import { ScrollView } from "react-navigation";
 import Settings from "../assets/icons/settings_fill.svg";
-import ImagePicker from 'react-native-image-picker';
+import ImagePicker from 'react-native-image-crop-picker';
 import PlaceHolder from "../assets/icons/placeholder_icon.svg"
-import Pen from '../assets/icons/pen.svg';
+import shorthash from "shorthash";
 let RNFS = require('react-native-fs');
 
 const PRIMARY_COLOR = "#7444C0";
 const WHITE = "#FFFFFF";
 
-const ICON_FONT = "tinderclone";
+const ICON_FONT = "sans-serif";
 
 const DIMENSION_WIDTH = Dimensions.get("window").width;
 const DIMENSION_HEIGHT = Dimensions.get("window").height;
@@ -70,9 +68,9 @@ class Profile extends React.Component {
 
   async _onChangeMedia(selection) {
     const media = {
-      name: selection.fileName,
-      type: selection.type,
-      uri: selection.uri
+      name: shorthash.unique(selection.path),
+      type: selection.mime,
+      uri: selection.path
     };
 
     const checksumImage = await RNFS.hash(selection.path, "md5");
@@ -92,29 +90,20 @@ class Profile extends React.Component {
   }
 
   chooseImage = () => {
-    let options = {
-      title: 'Select Image',
-      storageOptions: {
-        skipBackup: true,
-        path: 'images',
-      },
-    };
-    ImagePicker.showImagePicker(options, (response) => {
+    ImagePicker.openPicker({
+      compressImageQuality: 0.7
+    }).then((img) => ImagePicker.openCropper({
+        compressImageQuality: 0.7,
+        path: img.path,
+        cropperCircleOverlay: true,
+        width: DIMENSION_WIDTH * 0.6,
+        height: DIMENSION_HEIGHT * 0.3 
 
-      if (response.didCancel) {
-        console.log('User cancelled image picker');
-      } else if (response.error) {
-        console.log('ImagePicker Error: ', response.error);
-      } else if (response.customButton) {
-        console.log('User tapped custom button: ', response.customButton);
-        alert(response.customButton);
-      } else {
-
-        // file type: response.type
-        // file name: response.fileName
-        this._onChangeMedia(response);
-      }
-    });
+      }).then((img) => {
+        this._onChangeMedia(img);
+      }).catch((err) => null)
+    ).catch((err) => null);
+    
   };
 
   _getFormattedGender(gender) {
@@ -148,8 +137,9 @@ class Profile extends React.Component {
     const courses = this.state.profile ? this.state.profile.courses : [];
     const major = this.state.profile ? this.state.profile.major : [];
     const bio = this.state.profile ? this.state.profile.bio : [];
+    const projects = this.state.profile ? this.state.profile.projects : [];
+    const experience = this.state.profile ? this.state.profile.experience : [];
 
-    console.log(this.state);
     if (!this.state.isConnected) {
       this.props.navigation.navigate("Internet");
     }
@@ -195,6 +185,8 @@ class Profile extends React.Component {
                   keywords={keywords}
                   clubs={clubs}
                   courses={courses}
+                  projects={projects}
+                  experience={experience}
                   major={major}
                   bio={bio}
                 />
