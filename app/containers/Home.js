@@ -5,7 +5,6 @@ import CardItem from "../components/CardItem";
 import styles from "../assets/styles";
 import APIConnection from "../assets/data/APIConnection";
 import ProfilePopup from "../components/ProfilePopup";
-import {Overlay} from "react-native-elements"
 import MatchPopup from "../components/MatchPopup"
 
 const MAX_LENGTH = 150;

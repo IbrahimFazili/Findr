@@ -6,21 +6,6 @@ import Email from "../assets/icons/email.svg"
 import { Button } from 'react-native-elements';
 import APIConnection from "../assets/data/APIConnection";
 
-
-// function MiniOfflineSign() {
-//     return (
-//       <ImageBackground source={require('../assets/images/15.png')} style={styles.internetBG}>
-//         <View style={{flexDirection: 'column', alignItems: 'center', padding: 20}}>
-//           <Image style={styles.internetLogo} source={require('../assets/images/Findr_logo2x.png')} />
-//           <View style={styles.email}>
-//             <Email width={50} height={50}/>
-//           </View>
-//             <Text style={styles.internetText}>Oops! Looks like you haven't verified your account yet!</Text>
-//           </View>
-//           <Button title="Refresh" type="solid" onPress={() => this}/>
-//       </ImageBackground>
-// );
-//   }
   
   class Verify extends PureComponent {
     state = {
@@ -58,7 +43,7 @@ import APIConnection from "../assets/data/APIConnection";
           </View>
             <Text style={styles.internetText}>Oops! Looks like you haven't verified your account yet!</Text>
           </View>
-          <Button title="Refresh" type="solid" onPress={() => this.handleVerification()}/>
+          <Button title="Refresh" type="solid" buttonStyle={styles.verifyButt} onPress={() => this.handleVerification()}/>
       </ImageBackground>  
       ) 
   }

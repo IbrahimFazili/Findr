@@ -11,18 +11,17 @@ import {
 	FlatList,
 	AsyncStorage,
 	NetInfo,
-	Dimensions,
 } from "react-native";
 import CardItem from "../components/CardItem";
 import APIConnection from "../assets/data/APIConnection";
-
-// import {BlurView} from '@react-native-community/blur';
 
 const thumnailStyle = {
 	marginHorizontal: 10,
 	borderColor: "#1a5d57",
 	borderWidth: 2.7,
 };
+
+const PLACEHOLDER_PNG = require("../assets/images/placeholder.png");
 
 class Matches extends React.Component {
 	constructor(props) {
@@ -44,9 +43,12 @@ class Matches extends React.Component {
 		const data = await this.state.API.fetchMatches(
 			await AsyncStorage.getItem("storedEmail")
 		);
-		const pendingMatches = await this.state.API.fetchPendingMatches(
+		let pendingMatches = await this.state.API.fetchPendingMatches(
 			await AsyncStorage.getItem("storedEmail")
 		);
+		pendingMatches = pendingMatches.map((value) => {
+			return { data: value, placeholder: false };
+		});
 		this.scrollView.scrollToEnd({ animated: true, duration: 1000 });
 		this.setState({ cards: data, pending_cards: pendingMatches });
 	}
@@ -104,18 +106,23 @@ class Matches extends React.Component {
 									paddingEnd: 5,
 								}}
 							>
-								{this.state.pending_cards.map((user) => (
+								{this.state.pending_cards.map((user, i) => (
 									<View>
 										<Thumbnail
 											large
 											style={thumnailStyle}
-											source={{ uri: user.image }}
-											key={user.name}
+											source={user.placeholder ? PLACEHOLDER_PNG 
+												: { uri: user.data.image }}
+											key={user.data.name}
+											onError={(err) => {
+												this.state.pending_cards[i].placeholder = true;
+												this.setState({ pending_cards: this.state.pending_cards });
+											}}
 										/>
 										<Text style={styles.thumbnailCaption}>
-											{user.name.substring(
+											{user.data.name.substring(
 												0,
-												user.name.search(" ")
+												user.data.name.search(" ")
 											)}
 										</Text>
 									</View>
