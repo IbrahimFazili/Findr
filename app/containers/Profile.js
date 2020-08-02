@@ -214,6 +214,9 @@ const styles = StyleSheet.create({
   profilepicWrap: {
     width: DIMENSION_WIDTH * 0.6,
     height: DIMENSION_HEIGHT * 0.3,
+    borderColor: "black",
+    borderWidth: 1,
+    borderRadius: 700
   },
   profilepic: {
     flex: 1,

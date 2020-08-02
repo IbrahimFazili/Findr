@@ -352,10 +352,10 @@ class SignUp extends React.Component {
                         <Text style={styles.passwordNotError}>Passwords do not match</Text>} 
                         
                         <Button mode="contained" style={styles.signupbutt}
-                        onPress={()=> 
-                          this.handleSubmit()
-                        }
-                        >Sign Up</Button>
+                          onPress={()=> this.handleSubmit()}
+                        >
+                          Sign Up
+                        </Button>
                         
                     </ScrollView>
                 </Swiper>

@@ -30,7 +30,7 @@ class Home extends React.Component {
       keywords: [],
       bio: "",
       uni: "",
-      matchPossible: true,
+      matchPossible: false,
       updateCount: 0,
     };
   }
@@ -84,7 +84,13 @@ class Home extends React.Component {
     const data = await this.state.API.loadData(
       await AsyncStorage.getItem('storedEmail')
     );
-    this.setState({ cards: data, dataLoadRequired: false, updateCount: this.state.updateCount + 1 });
+    this.setState({
+      cards: data,
+      dataLoadRequired: false,
+      updateCount: this.state.updateCount + 1,
+      visible: false,
+      matchPossible: false
+    });
   }
 
   async handleRightSwipe(email, image, name, swiped=false) {

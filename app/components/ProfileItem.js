@@ -119,7 +119,6 @@ class ProfileItem extends React.Component{
 
 	componentWillReceiveProps(props) {
 		let updatedState = {};
-		console.log('recieving props', props);
 
 		if (props.name !== this.state.name) {
 			updatedState.name = props.name;
@@ -353,7 +352,6 @@ class ProfileItem extends React.Component{
 	}
 
 	render() {
-		console.log('allprojects', this.state.allProjects);
 		return (
 		<View>
 		<View style={styles.containerProfileItem}>
