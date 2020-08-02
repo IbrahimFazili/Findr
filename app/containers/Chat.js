@@ -9,15 +9,17 @@ import {
 	ImageBackground,
 	Dimensions,
 } from "react-native";
-import { Header, Image, ThemeConsumer } from "react-native-elements";
+import { Header } from "react-native-elements";
 import AutogrowInput from "react-native-autogrow-input";
 import { moderateScale } from "react-native-size-matters";
-import ImagePicker from "react-native-image-picker";
 import { Thumbnail } from "native-base";
-import io from "socket.io-client";
 import APIConnection from "../assets/data/APIConnection";
+import ImagePicker from 'react-native-image-crop-picker';
+import shorthash from "shorthash";
+import Images from "react-native-chat-images";
 
 import AttachIcon from "../assets/icons/attach.svg";
+import CameraIcon from "../assets/icons/camera.svg";
 import SendIcon from "../assets/icons/send_icon.svg";
 import BackButton from "../assets/icons/back_black.svg";
 
@@ -142,17 +144,23 @@ export default class Chat extends Component {
   _sendMessage() {
 	if (this.state.inputBarText.trim().length === 0 
 	&& this.state.selectedMedia.length === 0) return;
-    const timestamp = (new Date()).getTime();
+	const timestamp = (new Date()).getTime();
+	const selectedMedia = [];
+	for (let i = 0; i < this.state.selectedMedia.length; i++) {
+		selectedMedia.push({ url: this.state.selectedMedia[i] });
+	}
+
     this.state.messages.push({
       user: this.state.own_email,
       msg: this.state.inputBarText,
-      timestamp
+	  timestamp,
+	  media: selectedMedia
     });
 
     for (let i = 0; i < this.state.selectedMedia.length; i++) {
       const media = this.state.selectedMedia[i];
       APIConnection.mediaStore[media.name] = { uri: media.uri, type: media.type };
-      delete media.uri;      
+      delete media.uri;
     }
 
     const msg = {
@@ -182,15 +190,18 @@ export default class Chat extends Component {
   }
 
   _onChangeMedia(selection) {
-    const media = {
-      name: selection.fileName,
-      type: selection.type,
-      uri: selection.uri
-    };
+	
+	this.state.selectedMedia = [];
+	for (let index = 0; index < selection.length; index++) {
+		const img = selection[index];
+		const media = {
+			name: shorthash.unique(img.path),
+			type: img.mime,
+			uri: img.path
+		};
 
-    if (this.state.selectedMedia.length > 0) {
-      this.state.selectedMedia[0] = media
-    } else this.state.selectedMedia.push(media);
+		this.state.selectedMedia.push(media);
+	}
 
     this.setState({ selectedMedia: this.state.selectedMedia });
   }
@@ -212,7 +223,7 @@ export default class Chat extends Component {
     const own_email = this.state.own_email;
 
     this.state.messages.forEach(function (message, index) {
-		if (message.media && (message.media.length > 0)) {
+		if (message.media) {
 			messages.push(
 				<MessageBubble
 					key={index}
@@ -220,7 +231,7 @@ export default class Chat extends Component {
 						message.user === own_email ? "left" : "right"
 					}
 					text={message.msg}
-					image={message.media[0]}
+					images={message.media}
 					time={message.timestamp}
 				/>
 			);
@@ -232,7 +243,7 @@ export default class Chat extends Component {
 						message.user === own_email ? "left" : "right"
 					}
 					text={message.msg}
-					image={null}
+					images={[]}
 					time={message.timestamp}
 				/>
 			);
@@ -329,15 +340,24 @@ class MessageBubble extends Component {
 	constructor(props) {
 		super(props);
 		this.state = {
-			image: null
+			images: []
 		};
 	}
 
 	async componentDidMount() {
-		const url = this.props.image ? await (new APIConnection()).fetchChatImage(this.props.image) : null;
-		if (url) {
-			this.setState({ image: url });
+		const mediaUrls = [];
+		for (let i = 0; i < this.props.images.length; i++) {
+			let url = "";
+			if (typeof(this.props.images[i]) === "string") {
+				url = await (new APIConnection()).fetchChatImage(this.props.images[i]);
+				mediaUrls.push(url);
+			} else {
+				mediaUrls.push(this.props.images[i].url);
+			}
+			
 		}
+		
+		this.setState({ images: mediaUrls });
 	}
 
 	render() {
@@ -388,18 +408,19 @@ class MessageBubble extends Component {
 				>
 					{leftSpacer}
 					<View style={bubbleStyles}>
-						{this.state.image ? <View style={{
-							maxWidth: DIMENSION_WIDTH * 0.8,
-							maxHeight: DIMENSION_HEIGHT * 0.3,
-							alignItems: "center",
+						{this.state.images.length > 0 ? <View style={{
+							width: DIMENSION_WIDTH * 0.8,
+							height: DIMENSION_HEIGHT * 0.3,
+							paddingTop: DIMENSION_HEIGHT * 0.01,
 						}}>
-							<Image
-							source={{ uri: this.state.image }}
+							<Images
+							images={this.state.images}
+							backgroundColor="transparent"
+							width="92.5%"
 							style={{
-								width: DIMENSION_WIDTH * 0.75,
-								height: DIMENSION_HEIGHT * 0.3,
+								borderRadius: 10,
+								borderWidth: 1,
 								resizeMode: "contain",
-								borderRadius: 5
 							}}
 							/>
 						</View> : null}
@@ -428,33 +449,34 @@ class InputBar extends Component {
 		}
 	}
 
-	chooseImage = () => {
-		let options = {
-			title: "Select Image",
-			storageOptions: {
-				skipBackup: true,
-				path: "images",
-			},
-		};
-		ImagePicker.showImagePicker(options, (response) => {
-			if (response.didCancel) {
-				console.log("User cancelled image picker");
-			} else if (response.error) {
-				console.log("ImagePicker Error: ", response.error);
-			} else if (response.customButton) {
-				console.log(
-					"User tapped custom button: ",
-					response.customButton
-				);
-				alert(response.customButton);
-			} else {
-				const source = { uri: response.uri };
+	chooseImage = (selectionType) => {
+		if (selectionType === "picker") {
+			ImagePicker.openPicker({
+				multiple: true,
+				maxFiles: 4,
+				compressImageQuality: 0.7,
+			  }).then((images) => {
+				  if (images.length === 1) {
+					ImagePicker.openCropper({ path: images[0].path })
+					.then((croppedImage) => {
+					  this.props.onChangeMedia([croppedImage]);
+					}).catch((err) => null);
 
-				// file type: response.type
-				// file name: response.fileName
-				this.props.onChangeMedia(response);
-			}
-		});
+				  } else this.props.onChangeMedia(images);
+
+			  }).catch((err) => null);
+
+		} else if (selectionType === "camera") {
+			ImagePicker.openCamera({
+				compressImageQuality: 0.6,
+			  }).then((image) => {
+				  ImagePicker.openCropper({ path: image.path })
+				  .then((croppedImage) => {
+					this.props.onChangeMedia([croppedImage]);
+				  }).catch((err) => null);
+			  }).catch((err) => null);
+		}
+		
 	};
 
 	render() {
@@ -462,11 +484,21 @@ class InputBar extends Component {
 			<View style={styles.inputBar}>
 				<TouchableOpacity
 					style={styles.mediaButton}
-					onPress={() => this.chooseImage()}
+					onPress={() => this.chooseImage('picker')}
 				>
 					<AttachIcon
-						width={DIMENSION_WIDTH * 0.07}
-						height={DIMENSION_HEIGHT * 0.07}
+						width={DIMENSION_WIDTH * 0.06}
+						height={DIMENSION_HEIGHT * 0.06}
+					/>
+				</TouchableOpacity>
+
+				<TouchableOpacity
+					style={styles.mediaButton}
+					onPress={() => this.chooseImage('camera')}
+				>
+					<CameraIcon
+						width={DIMENSION_WIDTH * 0.06}
+						height={DIMENSION_HEIGHT * 0.06}
 					/>
 				</TouchableOpacity>
 				<AutogrowInput
@@ -528,9 +560,10 @@ const styles = StyleSheet.create({
 		flex: 1,
 		fontSize: 16,
 		paddingHorizontal: 10,
-		maxWidth: DIMENSION_WIDTH * 0.7,
+		maxWidth: DIMENSION_WIDTH * 0.65,
 		maxHeight: DIMENSION_HEIGHT * 0.05,
 		top: DIMENSION_HEIGHT * 0.01,
+		marginLeft: DIMENSION_WIDTH * 0.02
 	},
 
 	sendButton: {
@@ -538,6 +571,7 @@ const styles = StyleSheet.create({
 		backgroundColor: "transparent",
 		marginBottom: DIMENSION_HEIGHT * 0.003,
 		marginRight: DIMENSION_WIDTH * 0.01,
+		marginLeft: DIMENSION_WIDTH * 0.01,
 		elevation: 8,
 	},
 
@@ -548,6 +582,12 @@ const styles = StyleSheet.create({
 		bottom: 5,
 	},
 
+	cameraButton: {
+		backgroundColor: "transparent",
+		marginLeft: DIMENSION_WIDTH * 0.05,
+		marginTop: DIMENSION_HEIGHT * 0.005,
+		bottom: 5,
+	},
 	//MessageBubble
 
 	messageBubble: {
