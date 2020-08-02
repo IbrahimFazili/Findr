@@ -897,6 +897,36 @@ export default StyleSheet.create({
     height: DIMENSION_HEIGHT * 0.15,
   },
 
+  errorName: {
+    color: 'orange',
+    left: DIMENSION_WIDTH * 0.15,
+    bottom: DIMENSION_WIDTH * 0.05
+  },
+
+  errorMail:{
+    color: 'orange',
+    left: DIMENSION_WIDTH * 0.25,
+    bottom: DIMENSION_WIDTH * 0.05
+  },
+
+  errorMail2:{
+    color: 'orange',
+    left: DIMENSION_WIDTH * 0.3,
+    bottom: DIMENSION_WIDTH * 0.05
+  },
+
+  errorPassword: {
+    color: 'orange',
+    left: DIMENSION_WIDTH * 0.12,
+    bottom: DIMENSION_WIDTH * 0.05
+  },
+
+  passwordNotError: {
+    color: 'orange',
+    left: DIMENSION_WIDTH * 0.27,
+    bottom: DIMENSION_WIDTH * 0.05
+  },
+
   buttonText: {
     paddingBottom: 7,
     marginTop: 0,
@@ -993,13 +1023,26 @@ export default StyleSheet.create({
     borderTopLeftRadius: 10,
     borderTopRightRadius: 10,
     marginTop: DIMENSION_HEIGHT * 0.16,
-    marginBottom: DIMENSION_HEIGHT * 0.05,
+    // marginBottom: DIMENSION_HEIGHT * 0.05,
     width: DIMENSION_WIDTH * 0.35,
     alignSelf: 'center',
+    bottom: DIMENSION_HEIGHT * 0.016
   },
 
   bottomsignup: {
     marginBottom: 35,
+  },
+
+  verifyButt: {
+    width: DIMENSION_WIDTH * 0.4,
+    backgroundColor: TEAL,
+    borderRadius: 20,
+    left: DIMENSION_WIDTH * 0.3
+  },
+
+  loginError: {
+    color: 'orange',
+    left: DIMENSION_WIDTH * 0.235
   },
 
   //COMPONENT - LOGIN

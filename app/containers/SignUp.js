@@ -319,7 +319,7 @@ class SignUp extends React.Component {
                         {this.state.isEmailValid === true || this.state.email == "" ? null : 
                         <Text style={styles.errorMail}>Email provided is not valid</Text>} 
                         {this.state.emailUse === true ? 
-                        <Text style={styles.errorMail}>Email is already taken</Text> : 
+                        <Text style={styles.errorMail2}>Email is already taken</Text> : 
                         null}
                         
                         <TextInput
@@ -358,7 +358,6 @@ class SignUp extends React.Component {
 
                         {this.state.isConfirmValid === true || this.state.confirmedPassword === "" ?  null :
                         <Text style={styles.passwordNotError}>Passwords do not match</Text>} 
-                        { /* style for red */}
                         
                         <Button mode="contained" style={styles.signupbutt}
                         onPress={()=> 
