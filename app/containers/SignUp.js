@@ -15,7 +15,7 @@ const theme = {
         ...DefaultTheme.colors,
         primary: "transparent",
         text: 'white', 
-        placeholder: 'lightgrey',
+        placeholder: 'darkgrey',
         labelColor: 'black',
         underlineColor:  'transparent',
     },
@@ -33,8 +33,8 @@ const textBoxStyle = {
     borderRadius: 35,
     alignSelf: 'center',
     backgroundColor: 'transparent',
-    borderColor: 'white',
-    opacity: 0.5,
+    borderColor: 'darkgrey',
+    opacity: 1,
     marginBottom: "8%",
     zIndex: -1,
 };
@@ -241,10 +241,11 @@ class SignUp extends React.Component {
                             itemCount={6}
                             textColor="white"
                             itemColor="black"
-                            baseColor='white'
+                            baseColor='darkgrey'
                             onChangeText={(value)=> this.handleUniChange(value)}
                             selectedItemColor="black"
-                            disabledItemColor="black"/>
+                            disabledItemColor="black"
+                          />
 
                         <DatePicker
                             date={this.state.date}
@@ -261,10 +262,11 @@ class SignUp extends React.Component {
                                     borderTopLeftRadius: 30,
                                     borderTopRightRadius: 30,
                                     height: DIMENTIONS.height * 0.06,
+                                    borderColor: "darkgrey",
                                 },
                                 dateText: {
-                                    color: '#FFFFFF',
-                                }
+                                    color: 'white',
+                                },
                             }}
                             style={{ 
                                 width: DIMENTIONS.width * 0.7,
