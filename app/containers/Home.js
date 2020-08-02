@@ -6,6 +6,7 @@ import styles from "../assets/styles";
 import APIConnection from "../assets/data/APIConnection";
 import ProfilePopup from "../components/ProfilePopup";
 import MatchPopup from "../components/MatchPopup"
+import NoCardsPopup from "../components/OutOfCardsPopup"
 
 const MAX_LENGTH = 150;
 
@@ -30,6 +31,7 @@ class Home extends React.Component {
       bio: "",
       uni: "",
       matchPossible: false,
+      updateCount: 0,
     };
   }
 
@@ -82,7 +84,13 @@ class Home extends React.Component {
     const data = await this.state.API.loadData(
       await AsyncStorage.getItem('storedEmail')
     );
-    this.setState({ cards: data, dataLoadRequired: false, visible: false, matchPossible: false });
+    this.setState({
+      cards: data,
+      dataLoadRequired: false,
+      updateCount: this.state.updateCount + 1,
+      visible: false,
+      matchPossible: false
+    });
   }
 
   async handleRightSwipe(email, image, name, swiped=false) {
@@ -146,13 +154,18 @@ class Home extends React.Component {
             <CardStack
               loop={false}
               verticalSwipe={false}
-              renderNoMoreCards={() => null}
+              renderNoMoreCards={() => (<NoCardsPopup 
+                visible={true} 
+                email={this.state.email}
+                navigation={this.props.navigation}/>)
+              }
               ref={(swiper) => (this.swiper = swiper)}
+              key={this.state.updateCount}
             >
               {this.state.cards.map((item, index) => (
                 <Card key={index}
-                onSwipedLeft={() => this.handleLeftSwipe(item.email, true)}
-                onSwipedRight={() => this.handleRightSwipe(item.email, item.image, item.name, true)}
+                  onSwipedLeft={() => this.handleLeftSwipe(item.email, true)}
+                  onSwipedRight={() => this.handleRightSwipe(item.email, item.image, item.name, true)}
                 >
                   <TouchableOpacity 
                   activeOpacity={1} 

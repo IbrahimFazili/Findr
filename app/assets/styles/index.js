@@ -234,6 +234,17 @@ export default StyleSheet.create({
     position: "relative"
   },
 
+  noCardPop:{
+    backgroundColor: WHITE,
+    borderRadius: 20,
+    top: DIMENSION_HEIGHT * 0.35,
+    maxHeight: DIMENSION_HEIGHT * 0.2,
+    width: DIMENSION_WIDTH * 0.8,
+    alignSelf: "center",
+    borderRadius: 30,
+    position: "relative"
+  },
+
   blurredView: {
     flex: 1, 
     justifyContent: "center", 
@@ -950,6 +961,31 @@ export default StyleSheet.create({
     color: "#d16969",
   },
 
+  viewProfileText:{
+    paddingBottom: 7,
+    marginTop: 0,
+    fontSize: 15,
+    fontFamily: "sans-serif",
+    alignSelf: 'center',
+    color: "white",
+  },
+
+  viewProfileButtonStyle: {
+    borderRadius: 30,
+    borderColor: "transparent",
+    borderWidth: 0.06,
+    backgroundColor: "#1a5d57"
+  },
+
+  refreshButtonStyle: {
+    borderRadius: 30,
+    borderColor: "transparent",
+    borderWidth: 0.06,
+    backgroundColor: "#1a5d57",
+    marginBottom: DIMENSION_HEIGHT * 0.05,
+    marginTop: DIMENSION_HEIGHT * 0.05
+  },
+
   ignoreButtonStyle: {
     borderBottomRightRadius: 30,
     borderColor: "black",
@@ -971,6 +1007,22 @@ export default StyleSheet.create({
     alignSelf: 'center'
   },
 
+  noCardText: {
+    paddingBottom: 7,
+    marginTop: DIMENSION_HEIGHT * 0.05,
+    color: '#363636',
+    fontSize: 15,
+    alignSelf: 'center'
+  },
+
+  noCardText1: {
+    paddingBottom: 7,
+    // marginTop: DIMENSION_HEIGHT * 0.05,
+    color: '#363636',
+    fontSize: 15,
+    alignSelf: 'center'
+  },
+
   chatButton:{
     width: DIMENSION_WIDTH * 0.425,
     position: 'absolute',
@@ -984,6 +1036,12 @@ export default StyleSheet.create({
     position: 'absolute',
     bottom: 0,
     right: 0
+  },
+
+  viewProfileButton:{
+    width: DIMENSION_WIDTH * 0.425,
+    marginTop: DIMENSION_HEIGHT * 0.01,
+    alignSelf: "center"
   },
 
   slide0: {
