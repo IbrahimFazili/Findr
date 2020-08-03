@@ -6,18 +6,6 @@ import Swiper from 'react-native-swiper';
 // import { BlurView } from '@react-native-community/blur';
 import { Overlay } from 'react-native-elements';
 
-const DIMENTIONS = Dimensions.get("window");
-
-const nameStyle = [
-    {
-      paddingBottom: 7,
-      marginTop: 0,
-      color: '#363636',
-      fontSize: 35,
-      alignSelf: 'center'
-    }
-];
-
 class ProfilePopup extends React.Component {
 	constructor(props) {
 		super(props);

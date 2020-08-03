@@ -1,6 +1,6 @@
 import React from "react";
 import { View, ImageBackground, AsyncStorage, Image, NetInfo, 
-  TouchableOpacity, ScrollView, RefreshControl, BackHandler } from "react-native";
+  TouchableOpacity, ScrollView, RefreshControl, BackHandler, Dimensions } from "react-native";
 import CardStack, { Card } from "react-native-card-stack-swiper";
 import CardItem from "../components/CardItem";
 import styles from "../assets/styles";
@@ -160,7 +160,7 @@ class Home extends React.Component {
       >
       <ImageBackground
         source={require('../assets/images/15.png')}
-        style={styles.bg}
+        style={[styles.bg, {height: Dimensions.get("window").height * 0.935}]}
       >
         {/* <OfflinePopup /> */}
         {/* ^^ */}
@@ -169,7 +169,7 @@ class Home extends React.Component {
           source={require('../assets/images/Findr_logo2x.png')}
         />
         <View
-        style={styles.containerHome}
+          style={styles.containerHome}
         >
           <View style={styles.homeCards}>
             <CardStack
@@ -178,7 +178,8 @@ class Home extends React.Component {
               renderNoMoreCards={() => (<NoCardsPopup 
                 visible={true} 
                 email={this.state.email}
-                navigation={this.props.navigation}/>)
+                navigation={this.props.navigation}
+              />)
               }
               ref={(swiper) => (this.swiper = swiper)}
               key={this.state.updateCount}
@@ -189,18 +190,19 @@ class Home extends React.Component {
                   onSwipedRight={() => this.handleRightSwipe(item.email, item.image, item.name, true)}
                 >
                   <TouchableOpacity 
-                  activeOpacity={1} 
-                  onPress={() => this.setState({
-                    visible: true,
-                    name: item.name,
-                    age: item.age,
-                    keywords: item.keywords, 
-                    bio: item.bio,
-                    uni: item.uni,
-                    image: item.image,
-                    projects: item.projects,
-                    experience: item.experience
-                  })}
+                    activeOpacity={1} 
+                    onLongPress={() => this.setState({
+                      visible: true,
+                      name: item.name,
+                      age: item.age,
+                      keywords: item.keywords, 
+                      bio: item.bio,
+                      uni: item.uni,
+                      image: item.image,
+                      projects: item.projects,
+                      experience: item.experience
+                    })}
+                    delayLongPress={100}
                   >
                     <CardItem
                       image={{ uri: item.image, checksum: item.checksum }}

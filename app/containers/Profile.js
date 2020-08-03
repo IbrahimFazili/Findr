@@ -47,7 +47,7 @@ class Profile extends React.Component {
     let user = await this.state.API.fetchUser(
 			await AsyncStorage.getItem("storedEmail")
 		);
-		this.setState({ profile: user, refreshing: false });
+		this.setState({ profile: user, refreshing: false});
   }
 
 	async componentDidMount() {
@@ -204,6 +204,8 @@ class Profile extends React.Component {
                   experience={experience}
                   major={major}
                   bio={bio}
+                  showLoading={(()=>this.setState({refreshing: true})).bind(this)}
+                  hideLoading={(()=>this.setState({refreshing: false})).bind(this)}
                 />
               </View>
             </View>

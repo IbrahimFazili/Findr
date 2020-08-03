@@ -215,7 +215,7 @@ export default StyleSheet.create({
   popupCard: {
     backgroundColor: WHITE,
     borderRadius: 20,
-    maxHeight: DIMENSION_HEIGHT * 0.7,
+    maxHeight: DIMENSION_HEIGHT * 0.9,
     maxWidth: DIMENSION_WIDTH * 0.85,
     alignSelf: "center",
     marginVertical: DIMENSION_HEIGHT * 0.13,
@@ -742,14 +742,12 @@ export default StyleSheet.create({
   // CONTAINER - HOME
   containerHome: {
     alignSelf: "center",
-    marginTop: -50,
+    marginTop: -80,
   },
 
   homeCards: {
     alignSelf: "center",
     marginRight: 360,
-    marginTop: -25,
-    marginBottom: 40,
   },
 
   homeLogo: {
