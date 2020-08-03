@@ -2,6 +2,8 @@ import React from "react";
 import { Dimensions, StyleSheet, View } from "react-native";
 
 import TagInput from "react-native-tags-input";
+import Tags from "react-native-tags";
+
 
 const mainColor = "#3ca897";
 
@@ -41,8 +43,7 @@ class TagEducation extends React.Component {
 	render() {
 		return (
 			<View style={styles.container}>
-				<TagInput
-					tags={this.state.tags}
+				<Tags
 					containerStyle={styles.textInput}
 					readonly={true}
 					initialTags={this.state.tags.tagsArray}

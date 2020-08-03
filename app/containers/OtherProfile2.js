@@ -79,6 +79,7 @@ class OtherProfile2 extends React.Component {
 		const keywords = this.state.profile ? this.state.profile.keywords : [];
 		const clubs = this.state.profile ? this.state.profile.clubs : [];
 		const courses = this.state.profile ? this.state.profile.courses : [];
+		const bio = this.state.profile ? this.state.profile.bio : [];
 
 		if (!this.state.isConnected) {
 			this.props.navigation.navigate("Internet");
@@ -125,6 +126,7 @@ class OtherProfile2 extends React.Component {
 									keywords={keywords}
 									clubs={clubs}
 									courses={courses}
+									bio={bio}
 								/>
 							</View>
 						</View>

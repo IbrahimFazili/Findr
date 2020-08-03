@@ -405,7 +405,7 @@ class ProfileItem extends React.Component{
 				itemColor="black"
 				baseColor='black'
 				onChangeText={this.handleGenderChange.bind(this)}
-				selectedItemColor="black"
+				selectedItemColor="gray"
 				disabledItemColor="black"/> : 
 
 				<Text style={styles.infoContentGender}>{this.state.gender}</Text>

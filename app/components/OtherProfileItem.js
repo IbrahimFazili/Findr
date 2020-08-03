@@ -57,6 +57,7 @@ class ProfileItem extends React.Component {
 			clubs: [],
 			courses: [],
 			keywords: [],
+			bio: "",
 
 			nameLabel: "Name",
 			emailLabel: "Email",
@@ -152,6 +153,9 @@ class ProfileItem extends React.Component {
 
 		if (props.courses !== this.state.courses) {
 			updatedState.courses = props.courses;
+		}
+		if (props.bio !== this.state.bio) {
+			updatedState.bio = props.bio;
 		}
 
 		if (Object.keys(updatedState).length > 0) {
@@ -401,6 +405,26 @@ class ProfileItem extends React.Component {
 						<Text style={styles.infoContentOther}>
 							{this.props.email}
 						</Text>
+					</View>
+
+					<View style={styles.infoBio}>
+						<Text style={styles.otherProfileTitleBio}>About Me</Text>
+							{this.state.isEditable1
+							? (<TextInput
+								underlineColor="transparent"
+								mode={"flat"}
+								value={this.state.bio}
+								label='Bio'
+								placeholder="Say something about yourself"
+								onFocus={() => this.setState({ bioLabel: "" })}
+								onBlur={() => this.setState({ bioLabel: this.state.bio.length === 0 ? "Bio" : "" })}
+								onChangeText={this.handleBioChange.bind(this)}
+								theme={theme}
+								style={styles.textB}
+								multiline={true}
+								/>)
+							: (<Text style={styles.otherInfoContentBio}>{this.state.bio}</Text>)
+							}
 					</View>
 
 					<View style={styles.info}>

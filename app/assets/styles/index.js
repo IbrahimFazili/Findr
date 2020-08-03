@@ -452,7 +452,8 @@ export default StyleSheet.create({
     fontSize: 15,
     color: TEAL,
     // paddingHorizontal: 10,
-    left: DIMENSION_WIDTH * 0.63
+    left: DIMENSION_WIDTH * 0.63,
+    
   },
   profileTitle2: {
     fontSize: 15,
@@ -467,7 +468,9 @@ export default StyleSheet.create({
     width: '65%',
     height: 100,
     backgroundColor: "transparent",
-    left: DIMENSION_WIDTH * 0.17,
+    left: DIMENSION_WIDTH * 0.18,
+    marginLeft: DIMENSION_WIDTH * -0.11,
+    bottom: DIMENSION_WIDTH * 0.02
   },
   textMajor:{
     width: '45%',
@@ -478,7 +481,8 @@ export default StyleSheet.create({
   },
   genderDrop: {
     width: DIMENSION_WIDTH * 0.45, 
-    left: DIMENSION_WIDTH * 0.32,
+    marginLeft: DIMENSION_WIDTH * - 0.1,
+    left: DIMENSION_WIDTH * 0.34,
     borderColor: "white", 
     borderWidth: 0.4, 
     borderRadius: 35,
@@ -532,6 +536,7 @@ export default StyleSheet.create({
     fontSize: 13,
     left: 170,
     width: 290,
+    marginBottom: DIMENSION_WIDTH * 0.05
   },
   infoContentGenderOther: {
     color: BLACK,
@@ -539,7 +544,7 @@ export default StyleSheet.create({
     left: 22
   },
   infoContentGender: {
-    color: BLACK,
+    color: DARK_GRAY,
     fontSize: 13,
     left: 118,
     top: 4,
@@ -558,6 +563,14 @@ export default StyleSheet.create({
     marginLeft: DIMENSION_WIDTH * 0.1,
     width: 200,
     height:400
+  },
+  otherInfoContentBio: {
+    color: BLACK,
+    fontSize: 13,
+    marginLeft: DIMENSION_WIDTH * 0.15,
+    width: 200,
+    height:400,
+    bottom: 14
   },
   infoContentEmail: {
     color: GRAY,
@@ -582,12 +595,7 @@ export default StyleSheet.create({
     left: DIMENSION_WIDTH * 0.425,
     color: "black"
   },
-  profileTitle: {
-    fontSize: 15,
-    color: TEAL,
-    paddingHorizontal: 10,
-    // fontWeight: 'bold'
-  },
+
   profileTitleMajorOther: {
     fontSize: 15,
     color: TEAL,
@@ -602,17 +610,12 @@ export default StyleSheet.create({
     left: DIMENSION_WIDTH * 0.04
     // fontWeight: 'bold'
   },
-  profileTitleGender: {
-    fontSize: 15,
-    color: TEAL,
-    top: 10,
-    left: DIMENSION_WIDTH * 0.05
-    // fontWeight: 'bold'
-  },
+
   profileTitleBio: {
     fontSize: 15,
     color: TEAL,
     paddingHorizontal: 10,
+    left: DIMENSION_WIDTH * 0.085
   },
   profileTitleEmail: {
     fontSize: 15,
@@ -629,25 +632,30 @@ export default StyleSheet.create({
   },
   profileTitleGender: {
     fontSize: 15,
-    color: DARK_GRAY,
+    color: TEAL,
     paddingHorizontal: 10,
     position: 'absolute',
     top: 10,
     left: DIMENSION_WIDTH * 0.05
     // fontWeight: 'bold'
   },
-  profileTitleBio: {
+
+
+  otherProfileTitleBio: {
     fontSize: 15,
-    color: DARK_GRAY,
+    color: TEAL,
     paddingHorizontal: 10,
-    left: 33
+    left: 53,
+    bottom: 15
     // fontWeight: 'bold'
   },
+
   profileTitleEmail: {
     fontSize: 15,
-    color: DARK_GRAY,
+    color: TEAL,
     paddingHorizontal: 15,
-    left: 20
+    left: DIMENSION_WIDTH * 0.05,
+    bottom: DIMENSION_WIDTH * 0.01
     // fontWeight: 'bold'
   },
   profileButtons: {

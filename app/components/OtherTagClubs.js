@@ -2,6 +2,8 @@ import React from "react";
 import { Dimensions, StyleSheet, View } from "react-native";
 
 import TagInput from "react-native-tags-input";
+import Tags from "react-native-tags";
+
 
 const mainColor = "#3ca897";
 
@@ -42,23 +44,12 @@ class OtherTagEducation extends React.Component {
 	render() {
 		return (
 			<View style={styles.container}>
-				<TagInput
-					tags={this.state.tags}
-					inputContainerStyle={styles.textInput}
-					inputStyle={{ color: "black" }}
-					onFocus={() =>
-						this.setState({
-							tagsColor: "#fff",
-							tagsText: mainColor,
-						})
-					}
-					onBlur={() =>
-						this.setState({ tagsColor: "white", tagsText: "#fff" })
-					}
-					autoCorrect={false}
-					tagStyle={styles.tag}
+				<Tags
+					containerStyle={styles.textInput}
+					readonly={true}
+					initialTags={this.state.tags.tagsArray}
 					tagTextStyle={styles.tagText}
-					keysForTag={", "}
+					tagContainerStyle={styles.tag}
 				/>
 			</View>
 		);
@@ -70,6 +61,7 @@ const styles = StyleSheet.create({
 		flex: 1,
 		justifyContent: "center",
 		alignItems: "center",
+		bottom: Dimensions.get("window").width * 0.06
 	},
 	textInput: {
 		height: 30,

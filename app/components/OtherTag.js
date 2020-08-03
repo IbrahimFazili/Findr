@@ -61,7 +61,7 @@ const styles = StyleSheet.create({
 		justifyContent: "center",
 		alignItems: "center",
 		left: Dimensions.get('window').width * 0.2,
-		bottom: Dimensions.get("window").width * 0.023
+		bottom: Dimensions.get("window").width * 0.01
 	},
 	textInput: {
 		height: 30,
