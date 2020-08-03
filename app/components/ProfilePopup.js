@@ -24,9 +24,12 @@ class ProfilePopup extends React.Component {
 		this.state = {
 			isVisible: props.visible,
 			Name: props.name,
+			age: props.age,
 			keywords: props.keywords,
 			bio: props.bio,
 			uni: props.uni,
+			projects: props.projects,
+			experience: props.experience
 		};
 	}
 
@@ -36,6 +39,9 @@ class ProfilePopup extends React.Component {
 		}
 		if (props.name !== this.state.Name) {
 			this.setState({ Name: props.name });
+		}
+		if (props.age !== this.state.age) {
+			this.setState({ age: props.age });
 		}
 		if (props.keywords !== this.state.keywords) {
 			for (let i = 0; i < props.keywords.length; i++) {
@@ -49,6 +55,19 @@ class ProfilePopup extends React.Component {
 		if (props.uni !== this.state.uni) {
 			this.setState({ uni: props.uni });
 		}
+		if (props.projects !== this.state.projects) {
+			this.setState({ projects: props.projects });
+		}
+		if (props.experience !== this.state.experience) {
+			this.setState({ experience: props.experience });
+		}
+	}
+
+	_getAge(age) {
+		if (typeof age === "number"){ return age; }
+		// MM-DD-YYYY
+		const year = Number(age.split("-")[2]);
+		return (new Date()).getFullYear() - year;
 	}
 
 	render() {
@@ -82,7 +101,7 @@ class ProfilePopup extends React.Component {
 					<View>
 						<View style={styles.popupStyling}>
 							<Text style={styles.biodata}>
-								Name:{" "}
+								Name: {" "}
 								<Text style={styles.textValues}>
 									{this.state.Name}
 								</Text>
@@ -90,7 +109,7 @@ class ProfilePopup extends React.Component {
 						</View>
 						<View style={styles.popupStyling}>
 							<Text style={styles.biodata}>
-								University:{" "}
+								University: {" "}
 								<Text style={styles.textValues}>
 									{this.state.uni}
 								</Text>
@@ -98,7 +117,15 @@ class ProfilePopup extends React.Component {
 						</View>
 						<View style={styles.popupStyling}>
 							<Text style={styles.biodata}>
-								Major:{" "}
+								Age: {" "}
+								<Text style={styles.textValues}>
+									{this._getAge(this.state.age)}
+								</Text>
+							</Text>
+						</View>
+						<View style={styles.popupStyling}>
+							<Text style={styles.biodata}>
+								Major: {" "}
 								<Text style={styles.textValues}>
 									Life Sciences
 								</Text>
@@ -106,7 +133,7 @@ class ProfilePopup extends React.Component {
 						</View>
 						<View style={styles.popupStyling}>
 							<Text style={styles.biodata}>
-								Keywords:{" "}
+								Interests: {" "}
 								<Text style={styles.textValues}>
 									{this.state.keywords.join(", ")}
 								</Text>
@@ -114,7 +141,7 @@ class ProfilePopup extends React.Component {
 						</View>
 						<View style={styles.popupStyling}>
 							<Text style={styles.biodata}>
-								Bio:{" "}
+								About: {" "}
 								<Text style={styles.textValues}>
 									{this.state.bio}
 								</Text>
@@ -124,40 +151,28 @@ class ProfilePopup extends React.Component {
 					<View>
 						<View style={styles.popupStyling}>
 							<Text style={styles.biodata}>
-								Projects:{" "}
-								<Text style={styles.textValues}></Text>
+								Projects: {"\n"}
+								{this.state.projects.map((p) => (
+									<Text style={styles.textValues}>{p}{"\n"}</Text>
+								))}
 							</Text>
 						</View>
 						<View style={styles.popupStyling}>
 							<Text style={styles.biodata}>
-								Skills: <Text style={styles.textValues}></Text>
-							</Text>
-						</View>
-						<View style={styles.popupStyling}>
-							<Text style={styles.biodata}>
-								Relevant Experience:{" "}
-								<Text style={styles.textValues}></Text>
-							</Text>
-						</View>
-					</View>
-					<View>
-						<View style={styles.popupStyling}>
-							<Text style={styles.biodata}>
-								Random Stuff:{" "}
-								<Text style={styles.textValues}></Text>
-							</Text>
-						</View>
-						<View style={styles.popupStyling}>
-							<Text style={styles.biodata}>
-								More Information:{" "}
-								<Text style={styles.textValues}></Text>
+								Experience: {"\n"}
+								{this.state.experience.map((e) => (
+									<Text style={styles.textValues}>{e}{"\n"}</Text>
+								))}
 							</Text>
 						</View>
 					</View>
 				</Swiper>
 				{/* </BlurView> */}
 				<Overlay
-           			visible={this.state.isVisible} onBackdropPress={()=> this.setState({isVisible: false})}
+           			visible={this.state.isVisible} onBackdropPress={() => {
+						   this.props.onClose();
+					   }
+					}
            		>  
 				   </Overlay>
 			</Modal>

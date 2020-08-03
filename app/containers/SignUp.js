@@ -92,7 +92,6 @@ class SignUp extends React.Component {
 
   async checkDuplicateEmail(email){
     try{
-      let user = await(new APIConnection().fetchUser(email))
       this.setState({emailUse: true})
     }
     catch(err){
@@ -286,7 +285,9 @@ class SignUp extends React.Component {
                         <Button 
                             labelStyle={{color: "#FFF"}}
                             style={styles.loginRedirect}
-                            onPress={() => this.props.navigation.navigate("LogIn")}
+                            onPress={() => {
+                              this.props.navigation.navigate("LogIn");
+                            }}
                             mode='contained'
                         >
                             Log in

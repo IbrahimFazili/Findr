@@ -10,6 +10,7 @@ import {
   FlatList,
   AsyncStorage,
   Dimensions,
+  RefreshControl
 } from 'react-native';
 import Message from '../components/Message';
 import APIConnection from '../assets/data/APIConnection';
@@ -18,10 +19,11 @@ import APIConnection from '../assets/data/APIConnection';
 class Messages extends React.Component {
   constructor(props) {
     super(props);
-    this.state = { API: new APIConnection(), chats: [] };
+    this.state = { API: new APIConnection(), chats: [], refreshing: false };
   }
 
-  async loadData(){
+  async loadData() {
+    this.setState({ refreshing: true });
     let data = await this.state.API.fetchChats(
       await AsyncStorage.getItem('storedEmail')
     );
@@ -35,7 +37,7 @@ class Messages extends React.Component {
       ).messages;
     }
 
-    this.setState({ chats: data });
+    this.setState({ chats: data, refreshing: false });
   }
 
   async componentDidMount() {
@@ -58,51 +60,60 @@ class Messages extends React.Component {
 
   render() {
     return (
-      <ImageBackground
-        source={require('../assets/images/Home.png')}
-        style={styles.bg}
+      <ScrollView
+      refreshControl={
+        <RefreshControl
+        refreshing={this.state.refreshing}
+        onRefresh={this.loadData.bind(this)}
+        />
+      }
       >
-        <View style={styles.containerMessages}>
-          <ScrollView>
-            <View style={styles.top}>
-              <Image
-                style={styles.matchLogo}
-                source={require("../assets/images/Findr_logo2x.png")}
-              />
-              <Text style={styles.title}>Messages</Text>
-            </View>
+        <ImageBackground
+          source={require('../assets/images/Home.png')}
+          style={styles.bg}
+        >
+          <View style={styles.containerMessages}>
+            <ScrollView>
+              <View style={styles.top}>
+                <Image
+                  style={styles.matchLogo}
+                  source={require("../assets/images/Findr_logo2x.png")}
+                />
+                <Text style={styles.title}>Messages</Text>
+              </View>
 
-            <FlatList
-              data={this.state.chats}
-              keyExtractor={(item, index) => index.toString()}
-              ItemSeparatorComponent = {this.FlatListItemSeparator}
-              renderItem={({ item }) => (
-                <TouchableOpacity
-                  onPress={async () =>
-                    this.props.navigation.navigate('ChatPage', {
-                      messages: item.messages,
-                      own_email: await AsyncStorage.getItem('storedEmail'),
-                      user_name: item.name,
-                      user_image: { uri: item.image },
-                      user_email: item.email
-                    })
-                  }
-                >
-                  <Message
-                    image={{ uri: item.image, checksum: item.checksum }}
-                    name={item.name}
-                    email={item.email}
-                    lastMessage={APIConnection.MESSAGE_QUEUES[item.email] && 
-                      APIConnection.MESSAGE_QUEUES[item.email].peekNewest() ?
-                      APIConnection.MESSAGE_QUEUES[item.email].peekNewest().msg
-                      : item.messages[item.messages.length - 1].msg}
-                  />
-                </TouchableOpacity>
-              )}
-            />
-          </ScrollView>
-        </View>
-      </ImageBackground>
+              <FlatList
+                data={this.state.chats}
+                keyExtractor={(item, index) => index.toString()}
+                ItemSeparatorComponent = {this.FlatListItemSeparator}
+                renderItem={({ item }) => (
+                  <TouchableOpacity
+                    onPress={async () =>
+                      this.props.navigation.navigate('ChatPage', {
+                        messages: item.messages,
+                        own_email: await AsyncStorage.getItem('storedEmail'),
+                        user_name: item.name,
+                        user_image: { uri: item.image },
+                        user_email: item.email
+                      })
+                    }
+                  >
+                    <Message
+                      image={{ uri: item.image, checksum: item.checksum }}
+                      name={item.name}
+                      email={item.email}
+                      lastMessage={APIConnection.MESSAGE_QUEUES[item.email] && 
+                        APIConnection.MESSAGE_QUEUES[item.email].peekNewest() ?
+                        APIConnection.MESSAGE_QUEUES[item.email].peekNewest().msg
+                        : item.messages[item.messages.length - 1].msg}
+                    />
+                  </TouchableOpacity>
+                )}
+              />
+            </ScrollView>
+          </View>
+        </ImageBackground>
+      </ScrollView>
     );
   }
 }

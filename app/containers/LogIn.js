@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, AsyncStorage, Image, Dimensions, NetInfo, Text} from 'react-native';
+import { View, AsyncStorage, Image, Dimensions, NetInfo, Text } from 'react-native';
 import styles from '../assets/styles';
 import { DefaultTheme, Provider as PaperProvider, TextInput, Button } from 'react-native-paper';
 import APIConnection from '../assets/data/APIConnection';
@@ -55,7 +55,7 @@ class LogIn extends React.Component {
     };
   }
 
-  async componentDidMount(){
+  async componentDidMount() {
     NetInfo.isConnected.addEventListener('connectionChange', this.handleConnectivityChange);
   }
 
@@ -169,7 +169,9 @@ class LogIn extends React.Component {
             labelStyle={{color: "#FFF"}}
             style={styles.signupredirect}
             mode='contained'
-            onPress={() => this.props.navigation.navigate("SignUp")}
+            onPress={() => {
+              this.props.navigation.navigate("SignUp")
+            }}
             >
                 Sign Up
             </Button>

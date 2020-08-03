@@ -56,7 +56,7 @@ class TagEducation extends React.Component {
           updateState={this.updateTagState}
           tags={this.state.tags}
           placeholder=
-          { !this.state.edit ?
+          { !this.state.edit && this.state.tags.tagsArray.length === 0 ?
             `Add ${this.state.type}` : ""}
           inputContainerStyle={styles.textInput}
           inputStyle={{color: 'black'}}

@@ -1,5 +1,6 @@
 import React from "react";
-import { View, ImageBackground, AsyncStorage, Image, NetInfo, TouchableOpacity } from "react-native";
+import { View, ImageBackground, AsyncStorage, Image, NetInfo, 
+  TouchableOpacity, ScrollView, RefreshControl, BackHandler } from "react-native";
 import CardStack, { Card } from "react-native-card-stack-swiper";
 import CardItem from "../components/CardItem";
 import styles from "../assets/styles";
@@ -23,6 +24,8 @@ class Home extends React.Component {
       name: "",
       bio: "",
       uni: "",
+      projects: [],
+      experience: [],
       dataLoadRequired: true,
       isConnected: true,
       name: "",
@@ -30,8 +33,10 @@ class Home extends React.Component {
       keywords: [],
       bio: "",
       uni: "",
+      age: 0,
       matchPossible: false,
       updateCount: 0,
+      refreshing: false
     };
   }
 
@@ -67,6 +72,10 @@ class Home extends React.Component {
     }
   }
 
+  handleBack() {
+    this.setState({ visible: false, matchPossible: false });
+  }
+
   async componentDidMount() {
     await AsyncStorage.setItem('onboarding', '0');
     let storedEmail = await AsyncStorage.getItem("storedEmail");
@@ -81,6 +90,7 @@ class Home extends React.Component {
   }
 
   async loadData() {
+    this.setState({ refreshing: true });
     const data = await this.state.API.loadData(
       await AsyncStorage.getItem('storedEmail')
     );
@@ -89,7 +99,8 @@ class Home extends React.Component {
       dataLoadRequired: false,
       updateCount: this.state.updateCount + 1,
       visible: false,
-      matchPossible: false
+      matchPossible: false,
+      refreshing: false
     });
   }
 
@@ -139,6 +150,14 @@ class Home extends React.Component {
         this.props.navigation.navigate("Internet");
     }
     return (
+      <ScrollView
+      refreshControl={
+        <RefreshControl
+        refreshing={this.state.refreshing}
+        onRefresh={this.loadData.bind(this)}
+        />
+      }
+      >
       <ImageBackground
         source={require('../assets/images/15.png')}
         style={styles.bg}
@@ -149,7 +168,9 @@ class Home extends React.Component {
           style={styles.homeLogo}
           source={require('../assets/images/Findr_logo2x.png')}
         />
-        <View style={styles.containerHome}>
+        <View
+        style={styles.containerHome}
+        >
           <View style={styles.homeCards}>
             <CardStack
               loop={false}
@@ -172,10 +193,13 @@ class Home extends React.Component {
                   onPress={() => this.setState({
                     visible: true,
                     name: item.name,
+                    age: item.age,
                     keywords: item.keywords, 
                     bio: item.bio,
                     uni: item.uni,
-                    image: item.image
+                    image: item.image,
+                    projects: item.projects,
+                    experience: item.experience
                   })}
                   >
                     <CardItem
@@ -189,8 +213,8 @@ class Home extends React.Component {
                           : item.bio
                       }
                       actions
-                      onPressRight={() => this.handleRightSwipe(item.email)}
-                      onPressLeft={() => this.handleRightSwipe(item.email, item.image, item.name, true)}
+                      onPressRight={() => this.handleRightSwipe(item.email, item.image, item.name)}
+                      onPressLeft={() => this.handleLeftSwipe(item.email)}
                     />
                   </TouchableOpacity>
                 </Card>
@@ -209,13 +233,18 @@ class Home extends React.Component {
           <ProfilePopup 
             visible={this.state.visible} 
             name={this.state.name}
+            age={this.state.age}
             keywords={this.state.keywords}
             bio={this.state.bio}
             uni={this.state.uni}
+            projects={this.state.projects}
+            experience={this.state.experience}
+            onClose={(() => this.setState({ visible: false })).bind(this)}
           />
  
         </View>
       </ImageBackground>
+      </ScrollView>
     );
   }
 }

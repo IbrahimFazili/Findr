@@ -4,7 +4,6 @@ import {
 	createBottomTabNavigator,
 	createAppContainer,
 	createStackNavigator,
-	createSwitchNavigator
 } from "react-navigation";
 import SignUpScreen from "./containers/SignUp";
 import LogInScreen from "./containers/LogIn";
@@ -20,7 +19,6 @@ import InternetScreen from "./containers/OfflinePop";
 import VerifiyScreen from "./containers/Verifiy";
 
 import SettingsScreen from "./containers/Settings";
-import OtherProfileScreen from "./containers/OtherProfile";
 import ChatPopUpScreen from "./components/ChatPopup";
 import OtherProfileScreen2 from "./containers/OtherProfile2";
 
@@ -199,9 +197,6 @@ const RootStack = createStackNavigator(
 		},
 		Internet: {
 			screen: InternetScreen,
-		},
-		OtherProfile: {
-			screen: OtherProfileScreen,
 		},
 		ChatPopup: {
 			screen: ChatPopUpScreen,
