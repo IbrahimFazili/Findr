@@ -183,7 +183,11 @@ class ProfileItem extends React.Component{
 		data.bio = this.state.bio
 		if(Object.keys(data).length > 1){
 			var update = await API.updateUserInfo(data);
-			if (data.keywords) update = await API.updateKeywords(data);
+			if (data.keywords){
+				this.props.showLoading();
+				update = await API.updateKeywords(data);
+				this.props.hideLoading();
+			} 
 			if (update == 500) {
 				console.log("Server Error");
 			}

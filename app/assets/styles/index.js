@@ -215,7 +215,7 @@ export default StyleSheet.create({
   popupCard: {
     backgroundColor: WHITE,
     borderRadius: 20,
-    maxHeight: DIMENSION_HEIGHT * 0.7,
+    maxHeight: DIMENSION_HEIGHT * 0.9,
     maxWidth: DIMENSION_WIDTH * 0.85,
     alignSelf: "center",
     marginVertical: DIMENSION_HEIGHT * 0.13,
@@ -742,14 +742,12 @@ export default StyleSheet.create({
   // CONTAINER - HOME
   containerHome: {
     alignSelf: "center",
-    marginTop: -50,
+    marginTop: -80,
   },
 
   homeCards: {
     alignSelf: "center",
     marginRight: 360,
-    marginTop: -25,
-    marginBottom: 40,
   },
 
   homeLogo: {
@@ -1085,8 +1083,8 @@ export default StyleSheet.create({
     borderBottomRightRadius: 10,
     borderTopLeftRadius: 10,
     borderTopRightRadius: 10,
-    marginTop: DIMENSION_HEIGHT * 0.13,
-    marginBottom: DIMENSION_HEIGHT * 0.05,
+    marginTop: DIMENSION_HEIGHT * 0.1,
+    // marginBottom: DIMENSION_HEIGHT * 0.05,
     width: DIMENSION_WIDTH * 0.35,
     alignSelf: 'center',
     bottom: DIMENSION_HEIGHT * 0.016
@@ -1159,7 +1157,16 @@ export default StyleSheet.create({
     alignSelf: 'center',
     borderRadius: 10,
     borderColor: WHITE,
-    marginTop: DIMENSION_HEIGHT * 0.02,
+    marginTop: DIMENSION_HEIGHT * 0.01,
+    backgroundColor: "#013d38",
+  },
+
+  signUpNext: {
+    width: DIMENSION_WIDTH * 0.35,
+    alignSelf: 'center',
+    borderRadius: 10,
+    borderColor: WHITE,
+    marginTop: DIMENSION_HEIGHT * 0.18,
     backgroundColor: "#013d38",
   },
 
