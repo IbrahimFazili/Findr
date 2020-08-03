@@ -8,12 +8,14 @@ class List extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            items: []
+            items: [],
+            editable: false
         }
     }
 
     componentWillReceiveProps(props) {
         if (this.state.items !== props.items) this.setState({ items: props.items });
+        if (this.state.editable !== props.editable) this.setState({ editable: props.editable });
     }
 
     FlatListItemSeparator = () => {
@@ -32,7 +34,7 @@ class List extends React.Component {
     render() {
 
         return (
-            <View style={[this.props.style, { alignSelf: "center" }]}>
+            <View style={[this.props.style, { alignSelf: "center"}]}>
                 <FlatList
                 data={this.state.items}
                 contentContainerStyle={{ paddingBottom: DIMENTIONS.height * this.state.items.length * (0.03 / 4) }}
@@ -41,7 +43,7 @@ class List extends React.Component {
                 renderItem={({ item }) => (
                     <ListItem
                     value={item}
-                    editable={false}
+                    editable={this.state.editable}
                     style={{
                         alignSelf: "center",
                         width: this.props.style.width * 0.9,

@@ -31,6 +31,8 @@ class Profile extends React.Component {
 		this.state = {
       API: new APIConnection(),
       basicInfoEditable: false,
+      projectsEditable: false,
+      experienceEditable: false,
 			profile: null,
       isConnected: true,
       placeholder: false,
@@ -72,6 +74,18 @@ class Profile extends React.Component {
     // MM-DD-YYYY
     const year = Number(age.split("-")[2]);
     return (new Date()).getFullYear() - year;
+  }
+
+  setBasicInfoEditable(basicInfoEditable) {
+    this.setState({ basicInfoEditable });
+  }
+
+  setProjectsEditable(projectsEditable) {
+    this.setState({ projectsEditable });
+  }
+
+  setExperienceEditable(experienceEditable) {
+    this.setState({ experienceEditable });
   }
 
   render() {
@@ -142,10 +156,12 @@ class Profile extends React.Component {
               (<BasicInfo
               email={email}
               bio={bio}
-              gender={bio}
+              gender={gender}
+              editable={this.state.basicInfoEditable}
               />)
             ]}
             style={styles.infoContainerStyle}
+            setEditable={this.setBasicInfoEditable.bind(this)}
           />
 
           {/* InfoContainer (Keywords) */}
@@ -162,10 +178,12 @@ class Profile extends React.Component {
               marginLeft: DIMENSION_WIDTH * 0.05,
               marginTop: DIMENSION_HEIGHT * 0.1,
             }}
-            items={projects ? projects : []}
+            items={projects ? projects : null}
+            editable={this.state.projectsEditable}
             />)
           ]}
           style={styles.infoContainerStyle}
+          setEditable={this.setProjectsEditable.bind(this)}
           />
 
         <InfoContainer
@@ -178,9 +196,11 @@ class Profile extends React.Component {
               marginTop: DIMENSION_HEIGHT * 0.1
             }}
             items={experience ? experience : []}
+            editable={this.state.experienceEditable}
             />)
           ]}
           style={styles.infoContainerStyle}
+          setEditable={this.setExperienceEditable.bind(this)}
           />
 
 

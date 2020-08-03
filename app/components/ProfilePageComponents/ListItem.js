@@ -5,17 +5,18 @@ import { Dimensions } from "react-native";
 
 class ListItem extends React.Component{
 
-    constructor(props){
+    constructor(props) {
         super(props);
         this.state = {
             type: "",
             value: "",
-            editable: false
+            editable: false,
+            edited: false
         }
     }
     
     componentWillReceiveProps(props){
-        if (this.state.value !== props.value){
+        if (this.state.value !== props.value && !this.state.edited){
             this.state.value = props.value
         }
         if (this.state.type !== props.type){
@@ -34,7 +35,7 @@ class ListItem extends React.Component{
                 style={[this.props.style]}
                 placeholder={`${this.state.type}`}
                 value={this.state.value}   
-                onChangeText={(text)=> this.setState({ value: text })} 
+                onChangeText={(text)=> this.setState({ value: text, edited: true })} 
                 editable={this.state.editable}
                 mode='flat'
                 selectionColor={this.props.selectionColor ? this.props.selectionColor : "#1a5d57"}
