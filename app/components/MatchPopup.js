@@ -3,6 +3,7 @@ import { Text, View, Dimensions, Image, AsyncStorage } from 'react-native';
 import Modal from 'react-native-modal';
 import styles from "../assets/styles";
 import PlaceHolder from "../assets/icons/placeholder_icon.svg"
+import BackButtonIcon from "../assets/icons/back_black.svg";
 import { Overlay, Button } from 'react-native-elements';
 
 const DIMENTIONS = Dimensions.get("window");
@@ -64,7 +65,7 @@ class MatchPopup extends React.Component {
             style={styles.matchPop}
             transparent={true}
             animationType={"fade"}
-			>	
+			>
 				{ this.props.image.length === 0 ?
 				<View style={{ alignSelf: "center" }}>
 					<PlaceHolder width={30} height={30}/>

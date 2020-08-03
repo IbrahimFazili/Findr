@@ -7,15 +7,13 @@ import {
 	Dimensions,
 	ImageBackground,
 	NetInfo,
-	TouchableOpacity,
-	AsyncStorage
 } from "react-native";
 import OtherProfileItem from "../components/OtherProfileItem";
 import APIConnection from "../assets/data/APIConnection";
 import { ScrollView } from "react-navigation";
 import CachedImage from "../components/CachedImage";
 import PlaceHolder from "../assets/icons/placeholder_icon.svg"
-import Settings from "../assets/icons/settings_fill.svg";
+import { Button } from "react-native-elements";
 
 const PRIMARY_COLOR = "#7444C0";
 const WHITE = "#FFFFFF";
@@ -64,6 +62,16 @@ class OtherProfile2 extends React.Component {
 		this.setState({ isConnected });
 	};
 
+	navigateToChat(name, image) {
+		this.props.navigation.navigate("ChatPage", {
+			user_name: name,
+			user_image: image,
+			user_email: this.state.user_email,
+			own_email: this.state.own_email,
+			messages: [],
+		})
+	}
+
 	render() {
 		console.log(this.state.user_email);
 		console.log(this.state.profile);
@@ -99,7 +107,7 @@ class OtherProfile2 extends React.Component {
 						<View style={styles.header}>
 							<View style={styles.profilepicWrap}>
 								{
-                    				image === null ?
+									image === null ?
 									<PlaceHolder style={styles.profilepic} /> : 
 									<CachedImage
 									style={styles.profilepic}
@@ -107,13 +115,28 @@ class OtherProfile2 extends React.Component {
 									uid={email}
 									checksum={image.checksum}
 									/>
-                  				}
+								}
+								
+							</View>
+							
+							<View style={{ top: DIMENSION_HEIGHT * 0.325, position: "absolute" }}>
+								<Button
+									title="Chat"
+									buttonStyle={{ 
+										width: DIMENSION_WIDTH * 0.4,
+										borderRadius: 30,
+										backgroundColor: "#1a5d57"
+									}}
+									onPress={() => this.navigateToChat(name, image)}
+								></Button>
 							</View>
 						</View>
 
+						
+
 						<View style={{ paddingHorizontal: 10 }}>
 							<View
-								style={{ marginTop: DIMENSION_HEIGHT * 0.01 }}
+								style={{ marginTop: DIMENSION_HEIGHT * 0.08 }}
 							>
 								<OtherProfileItem
 									name={name}
@@ -144,22 +167,23 @@ const styles = StyleSheet.create({
 		backgroundColor: "rgba(26, 93, 87, 0.15)",
 	},
 	header: {
-		flex: 1,
+		// flex: 1,
+		position: 'relative',
 		alignItems: "center",
 		justifyContent: "center",
 		marginTop: DIMENSION_HEIGHT * 0.02,
 	},
-	profilepicWrap: {
-		width: 280,
-		height: 280,
-		padding: 20,
-	},
+	// profilepicWrap: {
+	// 	width: 280,
+	// 	height: 280,
+	// 	padding: 20,
+	// },
 	profilepicWrap: {
 		width: 240,
 		height: 240,
 		borderRadius: 100,
 		borderColor: "rgba(26, 93, 87, 0.15)",
-		marginBottom: 160,
+		marginBottom: 170,
 		elevation: 10,
 	},
 	profilepic: {
