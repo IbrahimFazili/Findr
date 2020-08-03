@@ -251,7 +251,9 @@ class Onboarding extends React.Component {
                 />
                 <View style={styles.slide4buttons}>
                   <TouchableOpacity
-                    onPress={() => this.props.navigation.navigate("SignUp")}
+                    onPress={() => {
+                      this.props.navigation.navigate("SignUp")
+                    }}
                     style={styles.onBoardingButt}
                   >
                     <Text style={styles.onBoardingButtText}>Sign Up</Text>
@@ -261,7 +263,9 @@ class Onboarding extends React.Component {
                     source={require("../assets/images/OR_photo.png")}
                   />
                   <TouchableOpacity
-                    onPress={() => this.props.navigation.navigate("LogIn")}
+                    onPress={() => {
+                      this.props.navigation.navigate("LogIn")
+                    }}
                     style={styles.onBoardingButt}
                   >
                     <Text style={styles.onBoardingButtText}>Log In</Text>

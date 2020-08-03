@@ -8,7 +8,9 @@ import {
   Dimensions,
   AsyncStorage,
   ImageBackground,
-  NetInfo
+  NetInfo,
+  RefreshControl,
+  ScrollView as _NativeScrollView
 } from "react-native";
 import ProfileItem from "../components/ProfileItem";
 import APIConnection from "../assets/data/APIConnection";
@@ -34,15 +36,17 @@ class Profile extends React.Component {
 		this.state = {
 			API: new APIConnection(),
 			profile: null,
-			isConnected: true,
+      isConnected: true,
+      refreshing: false
 		};
   }
   
-  async loadData(){
+  async loadData() {
+    this.setState({ refreshing: true });
     let user = await this.state.API.fetchUser(
 			await AsyncStorage.getItem("storedEmail")
 		);
-		this.setState({ profile: user });
+		this.setState({ profile: user, refreshing: false });
   }
 
 	async componentDidMount() {
@@ -150,7 +154,14 @@ class Profile extends React.Component {
       style={styles.bg}
       >
         <View style={styles.profileContainer}>
-          <ScrollView>
+          <ScrollView
+          refreshControl={
+            <RefreshControl
+            refreshing={this.state.refreshing}
+            onRefresh={this.loadData.bind(this)}
+            />
+          }
+          >
             <View style={styles.profileLogoTop}>
               <Image
                 source={require("../assets/images/Findr_logo2x.png")}
