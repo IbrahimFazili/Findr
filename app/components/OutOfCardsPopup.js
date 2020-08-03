@@ -38,12 +38,12 @@ class OutOfCardsPopup extends React.Component {
 			style={{ 
 				position: 'absolute',
 				zIndex: 0,
-				marginLeft: DIMENTIONS.width * 0.1,
+				marginLeft: DIMENTIONS.width * 0.05,
 				paddingVertical: DIMENTIONS.height * 0.3 
 			}}
 			>	
-                <Text style={styles.noCardText}>Oops! You're out of cards</Text>
-                <Text style={styles.noCardText1}>Try updating your keywords to get more!</Text>
+                <Text style={styles.noCardText}>Looks like you don't have any matches</Text>
+                <Text style={styles.noCardText1}>Refresh or update your keywords to get more!</Text>
                 <View style={styles.viewProfileButton}>
 					<Button
 					title="Refresh"

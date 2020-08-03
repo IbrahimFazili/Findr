@@ -9,6 +9,7 @@ import {Dropdown} from 'react-native-material-dropdown'
 
 
 const DIMENTIONS = Dimensions.get('window');
+const CARDS_NUMBER = 2
 
 const theme = {
     colors: {
@@ -60,6 +61,7 @@ class SignUp extends React.Component {
       password: "",
       uni: "",
       confirmedPassword: "",
+      idxActive: 0,
 
       nameLabel: "Name",
       emailLabel: "Email",
@@ -143,6 +145,13 @@ class SignUp extends React.Component {
     NetInfo.isConnected.removeEventListener('connectionChange', this.handleConnectivityChange);
   }
 
+  onPressNext = () => {
+    const { idxActive } = this.state;
+    if (idxActive < CARDS_NUMBER) {
+      this.refs.swiper.scrollBy(1);
+    }
+  };
+
   handleConnectivityChange = isConnected => {
     this.setState({ isConnected });
   };
@@ -215,6 +224,11 @@ class SignUp extends React.Component {
                     }
                     loop={false}
                     showsPagination={this.state.showDots}
+                    onIndexChanged={(newIndex) => {
+                      this.setState({ idxActive: newIndex });
+                    }}
+                    ref={"swiper"}
+                    bounces={true}
                     >
                     <ScrollView style={styles.slide0}>
                         <TextInput
@@ -278,18 +292,13 @@ class SignUp extends React.Component {
                             androidMode='spinner'
                         />
 
-                        <Image 
-                            source={require('../assets/images/or.png')} 
-                            style={{marginLeft: DIMENTIONS.width * 0.2, marginTop: DIMENTIONS.width * 0.24}}
-                        />
-
                         <Button 
                             labelStyle={{color: "#FFF"}}
-                            style={styles.loginRedirect}
-                            onPress={() => this.props.navigation.navigate("LogIn")}
+                            style={styles.signUpNext}
+                            onPress={this.onPressNext}
                             mode='contained'
                         >
-                            Log in
+                            Next
                         </Button>
 
                     </ScrollView>
@@ -355,6 +364,19 @@ class SignUp extends React.Component {
                           onPress={()=> this.handleSubmit()}
                         >
                           Sign Up
+                        </Button>
+                        <Image 
+                            source={require('../assets/images/or.png')} 
+                            style={{marginLeft: DIMENTIONS.width * 0.2}}
+                        />
+
+                        <Button 
+                            labelStyle={{color: "#FFF"}}
+                            style={styles.loginRedirect}
+                            onPress={() => this.props.navigation.navigate("LogIn")}
+                            mode='contained'
+                        >
+                            Log in
                         </Button>
                         
                     </ScrollView>

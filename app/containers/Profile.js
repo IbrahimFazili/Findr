@@ -34,9 +34,10 @@ class Profile extends React.Component {
 		this.state = {
 			API: new APIConnection(),
 			profile: null,
-			isConnected: true,
-		};
+      isConnected: true,
+      placeholder: false
   }
+}
   
   async loadData(){
     let user = await this.state.API.fetchUser(
@@ -125,7 +126,7 @@ class Profile extends React.Component {
   }
 
   render() {
-    const checksum = this.state.profile ? this.state.profile.checksum : null;
+    // const checksum = this.state.profile ? this.state.profile.checksum : null;
     const image = this.state.profile ? { uri: this.state.profile.image } : null;
     const name = this.state.profile ? this.state.profile.name : "";
     const age = this.state.profile ? this.state.profile.age : -1;
@@ -167,9 +168,12 @@ class Profile extends React.Component {
               <View style={styles.profilepicWrap}>
                 <TouchableOpacity style={{ height: styles.profilepicWrap.height }} onPress={() => this.chooseImage()}>
                   {
-                    image === null ?
+                    image === null || this.state.placeholder ?
                     <PlaceHolder style={styles.profilepic} /> : 
-                    <CachedImage style={styles.profilepic} uri={image.uri} uid={email} checksum={checksum}/>
+                    <Image 
+                      style={styles.profilepic} source={{uri:image.uri}}
+                      onError={()=>this.setState({placeholder: true})}
+                    />
                   }
                 </TouchableOpacity>
               </View>
@@ -214,8 +218,6 @@ const styles = StyleSheet.create({
   profilepicWrap: {
     width: DIMENSION_WIDTH * 0.6,
     height: DIMENSION_HEIGHT * 0.3,
-    borderColor: "black",
-    borderWidth: 1,
     borderRadius: 700
   },
   profilepic: {

@@ -1085,8 +1085,8 @@ export default StyleSheet.create({
     borderBottomRightRadius: 10,
     borderTopLeftRadius: 10,
     borderTopRightRadius: 10,
-    marginTop: DIMENSION_HEIGHT * 0.13,
-    marginBottom: DIMENSION_HEIGHT * 0.05,
+    marginTop: DIMENSION_HEIGHT * 0.1,
+    // marginBottom: DIMENSION_HEIGHT * 0.05,
     width: DIMENSION_WIDTH * 0.35,
     alignSelf: 'center',
     bottom: DIMENSION_HEIGHT * 0.016
@@ -1159,7 +1159,16 @@ export default StyleSheet.create({
     alignSelf: 'center',
     borderRadius: 10,
     borderColor: WHITE,
-    marginTop: DIMENSION_HEIGHT * 0.02,
+    marginTop: DIMENSION_HEIGHT * 0.01,
+    backgroundColor: "#013d38",
+  },
+
+  signUpNext: {
+    width: DIMENSION_WIDTH * 0.35,
+    alignSelf: 'center',
+    borderRadius: 10,
+    borderColor: WHITE,
+    marginTop: DIMENSION_HEIGHT * 0.18,
     backgroundColor: "#013d38",
   },
 
