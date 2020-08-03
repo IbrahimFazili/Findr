@@ -4,28 +4,23 @@ import {
   View,
   TouchableOpacity,
   StyleSheet,
-  Image,
   Dimensions,
   AsyncStorage,
   ImageBackground,
   NetInfo,
   RefreshControl,
+  Image,
+  Text,
   ScrollView as _NativeScrollView
 } from "react-native";
-import ProfileItem from "../components/ProfileItem";
 import APIConnection from "../assets/data/APIConnection";
-import CachedImage from "../components/CachedImage";
 import { ScrollView } from "react-navigation";
 import Settings from "../assets/icons/settings_fill.svg";
-import ImagePicker from 'react-native-image-crop-picker';
-import PlaceHolder from "../assets/icons/placeholder_icon.svg"
-import shorthash from "shorthash";
-let RNFS = require('react-native-fs');
-
-const PRIMARY_COLOR = "#7444C0";
-const WHITE = "#FFFFFF";
-
-const ICON_FONT = "sans-serif";
+import ProfilePicture from "../components/ProfilePageComponents/ProfilePicture";
+import InfoContainer from "../components/ProfilePageComponents/InfoContainer";
+import List from "../components/ProfilePageComponents/List";
+import BasicInfo from "../components/ProfilePageComponents/BasicInfo";
+import Header from "../components/ProfilePageComponents/Header";
 
 const DIMENSION_WIDTH = Dimensions.get("window").width;
 const DIMENSION_HEIGHT = Dimensions.get("window").height;
@@ -34,7 +29,8 @@ class Profile extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {
-			API: new APIConnection(),
+      API: new APIConnection(),
+      basicInfoEditable: false,
 			profile: null,
       isConnected: true,
       placeholder: false,
@@ -71,57 +67,6 @@ class Profile extends React.Component {
 		this.setState({ isConnected });
 	};
 
-  async _onChangeMedia(selection) {
-    const media = {
-      name: shorthash.unique(selection.path),
-      type: selection.mime,
-      uri: selection.path
-    };
-
-    const checksumImage = await RNFS.hash(selection.path, "md5");
-
-    const url = await this.state.API.updateProfilePicture(
-      await AsyncStorage.getItem('storedEmail'),
-      media.type,
-      checksumImage
-    )
-
-    APIConnection.uploadPicture(url, media);
-    var profile = {...this.state.profile}
-    profile.image = media.uri;
-    profile.checksum = null;
-    this.setState({profile})
-    // this.setState({ image: media.uri });
-  }
-
-  chooseImage = () => {
-    ImagePicker.openPicker({
-      compressImageQuality: 0.7
-    }).then((img) => ImagePicker.openCropper({
-        compressImageQuality: 0.7,
-        path: img.path,
-        cropperCircleOverlay: true,
-        width: DIMENSION_WIDTH * 0.6,
-        height: DIMENSION_HEIGHT * 0.3 
-
-      }).then((img) => {
-        this._onChangeMedia(img);
-      }).catch((err) => null)
-    ).catch((err) => null);
-    
-  };
-
-  _getFormattedGender(gender) {
-    switch (gender) {
-      case "" : return "";
-      case "M": return "Male";
-      case "F": return "Female";
-      case "O": return "Other";
-      case "P": return "Prefer Not To Say";
-      default: return "";
-    }
-  }
-
   _getAge(age) {
     if (typeof age === "number"){ return age; }
     // MM-DD-YYYY
@@ -130,7 +75,7 @@ class Profile extends React.Component {
   }
 
   render() {
-    // const checksum = this.state.profile ? this.state.profile.checksum : null;
+    const checksum = this.state.profile ? this.state.profile.checksum : null;
     const image = this.state.profile ? { uri: this.state.profile.image } : null;
     const name = this.state.profile ? this.state.profile.name : "";
     const age = this.state.profile ? this.state.profile.age : -1;
@@ -154,175 +99,103 @@ class Profile extends React.Component {
       source={require("../assets/images/15.png")}
       style={styles.bg}
       >
-        <View style={styles.profileContainer}>
-          <ScrollView
-          refreshControl={
-            <RefreshControl
-            refreshing={this.state.refreshing}
-            onRefresh={this.loadData.bind(this)}
-            />
-          }
-          >
-            <View style={styles.profileLogoTop}>
-              <Image
-                source={require("../assets/images/Findr_logo2x.png")}
-                style={globalStyles.profileLogo}
-              />
-              <TouchableOpacity
-                style={styles.profileSettings}
-                onPress={() => this.props.navigation.navigate("Settings")}
-              >
-                <Settings width={DIMENSION_HEIGHT * 0.03} height={DIMENSION_HEIGHT * 0.03}/>
-              </TouchableOpacity>
-            </View>
-            <View style={styles.header}>
-              <View style={styles.profilepicWrap}>
-                <TouchableOpacity style={{ height: styles.profilepicWrap.height }} onPress={() => this.chooseImage()}>
-                  {
-                    image === null || this.state.placeholder ?
-                    <PlaceHolder style={styles.profilepic} /> : 
-                    <Image 
-                      style={styles.profilepic} source={{uri:image.uri}}
-                      onError={()=>this.setState({placeholder: true})}
-                    />
-                  }
-                </TouchableOpacity>
-              </View>
-            </View>
-            <View style={{paddingHorizontal: 10}}>
-              <View style={{marginTop: DIMENSION_HEIGHT * 0.21}}>
-                <ProfileItem
-                  name={name}
-                  age={this._getAge(age)}
-                  uni={location}
-                  gender={this._getFormattedGender(gender)}
-                  email={email}
-                  keywords={keywords}
-                  clubs={clubs}
-                  courses={courses}
-                  projects={projects}
-                  experience={experience}
-                  major={major}
-                  bio={bio}
-                  showLoading={(()=>this.setState({refreshing: true})).bind(this)}
-                  hideLoading={(()=>this.setState({refreshing: false})).bind(this)}
-                />
-              </View>
-            </View>
-          </ScrollView>
-        </View>
+        <_NativeScrollView
+        refreshControl={
+          <RefreshControl
+          refreshing={this.state.refreshing}
+          onRefresh={this.loadData.bind(this)}
+          />
+        }
+        style={{ position: "relative" }}
+        >
+          <Image
+          source={require("../assets/images/Findr_logo2x.png")}
+          style={globalStyles.profileLogo}
+          />
+          <TouchableOpacity style={{ 
+            alignSelf: "flex-end",
+            marginTop: "-20%",
+            marginRight: "5%",
+            width: "10%",
+            padding: "8%"
+          }}>
+            <Settings width={30} height={30} />
+          </TouchableOpacity>
+
+          <ProfilePicture
+            image={image}
+            checksum={checksum}
+            style={{ 
+              width: DIMENSION_HEIGHT * 0.25,
+              height: DIMENSION_HEIGHT * 0.25,
+              marginTop: "5%",
+              borderRadius: 300,
+              borderColor: "black", 
+              borderWidth: 1,
+              alignSelf: "center"
+            }}
+          />
+          
+          <InfoContainer
+            comp={[
+              (<Header title={name} />),
+              (<BasicInfo
+              email={email}
+              bio={bio}
+              gender={bio}
+              />)
+            ]}
+            style={styles.infoContainerStyle}
+          />
+
+          {/* InfoContainer (Keywords) */}
+
+          {/* InfoContainer (About Me) */}
+
+          {/* InfoContainer (Experience, Projects, Courses) */}
+          <InfoContainer
+          comp={[
+            (<Header title={"Projects"} />),
+            (<List
+            style={{ width: DIMENSION_WIDTH * 0.8, marginLeft: DIMENSION_WIDTH * 0.05, marginTop: DIMENSION_HEIGHT * 0.1 }}
+            items={projects}
+            />)
+          ]}
+          style={styles.infoContainerStyle}
+          />
+
+        <InfoContainer
+          comp={[
+            (<Header title={"Experience"} />),
+            (<List
+            style={{ width: DIMENSION_WIDTH * 0.8, marginLeft: DIMENSION_WIDTH * 0.05, marginTop: DIMENSION_HEIGHT * 0.1 }}
+            items={experience ? experience : []}
+            />)
+          ]}
+          style={styles.infoContainerStyle}
+          />
+
+
+        </_NativeScrollView>
+        
       </ImageBackground>
     );
   }
 }
 
 const styles = StyleSheet.create({
-  headerBackground: {
-    flex: 1,
-    width: DIMENSION_WIDTH,
-    height: DIMENSION_HEIGHT,
-    alignSelf: "stretch",
-    backgroundColor: "rgba(26, 93, 87, 0.15)",
-  },
-  header: {
-    alignItems: "center",
-    marginTop: DIMENSION_HEIGHT * 0.02
-  },
-  profilepicWrap: {
-    width: DIMENSION_WIDTH * 0.6,
-    height: DIMENSION_HEIGHT * 0.3,
-    borderRadius: 700
-  },
-  profilepic: {
-    flex: 1,
-    width: null,
-    alignSelf: "stretch",
-    borderRadius: 700,
-  },
-  containerProfile: { marginHorizontal: 0 },
-  photo: {
-    width: DIMENSION_WIDTH,
-    height: 450,
-  },
-  topIconLeft: {
-    fontFamily: ICON_FONT,
-    fontSize: 20,
-    color: WHITE,
-    paddingLeft: 20,
-    marginTop: -20,
-    transform: [{ rotate: "90deg" }],
-  },
-  topIconRight: {
-    fontFamily: ICON_FONT,
-    fontSize: 20,
-    color: WHITE,
-    paddingRight: 20,
-  },
-  actionsProfile: {
-    justifyContent: "center",
-    flexDirection: "row",
-    alignItems: "center",
-    marginBottom: 10,
-  },
-  iconButton: { fontFamily: ICON_FONT, fontSize: 20, color: "#1a5d57" },
-  textButton: {
-    fontFamily: ICON_FONT,
-    fontSize: 15,
-    color: "#1a5d57",
-    paddingLeft: 5,
-  },
-  circledButton: {
-    width: 50,
-    height: 50,
-    borderRadius: 25,
-    backgroundColor: PRIMARY_COLOR,
-    justifyContent: "center",
-    alignItems: "center",
-    marginRight: 10,
-  },
-  roundedButton: {
-    justifyContent: "center",
-    flexDirection: "row",
-    alignItems: "center",
-    marginLeft: 10,
-    height: 50,
-    borderRadius: 25,
-    backgroundColor: WHITE,
-    paddingHorizontal: 20,
-    elevation: 10,
-  },
-  name: {
-    marginTop: 20,
-    fontSize: 16,
-    color: "#fff",
-    fontWeight: "bold",
-  },
-  pos: {
-    fontSize: 16,
-    color: "#0394c0",
-    fontWeight: "300",
-    fontStyle: "italic",
-  },
-  profileContainer: {
-    justifyContent: "space-between",
-    flex: 1,
-    // paddingHorizontal: 10,
-  },
-  profileLogoTop: {
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  profileSettings: {
-    width: DIMENSION_WIDTH * 0.2,
-    height: DIMENSION_WIDTH * 0.1,
-    marginLeft: DIMENSION_HEIGHT * 0.15,
-    marginTop: DIMENSION_HEIGHT * 0.04,
-  },
   bg: {
     flex: 1,
     resizeMode: "cover",
     width: DIMENSION_WIDTH,
     height: DIMENSION_HEIGHT,
+  },
+  infoContainerStyle: {
+    alignSelf: "center",
+    justifyContent: "center",
+    alignItems: "center",
+    width: DIMENSION_WIDTH * 0.9,
+    marginTop: "10%"
   }
 });
 
