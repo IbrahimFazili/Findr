@@ -1,5 +1,5 @@
 import React from "react"
-import { Dimensions, View, FlatList } from "react-native";
+import { Dimensions, View, FlatList, ScrollView } from "react-native";
 import ListItem from "./ListItem";
 
 const DIMENTIONS = Dimensions.get("window");
@@ -35,6 +35,7 @@ class List extends React.Component {
             <View style={[this.props.style, { alignSelf: "center" }]}>
                 <FlatList
                 data={this.state.items}
+                contentContainerStyle={{ paddingBottom: DIMENTIONS.height * this.state.items.length * (0.03 / 4) }}
                 keyExtractor={(item, index) => index.toString()}
                 ItemSeparatorComponent = {this.FlatListItemSeparator}
                 renderItem={({ item }) => (
@@ -43,7 +44,7 @@ class List extends React.Component {
                     editable={false}
                     style={{
                         alignSelf: "center",
-                        width: this.props.style.width * 0.9
+                        width: this.props.style.width * 0.9,
                     }}
                     />
                 )}

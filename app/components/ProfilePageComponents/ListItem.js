@@ -1,5 +1,6 @@
 import React from "react"
 import { TextInput, View } from "react-native"
+import { Dimensions } from "react-native";
 
 
 class ListItem extends React.Component{
@@ -28,14 +29,13 @@ class ListItem extends React.Component{
 
     render() {
         return(
-            <View>
+            <View style={{ paddingVertical: Dimensions.get("window").height * 0.009 }}>
                 <TextInput  
-                style={this.props.style}
+                style={[this.props.style]}
                 placeholder={`${this.state.type}`}
                 value={this.state.value}   
-                // onChangeText={(text)=> this.itemsTextChange(text, index)} 
+                onChangeText={(text)=> this.setState({ value: text })} 
                 editable={this.state.editable}
-                
                 mode='flat'
                 selectionColor={this.props.selectionColor ? this.props.selectionColor : "#1a5d57"}
                 underlineColor={this.props.underlineColor ? this.props.underlineColor : "black"}

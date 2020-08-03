@@ -1,9 +1,11 @@
-import React, { PureComponent } from 'react';
+import React from 'react';
 import { View, Text, AsyncStorage, Dimensions, StyleSheet, NetInfo, Image, ImageBackground} from 'react-native';
 import styles from "../../assets/styles/index";
 import KeyValue from "./KeyValue";
 
-class BasicInfo extends PureComponent {
+const DIMENTIONS = Dimensions.get("window");
+
+class BasicInfo extends React.Component {
     constructor(props){
       super(props);
       this.state = {
@@ -32,29 +34,29 @@ class BasicInfo extends PureComponent {
 
     render() {
       return(
-        <View style={{alignItems: 'center', padding: 20 }}>
+        <View style={{alignItems: 'center', paddingVertical: 25 }}>
             <KeyValue
                 _key="Email"
                 value={this.state.email}
                 spacing={12}
-                width={Dimensions.get('window').height * 0.6}
-                keyStyle={{color: "#1a5d57"}}
+                width={DIMENTIONS.height * 0.4}
+                keyStyle={{color: "#1a5d57", fontSize: 17 }}
                 valueStyle={{color: "black"}}
             />
             <KeyValue
                 _key="Gender"
                 value={this._getFormattedGender(this.state.gender)}
                 spacing={8}
-                width={Dimensions.get('window').height * 0.6}
-                keyStyle={{color: "#1a5d57"}}
-                valueStyle={{color: "black"}}
+                width={DIMENTIONS.height * 0.4}
+                keyStyle={{color: "#1a5d57", fontSize: 17, marginTop: DIMENTIONS.height * 0.01 }}
+                valueStyle={{color: "black", marginTop: DIMENTIONS.height * 0.01 }}
             />
             <KeyValue
                 _key="About me"
                 value={this.state.bio}
-                width={Dimensions.get('window').height * 0.6}
-                spacing={3}
-                keyStyle={{color: "#1a5d57"}}
+                width={DIMENTIONS.height * 0.4}
+                spacing={1}
+                keyStyle={{color: "#1a5d57", fontSize: 17, marginTop: DIMENTIONS.height * 0.01 }}
                 valueStyle={{color: "black"}}
             />
         </View>

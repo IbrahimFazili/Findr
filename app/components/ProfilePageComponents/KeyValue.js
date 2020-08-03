@@ -20,16 +20,18 @@ class KeyValue extends React.Component {
 
     render() {
         return (
-            <View style={{ flexDirection: "row", width: this.props.width }}>
+            <View style={{ 
+                flexDirection: "row",
+                width: this.props.width,
+                flexWrap: "wrap",
+                flex: 1,
+                alignContent: "flex-start"
+            }}>
                 <Text
-                style={[this.props.keyStyle, {
-                    alignSelf: "flex-start",
-                }]}>
+                style={[this.props.keyStyle]}>
                     {this.state._key}:{" ".repeat(this.state.spacing)}
                 </Text>
-                <Text style={[this.props.valueStyle, {
-                    alignSelf: "flex-end"
-                }]}>
+                <Text style={[this.props.valueStyle]}>
                     {this.state.value}
                 </Text>
             </View>

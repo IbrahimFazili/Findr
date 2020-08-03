@@ -157,8 +157,12 @@ class Profile extends React.Component {
           comp={[
             (<Header title={"Projects"} />),
             (<List
-            style={{ width: DIMENSION_WIDTH * 0.8, marginLeft: DIMENSION_WIDTH * 0.05, marginTop: DIMENSION_HEIGHT * 0.1 }}
-            items={projects}
+            style={{ 
+              width: DIMENSION_WIDTH * 0.8,
+              marginLeft: DIMENSION_WIDTH * 0.05,
+              marginTop: DIMENSION_HEIGHT * 0.1,
+            }}
+            items={projects ? projects : []}
             />)
           ]}
           style={styles.infoContainerStyle}
@@ -168,7 +172,11 @@ class Profile extends React.Component {
           comp={[
             (<Header title={"Experience"} />),
             (<List
-            style={{ width: DIMENSION_WIDTH * 0.8, marginLeft: DIMENSION_WIDTH * 0.05, marginTop: DIMENSION_HEIGHT * 0.1 }}
+            style={{
+              width: DIMENSION_WIDTH * 0.8,
+              marginLeft: DIMENSION_WIDTH * 0.05,
+              marginTop: DIMENSION_HEIGHT * 0.1
+            }}
             items={experience ? experience : []}
             />)
           ]}
