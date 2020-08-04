@@ -12,6 +12,7 @@ import styles from "../assets/styles";
 import Swiper from "react-native-swiper";
 import APIConnection from "../assets/data/APIConnection";
 import CardItem from "../components/CardItem";
+import BackArrow from "../assets/icons/back_white.svg"
 
 const INPUT_RANGE = [0, 1, 2, 3];
 const OUTPUT_RANGE = ["#8B9EAF", "#4D617C", "#679389", "#1A5D57"];
@@ -147,16 +148,16 @@ class Onboarding extends React.Component {
                 }}
               >
                 <TouchableOpacity onPress={this.onPressPrev}>
-                  <Image
+                  <View
                     style={{
                       width: FULL_HEIGHT * 0.096,
                       height: FULL_HEIGHT * 0.024,
                       marginTop: FULL_HEIGHT * 0.02,
                       marginLeft: FULL_WIDTH * 0.02,
                       marginBottom: FULL_HEIGHT * 0.015,
-                    }}
-                    source={require("../assets/images/back_arrow.png")}
-                  />
+                    }}>
+                      <BackArrow width={20} height={20} />
+                  </View>
                 </TouchableOpacity>
               </View>
               <View style={styles.slideTwoContent}>
@@ -189,16 +190,16 @@ class Onboarding extends React.Component {
             </View>
             <View style={styles.slide3}>
               <TouchableOpacity onPress={this.onPressPrev}>
-                <Image
-                  style={{
-                    width: FULL_HEIGHT * 0.096,
-                    height: FULL_HEIGHT * 0.024,
-                    marginTop: FULL_HEIGHT * 0.07,
-                    marginLeft: FULL_WIDTH * 0.07,
-                    marginBottom: FULL_HEIGHT * 0.015,
-                  }}
-                  source={require("../assets/images/back_arrow.png")}
-                />
+                  <View
+                    style={{
+                      width: FULL_HEIGHT * 0.096,
+                      height: FULL_HEIGHT * 0.024,
+                      marginTop: FULL_HEIGHT * 0.07,
+                      marginLeft: FULL_WIDTH * 0.06,
+                      marginBottom: FULL_HEIGHT * 0.015,
+                    }}>
+                      <BackArrow width={20} height={20} />
+                  </View>
               </TouchableOpacity>
               <View styles={styles.slide3content}>
                 <Text style={styles.slide3Header}>Chat Rooms</Text>
@@ -233,16 +234,16 @@ class Onboarding extends React.Component {
             </View>
             <View style={styles.slide4}>
               <TouchableOpacity onPress={this.onPressPrev}>
-                <Image
-                  style={{
-                    width: FULL_HEIGHT * 0.096,
-                    height: FULL_HEIGHT * 0.024,
-                    marginTop: FULL_HEIGHT * 0.16,
-                    marginLeft: FULL_WIDTH * 0.06,
-                    marginBottom: FULL_HEIGHT * 0.015,
-                  }}
-                  source={require("../assets/images/back_arrow.png")}
-                />
+                  <View
+                    style={{
+                      width: FULL_HEIGHT * 0.096,
+                      height: FULL_HEIGHT * 0.024,
+                      marginTop: FULL_HEIGHT * 0.2,
+                      marginLeft: FULL_WIDTH * 0.06,
+                      marginBottom: FULL_HEIGHT * 0.015,
+                    }}>
+                      <BackArrow width={20} height={20} />
+                  </View>
               </TouchableOpacity>
               <View style={styles.slide4content}>
                 <Image

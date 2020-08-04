@@ -569,7 +569,6 @@ export default StyleSheet.create({
     height: 60,
     alignSelf: "center",
     marginTop: DIMENSION_HEIGHT * 0.06,
-    marginLeft: DIMENSION_HEIGHT * 0.2
   },
   otherProfileLogo: {
     width: 65,
@@ -581,12 +580,6 @@ export default StyleSheet.create({
   LogoutSettings: {
     left: DIMENSION_WIDTH * 0.425,
     color: "black"
-  },
-  profileTitle: {
-    fontSize: 15,
-    color: TEAL,
-    paddingHorizontal: 10,
-    // fontWeight: 'bold'
   },
   profileTitleMajorOther: {
     fontSize: 15,
@@ -711,7 +704,7 @@ export default StyleSheet.create({
   },
 
   internetText: {
-    fontSize: 23,
+    fontSize: 20,
     paddingLeft: DIMENSION_WIDTH * 0.25,
     bottom: DIMENSION_HEIGHT * 0.079
   },
