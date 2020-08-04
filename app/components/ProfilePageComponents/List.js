@@ -10,13 +10,15 @@ class List extends React.Component {
         super(props);
         this.state = {
             items: [],
-            editable: false
+            editable: false,
+            type: ""
         }
     }
 
     componentWillReceiveProps(props) {
         const updatedProps = {};
         if (this.state.items !== props.items) updatedProps.items = props.items;
+        if (this.state.type !== props.type) updatedProps.type = props.type;
         if (this.state.editable !== props.editable) {
             this.state.editable && !props.editable ? (this.props.updateCallback ? 
                 this.props.updateCallback(this._cleanItems(this.state.items)) : null)
@@ -74,7 +76,7 @@ class List extends React.Component {
                 // ItemSeparatorComponent = {this.FlatListItemSeparator}
                 renderItem={({ item, index }) => (
                     <ListItem
-                    value={item}
+                    value={item ? item : ""}
                     editable={this.state.editable}
                     style={{
                         alignSelf: "center",
@@ -86,6 +88,7 @@ class List extends React.Component {
                     }}
                     updateValue={((newValue) => this.updateHandler(newValue, index)).bind(this)}
                     onDeletePress={(() => this.handleDelete(index)).bind(this)}
+                    type={this.state.type}
                     />
                 )}
                 />

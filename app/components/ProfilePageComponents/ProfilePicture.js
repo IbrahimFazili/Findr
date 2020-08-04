@@ -2,9 +2,14 @@ import React from "react";
 import APIConnection from "../../assets/data/APIConnection";
 import ImagePicker from 'react-native-image-crop-picker';
 import shorthash from "shorthash";
-import { TouchableOpacity, Image, View, Dimensions } from "react-native"
-import PlaceHolder from "../../assets/icons/placeholder_icon.svg"
+import { TouchableOpacity, Image, View, Dimensions, AsyncStorage } from "react-native";
+import PlaceHolder from "../../assets/icons/placeholder_icon.svg";
 
+let RNFS = require('react-native-fs');
+
+
+const DIMENSION_WIDTH = Dimensions.get("window").width;
+const DIMENSION_HEIGHT = Dimensions.get("window").height;
 
 class ProfilePicture extends React.Component{
     constructor(props){
@@ -13,7 +18,8 @@ class ProfilePicture extends React.Component{
             image: props.image,
             checksum: props.checksum,
             editable: true,
-            placeholder: false
+            placeholder: false,
+            API: new APIConnection()
         }
     }
 
@@ -44,8 +50,8 @@ class ProfilePicture extends React.Component{
 
                 this._onChangeMedia(img);
 
-            }).catch((err) => null)
-        ).catch((err) => null);
+            }).catch((err) => console.log(err))
+        ).catch((err) => console.log(err));
 
     };
 
@@ -65,10 +71,7 @@ class ProfilePicture extends React.Component{
         )
 
         APIConnection.uploadPicture(url, media);
-        var profile = {...this.state.profile}
-        profile.image = media.uri;
-        profile.checksum = null;
-        this.setState({profile})
+        this.setState({ image: media.uri, checksum: null })
     }
     
     render() {

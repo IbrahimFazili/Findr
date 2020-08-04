@@ -48,7 +48,7 @@ class ListItem extends React.Component{
             >
                 <TextInput  
                     style={[this.props.style, { color: 'black' }]}
-                    placeholder={`${this.state.type}`}
+                    placeholder={`Add ${this.state.type}`}
                     value={this.state.value}   
                     onChangeText={((value) => this.handleChange(value)).bind(this)} 
                     editable={this.state.editable}

@@ -177,7 +177,7 @@ class Profile extends React.Component {
               marginTop: DIMENSION_HEIGHT * 0.01,
               zIndex: Number.MAX_SAFE_INTEGER,
             }}
-            items={projects ? projects : []}
+            items={projects && projects.length > 0 ? projects : [""]}
             editable={false}
             />)
           ]}
@@ -195,7 +195,7 @@ class Profile extends React.Component {
               marginTop: DIMENSION_HEIGHT * 0.01,
               zIndex: Number.MAX_SAFE_INTEGER,
             }}
-            items={experience ? experience : []}
+            items={experience && experience.length > 0 ? experience : []}
             editable={false}
             />)
           ]}

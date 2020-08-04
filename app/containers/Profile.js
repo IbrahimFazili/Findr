@@ -13,7 +13,7 @@ import {
   ScrollView as _NativeScrollView
 } from "react-native";
 import APIConnection from "../assets/data/APIConnection";
-import Settings from "../assets/icons/settings_fill.svg";
+import Settings from "../assets/icons/menu_icon.svg";
 import ProfilePicture from "../components/ProfilePageComponents/ProfilePicture";
 import InfoContainer from "../components/ProfilePageComponents/InfoContainer";
 import List from "../components/ProfilePageComponents/List";
@@ -188,14 +188,14 @@ class Profile extends React.Component {
           <TouchableOpacity
           style={{ 
             alignSelf: "flex-end",
-            marginTop: "-20%",
+            marginTop: "-22%",
             marginRight: "5%",
             width: "10%",
             padding: "8%"
           }}
           onPress={() => this.props.navigation.navigate("Settings")}
           >
-            <Settings width={30} height={30} />
+            <Settings width={DIMENSION_WIDTH * 0.06} height={DIMENSION_HEIGHT * 0.06} />
           </TouchableOpacity>
 
           <ProfilePicture
@@ -258,9 +258,10 @@ class Profile extends React.Component {
               marginTop: DIMENSION_HEIGHT * 0.01,
               zIndex: Number.MAX_SAFE_INTEGER,
             }}
-            items={projects ? projects : []}
+            items={projects && projects.length > 0 ? projects : [""]}
             editable={this.state.projectsEditable}
             updateCallback={((newValue) => this.updateProjects(email, newValue)).bind(this)}
+            type={"projects"}
             />)
           ]}
           style={styles.infoContainerStyle}
@@ -277,9 +278,10 @@ class Profile extends React.Component {
               marginTop: DIMENSION_HEIGHT * 0.01,
               zIndex: Number.MAX_SAFE_INTEGER,
             }}
-            items={experience ? experience : []}
+            items={experience && experience.length > 0 ? experience : [""]}
             editable={this.state.experienceEditable}
             updateCallback={((newValue) => this.updateExperience(email, newValue)).bind(this)}
+            type={"experience"}
             />)
           ]}
           style={styles.infoContainerStyle}
