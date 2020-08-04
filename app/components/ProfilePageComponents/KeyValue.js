@@ -19,11 +19,14 @@ class KeyValue extends React.Component {
     }
 
     componentWillReceiveProps(props) {
-        if (props._key !== this.state._key) this.setState({ _key: props._key });
-        if (props.value !== this.state.value) this.setState({ value: props.value });
-        if (props.spacing !== this.state.spacing) this.setState({ spacing: props.spacing });
-        if (props.multiline !== this.state.multiline) this.setState({ multiline: props.multiline });
-        if (this.state.editable !== props.editable) this.setState({ editable: props.editable });
+        const updatedProps = {};
+        if (props._key !== this.state._key) updatedProps._key = props._key;
+        if (props.value !== this.state.value) updatedProps.value = props.value;
+        if (props.spacing !== this.state.spacing) updatedProps.spacing = props.spacing;
+        if (props.multiline !== this.state.multiline) updatedProps.multiline = props.multiline;
+        if (this.state.editable !== props.editable) updatedProps.editable = props.editable;
+        
+        if (Object.keys(updatedProps).length > 0) this.setState(updatedProps);
     }
 
     handleChange(value) {

@@ -16,13 +16,16 @@ class InfoContainer extends React.Component{
     super(props);
     this.state = {
       comp: [],
-      edit: false
+      edit: false,
+      isOther: false,
     }
-    console.log('props', this.props);
   }
 
   componentWillReceiveProps(props) {
-    if (props.comp !== this.state.comp) this.setState({ comp: props.comp });
+    const updatedProps = {};
+    if (props.comp !== this.state.comp) updatedProps.comp = props.comp;
+    if (props.isOther !== this.state.isOther) updatedProps.isOther = props.isOther;
+    this.setState(updatedProps);
   }
 
   handlePenPress() {
@@ -45,7 +48,8 @@ class InfoContainer extends React.Component{
               top: 0,
             }}
           >
-          {this.state.edit ? 
+          {!this.state.isOther ?
+          (this.state.edit ? 
             <TouchableOpacity
               style={{
                 padding: "10%",
@@ -65,7 +69,9 @@ class InfoContainer extends React.Component{
             > 
               <EDIT width={DIMENSION_WIDTH * 0.05} height={DIMENSION_HEIGHT * 0.05}/>
             </TouchableOpacity>
-          }
+          )
+          : null}
+          
         </View>
           {this.state.comp}
       </View>

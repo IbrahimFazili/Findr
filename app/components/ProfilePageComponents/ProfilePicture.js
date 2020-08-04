@@ -2,7 +2,7 @@ import React from "react";
 import APIConnection from "../../assets/data/APIConnection";
 import ImagePicker from 'react-native-image-crop-picker';
 import shorthash from "shorthash";
-import { TouchableOpacity, Image, View } from "react-native"
+import { TouchableOpacity, Image, View, Dimensions } from "react-native"
 import PlaceHolder from "../../assets/icons/placeholder_icon.svg"
 
 
@@ -11,7 +11,9 @@ class ProfilePicture extends React.Component{
         super(props);
         this.state = {
             image: props.image,
-            checksum: props.checksum
+            checksum: props.checksum,
+            editable: true,
+            placeholder: false
         }
     }
 
@@ -22,7 +24,10 @@ class ProfilePicture extends React.Component{
         if (this.state.checksum !== props.checksum){
             this.state.checksum = props.checksum
         }
-        this.setState({ image: this.state.image, checksum: this.state.checksum });
+        if (this.state.editable !== props.editable){
+            this.state.editable = props.editable
+        }
+        this.setState({ image: this.state.image, checksum: this.state.checksum, editable: this.state.editable, placeholder: false });
     }
 
     
@@ -69,13 +74,36 @@ class ProfilePicture extends React.Component{
     render() {
         return (
             <View>
-                <TouchableOpacity
-                onPress={this.chooseImage.bind(this)}>
-                    {this.state.image ? 
-                        <Image source={{ uri: this.state.image.uri}} style={this.props.style}/> :
-                        <PlaceHolder width={this.props.placeholderWidth} height={this.props.placeholderHeight}/>
-                    }
-                </TouchableOpacity>
+                { this.state.editable ? (
+                    <TouchableOpacity
+                    onPress={this.chooseImage.bind(this)}>
+                        {this.state.image && !this.state.placeholder ? 
+                        <Image
+                        source={{ uri: this.state.image.uri}}
+                        style={this.props.style}
+                        onError={() => this.setState({ placeholder: true })}
+                        /> :
+                        <View style={this.props.style}>
+                            <PlaceHolder
+                            // width={Dimensions.get('window').width * 0.6}
+                            // height={Dimensions.get('window').height * 0.6}
+                            />
+                        </View>
+                        }
+                    </TouchableOpacity>
+                ) : (
+                    this.state.image && !this.state.placeholder ? 
+                        <Image
+                        source={{ uri: this.state.image.uri}}
+                        style={this.props.style}
+                        onError={() => this.setState({ placeholder: true })}
+                        /> :
+                        <View style={this.props.style}>
+                            <PlaceHolder
+                            // width={Dimensions.get('window').width * 0.6}
+                            // height={Dimensions.get('window').height * 0.6}
+                            />
+                        </View>                )}
             </View>
         )
     }

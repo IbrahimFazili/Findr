@@ -19,6 +19,7 @@ import InfoContainer from "../components/ProfilePageComponents/InfoContainer";
 import List from "../components/ProfilePageComponents/List";
 import BasicInfo from "../components/ProfilePageComponents/BasicInfo";
 import Header from "../components/ProfilePageComponents/Header";
+import Tag from "../components/ProfilePageComponents/Tag";
 
 const DIMENSION_WIDTH = Dimensions.get("window").width;
 const DIMENSION_HEIGHT = Dimensions.get("window").height;
@@ -31,6 +32,7 @@ class Profile extends React.Component {
       basicInfoEditable: false,
       projectsEditable: false,
       experienceEditable: false,
+      keywordsEditable: false,
 			profile: null,
       isConnected: true,
       placeholder: false,
@@ -86,6 +88,10 @@ class Profile extends React.Component {
     this.setState({ experienceEditable });
   }
 
+  setKeywordsEditable(keywordsEditable) {
+    this.setState({ keywordsEditable });
+  }
+
   async updateName(email, newName) {
     const status = await this.state.API.updateUserInfo({
       name: newName,
@@ -117,6 +123,22 @@ class Profile extends React.Component {
       experience: updatedExperience,
       email
     });
+
+    if (status === 201) {
+      APIConnection.ProfilePage.notify();
+    } else {
+      Alert.alert("Update failed", "Couldn't update your info, try again later");
+    }
+  }
+
+  async updateKeywords(email, keywords) {
+    this.setState({ refreshing: true });
+    const status = await this.state.API.updateKeywords({
+      email,
+      keywords
+    });
+
+    this.setState({ refreshing: false });
 
     if (status === 201) {
       APIConnection.ProfilePage.notify();
@@ -179,13 +201,12 @@ class Profile extends React.Component {
           <ProfilePicture
             image={image}
             checksum={checksum}
+            editable={true}
             style={{ 
               width: DIMENSION_HEIGHT * 0.25,
               height: DIMENSION_HEIGHT * 0.25,
               marginTop: "5%",
               borderRadius: 300,
-              borderColor: "black", 
-              borderWidth: 1,
               alignSelf: "center"
             }}
           />
@@ -211,16 +232,30 @@ class Profile extends React.Component {
           />
 
           {/* InfoContainer (Keywords) */}
+          <InfoContainer
+          comp={[
+            (<Header title={"Interests"} style={{ marginTop: "3%"}} editable={false}/>),
+            (<Tag
+            containerStyle={{ width: DIMENSION_WIDTH * 0.8}}
+            tags={keywords}
+            type={"interests"}
+            editable={this.state.keywordsEditable}
+            updateCallback={((newKeywords) => this.updateKeywords(email, newKeywords)).bind(this)}
+            />)
+          ]}
+          style={styles.infoContainerStyle}
+          setEditable={this.setKeywordsEditable.bind(this)}
+          />
 
           {/* InfoContainer (Experience, Projects, Courses) */}
           <InfoContainer
           comp={[
-            (<Header title={"Projects"} />),
+            (<Header title={"Projects"} editable={false}/>),
             (<List
             style={{ 
               width: DIMENSION_WIDTH * 0.8,
               marginLeft: DIMENSION_WIDTH * 0.05,
-              marginTop: DIMENSION_HEIGHT * 0.03,
+              marginTop: DIMENSION_HEIGHT * 0.01,
               zIndex: Number.MAX_SAFE_INTEGER,
             }}
             items={projects ? projects : []}
@@ -234,12 +269,12 @@ class Profile extends React.Component {
 
         <InfoContainer
           comp={[
-            (<Header title={"Experience"} />),
+            (<Header title={"Experience"} editable={false}/>),
             (<List
             style={{
               width: DIMENSION_WIDTH * 0.8,
               marginLeft: DIMENSION_WIDTH * 0.05,
-              marginTop: DIMENSION_HEIGHT * 0.1,
+              marginTop: DIMENSION_HEIGHT * 0.01,
               zIndex: Number.MAX_SAFE_INTEGER,
             }}
             items={experience ? experience : []}
@@ -271,7 +306,8 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     width: DIMENSION_WIDTH * 0.9,
-    marginTop: "10%"
+    marginBottom: DIMENSION_HEIGHT * 0.05,
+    marginTop: "8%"
   }
 });
 

@@ -136,6 +136,7 @@ class LogIn extends React.Component {
                 onFocus={() => this.setState({emailLabel:""})}
                 onBlur={() => this.setState({ emailLabel: this.state.email.length === 0 ? "Email" : "" })}
                 placeholder="email@example.com"
+                autoCompleteType="email"
                 onChangeText={this.handleEmailChange.bind(this)}
                 theme={theme}
                 style={textBoxStyle}
@@ -150,6 +151,7 @@ class LogIn extends React.Component {
                 onFocus={() => this.setState({ passLabel: "" })}
                 onBlur={() => this.setState({ passLabel: this.state.password.length === 0 ? "Password" : "" })}
                 placeholder="Enter your Password"
+                autoCompleteType="password"
                 onChangeText={this.handlePasswordChange.bind(this)}
                 theme={theme}
                 style={textBoxStyle}

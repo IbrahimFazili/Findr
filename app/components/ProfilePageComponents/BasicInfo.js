@@ -20,14 +20,19 @@ class BasicInfo extends React.Component {
     }
 
     componentWillReceiveProps(props) {
-        if (this.state.email !== props.email) this.setState({ email: props.email });
-        if (this.state.gender !== props.gender) this.setState({ gender: props.gender });
-        if (this.state.bio !== props.bio) this.setState({ bio: props.bio });
-        if (this.state.major !== props.major) this.setState({ major: props.major });
-        if (this.state.uni !== props.uni) this.setState({ uni: props.uni });
+        const updatedProps = {};
+        if (this.state.email !== props.email) updatedProps.email = props.email;
+        if (this.state.gender !== props.gender) updatedProps.gender = props.gender;
+        if (this.state.bio !== props.bio) updatedProps.bio = props.bio;
+        if (this.state.major !== props.major) updatedProps.major = props.major;
+        if (this.state.uni !== props.uni) updatedProps.uni = props.uni;
         if (this.state.editable !== props.editable) {
           this.state.editable && !props.editable ? this.sendUpdate() : null;
-          this.setState({ editable: props.editable });
+          updatedProps.editable = props.editable;
+        }
+
+        if (Object.keys(updatedProps).length > 0) {
+          this.setState(updatedProps);
         }
     }
 
@@ -79,7 +84,7 @@ class BasicInfo extends React.Component {
                 value={this.state.email}
                 spacing={12}
                 width={DIMENTIONS.height * 0.4}
-                keyStyle={{color: "#1a5d57", fontSize: 17 }}
+                keyStyle={{color: "#1a5d57", fontSize: 15 }}
                 valueStyle={{color: "black", marginTop: -DIMENTIONS.height * 0.015 }}
                 editable={false}
             />
@@ -88,7 +93,7 @@ class BasicInfo extends React.Component {
                 value={this.state.uni}
                 spacing={2}
                 width={DIMENTIONS.height * 0.4}
-                keyStyle={{color: "#1a5d57", fontSize: 17 }}
+                keyStyle={{color: "#1a5d57", fontSize: 15 }}
                 valueStyle={{color: "black", marginTop: -DIMENTIONS.height * 0.015 }}
                 editable={this.state.editable}
                 updateValue={((value) => this.updateHandler("uni", value)).bind(this)}
@@ -97,8 +102,9 @@ class BasicInfo extends React.Component {
                 _key="Major"
                 value={this.state.major}
                 spacing={12}
+                multiline={true}
                 width={DIMENTIONS.height * 0.4}
-                keyStyle={{color: "#1a5d57", fontSize: 17 }}
+                keyStyle={{color: "#1a5d57", fontSize: 15 }}
                 valueStyle={{color: "black", marginTop: -DIMENTIONS.height * 0.015 }}
                 editable={this.state.editable}
                 updateValue={((value) => this.updateHandler("major", value)).bind(this)}
@@ -108,7 +114,7 @@ class BasicInfo extends React.Component {
                 value={this._getFormattedGender(this.state.gender)}
                 spacing={8}
                 width={DIMENTIONS.height * 0.4}
-                keyStyle={{color: "#1a5d57", fontSize: 17, marginTop: DIMENTIONS.height * 0.01 }}
+                keyStyle={{color: "#1a5d57", fontSize: 15, marginTop: DIMENTIONS.height * 0.01 }}
                 valueStyle={{color: "black", marginTop: -DIMENTIONS.height * 0.005 }}
                 editable={this.state.editable}
                 updateValue={((value) => this.updateHandler("gender", value)).bind(this)}
@@ -118,7 +124,7 @@ class BasicInfo extends React.Component {
                 value={this.state.bio}
                 width={DIMENTIONS.height * 0.4}
                 spacing={1}
-                keyStyle={{color: "#1a5d57", fontSize: 17, marginTop: DIMENTIONS.height * 0.01 }}
+                keyStyle={{color: "#1a5d57", fontSize: 15, marginTop: DIMENTIONS.height * 0.01 }}
                 valueStyle={{color: "black", marginTop: -DIMENTIONS.height * 0.01, marginLeft: -DIMENTIONS.width * 0.01}}
                 editable={this.state.editable}
                 multiline={true}

@@ -15,13 +15,15 @@ class Header extends React.Component {
     }
 
     componentWillReceiveProps(props) {
-        if (props.title !== this.state.title) this.setState({ title: props.title });
+        const updatedProps = {};
+        if (props.title !== this.state.title) updatedProps.title = props.title;
         if (props.editable !== this.state.editable) {
             this.state.editable && !props.editable ? 
             (this.props.updateCallback ? this.props.updateCallback(this.state.title) : null) 
             : null;
-            this.setState({ editable: props.editable });
+            updatedProps.editable = props.editable;
         }
+        if (Object.keys(updatedProps).length > 0) this.setState(updatedProps);
     }
 
     render() {

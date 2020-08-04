@@ -15,13 +15,15 @@ class List extends React.Component {
     }
 
     componentWillReceiveProps(props) {
-        if (this.state.items !== props.items) this.setState({ items: props.items });
+        const updatedProps = {};
+        if (this.state.items !== props.items) updatedProps.items = props.items;
         if (this.state.editable !== props.editable) {
             this.state.editable && !props.editable ? (this.props.updateCallback ? 
                 this.props.updateCallback(this._cleanItems(this.state.items)) : null)
             : null;
-            this.setState({ editable: props.editable });
+            updatedProps.editable = props.editable;
         }
+        if (Object.keys(updatedProps).length > 0) this.setState(updatedProps);
     }
 
     _cleanItems() {

@@ -1,42 +1,41 @@
 import React from "react";
 import globalStyles from "../assets/styles";
 import {
-	View,
-	StyleSheet,
-	Image,
-	Dimensions,
-	ImageBackground,
-	NetInfo,
+  StyleSheet,
+  Dimensions,
+  ImageBackground,
+  NetInfo,
+  Image,
+  View,
+  ScrollView as _NativeScrollView
 } from "react-native";
-import OtherProfileItem from "../components/OtherProfileItem";
 import APIConnection from "../assets/data/APIConnection";
-import { ScrollView } from "react-navigation";
-import CachedImage from "../components/CachedImage";
-import PlaceHolder from "../assets/icons/placeholder_icon.svg"
+import ProfilePicture from "../components/ProfilePageComponents/ProfilePicture";
+import InfoContainer from "../components/ProfilePageComponents/InfoContainer";
+import List from "../components/ProfilePageComponents/List";
+import BasicInfo from "../components/ProfilePageComponents/BasicInfo";
+import Header from "../components/ProfilePageComponents/Header";
+import Tag from "../components/ProfilePageComponents/Tag";
 import { Button } from "react-native-elements";
-
-const PRIMARY_COLOR = "#7444C0";
-const WHITE = "#FFFFFF";
-
 
 const DIMENSION_WIDTH = Dimensions.get("window").width;
 const DIMENSION_HEIGHT = Dimensions.get("window").height;
 
-class OtherProfile2 extends React.Component {
+class Profile extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {
 			API: new APIConnection(),
 			profile: null,
 			isConnected: true,
-			user_email: props.navigation.state.params.email,
+      user_email: props.navigation.state.params.email,
+      count: 0
 		};
 	}
-
+  
 	async componentDidMount() {
 		let user = await this.state.API.fetchUser(this.state.user_email);
 		this.setState({ profile: user });
-		console.log(user);
 		NetInfo.isConnected.addEventListener(
 			"connectionChange",
 			this.handleConnectivityChange
@@ -72,200 +71,161 @@ class OtherProfile2 extends React.Component {
 		})
 	}
 
-	render() {
-		console.log(this.state.user_email);
-		console.log(this.state.profile);
-		const image = this.state.profile
-			? { uri: this.state.profile.image, checksum: this.state.profile.checksum }
-			: null;
-		const name = this.state.profile ? this.state.profile.name : "";
-		const age = this.state.profile ? this.state.profile.age : -1;
-		const location = this.state.profile ? this.state.profile.uni : "";
-		const gender = this.state.profile ? this.state.profile.gender : "";
-		const major = this.state.profile ? this.state.profile.major : "";
-		const email = this.state.profile ? this.state.profile.email : "";
-		const keywords = this.state.profile ? this.state.profile.keywords : [];
-		const clubs = this.state.profile ? this.state.profile.clubs : [];
-		const courses = this.state.profile ? this.state.profile.courses : [];
+  render() {
+    const checksum = this.state.profile ? this.state.profile.checksum : null;
+    const image = this.state.profile ? { uri: this.state.profile.image } : null;
+    const name = this.state.profile ? this.state.profile.name : "";
+    const age = this.state.profile ? this.state.profile.age : -1;
+    const uni = this.state.profile ? this.state.profile.uni : "";
+    const gender = this.state.profile ? this.state.profile.gender : "";
+    const email = this.state.profile ? this.state.profile.email : "";
+    const keywords = this.state.profile ? this.state.profile.keywords : [];
+    const clubs = this.state.profile ? this.state.profile.clubs : [];
+    const courses = this.state.profile ? this.state.profile.courses : [];
+    const major = this.state.profile ? this.state.profile.major : [];
+    const bio = this.state.profile ? this.state.profile.bio : [];
+    const projects = this.state.profile ? this.state.profile.projects : [];
+    const experience = this.state.profile ? this.state.profile.experience : [];
 
-		if (!this.state.isConnected) {
-			this.props.navigation.navigate("Internet");
-		}
+    if (!this.state.profile || this.state.count < 1) setTimeout((() => this.setState({ count: this.state.count + 1 })).bind(this), 50);
 
-		return (
-			<ImageBackground
-				source={require("../assets/images/15.png")}
-				style={styles.bg}
-			>
-				<View style={styles.profileContainer}>
-					<ScrollView>
-						<Image
-							source={require("../assets/images/Findr_logo2x.png")}
-							style={globalStyles.otherProfileLogo}
-						/>
-						
-						<View style={styles.header}>
-							<View style={styles.profilepicWrap}>
-								{
-									image === null ?
-									<PlaceHolder style={styles.profilepic} /> : 
-									<CachedImage
-									style={styles.profilepic}
-									uri={image.uri}
-									uid={email}
-									checksum={image.checksum}
-									/>
-								}
-								
-							</View>
-							
-							<View style={{ top: DIMENSION_HEIGHT * 0.325, position: "absolute" }}>
+    if (!this.state.isConnected) {
+      this.props.navigation.navigate("Internet");
+    }
+
+    return (
+      <ImageBackground
+      source={require("../assets/images/15.png")}
+      style={styles.bg}
+      >
+        <_NativeScrollView
+        style={{ position: "relative" }}
+        >
+          <Image
+          source={require("../assets/images/Findr_logo2x.png")}
+          style={globalStyles.profileLogo}
+          />
+
+          <ProfilePicture
+            image={image}
+            checksum={checksum}
+            editable={false}
+            style={{ 
+              width: DIMENSION_HEIGHT * 0.25,
+              height: DIMENSION_HEIGHT * 0.25,
+              marginTop: "5%",
+              borderRadius: 300,
+              borderColor: "black", 
+              borderWidth: 1,
+              alignSelf: "center"
+            }}
+          />
+
+            <View style={{ top: DIMENSION_HEIGHT * 0.035, alignSelf: "center" }}>
 								<Button
 									title="Chat"
 									buttonStyle={{ 
 										width: DIMENSION_WIDTH * 0.4,
 										borderRadius: 30,
-										backgroundColor: "#1a5d57"
+                    backgroundColor: "#1a5d57",
 									}}
 									onPress={() => this.navigateToChat(name, image)}
 								></Button>
-							</View>
 						</View>
+          
+          <InfoContainer
+            comp={[
+              (<Header
+                title={name}
+                editable={false}
+              />),
+              (<BasicInfo
+              email={email}
+              bio={bio}
+              gender={gender}
+              major={major}
+              uni={uni}
+              editable={false}
+              />)
+            ]}
+            style={[styles.infoContainerStyle, { marginTop: "15%" }]}
+            isOther={true}
+          />
 
-						
+          {/* InfoContainer (Keywords) */}
+          <InfoContainer
+          comp={[
+            (<Header title={"Interests"} style={{ marginTop: "3%"}} editable={false}/>),
+            (<Tag
+            containerStyle={{ width: DIMENSION_WIDTH * 0.8}}
+            tags={keywords}
+            type={"interests"}
+            editable={false}
+            />)
+          ]}
+          style={styles.infoContainerStyle}
+		      isOther={true}
+		  />
 
-						<View style={{ paddingHorizontal: 10 }}>
-							<View
-								style={{ marginTop: DIMENSION_HEIGHT * 0.08 }}
-							>
-								<OtherProfileItem
-									name={name}
-									age={this._getAge(age)}
-									uni={location}
-									gender={gender}
-									major={major}
-									email={email}
-									keywords={keywords}
-									clubs={clubs}
-									courses={courses}
-								/>
-							</View>
-						</View>
-					</ScrollView>
-				</View>
-			</ImageBackground>
-		);
-	}
+          <InfoContainer
+          comp={[
+            (<Header title={"Projects"} editable={false}/>),
+            (<List
+            style={{ 
+              width: DIMENSION_WIDTH * 0.8,
+              marginLeft: DIMENSION_WIDTH * 0.05,
+              marginTop: DIMENSION_HEIGHT * 0.01,
+              zIndex: Number.MAX_SAFE_INTEGER,
+            }}
+            items={projects ? projects : []}
+            editable={false}
+            />)
+          ]}
+          style={styles.infoContainerStyle}
+          isOther={true}
+          />
+
+        <InfoContainer
+          comp={[
+            (<Header title={"Experience"} editable={false}/>),
+            (<List
+            style={{
+              width: DIMENSION_WIDTH * 0.8,
+              marginLeft: DIMENSION_WIDTH * 0.05,
+              marginTop: DIMENSION_HEIGHT * 0.01,
+              zIndex: Number.MAX_SAFE_INTEGER,
+            }}
+            items={experience ? experience : []}
+            editable={false}
+            />)
+          ]}
+          style={styles.infoContainerStyle}
+          isOther={true}
+          />
+
+
+        </_NativeScrollView>
+        
+      </ImageBackground>
+    );
+  }
 }
 
 const styles = StyleSheet.create({
-	headerBackground: {
-		flex: 1,
-		width: DIMENSION_WIDTH,
-		height: DIMENSION_HEIGHT,
-		alignSelf: "stretch",
-		backgroundColor: "rgba(26, 93, 87, 0.15)",
-	},
-	header: {
-		// flex: 1,
-		position: 'relative',
-		alignItems: "center",
-		justifyContent: "center",
-		marginTop: DIMENSION_HEIGHT * 0.02,
-	},
-	// profilepicWrap: {
-	// 	width: 280,
-	// 	height: 280,
-	// 	padding: 20,
-	// },
-	profilepicWrap: {
-		width: 240,
-		height: 240,
-		borderRadius: 100,
-		borderColor: "rgba(26, 93, 87, 0.15)",
-		marginBottom: 170,
-		elevation: 10,
-	},
-	profilepic: {
-		flex: 1,
-		width: null,
-		alignSelf: "stretch",
-		borderRadius: 700,
-	},
-	containerProfile: { marginHorizontal: 0 },
-	photo: {
-		width: DIMENSION_WIDTH,
-		height: 450,
-	},
-	topIconLeft: {
-		fontFamily: "sans-serif",
-		fontSize: 20,
-		color: WHITE,
-		paddingLeft: 20,
-		marginTop: -20,
-		transform: [{ rotate: "90deg" }],
-	},
-	topIconRight: {
-		fontFamily: "sans-serif",
-		fontSize: 20,
-		color: WHITE,
-		paddingRight: 20,
-	},
-	actionsProfile: {
-		justifyContent: "center",
-		flexDirection: "row",
-		alignItems: "center",
-		marginBottom: 10,
-	},
-	iconButton: { fontFamily: "sans-serif", fontSize: 20, color: "#1a5d57" },
-	textButton: {
-		fontFamily: "sans-serif",
-		fontSize: 15,
-		color: "#1a5d57",
-		paddingLeft: 5,
-	},
-	circledButton: {
-		width: 50,
-		height: 50,
-		borderRadius: 25,
-		backgroundColor: PRIMARY_COLOR,
-		justifyContent: "center",
-		alignItems: "center",
-		marginRight: 10,
-	},
-	roundedButton: {
-		justifyContent: "center",
-		flexDirection: "row",
-		alignItems: "center",
-		marginLeft: 10,
-		height: 50,
-		borderRadius: 25,
-		backgroundColor: WHITE,
-		paddingHorizontal: 20,
-		elevation: 10,
-	},
-	name: {
-		marginTop: 20,
-		fontSize: 16,
-		color: "#fff",
-		fontWeight: "bold",
-	},
-	pos: {
-		fontSize: 16,
-		color: "#0394c0",
-		fontWeight: "300",
-		fontStyle: "italic",
-	},
-	profileContainer: {
-		justifyContent: "space-between",
-		flex: 1,
-	},
-	bg: {
-		flex: 1,
-		resizeMode: "cover",
-		width: DIMENSION_WIDTH,
-		height: DIMENSION_HEIGHT,
-	},
+  bg: {
+    flex: 1,
+    resizeMode: "cover",
+    width: DIMENSION_WIDTH,
+    height: DIMENSION_HEIGHT,
+  },
+  infoContainerStyle: {
+    alignSelf: "center",
+    justifyContent: "center",
+    alignItems: "center",
+    width: DIMENSION_WIDTH * 0.9,
+    marginBottom: DIMENSION_HEIGHT * 0.05,
+    marginTop: "8%"
+  }
 });
 
-export default OtherProfile2;
+export default Profile;
