@@ -81,7 +81,8 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     flexWrap: 'wrap',
     flexDirection: 'row',
-    justifyContent: "flex-start"
+    justifyContent: "flex-start",
+    zIndex: Number.MIN_SAFE_INTEGER,
   }
 })
 

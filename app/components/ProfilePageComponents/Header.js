@@ -1,5 +1,5 @@
 import React from "react"
-import { Text, View, TouchableOpacity, Dimensions } from "react-native";
+import { Text, View, Dimensions, TextInput } from "react-native";
 
 const DIMENSION_HEIGHT = Dimensions.get("window").height
 
@@ -8,27 +8,40 @@ class Header extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            title: props.title
+            title: props.title,
+            editable: false,
+            underlineColor: "transparent"
         };
     }
 
     componentWillReceiveProps(props) {
         if (props.title !== this.state.title) this.setState({ title: props.title });
+        if (props.editable !== this.state.editable) {
+            this.state.editable && !props.editable ? 
+            (this.props.updateCallback ? this.props.updateCallback(this.state.title) : null) 
+            : null;
+            this.setState({ editable: props.editable });
+        }
     }
 
     render() {
         return (
             <View style={this.props.style}>
-              <Text 
+              <TextInput 
                 style={{
                     fontSize: 26,
                     justifyContent: 'center',
                     color: "#1a5d57",
                     marginTop: DIMENSION_HEIGHT * 0.01,
                 }}
-              >
-                {this.state.title}
-              </Text>
+                mode='flat'
+                value={this.state.title}
+                onChangeText={((title) => this.setState({ title })).bind(this)}
+                onFocus={() => this.setState({ underlineColor: "lightgrey" })}
+                onBlur={() => this.setState({ underlineColor: "transparent" })}
+                underlineColorAndroid={this.state.underlineColor}
+                editable={this.state.editable}
+              />
               
           </View>
         );

@@ -1,7 +1,6 @@
 import React from "react";
 import globalStyles from "../assets/styles";
 import {
-  View,
   TouchableOpacity,
   StyleSheet,
   Dimensions,
@@ -10,11 +9,10 @@ import {
   NetInfo,
   RefreshControl,
   Image,
-  Text,
+  Alert,
   ScrollView as _NativeScrollView
 } from "react-native";
 import APIConnection from "../assets/data/APIConnection";
-import { ScrollView } from "react-navigation";
 import Settings from "../assets/icons/settings_fill.svg";
 import ProfilePicture from "../components/ProfilePageComponents/ProfilePicture";
 import InfoContainer from "../components/ProfilePageComponents/InfoContainer";
@@ -88,12 +86,51 @@ class Profile extends React.Component {
     this.setState({ experienceEditable });
   }
 
+  async updateName(email, newName) {
+    const status = await this.state.API.updateUserInfo({
+      name: newName,
+      email
+    });
+
+    if (status === 201) {
+      APIConnection.ProfilePage.notify();
+    } else {
+      Alert.alert("Update failed", "Couldn't update your info, try again later");
+    }
+  }
+
+  async updateProjects(email, updatedProjects) {
+    const status = await this.state.API.updateUserInfo({
+      projects: updatedProjects,
+      email
+    });
+
+    if (status === 201) {
+      APIConnection.ProfilePage.notify();
+    } else {
+      Alert.alert("Update failed", "Couldn't update your info, try again later");
+    }
+  }
+
+  async updateExperience(email, updatedExperience) {
+    const status = await this.state.API.updateUserInfo({
+      experience: updatedExperience,
+      email
+    });
+
+    if (status === 201) {
+      APIConnection.ProfilePage.notify();
+    } else {
+      Alert.alert("Update failed", "Couldn't update your info, try again later");
+    }
+  }
+
   render() {
     const checksum = this.state.profile ? this.state.profile.checksum : null;
     const image = this.state.profile ? { uri: this.state.profile.image } : null;
     const name = this.state.profile ? this.state.profile.name : "";
     const age = this.state.profile ? this.state.profile.age : -1;
-    const location = this.state.profile ? this.state.profile.uni : "";
+    const uni = this.state.profile ? this.state.profile.uni : "";
     const gender = this.state.profile ? this.state.profile.gender : "";
     const email = this.state.profile ? this.state.profile.email : "";
     const keywords = this.state.profile ? this.state.profile.keywords : [];
@@ -126,13 +163,16 @@ class Profile extends React.Component {
           source={require("../assets/images/Findr_logo2x.png")}
           style={globalStyles.profileLogo}
           />
-          <TouchableOpacity style={{ 
+          <TouchableOpacity
+          style={{ 
             alignSelf: "flex-end",
             marginTop: "-20%",
             marginRight: "5%",
             width: "10%",
             padding: "8%"
-          }}>
+          }}
+          onPress={() => this.props.navigation.navigate("Settings")}
+          >
             <Settings width={30} height={30} />
           </TouchableOpacity>
 
@@ -152,11 +192,17 @@ class Profile extends React.Component {
           
           <InfoContainer
             comp={[
-              (<Header title={name} />),
+              (<Header
+                title={name}
+                editable={this.state.basicInfoEditable}
+                updateCallback={((newName) => this.updateName(email, newName)).bind(this)}
+              />),
               (<BasicInfo
               email={email}
               bio={bio}
               gender={gender}
+              major={major}
+              uni={uni}
               editable={this.state.basicInfoEditable}
               />)
             ]}
@@ -166,8 +212,6 @@ class Profile extends React.Component {
 
           {/* InfoContainer (Keywords) */}
 
-          {/* InfoContainer (About Me) */}
-
           {/* InfoContainer (Experience, Projects, Courses) */}
           <InfoContainer
           comp={[
@@ -176,10 +220,12 @@ class Profile extends React.Component {
             style={{ 
               width: DIMENSION_WIDTH * 0.8,
               marginLeft: DIMENSION_WIDTH * 0.05,
-              marginTop: DIMENSION_HEIGHT * 0.1,
+              marginTop: DIMENSION_HEIGHT * 0.03,
+              zIndex: Number.MAX_SAFE_INTEGER,
             }}
-            items={projects ? projects : null}
+            items={projects ? projects : []}
             editable={this.state.projectsEditable}
+            updateCallback={((newValue) => this.updateProjects(email, newValue)).bind(this)}
             />)
           ]}
           style={styles.infoContainerStyle}
@@ -193,10 +239,12 @@ class Profile extends React.Component {
             style={{
               width: DIMENSION_WIDTH * 0.8,
               marginLeft: DIMENSION_WIDTH * 0.05,
-              marginTop: DIMENSION_HEIGHT * 0.1
+              marginTop: DIMENSION_HEIGHT * 0.1,
+              zIndex: Number.MAX_SAFE_INTEGER,
             }}
             items={experience ? experience : []}
             editable={this.state.experienceEditable}
+            updateCallback={((newValue) => this.updateExperience(email, newValue)).bind(this)}
             />)
           ]}
           style={styles.infoContainerStyle}

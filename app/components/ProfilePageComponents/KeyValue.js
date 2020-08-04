@@ -49,7 +49,7 @@ class KeyValue extends React.Component {
                 editable={this.state.editable}
                 value={this.state.value}
                 onChangeText={this.handleChange.bind(this)}
-                onFocus={() => this.setState({ underlineColor: "#1a5d57" })}
+                onFocus={() => this.setState({ underlineColor: "lightgrey" })}
                 onBlur={() => this.setState({ underlineColor: "transparent" })}
                 mode="flat"
                 underlineColorAndroid={this.state.underlineColor}

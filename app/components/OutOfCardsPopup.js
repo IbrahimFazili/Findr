@@ -43,7 +43,7 @@ class OutOfCardsPopup extends React.Component {
 			}}
 			>	
                 <Text style={styles.noCardText}>Looks like you don't have any matches</Text>
-                <Text style={styles.noCardText1}>Refresh or update your keywords to get more!</Text>
+                <Text style={styles.noCardText1}>Refresh or update your interests to get more!</Text>
                 <View style={styles.viewProfileButton}>
 					<Button
 					title="Refresh"

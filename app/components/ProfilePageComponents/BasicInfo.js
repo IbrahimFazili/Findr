@@ -13,6 +13,8 @@ class BasicInfo extends React.Component {
         email: "",
         gender: "",
         bio: "",
+        major: "",
+        uni: "",
         editable: false
       }
     }
@@ -21,6 +23,8 @@ class BasicInfo extends React.Component {
         if (this.state.email !== props.email) this.setState({ email: props.email });
         if (this.state.gender !== props.gender) this.setState({ gender: props.gender });
         if (this.state.bio !== props.bio) this.setState({ bio: props.bio });
+        if (this.state.major !== props.major) this.setState({ major: props.major });
+        if (this.state.uni !== props.uni) this.setState({ uni: props.uni });
         if (this.state.editable !== props.editable) {
           this.state.editable && !props.editable ? this.sendUpdate() : null;
           this.setState({ editable: props.editable });
@@ -43,7 +47,9 @@ class BasicInfo extends React.Component {
       const status = await API.updateUserInfo({
         email: this.state.email,
         gender: this.state.gender,
-        bio: this.state.bio
+        bio: this.state.bio,
+        uni: this.state.uni,
+        major: this.state.major
       });
 
       if (status === 201) {
@@ -58,6 +64,10 @@ class BasicInfo extends React.Component {
         this.setState({ gender: updatedValue });
       } else if (type === "about") {
         this.setState({ bio: updatedValue });
+      } else if (type === "major") {
+        this.setState({ major: updatedValue });
+      } else if (type === "uni") {
+        this.setState({ uni: updatedValue });
       }
     }
 
@@ -74,9 +84,29 @@ class BasicInfo extends React.Component {
                 editable={false}
             />
             <KeyValue
+                _key="University"
+                value={this.state.uni}
+                spacing={2}
+                width={DIMENTIONS.height * 0.4}
+                keyStyle={{color: "#1a5d57", fontSize: 17 }}
+                valueStyle={{color: "black", marginTop: -DIMENTIONS.height * 0.015 }}
+                editable={this.state.editable}
+                updateValue={((value) => this.updateHandler("uni", value)).bind(this)}
+            />
+            <KeyValue
+                _key="Major"
+                value={this.state.major}
+                spacing={12}
+                width={DIMENTIONS.height * 0.4}
+                keyStyle={{color: "#1a5d57", fontSize: 17 }}
+                valueStyle={{color: "black", marginTop: -DIMENTIONS.height * 0.015 }}
+                editable={this.state.editable}
+                updateValue={((value) => this.updateHandler("major", value)).bind(this)}
+            />
+            <KeyValue
                 _key="Gender"
                 value={this._getFormattedGender(this.state.gender)}
-                spacing={7}
+                spacing={8}
                 width={DIMENTIONS.height * 0.4}
                 keyStyle={{color: "#1a5d57", fontSize: 17, marginTop: DIMENTIONS.height * 0.01 }}
                 valueStyle={{color: "black", marginTop: -DIMENTIONS.height * 0.005 }}
