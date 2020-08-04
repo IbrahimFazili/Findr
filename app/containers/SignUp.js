@@ -93,7 +93,8 @@ class SignUp extends React.Component {
   }
 
   async checkDuplicateEmail(email){
-    try{
+    try {
+      const res = await (new APIConnection()).fetchUser(email);
       this.setState({emailUse: true})
     }
     catch(err){
@@ -235,6 +236,7 @@ class SignUp extends React.Component {
                             mode={"flat"}
                             value={this.state.name}
                             label={"Name"}
+                            autoCompleteType="name"
                             placeholder="Enter your full name"
                             onChangeText={this.handleNameChange.bind(this)}
                             onFocus={() => this.setState({ showDots: false })}
@@ -308,6 +310,7 @@ class SignUp extends React.Component {
                             mode={"flat"}
                             value={this.state.email}
                             label={"E-Mail"}
+                            autoCompleteType="email"
                             placeholder="email@example.com"
                             onChangeText={this.handleEmailChange.bind(this)}
                             onFocus={() => this.setState({ showDots: false })}
@@ -328,6 +331,7 @@ class SignUp extends React.Component {
                             mode={"flat"}
                             value={this.state.password}
                             label={"Password"}
+                            autoCompleteType="password"
                             placeholder="Enter your new password"
                             onChangeText={this.handlePasswordChange.bind(this)}
                             onFocus={() => this.setState({ showDots: false })}
