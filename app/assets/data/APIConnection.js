@@ -1,8 +1,8 @@
 import io from 'socket.io-client';
 import { AsyncStorage } from 'react-native';
 
-const ENDPOINT = 'http://api.findrapp.ca'; // goes to localhost from avd
-const PORT = 80;
+const ENDPOINT = 'https://api.findrapp.ca'; // goes to localhost from avd
+const PORT = 443;
 
 /**
  * This class provides methods to interact with our API. If no endpoint or port is provided,
