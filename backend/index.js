@@ -25,6 +25,16 @@ const CONNECTIONS_CHUNK_SIZE = 25;
 const MESSAGES_CHUNK_SIZE = 50;
 var isServerOutdated = false;
 
+if (process.env.NODE_ENV !== "test") {
+	app.use(function(req, res, next) {
+		if((!req.secure) && (req.get('X-Forwarded-Proto') !== 'https')) {
+			res.redirect('https://' + req.get('Host') + req.url);
+		} else { 
+			next(); 
+		}
+	});
+}
+
 app.use(bodyParser.json());
 
 app.get("/", (req, res) => {

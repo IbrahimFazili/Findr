@@ -114,6 +114,18 @@ resource "aws_lb_listener" "request_listener" {
   }
 }
 
+resource "aws_lb_listener" "request_listener_https" {
+  load_balancer_arn = aws_lb.findr-dev-alb.arn
+  port              = "443"
+  protocol          = "HTTPS"
+  certificate_arn = var.cert
+
+  default_action {
+    type             = "forward"
+    target_group_arn = aws_lb_target_group.backend_target_group.arn
+  }
+}
+
 resource "aws_lb_listener" "testing_request_listener" {
   load_balancer_arn = aws_lb.findr-dev-alb.arn
   port              = "8100"
@@ -140,6 +152,13 @@ resource "aws_security_group" "findr_dev_server_rules" {
   ingress {
     from_port   = 80
     to_port     = 80
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  ingress {
+    from_port   = 443
+    to_port     = 443
     protocol    = "tcp"
     cidr_blocks = ["0.0.0.0/0"]
   }
