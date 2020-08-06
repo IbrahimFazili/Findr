@@ -79,7 +79,7 @@ resource "aws_lb_target_group" "backend_target_group" {
 
   health_check {
     interval            = 10
-    path                = "/"
+    path                = "/healthCheck"
     port                = 80
     healthy_threshold   = 2
     unhealthy_threshold = 2
