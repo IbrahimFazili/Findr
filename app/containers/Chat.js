@@ -14,7 +14,7 @@ import AutogrowInput from "react-native-autogrow-input";
 import { moderateScale } from "react-native-size-matters";
 import { Thumbnail } from "native-base";
 import APIConnection from "../assets/data/APIConnection";
-import ImagePicker from 'react-native-image-crop-picker';
+import ImagePicker from "react-native-image-crop-picker";
 import shorthash from "shorthash";
 import Images from "react-native-chat-images";
 
@@ -25,7 +25,6 @@ import BackButton from "../assets/icons/back_black.svg";
 
 const DIMENSION_WIDTH = Dimensions.get("window").width;
 const DIMENSION_HEIGHT = Dimensions.get("window").height;
-const ICON_FONT = "sans-serif";
 
 function convertTimestamptoTime(unixTimestamp) {
 	dateObj = new Date(unixTimestamp);
@@ -51,265 +50,281 @@ function convertTimestamptoTime(unixTimestamp) {
 }
 
 export default class Chat extends Component {
-  constructor(props) {
-    super(props);
+	constructor(props) {
+		super(props);
 
-    this.state = {
-	  showPopup: false,
-      own_email: props.navigation.state.params.own_email,
-      messages: props.navigation.state.params.messages,
-      inputBarText: '',
-      selectedMedia: [],
-      other_user: props.navigation.state.params.user_name,
-      other_user_image: props.navigation.state.params.user_image,
-      other_user_email: props.navigation.state.params.user_email
-    };
-  }
-
-  static navigationOptions = {
-    title: 'Chat',
-  };
-
-  //fun keyboard stuff- we use these to get the end of the ScrollView to "follow" the top of the InputBar as the keyboard rises and falls
-  componentWillMount() {
-    this.keyboardDidShowListener = Keyboard.addListener(
-      'keyboardDidShow',
-      this.keyboardDidShow.bind(this)
-    );
-    this.keyboardDidHideListener = Keyboard.addListener(
-      'keyboardDidHide',
-      this.keyboardDidHide.bind(this)
-    );
-  }
-
-  componentWillUnmount() {
-    this.keyboardDidShowListener.remove();
-    this.keyboardDidHideListener.remove();
-  }
-
-  //When the keyboard appears, this gets the ScrollView to move the end back "up" so the last message is visible with the keyboard up
-  //Without this, whatever message is the keyboard's height from the bottom will look like the last message.
-  keyboardDidShow(e) {
-    this.scrollView.scrollToEnd();
-  }
-
-  //When the keyboard dissapears, this gets the ScrollView to move the last message back down.
-  keyboardDidHide(e) {
-    this.scrollView.scrollToEnd();
-  }
-
-  //scroll to bottom when first showing the view
-  componentDidMount() {
-    this._isMounted = true;
-    setTimeout(
-      function () {
-        this.scrollView.scrollToEnd();
-      }.bind(this)
-    );
-
-    APIConnection.attachObserver(this.onNewMessage.bind(this), this.state.other_user_email);
-	this.onNewMessage();
-	
-  }
-
-  //this is a bit sloppy: this is to make sure it scrolls to the bottom when a message is added, but
-  //the component could update for other reasons, for which we wouldn't want it to scroll to the bottom.
-  componentDidUpdate() {
-    setTimeout(
-      function () {
-        this.scrollView.scrollToEnd();
-      }.bind(this)
-    );
-    this.onNewMessage();
-  }
-
-  onNewMessage() {
-    const msgQueue = APIConnection.MESSAGE_QUEUES[this.state.other_user_email];
-    if (!msgQueue) return;
-    const newMessages = [];
-    while (!msgQueue.isEmpty()) {
-      const msg = msgQueue.dequeue();
-      newMessages.push({
-        user: msg.from,
-        msg: msg.msg,
-        timestamp: msg.time
-      });
-    }
-    if (newMessages.length > 0) {
-	  APIConnection.MessagesPage ? APIConnection.MessagesPage.notify() : null;
-      this.setState({ messages: this.state.messages.concat(newMessages) });
-    }
-  }
-
-  _sendMessage() {
-	if (this.state.inputBarText.trim().length === 0 
-	&& this.state.selectedMedia.length === 0) return;
-	const timestamp = (new Date()).getTime();
-	const selectedMedia = [];
-	for (let i = 0; i < this.state.selectedMedia.length; i++) {
-		selectedMedia.push({ url: this.state.selectedMedia[i] });
+		this.state = {
+			showPopup: false,
+			own_email: props.navigation.state.params.own_email,
+			messages: props.navigation.state.params.messages,
+			inputBarText: "",
+			selectedMedia: [],
+			other_user: props.navigation.state.params.user_name,
+			other_user_image: props.navigation.state.params.user_image,
+			other_user_email: props.navigation.state.params.user_email,
+		};
 	}
 
-    this.state.messages.push({
-      user: this.state.own_email,
-      msg: this.state.inputBarText,
-	  timestamp,
-	  media: selectedMedia
-    });
+	static navigationOptions = {
+		title: "Chat",
+	};
 
-    for (let i = 0; i < this.state.selectedMedia.length; i++) {
-      const media = this.state.selectedMedia[i];
-      APIConnection.mediaStore[media.name] = { uri: media.uri, type: media.type };
-      delete media.uri;
-    }
+	//fun keyboard stuff- we use these to get the end of the ScrollView to "follow" the top of the InputBar as the keyboard rises and falls
+	componentWillMount() {
+		this.keyboardDidShowListener = Keyboard.addListener(
+			"keyboardDidShow",
+			this.keyboardDidShow.bind(this)
+		);
+		this.keyboardDidHideListener = Keyboard.addListener(
+			"keyboardDidHide",
+			this.keyboardDidHide.bind(this)
+		);
+	}
 
-    const msg = {
-      from: this.state.own_email,
-      to: this.state.other_user_email,
-      msg: this.state.inputBarText,
-      media: this.state.selectedMedia,
-      time: timestamp,
-      public_key: null
-    }
+	componentWillUnmount() {
+		this.keyboardDidShowListener.remove();
+		this.keyboardDidHideListener.remove();
+	}
 
-	APIConnection.socket.emit("new msg", msg);
-	
-	APIConnection.MessagesPage ? APIConnection.MessagesPage.notify() : null;
+	//When the keyboard appears, this gets the ScrollView to move the end back "up" so the last message is visible with the keyboard up
+	//Without this, whatever message is the keyboard's height from the bottom will look like the last message.
+	keyboardDidShow(e) {
+		this.scrollView.scrollToEnd();
+	}
 
-    this.setState({
-      messages: this.state.messages,
-      inputBarText: '',
-      selectedMedia: []
-    });
-  }
+	//When the keyboard dissapears, this gets the ScrollView to move the last message back down.
+	keyboardDidHide(e) {
+		this.scrollView.scrollToEnd();
+	}
 
-  _onChangeInputBarText(text) {
-    this.setState({
-      inputBarText: text,
-    });
-  }
+	//scroll to bottom when first showing the view
+	componentDidMount() {
+		this._isMounted = true;
+		setTimeout(
+			function () {
+				this.scrollView.scrollToEnd();
+			}.bind(this)
+		);
 
-  _onChangeMedia(selection) {
-	
-	this.state.selectedMedia = [];
-	for (let index = 0; index < selection.length; index++) {
-		const img = selection[index];
-		const media = {
-			name: shorthash.unique(img.path),
-			type: img.mime,
-			uri: img.path
+		APIConnection.attachObserver(
+			this.onNewMessage.bind(this),
+			this.state.other_user_email
+		);
+		this.onNewMessage();
+	}
+
+	//this is a bit sloppy: this is to make sure it scrolls to the bottom when a message is added, but
+	//the component could update for other reasons, for which we wouldn't want it to scroll to the bottom.
+	componentDidUpdate() {
+		setTimeout(
+			function () {
+				this.scrollView.scrollToEnd();
+			}.bind(this)
+		);
+		this.onNewMessage();
+	}
+
+	onNewMessage() {
+		const msgQueue =
+			APIConnection.MESSAGE_QUEUES[this.state.other_user_email];
+		if (!msgQueue) return;
+		const newMessages = [];
+		while (!msgQueue.isEmpty()) {
+			const msg = msgQueue.dequeue();
+			newMessages.push({
+				user: msg.from,
+				msg: msg.msg,
+				timestamp: msg.time,
+			});
+		}
+		if (newMessages.length > 0) {
+			APIConnection.MessagesPage
+				? APIConnection.MessagesPage.notify()
+				: null;
+			this.setState({
+				messages: this.state.messages.concat(newMessages),
+			});
+		}
+	}
+
+	_sendMessage() {
+		if (
+			this.state.inputBarText.trim().length === 0 &&
+			this.state.selectedMedia.length === 0
+		)
+			return;
+		const timestamp = new Date().getTime();
+		const selectedMedia = [];
+		for (let i = 0; i < this.state.selectedMedia.length; i++) {
+			selectedMedia.push({ url: this.state.selectedMedia[i] });
+		}
+
+		this.state.messages.push({
+			user: this.state.own_email,
+			msg: this.state.inputBarText,
+			timestamp,
+			media: selectedMedia,
+		});
+
+		for (let i = 0; i < this.state.selectedMedia.length; i++) {
+			const media = this.state.selectedMedia[i];
+			APIConnection.mediaStore[media.name] = {
+				uri: media.uri,
+				type: media.type,
+			};
+			delete media.uri;
+		}
+
+		const msg = {
+			from: this.state.own_email,
+			to: this.state.other_user_email,
+			msg: this.state.inputBarText,
+			media: this.state.selectedMedia,
+			time: timestamp,
+			public_key: null,
 		};
 
-		this.state.selectedMedia.push(media);
+		APIConnection.socket.emit("new msg", msg);
+
+		APIConnection.MessagesPage ? APIConnection.MessagesPage.notify() : null;
+
+		this.setState({
+			messages: this.state.messages,
+			inputBarText: "",
+			selectedMedia: [],
+		});
 	}
 
-    this.setState({ selectedMedia: this.state.selectedMedia });
-  }
+	_onChangeInputBarText(text) {
+		this.setState({
+			inputBarText: text,
+		});
+	}
 
-  //This event fires way too often.
-  //We need to move the last message up if the input bar expands due to the user's new message exceeding the height of the box.
-  //We really only need to do anything when the height of the InputBar changes, but AutogrowInput can't tell us that.
-  //The real solution here is probably a fork of AutogrowInput that can provide this information.
-  _onInputSizeChange() {
-    setTimeout(
-      function () {
-        this.scrollView.scrollToEnd({ animated: false });
-      }.bind(this)
-    );
-  }
+	_onChangeMedia(selection) {
+		this.state.selectedMedia = [];
+		for (let index = 0; index < selection.length; index++) {
+			const img = selection[index];
+			const media = {
+				name: shorthash.unique(img.path),
+				type: img.mime,
+				uri: img.path,
+			};
 
-  render() {
-    var messages = [];
-    const own_email = this.state.own_email;
-
-    this.state.messages.forEach(function (message, index) {
-		if (message.media) {
-			messages.push(
-				<MessageBubble
-					key={index}
-					direction={
-						message.user === own_email ? "left" : "right"
-					}
-					text={message.msg}
-					images={message.media}
-					time={message.timestamp}
-				/>
-			);
-		} else {
-			messages.push(
-				<MessageBubble
-					key={index}
-					direction={
-						message.user === own_email ? "left" : "right"
-					}
-					text={message.msg}
-					images={[]}
-					time={message.timestamp}
-				/>
-			);
+			this.state.selectedMedia.push(media);
 		}
-	});
 
+		this.setState({ selectedMedia: this.state.selectedMedia });
+	}
 
-    return (
-		<View style={styles.outer}>
-			<ImageBackground
-				source={require("../assets/images/15.png")}
-				style={styles.bg}
-			>
-				<Header
-					statusBarProps={{ barStyle: "light-content" }}
-					barStyle="light-content" // or directly
-					centerComponent={() => {
-						return (
-							<View style={styles.chatHeader}>
-								<TouchableOpacity
-									style={styles.chatBack}
-									onPress={() =>
-										this.props.navigation.goBack()
-									}
-								>
-									<BackButton
-										width={DIMENSION_WIDTH * 0.02}
-										height={DIMENSION_HEIGHT * 0.02}
+	//This event fires way too often.
+	//We need to move the last message up if the input bar expands due to the user's new message exceeding the height of the box.
+	//We really only need to do anything when the height of the InputBar changes, but AutogrowInput can't tell us that.
+	//The real solution here is probably a fork of AutogrowInput that can provide this information.
+	_onInputSizeChange() {
+		setTimeout(
+			function () {
+				this.scrollView.scrollToEnd({ animated: false });
+			}.bind(this)
+		);
+	}
+
+	render() {
+		var messages = [];
+		const own_email = this.state.own_email;
+
+		this.state.messages.forEach(function (message, index) {
+			if (message.media) {
+				messages.push(
+					<MessageBubble
+						key={index}
+						direction={
+							message.user === own_email ? "left" : "right"
+						}
+						text={message.msg}
+						images={message.media}
+						time={message.timestamp}
+					/>
+				);
+			} else {
+				messages.push(
+					<MessageBubble
+						key={index}
+						direction={
+							message.user === own_email ? "left" : "right"
+						}
+						text={message.msg}
+						images={[]}
+						time={message.timestamp}
+					/>
+				);
+			}
+		});
+
+		return (
+			<View style={styles.outer}>
+				<ImageBackground
+					source={require("../assets/images/15.png")}
+					style={styles.bg}
+				>
+					<Header
+						statusBarProps={{ barStyle: "light-content" }}
+						barStyle="light-content" // or directly
+						centerComponent={() => {
+							return (
+								<View style={styles.chatHeader}>
+									<TouchableOpacity
+										style={styles.chatBack}
+										onPress={() =>
+											this.props.navigation.goBack()
+										}
+									>
+										<BackButton
+											width={DIMENSION_WIDTH * 0.02}
+											height={DIMENSION_HEIGHT * 0.02}
+										/>
+									</TouchableOpacity>
+									<Thumbnail
+										small
+										style={{
+											alignSelf: "center",
+											marginTop: 0,
+											marginRight: DIMENSION_WIDTH * 0.02,
+										}}
+										source={this.state.other_user_image}
+										key={this.state.own_email}
 									/>
-								</TouchableOpacity>
-								<Thumbnail
-									small
-									style={{
-										alignSelf: "center",
-										marginTop: 0,
-										marginRight: DIMENSION_WIDTH * 0.02,
-									}}
-									source={this.state.other_user_image}
-									key={this.state.own_email}
-								/>
-								<TouchableOpacity
-									onPress={() =>
-										this.props.navigation.navigate(
-											"OtherProfile2",
-											{
-												email: this.state.other_user_email,
-											}
-										)
-									}
-									style={{width: styles.headerTest.width, height: DIMENSION_HEIGHT * 0.05, justifyContent: 'center'}}
-								>
-									<Text style={styles.headerTest}>
-										{this.state.other_user}
-									</Text>
-								</TouchableOpacity>
-							</View>
-						);
-					}}
-					containerStyle={{
-						backgroundColor: "white",
-						justifyContent: "space-around",
-						elevation: 15,
-						paddingBottom: DIMENSION_HEIGHT * 0.03,
-						height: DIMENSION_HEIGHT * 0.08,
-					}}
-				/>
+									<TouchableOpacity
+										onPress={() =>
+											this.props.navigation.navigate(
+												"OtherProfile2",
+												{
+													email: this.state
+														.other_user_email,
+												}
+											)
+										}
+										style={{
+											width: styles.headerTest.width,
+											height: DIMENSION_HEIGHT * 0.05,
+											justifyContent: "center",
+										}}
+									>
+										<Text style={styles.headerTest}>
+											{this.state.other_user}
+										</Text>
+									</TouchableOpacity>
+								</View>
+							);
+						}}
+						containerStyle={{
+							backgroundColor: "white",
+							justifyContent: "space-around",
+							elevation: 15,
+							paddingBottom: DIMENSION_HEIGHT * 0.03,
+							height: DIMENSION_HEIGHT * 0.08,
+						}}
+					/>
 
 					<ScrollView
 						ref={(ref) => {
@@ -336,11 +351,10 @@ export default class Chat extends Component {
 
 //The bubbles that appear on the left or the right for the messages.
 class MessageBubble extends Component {
-
 	constructor(props) {
 		super(props);
 		this.state = {
-			images: []
+			images: [],
 		};
 	}
 
@@ -348,15 +362,16 @@ class MessageBubble extends Component {
 		const mediaUrls = [];
 		for (let i = 0; i < this.props.images.length; i++) {
 			let url = "";
-			if (typeof(this.props.images[i]) === "string") {
-				url = await (new APIConnection()).fetchChatImage(this.props.images[i]);
+			if (typeof this.props.images[i] === "string") {
+				url = await new APIConnection().fetchChatImage(
+					this.props.images[i]
+				);
 				mediaUrls.push(url);
 			} else {
 				mediaUrls.push(this.props.images[i].url);
 			}
-			
 		}
-		
+
 		this.setState({ images: mediaUrls });
 	}
 
@@ -408,22 +423,26 @@ class MessageBubble extends Component {
 				>
 					{leftSpacer}
 					<View style={bubbleStyles}>
-						{this.state.images.length > 0 ? <View style={{
-							width: DIMENSION_WIDTH * 0.8,
-							height: DIMENSION_HEIGHT * 0.3,
-							paddingTop: DIMENSION_HEIGHT * 0.01,
-						}}>
-							<Images
-							images={this.state.images}
-							backgroundColor="transparent"
-							width="92.5%"
-							style={{
-								borderRadius: 10,
-								borderWidth: 1,
-								resizeMode: "contain",
-							}}
-							/>
-						</View> : null}
+						{this.state.images.length > 0 ? (
+							<View
+								style={{
+									width: DIMENSION_WIDTH * 0.8,
+									height: DIMENSION_HEIGHT * 0.3,
+									paddingTop: DIMENSION_HEIGHT * 0.01,
+								}}
+							>
+								<Images
+									images={this.state.images}
+									backgroundColor="transparent"
+									width="92.5%"
+									style={{
+										borderRadius: 10,
+										borderWidth: 1,
+										resizeMode: "contain",
+									}}
+								/>
+							</View>
+						) : null}
 						<Text style={bubbleTextStyle}>{this.props.text}</Text>
 					</View>
 					{rightSpacer}
@@ -434,7 +453,6 @@ class MessageBubble extends Component {
 		);
 	}
 }
-
 
 //The bar at the bottom with a textbox and a send button.
 class InputBar extends Component {
@@ -455,28 +473,30 @@ class InputBar extends Component {
 				multiple: true,
 				maxFiles: 4,
 				compressImageQuality: 0.7,
-			  }).then((images) => {
-				  if (images.length === 1) {
-					ImagePicker.openCropper({ path: images[0].path })
-					.then((croppedImage) => {
-					  this.props.onChangeMedia([croppedImage]);
-					}).catch((err) => null);
-
-				  } else this.props.onChangeMedia(images);
-
-			  }).catch((err) => null);
-
+			})
+				.then((images) => {
+					if (images.length === 1) {
+						ImagePicker.openCropper({ path: images[0].path })
+							.then((croppedImage) => {
+								this.props.onChangeMedia([croppedImage]);
+							})
+							.catch((err) => null);
+					} else this.props.onChangeMedia(images);
+				})
+				.catch((err) => null);
 		} else if (selectionType === "camera") {
 			ImagePicker.openCamera({
 				compressImageQuality: 0.6,
-			  }).then((image) => {
-				  ImagePicker.openCropper({ path: image.path })
-				  .then((croppedImage) => {
-					this.props.onChangeMedia([croppedImage]);
-				  }).catch((err) => null);
-			  }).catch((err) => null);
+			})
+				.then((image) => {
+					ImagePicker.openCropper({ path: image.path })
+						.then((croppedImage) => {
+							this.props.onChangeMedia([croppedImage]);
+						})
+						.catch((err) => null);
+				})
+				.catch((err) => null);
 		}
-		
 	};
 
 	render() {
@@ -484,7 +504,7 @@ class InputBar extends Component {
 			<View style={styles.inputBar}>
 				<TouchableOpacity
 					style={styles.mediaButton}
-					onPress={() => this.chooseImage('picker')}
+					onPress={() => this.chooseImage("picker")}
 				>
 					<AttachIcon
 						width={DIMENSION_WIDTH * 0.06}
@@ -494,7 +514,7 @@ class InputBar extends Component {
 
 				<TouchableOpacity
 					style={styles.mediaButton}
-					onPress={() => this.chooseImage('camera')}
+					onPress={() => this.chooseImage("camera")}
 				>
 					<CameraIcon
 						width={DIMENSION_WIDTH * 0.06}
@@ -563,7 +583,7 @@ const styles = StyleSheet.create({
 		maxWidth: DIMENSION_WIDTH * 0.65,
 		maxHeight: DIMENSION_HEIGHT * 0.05,
 		top: DIMENSION_HEIGHT * 0.01,
-		marginLeft: DIMENSION_WIDTH * 0.02
+		marginLeft: DIMENSION_WIDTH * 0.02,
 	},
 
 	sendButton: {
@@ -625,9 +645,8 @@ const styles = StyleSheet.create({
 		width: DIMENSION_WIDTH,
 		height: DIMENSION_HEIGHT,
 	},
-	iconButton: { fontFamily: ICON_FONT, fontSize: 20, color: "#ffff" },
+	iconButton: { fontSize: 20, color: "#ffff" },
 	iconButton2: {
-		fontFamily: ICON_FONT,
 		fontSize: 30,
 		color: "#000000",
 		marginBottom: 10,
@@ -707,6 +726,6 @@ const styles = StyleSheet.create({
 		marginLeft: DIMENSION_WIDTH * 0.1,
 		width: 30,
 		height: DIMENSION_HEIGHT * 0.05,
-		justifyContent: 'center',
+		justifyContent: "center",
 	},
 });
