@@ -25,6 +25,16 @@ const CONNECTIONS_CHUNK_SIZE = 25;
 const MESSAGES_CHUNK_SIZE = 50;
 var isServerOutdated = false;
 
+
+app.get("/healthCheck", (req, res) => {
+	if (!isServerOutdated) {
+		res.status(200).send((process.env.NODE_ENV === "test") ? "Test Server is Alive"
+				     : "Server is Alive");
+	} else {
+		res.status(503).send("Server is updating...");
+	}
+});
+
 if (process.env.NODE_ENV !== "test") {
 	app.use(function(req, res, next) {
 		if((!req.secure) && (req.get('X-Forwarded-Proto') !== 'https')) {
