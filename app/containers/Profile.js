@@ -228,10 +228,10 @@ class Profile extends React.Component {
 						checksum={checksum}
 						editable={true}
 						style={{
-							width: DIMENSION_WIDTH * 0.4,
-							height: DIMENSION_WIDTH * 0.4,
-							marginTop: "5%",
-							borderRadius: DIMENSION_WIDTH * 0.2,
+							width: DIMENSION_WIDTH * 0.6,
+							height: DIMENSION_WIDTH * 0.6,
+							marginTop: "1%",
+							borderRadius: DIMENSION_WIDTH * 0.5,
 							alignSelf: "center",
 						}}
 					/>
