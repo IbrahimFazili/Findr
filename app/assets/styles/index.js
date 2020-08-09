@@ -477,7 +477,7 @@ export default StyleSheet.create({
 	},
 	genderDrop: {
 		width: DIMENSION_WIDTH * 0.45,
-		left: DIMENSION_WIDTH * 0.32,
+		left: DIMENSION_WIDTH * 0.01,
 		borderColor: "white",
 		borderWidth: 0.4,
 		borderRadius: 35,
@@ -485,7 +485,7 @@ export default StyleSheet.create({
 		paddingRight: 20,
 		paddingTop: -30,
 		height: 50,
-		bottom: 20,
+		bottom: 7,
 	},
 	profileButtons: {
 		marginLeft: DIMENSION_WIDTH * 0.13,
