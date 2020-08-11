@@ -25,7 +25,7 @@ export default StyleSheet.create({
   // COMPONENT - CARD ITEM
   containerCardItem: {
     width: DIMENSION_WIDTH * 0.8,
-    marginTop: DIMENSION_HEIGHT * 0.11,
+    marginTop: DIMENSION_HEIGHT * 0.08,
     marginLeft: DIMENSION_WIDTH * 0.04,
     backgroundColor: WHITE,
     borderRadius: 40,

@@ -1,7 +1,8 @@
 import React from "react";
 import { View, ImageBackground, AsyncStorage, Image, NetInfo, 
   TouchableOpacity, ScrollView, RefreshControl, BackHandler, Dimensions } from "react-native";
-import CardStack, { Card } from "react-native-card-stack-swiper";
+import Swiper from "react-native-deck-swiper";
+import { Card } from "react-native-card-stack-swiper";
 import CardItem from "../components/CardItem";
 import styles from "../assets/styles";
 import APIConnection from "../assets/data/APIConnection";
@@ -172,56 +173,61 @@ class Home extends React.Component {
           style={styles.containerHome}
         >
           <View style={styles.homeCards}>
-            <CardStack
-              loop={false}
-              verticalSwipe={false}
-              renderNoMoreCards={() => (<NoCardsPopup 
-                visible={true} 
-                email={this.state.email}
-                navigation={this.props.navigation}
-              />)
-              }
+            <Swiper
+              // verticalSwipe={false}
+              // renderNoMoreCards={() => (<NoCardsPopup 
+              //   visible={true} 
+              //   email={this.state.email}
+              //   navigation={this.props.navigation}
+              // />)
+              // }
               ref={(swiper) => (this.swiper = swiper)}
               key={this.state.updateCount}
+              cards={this.state.cards ? this.state.cards : []}
+              onSwipedLeft={(index) => this.handleLeftSwipe(this.state.cards[index].email, true)}
+              onSwipedRight={(index) => this.handleRightSwipe(
+                this.state.cards[index].email, this.state.cards[index].image, this.state.cards[index].name, true
+              )}
+              renderCard={(item, index) =>{
+                return(
+                  item ?
+                    (<TouchableOpacity 
+                      activeOpacity={1} 
+                      onLongPress={() => this.setState({
+                        visible: true,
+                        name: item.name,
+                        age: item.age,
+                        keywords: item.keywords, 
+                        bio: item.bio,
+                        uni: item.uni,
+                        image: item.image,
+                        projects: item.projects,
+                        experience: item.experience
+                      })}
+                      delayLongPress={100}
+                      key={index}
+                    >
+                      <CardItem
+                        image={{ uri: item.image, checksum: item.checksum }}
+                        name={item.name}
+                        keywords={item.keywords}
+                        email={item.email}
+                        key={index}
+                        description={
+                          item.bio.length > MAX_LENGTH
+                            ? item.bio.substring(0, MAX_LENGTH) + '...'
+                            : item.bio
+                        }
+                        actions
+                        onPressRight={() => this.handleRightSwipe(item.email, item.image, item.name)}
+                        onPressLeft={() => this.handleLeftSwipe(item.email)}
+                      />
+                    </TouchableOpacity>)
+                  :
+                  null
+              )}}
             >
-              {this.state.cards.map((item, index) => (
-                <Card key={index}
-                  onSwipedLeft={() => this.handleLeftSwipe(item.email, true)}
-                  onSwipedRight={() => this.handleRightSwipe(item.email, item.image, item.name, true)}
-                >
-                  <TouchableOpacity 
-                    activeOpacity={1} 
-                    onLongPress={() => this.setState({
-                      visible: true,
-                      name: item.name,
-                      age: item.age,
-                      keywords: item.keywords, 
-                      bio: item.bio,
-                      uni: item.uni,
-                      image: item.image,
-                      projects: item.projects,
-                      experience: item.experience
-                    })}
-                    delayLongPress={100}
-                  >
-                    <CardItem
-                      image={{ uri: item.image, checksum: item.checksum }}
-                      name={item.name}
-                      keywords={item.keywords}
-                      email={item.email}
-                      description={
-                        item.bio.length > MAX_LENGTH
-                          ? item.bio.substring(0, MAX_LENGTH) + '...'
-                          : item.bio
-                      }
-                      actions
-                      onPressRight={() => this.handleRightSwipe(item.email, item.image, item.name)}
-                      onPressLeft={() => this.handleLeftSwipe(item.email)}
-                    />
-                  </TouchableOpacity>
-                </Card>
-              ))}
-            </CardStack>
+            </Swiper>
           </View>
 
           <MatchPopup
