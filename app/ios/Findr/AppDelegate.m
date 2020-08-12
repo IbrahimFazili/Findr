@@ -25,6 +25,9 @@
   self.window = [[UIWindow alloc] initWithFrame:[UIScreen mainScreen].bounds];
   UIViewController *rootViewController = [UIViewController new];
   rootViewController.view = rootView;
+  if (@available(iOS 13, *)) {
+      self.window.overrideUserInterfaceStyle = UIUserInterfaceStyleLight;
+  }
   self.window.rootViewController = rootViewController;
   [self.window makeKeyAndVisible];
   return YES;
