@@ -25,7 +25,6 @@ const CONNECTIONS_CHUNK_SIZE = 25;
 const MESSAGES_CHUNK_SIZE = 50;
 var isServerOutdated = false;
 
-
 app.get("/healthCheck", (req, res) => {
 	if (!isServerOutdated) {
 		res.status(200).send((process.env.NODE_ENV === "test") ? "Test Server is Alive"
@@ -54,6 +53,10 @@ app.get("/", (req, res) => {
 	} else {
 		res.status(503).send("Server is updating...");
 	}
+});
+
+app.get("/public/:file", (req, res) => {
+	res.status(200).sendFile(__dirname + "/public/" + req.params.file);
 });
 
 app.get("/user/:user_email", async (req, res) => {
@@ -510,7 +513,7 @@ app.get("/verifyUserEmail", (req, res) => {
 			const user = users[0];
 			user.active = true;
 			DB.updateUser({ active: user.active, verificationHash: null }, { email: user.email });
-			res.status(200).send("Email Successfully Verified");
+			res.status(200).sendFile(__dirname + "/public/verify.html");
 		})
 		.catch((err) => {
 			console.log(err);
