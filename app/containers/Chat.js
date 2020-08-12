@@ -17,7 +17,7 @@ import APIConnection from "../assets/data/APIConnection";
 import ImagePicker from "react-native-image-crop-picker";
 import shorthash from "shorthash";
 import Images from "react-native-chat-images";
-
+import KeyboardSpacer from "react-native-keyboard-spacer";
 import AttachIcon from "../assets/icons/attach.svg";
 import CameraIcon from "../assets/icons/camera.svg";
 import SendIcon from "../assets/icons/send_icon.svg";
@@ -343,6 +343,7 @@ export default class Chat extends Component {
 						onChangeMedia={this._onChangeMedia.bind(this)}
 						text={this.state.inputBarText}
 					/>
+					<KeyboardSpacer />
 				</ImageBackground>
 			</View>
 		);

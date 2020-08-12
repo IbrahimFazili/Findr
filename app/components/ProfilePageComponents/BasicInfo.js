@@ -13,16 +13,15 @@ import {
 import styles from "../../assets/styles/index";
 import KeyValue from "./KeyValue";
 import APIConnection from "../../assets/data/APIConnection";
-import {Dropdown} from 'react-native-material-dropdown'
-
+import { Dropdown } from "react-native-material-dropdown";
 
 const DIMENTIONS = Dimensions.get("window");
 
-let genders=[
-    {value: "Male",},
-    {value: "Female",},
-    {value: "Other",},
-    {value: "Prefer Not To Say",},
+let genders = [
+	{ value: "Male" },
+	{ value: "Female" },
+	{ value: "Other" },
+	{ value: "Prefer Not To Say" },
 ];
 
 class BasicInfo extends React.Component {
@@ -94,18 +93,15 @@ class BasicInfo extends React.Component {
 		}
 	}
 
-	handleGenderChange(text){
-		if (text === "Male"){
-			this.setState({gender: 'Male', sendG : 'M'})
-		}
-		else if (text === "Female"){
-			this.setState({gender: 'Female', sendG : 'F'})
-		}
-		else if (text === "Prefer Not To Say"){
-			this.setState({gender: 'Prefer Not To Say', sendG : 'P'})
-		}
-		else{
-			this.setState({gender: 'Other', sendG : 'O'})
+	handleGenderChange(text) {
+		if (text === "Male") {
+			this.setState({ gender: "Male", sendG: "M" });
+		} else if (text === "Female") {
+			this.setState({ gender: "Female", sendG: "F" });
+		} else if (text === "Prefer Not To Say") {
+			this.setState({ gender: "Prefer Not To Say", sendG: "P" });
+		} else {
+			this.setState({ gender: "Other", sendG: "O" });
 		}
 	}
 
@@ -123,7 +119,7 @@ class BasicInfo extends React.Component {
 
 	render() {
 		return (
-			<View style={{ alignItems: "center", paddingVertical: 25, }}>
+			<View style={{ alignItems: "center", paddingVertical: 25 }}>
 				<KeyValue
 					_key="Email"
 					value={this.state.email}
@@ -183,43 +179,47 @@ class BasicInfo extends React.Component {
 					updateValue={((value) =>
 						this.updateHandler("gender", value)).bind(this)}
 				/> */}
-				{this.state.editable ? 
-				<Dropdown data={genders}
-				dropdownPosition={-5}
-				containerStyle={styles.genderDrop}
-				pickerStyle={{borderRadius: 35,}}
-				dropdownOffset={{ top: 20, left: 10 }}
-				itemCount={4}
-				textColor="black"
-				itemColor="black"
-				baseColor='black'
-				onChangeText={this.handleGenderChange.bind(this)}
-				selectedItemColor="black"
-				disabledItemColor="black"/> :
-				<KeyValue
-					_key="Gender"
-					value={this._getFormattedGender(this.state.gender)}
-					spacing={8}
-					width={DIMENTIONS.height * 0.4}
-					keyStyle={{
-						color: "#1a5d57",
-						fontSize: 15,
-						marginTop: DIMENTIONS.height * 0.01,
-					}}
-					valueStyle={{
-						color: "black",
-						marginTop: -DIMENTIONS.height * 0.005,
-					}}
-					editable={this.state.editable}
-					updateValue={((value) =>
-						this.updateHandler("gender", value)).bind(this)}
-				/>
-				 } 
+				{this.state.editable ? (
+					<Dropdown
+						data={genders}
+						dropdownPosition={-5}
+						containerStyle={styles.genderDrop}
+						pickerStyle={{ borderRadius: 35 }}
+						dropdownOffset={{ top: 20, left: 10 }}
+						itemCount={4}
+						textColor="black"
+						itemColor="black"
+						baseColor="black"
+						onChangeText={this.handleGenderChange.bind(this)}
+						selectedItemColor="black"
+						disabledItemColor="black"
+					/>
+				) : (
+					<KeyValue
+						_key="Gender"
+						value={this._getFormattedGender(this.state.gender)}
+						spacing={8}
+						width={DIMENTIONS.height * 0.4}
+						keyStyle={{
+							color: "#1a5d57",
+							fontSize: 15,
+							marginTop: DIMENTIONS.height * 0.01,
+							alignSelf: "flex-start",
+						}}
+						valueStyle={{
+							color: "black",
+							marginTop: -DIMENTIONS.height * 0.005,
+						}}
+						editable={this.state.editable}
+						updateValue={((value) =>
+							this.updateHandler("gender", value)).bind(this)}
+					/>
+				)}
 
 				<KeyValue
 					_key="About me"
 					value={this.state.bio}
-					width={DIMENTIONS.width * 0.8}
+					width={DIMENTIONS.width * 0.86}
 					spacing={1}
 					keyStyle={{
 						color: "#1a5d57",
