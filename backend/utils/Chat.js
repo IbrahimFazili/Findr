@@ -87,6 +87,14 @@ class Chat {
 	}
 }
 
+function getAllRooms(io) {
+	return new Promise(function(resolve, reject) {
+		io.of('/').adapter.allRooms((err, rooms) => {
+			resolve(rooms);
+		});
+	});
+}
+
 /* Socket Listeners for chat */
 function bindSocketListeners(io) {
 	io.on("connection", (socket) => {
@@ -102,7 +110,7 @@ function bindSocketListeners(io) {
 					const user = users[0];
 					let chat = null;
 					var msgHandled = false;
-					const receiverIsReachable = io.sockets.adapter.rooms[msg.to] && io.sockets.adapter.rooms[msg.to].length > 0;
+					const receiverIsReachable = (await getAllRooms(io)).findIndex((room) => room === msg.to) !== -1;
 	
 					try {
 						chat = await findChat(user, msg.to);
@@ -123,7 +131,7 @@ function bindSocketListeners(io) {
 								socket.emit("upload urls", mediaUploadUrls);
 
 								if (receiverIsReachable) {
-									socket.to(msg.to).emit("new msg", msg);
+									io.to(msg.to).emit("new msg", msg);
 								} else {
 									// store message event in eventQueue to notify user later
 									DB.fetchUsers({ email: msg.to }).then((receiver) => {
@@ -154,7 +162,7 @@ function bindSocketListeners(io) {
 					}
 					// no existing chat b/w users, so create a new one
 					if (!msgHandled) {
-						initNewChat(socket, user, msg, receiverIsReachable);
+						initNewChat(io, socket, user, msg, receiverIsReachable);
 					}
 				})
 				.catch((err) => {
@@ -200,7 +208,7 @@ function bindSocketListeners(io) {
 	});
 }
 
-async function initNewChat(socket, user, msg, receiverIsReachable) {
+async function initNewChat(io, socket, user, msg, receiverIsReachable) {
 	const chat = new Chat(msg.from, msg.to);
 	const mediaUploadUrls = await chat.newMessage(msg.from, msg.msg, msg.time, msg.media, msg.public_key);
 	msg.media = chat.messages[chat.messages.length - 1].media;
@@ -227,7 +235,7 @@ async function initNewChat(socket, user, msg, receiverIsReachable) {
 					DB.updateUser({ chats: user.chats }, { email: user.email })
 						.then((value) => {
 							if (receiverIsReachable) {
-								socket.to(msg.to).emit("new msg", msg);
+								io.to(msg.to).emit("new msg", msg);
 							} else {
 								// store message event in eventQueue to notify user later
 								DB.fetchUsers({ email: msg.to }).then((receiver) => {
