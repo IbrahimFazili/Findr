@@ -230,7 +230,16 @@ export default StyleSheet.create({
     maxHeight: DIMENSION_HEIGHT * 0.3,
     width: DIMENSION_WIDTH * 0.85,
     alignSelf: "center",
-    borderRadius: 30,
+    position: "relative"
+  },
+
+  confirmPassPopup: {
+    backgroundColor: WHITE,
+    borderRadius: 20,
+    top: DIMENSION_HEIGHT * 0.3,
+    maxHeight: DIMENSION_HEIGHT * 0.2,
+    width: DIMENSION_WIDTH * 0.8,
+    alignSelf: "center",
     position: "relative"
   },
 
@@ -993,6 +1002,12 @@ export default StyleSheet.create({
     paddingBottom: 7,
     marginTop: 0,
     top: DIMENSION_HEIGHT * 0.05,
+    color: '#363636',
+    fontSize: 15,
+    alignSelf: 'center'
+  },
+
+  confirmPassText: {
     color: '#363636',
     fontSize: 15,
     alignSelf: 'center'

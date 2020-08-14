@@ -6,6 +6,7 @@ import styles from "../assets/styles";
 import {Button} from "react-native-paper"
 import BackButton from "../assets/icons/back_black.svg";
 import APIConnection from "../assets/data/APIConnection";
+import ConfirmPassPopup from "../components/ConfirmPass"
 
 const DIMENTIONS = Dimensions.get('window');
 
@@ -15,9 +16,11 @@ const ICON_HEIGHT = DIMENTIONS.height * 0.03;
 class Settings extends React.Component{
     constructor(){
         super();
-        this.state = {switchValue: false};
+        this.state = {
+          switchValue: false, 
+          visible: false
+        };
         const API = new APIConnection();
-        visible: false;
       }
       render() {
         var bgColor = '#DCE3F4';
@@ -37,7 +40,6 @@ class Settings extends React.Component{
               </View>
               <View style={{backgroundColor:'#EFEFF4',flex:1}}>
                 <SettingsList borderColor='#c8c7cc' defaultItemSize={50}>
-
                   <SettingsList.Header headerStyle={{marginTop:15}} 
                   headerText="Contact Us"/>
                   <SettingsList.Item
@@ -99,10 +101,18 @@ class Settings extends React.Component{
               <View style={styles.deleteAccountButton}>
                 <SettingsList borderColor='#c8c7cc' defaultItemSize={50}>
                     <SettingsList.Item 
+                      onPress={()=>this.setState({visible: true})}
                       title="Delete Account"
                     />
                 </SettingsList>
               </View>
+
+              <ConfirmPassPopup
+                name={this.state.name}
+                email={this.state.email}
+                visible={this.state.visible}
+                navigation={this.props.navigation}
+              />  
             </View>
           </ImageBackground>
         );
