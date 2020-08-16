@@ -2,6 +2,7 @@ require("dotenv").config();
 const app = require("express")();
 const http = require("http").createServer(app);
 const io = require("socket.io")(http);
+const redisAdapter = require('socket.io-redis');
 const bodyParser = require("body-parser");
 const bcrypt = require("bcrypt");
 const DB = require("./utils/DatabaseManager");
@@ -20,6 +21,11 @@ const {
 } = require('./utils/Handlers').functions;
 const { SUPPORTED_UNIVERSITIES } = require("./vars");
 
+io.adapter(redisAdapter({
+	host: process.env.REDIS_HOST,
+	port: 19367,
+	auth_pass: process.env.REDIS_PASS
+}));
 const callbackQueue = new CallbackQueue();
 const CONNECTIONS_CHUNK_SIZE = 25;
 const MESSAGES_CHUNK_SIZE = 50;

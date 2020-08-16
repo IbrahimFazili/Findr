@@ -40,3 +40,5 @@ jobs:
         GMAIL_EMAIL: noreply.findrstudy@gmail.com
         GMAIL_PASSWORD: ${{ secrets.GMAIL_PASSWORD }}
         DOMAIN: api.findrapp.ca
+        REDIS_HOST: ${{ secrets.REDIS_HOST }}
+        REDIS_PASS: ${{ secrets.REDIS_PASS }}
