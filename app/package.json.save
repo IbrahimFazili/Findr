@@ -17,8 +17,8 @@
 		"expo-linear-gradient": "^8.1.0",
 		"jetifier": "^1.6.6",
 		"native-base": "^2.13.12",
-		"react": "16.13.1",
-		"react-native": "0.63.2",
+		"react": "16.6.3",
+		"react-native": "^0.59.10",
 		"react-native-autogrow-input": "^0.2.1",
 		"react-native-card-stack-swiper": "^1.1.0",
 		"react-native-chat-images": "^1.0.1",
@@ -78,3 +78,5 @@
 		]
 	}
 }
+
+
