@@ -1,3 +1,5 @@
+// * @format
+// * @flow strict-local
 import React from "react";
 import { Dimensions, Platform, View } from "react-native";
 import {
