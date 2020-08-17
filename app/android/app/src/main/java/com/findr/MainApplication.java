@@ -8,7 +8,6 @@ import com.rnfs.RNFSPackage;
 import com.oblador.vectoricons.VectorIconsPackage;
 import com.horcrux.svg.SvgPackage;
 import com.BV.LinearGradient.LinearGradientPackage;
-import com.imagepicker.ImagePickerPackage;
 import com.swmansion.gesturehandler.react.RNGestureHandlerPackage;
 import com.reactnativecommunity.netinfo.NetInfoPackage;
 import com.cmcewen.blurview.BlurViewPackage;
@@ -20,8 +19,9 @@ import android.content.Context;
 import com.facebook.react.PackageList;
 import com.facebook.react.ReactInstanceManager;
 
-import java.util.lang.reflect.InvocationTargetException;
+import java.lang.reflect.InvocationTargetException;
 import java.util.List;
+import java.util.Arrays;
 
 public class MainApplication extends Application implements ReactApplication {
 
@@ -45,7 +45,6 @@ public class MainApplication extends Application implements ReactApplication {
             new VectorIconsPackage(),
             new SvgPackage(),
             new LinearGradientPackage(),
-            new ImagePickerPackage(),
             new RNGestureHandlerPackage(),
             new NetInfoPackage(),
             new BlurViewPackage()
