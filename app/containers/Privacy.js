@@ -1,5 +1,6 @@
 import React from 'react';
-import { Text, View, Image, ScrollView, NetInfo } from 'react-native';
+import { Text, View, Image, ScrollView } from 'react-native';
+import NetInfo from "@react-native-community/netinfo";
 import styles from '../assets/styles';
 import Unorderedlist from 'react-native-unordered-list';
 import {Button} from 'react-native-paper';

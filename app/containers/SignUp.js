@@ -1,5 +1,6 @@
 import React from 'react';
-import { View, AsyncStorage, Image, Dimensions, ScrollView, NetInfo, Text } from 'react-native';
+import { View, AsyncStorage, Image, Dimensions, ScrollView, Text } from 'react-native';
+import NetInfo from "@react-native-community/netinfo";
 import styles from '../assets/styles';
 import { DefaultTheme, TextInput, Button } from 'react-native-paper';
 import DatePicker from 'react-native-datepicker';

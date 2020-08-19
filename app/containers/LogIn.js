@@ -1,7 +1,8 @@
 import React from 'react';
-import { View, AsyncStorage, Image, Dimensions, NetInfo, Text } from 'react-native';
+import { View, AsyncStorage, Image, Dimensions, Text } from 'react-native';
+import NetInfo from "@react-native-community/netinfo";
 import styles from '../assets/styles';
-import { DefaultTheme, Provider as PaperProvider, TextInput, Button } from 'react-native-paper';
+import { DefaultTheme, TextInput, Button } from 'react-native-paper';
 import APIConnection from '../assets/data/APIConnection';
 
 const DIMENSION = Dimensions.get('window')

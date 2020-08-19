@@ -1,5 +1,5 @@
 import React, { PureComponent } from 'react';
-import { View, Text, AsyncStorage, Dimensions, StyleSheet, NetInfo, Image, ImageBackground} from 'react-native';
+import { View, Text, AsyncStorage, Image, ImageBackground} from 'react-native';
 import styles from "../assets/styles/index";
 // import NetInfo from "@react-native-community/netinfo";
 import Email from "../assets/icons/email.svg"

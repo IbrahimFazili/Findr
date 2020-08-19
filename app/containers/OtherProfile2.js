@@ -4,11 +4,11 @@ import {
   StyleSheet,
   Dimensions,
   ImageBackground,
-  NetInfo,
   Image,
   View,
   ScrollView as _NativeScrollView
 } from "react-native";
+import NetInfo from "@react-native-community/netinfo";
 import APIConnection from "../assets/data/APIConnection";
 import ProfilePicture from "../components/ProfilePageComponents/ProfilePicture";
 import InfoContainer from "../components/ProfilePageComponents/InfoContainer";

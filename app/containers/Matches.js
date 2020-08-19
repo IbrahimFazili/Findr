@@ -10,9 +10,9 @@ import {
 	ImageBackground,
 	FlatList,
 	AsyncStorage,
-	NetInfo,
 	RefreshControl,
 } from "react-native";
+import NetInfo from "@react-native-community/netinfo";
 import CardItem from "../components/CardItem";
 import APIConnection from "../assets/data/APIConnection";
 

@@ -1,6 +1,7 @@
 import React from "react";
-import { View, ImageBackground, AsyncStorage, Image, NetInfo, 
-  TouchableOpacity, ScrollView, RefreshControl, BackHandler, Dimensions } from "react-native";
+import { View, ImageBackground, AsyncStorage, Image, 
+  TouchableOpacity, ScrollView, RefreshControl, Dimensions } from "react-native";
+import NetInfo from "@react-native-community/netinfo";
 import CardStack, { Card } from "react-native-card-stack-swiper";
 import CardItem from "../components/CardItem";
 import styles from "../assets/styles";

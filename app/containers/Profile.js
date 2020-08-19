@@ -6,12 +6,12 @@ import {
   Dimensions,
   AsyncStorage,
   ImageBackground,
-  NetInfo,
   RefreshControl,
   Image,
   Alert,
   ScrollView as _NativeScrollView
 } from "react-native";
+import NetInfo from "@react-native-community/netinfo";
 import APIConnection from "../assets/data/APIConnection";
 import Settings from "../assets/icons/menu_icon.svg";
 import ProfilePicture from "../components/ProfilePageComponents/ProfilePicture";

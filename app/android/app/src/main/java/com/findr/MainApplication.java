@@ -3,6 +3,9 @@ package com.findr;
 import android.app.Application;
 
 import com.facebook.react.ReactApplication;
+import org.reactnative.maskedview.RNCMaskedViewPackage;
+import com.th3rdwave.safeareacontext.SafeAreaContextPackage;
+import com.swmansion.reanimated.ReanimatedPackage;
 import com.reactnative.ivpusic.imagepicker.PickerPackage;
 import com.rnfs.RNFSPackage;
 import com.oblador.vectoricons.VectorIconsPackage;
@@ -40,6 +43,9 @@ public class MainApplication extends Application implements ReactApplication {
         // packages.add(new MyReactNativePackage());
         return Arrays.<ReactPackage>asList(
             new MainReactPackage(),
+            new RNCMaskedViewPackage(),
+            new SafeAreaContextPackage(),
+            new ReanimatedPackage(),
             new PickerPackage(),
             new RNFSPackage(),
             new VectorIconsPackage(),
