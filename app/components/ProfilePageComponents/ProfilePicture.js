@@ -63,14 +63,14 @@ class ProfilePicture extends React.Component{
         };
 
         const checksumImage = await RNFS.hash(selection.path, "md5");
-
         const url = await this.state.API.updateProfilePicture(
             await AsyncStorage.getItem('storedEmail'),
             media.type,
             checksumImage
         )
 
-        APIConnection.uploadPicture(url, media);
+        
+        APIConnection.uploadPicture(url, media).catch((err) => console.log("upload err:", err));
         this.setState({ image: media.uri, checksum: null })
     }
     

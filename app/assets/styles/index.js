@@ -706,13 +706,16 @@ export default StyleSheet.create({
   internetText: {
     fontSize: 20,
     // paddingLeft: DIMENSION_WIDTH * 0.05,
-    top: DIMENSION_HEIGHT * 0.059,
-    alignSelf: 'center'
+    marginTop: DIMENSION_HEIGHT * 0.029,
+    alignSelf: 'center',
+    marginLeft: DIMENSION_WIDTH * 0.1,
+    width: DIMENSION_WIDTH * 0.7
   },
 
   email: {
-    marginRight: DIMENSION_WIDTH * 0.7,
-    marginTop: DIMENSION_HEIGHT * 0.1
+    // marginRight: DIMENSION_WIDTH * 0.7,
+    marginTop: DIMENSION_HEIGHT * 0.1,
+    alignSelf: "center"
   },
   top: {
     paddingTop: 50,

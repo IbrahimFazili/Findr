@@ -50,7 +50,7 @@ function validateEmail(email) {
 }
 
 function validatePassword(password) {
-  const regex = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])[0-9a-zA-Z]{6,}$/;
+  const regex = /^(?=.*[0-9])(?=.*[!@#$%^&*_])[a-zA-Z0-9!@#$%^&*_]{6,}$/;
   return regex.test(password);
 }
 
@@ -201,7 +201,6 @@ class SignUp extends React.Component {
         if (!this.state.isConnected) {
           this.props.navigation.navigate("Internet");
         }
-        console.log(this.state)
         return (
             <View style={{backgroundColor: "#164e48", width: "100%", height: "100%", padding: '3%' }}>
                 <Image style={styles.logo} source={require('../assets/images/Findr_white2x.png')}/>
@@ -350,7 +349,7 @@ class SignUp extends React.Component {
                           || this.state.password.length >= 6 ? null : 
                           <View style={{ paddingRight:DIMENTIONS.width * 0.2}}>
                           <Text style ={styles.errorPassword}>Passwords must be greater than 5 characters, 
-                          include a number and a capital letter</Text>
+                          include a number, an uppercase, lowercase, and special character</Text>
                           </View>} 
 
                         <TextInput

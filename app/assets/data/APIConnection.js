@@ -78,9 +78,14 @@ class APIConnection {
       xhr.onreadystatechange = () => {
           if(xhr.readyState === 4) {
               if(xhr.status === 200) resolve(true);
-              else reject(false);
+              else {
+                console.log("Upload failed"); 
+                reject(false);
+              }
           }
       };
+
+      xhr.onerror = (err) => console.log(xhr.responseText);
 
       xhr.send({ uri: img.uri, type: img.type });
     });
