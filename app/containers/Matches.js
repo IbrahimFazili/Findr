@@ -38,6 +38,7 @@ class Matches extends React.Component {
 			uni: "",
 			isConnected: true,
 			refreshing: false,
+			unsubscribeNetwork: null,
 		};
 	}
 
@@ -58,24 +59,19 @@ class Matches extends React.Component {
 
 	async componentDidMount() {
 		this.loadData();
-		NetInfo.isConnected.addEventListener(
-			"connectionChange",
-			this.handleConnectivityChange
-		);
+		this.setState({ 
+			unsubscribeNetwork: NetInfo.addEventListener( state => {
+			this.setState({isConnected: state.isConnected})
+		  }
+		)});
 
 		APIConnection.attachMatchPageNotifier(this.loadData.bind(this));
 	}
 
 	async componentWillUnmount() {
-		NetInfo.isConnected.removeEventListener(
-			"connectionChange",
-			this.handleConnectivityChange
-		);
+		this.state.unsubscribeNetwork()
 	}
 
-	handleConnectivityChange = (isConnected) => {
-		this.setState({ isConnected });
-	};
 
 	render() {
 		if (!this.state.isConnected) {

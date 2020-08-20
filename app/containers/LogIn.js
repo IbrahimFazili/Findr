@@ -53,20 +53,22 @@ class LogIn extends React.Component {
       isPasswordValid: false,
       isConnected: true,
       loginStatus: true,
+      unsubscribeNetwork: null,
+
     };
   }
 
   async componentDidMount() {
-    NetInfo.isConnected.addEventListener('connectionChange', this.handleConnectivityChange);
+		this.setState({ 
+      unsubscribeNetwork: NetInfo.addEventListener( state => {
+      this.setState({isConnected: state.isConnected})
+    }
+  )});
   }
 
   async componentWillUnmount(){
-    NetInfo.isConnected.removeEventListener('connectionChange', this.handleConnectivityChange);
+    this.state.unsubscribeNetwork()
   }
-
-  handleConnectivityChange = isConnected => {
-    this.setState({ isConnected });
-  };
 
   handleEmailChange(text) {
     if (validateEmail(text.toLowerCase())) {

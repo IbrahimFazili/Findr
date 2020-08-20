@@ -39,6 +39,8 @@ const textBoxStyle = {
     opacity: 1,
     marginBottom: "8%",
     zIndex: -1,
+    unsubscribeNetwork: null,
+
 };
 
 
@@ -78,6 +80,7 @@ class SignUp extends React.Component {
       dropdownVisible: false,
       goingToPrivacy: false,
       emailUse: false,
+      unsubscribeNetwork: null,
 
       isConnected: true,
       universityArray: []
@@ -137,13 +140,16 @@ class SignUp extends React.Component {
   }
 
   async componentDidMount(){
-    NetInfo.isConnected.addEventListener('connectionChange', this.handleConnectivityChange);
+
     const temp = await ((new APIConnection())).fetchUniversities()
-    this.setState({ universityArray: temp.map((value) => { return { value } }) })
+    this.setState({ universityArray: temp.map((value) => { return { value } }) ,
+    unsubscribeNetwork: NetInfo.addEventListener( state => {
+      this.setState({isConnected: state.isConnected})
+    })})
   }
 
   async componentWillUnmount() {
-    NetInfo.isConnected.removeEventListener('connectionChange', this.handleConnectivityChange);
+    this.state.unsubscribeNetwork()
   }
 
   onPressNext = () => {

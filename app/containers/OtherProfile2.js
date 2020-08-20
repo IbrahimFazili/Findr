@@ -29,24 +29,22 @@ class Profile extends React.Component {
 			profile: null,
 			isConnected: true,
       user_email: props.navigation.state.params.email,
-      count: 0
+      count: 0,
+      unsubscribeNetwork: null,
 		};
 	}
   
 	async componentDidMount() {
 		let user = await this.state.API.fetchUser(this.state.user_email);
-		this.setState({ profile: user });
-		NetInfo.isConnected.addEventListener(
-			"connectionChange",
-			this.handleConnectivityChange
-		);
+    this.setState({ profile: user, 
+      unsubscribeNetwork: NetInfo.addEventListener( state => {
+      this.setState({isConnected: state.isConnected})
+    } )});
+
 	}
 
 	async componentWillUnmount() {
-		NetInfo.isConnected.removeEventListener(
-			"connectionChange",
-			this.handleConnectivityChange
-		);
+    this.state.unsubscribeNetwork()
 	}
 
 	_getAge(age) {
@@ -56,10 +54,6 @@ class Profile extends React.Component {
 		return (new Date()).getFullYear() - year;
 	  }
 	
-
-	handleConnectivityChange = (isConnected) => {
-		this.setState({ isConnected });
-	};
 
 	navigateToChat(name, image) {
 		this.props.navigation.navigate("ChatPage", {

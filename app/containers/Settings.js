@@ -15,7 +15,7 @@ const ICON_HEIGHT = DIMENTIONS.height * 0.03;
 class Settings extends React.Component{
     constructor(){
         super();
-        this.state = {switchValue: false};
+        this.state = {switchValue: false,unsubscribeNetwork: null, };
         const API = new APIConnection();
         visible: false;
       }

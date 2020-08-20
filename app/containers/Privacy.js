@@ -12,19 +12,20 @@ class Privacy extends React.Component{
         
         this.state={
             isConnected: true,
+            unsubscribeNetwork: null,
         }
     }
 
     async componentWillUnmount() {
-        NetInfo.isConnected.removeEventListener('connectionChange', this.handleConnectivityChange);
+        this.setState({ 
+            unsubscribeNetwork: NetInfo.addEventListener( state => {
+            this.setState({isConnected: state.isConnected})
+          }
+        )});
       }
-    
-      handleConnectivityChange = isConnected => {
-        this.setState({ isConnected });
-    };
 
     async componentDidMount(){
-        NetInfo.isConnected.addEventListener('connectionChange', this.handleConnectivityChange);
+        this.state.unsubscribeNetwork()
     }
     render(){
         if (!this.state.isConnected) {

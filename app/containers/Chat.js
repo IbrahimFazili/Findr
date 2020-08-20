@@ -17,6 +17,7 @@ import APIConnection from "../assets/data/APIConnection";
 import ImagePicker from 'react-native-image-crop-picker';
 import shorthash from "shorthash";
 import Images from "react-native-chat-images";
+import NetInfo from "@react-native-community/netinfo"
 
 import AttachIcon from "../assets/icons/attach.svg";
 import CameraIcon from "../assets/icons/camera.svg";
@@ -62,7 +63,8 @@ export default class Chat extends Component {
       selectedMedia: [],
       other_user: props.navigation.state.params.user_name,
       other_user_image: props.navigation.state.params.user_image,
-      other_user_email: props.navigation.state.params.user_email
+	  other_user_email: props.navigation.state.params.user_email,
+	  unsubscribeNetwork: null,
     };
   }
 
@@ -84,7 +86,9 @@ export default class Chat extends Component {
 
   componentWillUnmount() {
     this.keyboardDidShowListener.remove();
-    this.keyboardDidHideListener.remove();
+	this.keyboardDidHideListener.remove();
+	this.state.unsubscribeNetwork()
+
   }
 
   //When the keyboard appears, this gets the ScrollView to move the end back "up" so the last message is visible with the keyboard up
@@ -109,7 +113,11 @@ export default class Chat extends Component {
 
     APIConnection.attachObserver(this.onNewMessage.bind(this), this.state.other_user_email);
 	this.onNewMessage();
-	
+	this.setState({ 
+        unsubscribeNetwork: NetInfo.addEventListener( state => {
+        this.setState({isConnected: state.isConnected})
+      }
+    )});
   }
 
   //this is a bit sloppy: this is to make sure it scrolls to the bottom when a message is added, but

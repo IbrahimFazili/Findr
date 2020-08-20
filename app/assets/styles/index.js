@@ -705,8 +705,9 @@ export default StyleSheet.create({
 
   internetText: {
     fontSize: 20,
-    paddingLeft: DIMENSION_WIDTH * 0.25,
-    bottom: DIMENSION_HEIGHT * 0.079
+    // paddingLeft: DIMENSION_WIDTH * 0.05,
+    top: DIMENSION_HEIGHT * 0.059,
+    alignSelf: 'center'
   },
 
   email: {

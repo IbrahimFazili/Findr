@@ -37,13 +37,14 @@ class Home extends React.Component {
       age: 0,
       matchPossible: false,
       updateCount: 0,
-      refreshing: false
+      refreshing: false,
+      unsubscribeNetwork: null,
     };
   }
 
 
   async componentWillUnmount() {
-    NetInfo.isConnected.removeEventListener('connectionChange', this.handleConnectivityChange);
+    this.state.unsubscribeNetwork()
   }
 
   handleConnectivityChange = isConnected => {
@@ -80,11 +81,13 @@ class Home extends React.Component {
   async componentDidMount() {
     await AsyncStorage.setItem('onboarding', '0');
     let storedEmail = await AsyncStorage.getItem("storedEmail");
-    NetInfo.isConnected.addEventListener('connectionChange', this.handleConnectivityChange);
 
     if (storedEmail !== null && this.state.dataLoadRequired) {
       const data = await this.state.API.loadData(storedEmail);
-      this.setState({ cards: data, dataLoadRequired: false });
+      this.setState({ cards: data, dataLoadRequired: false,
+        unsubscribeNetwork: NetInfo.addEventListener( state => {
+          this.setState({isConnected: state.isConnected})
+        })});
     }
 
     APIConnection.attachHomePageNotifier(this.loadData.bind(this));
