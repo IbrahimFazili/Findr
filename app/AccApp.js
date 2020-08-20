@@ -1,10 +1,10 @@
+// * @format
+// * @flow strict-local
 import React from "react";
 import { Dimensions, Platform, View } from "react-native";
-import {
-	createBottomTabNavigator,
-	createAppContainer,
-	createStackNavigator,
-} from "react-navigation";
+import {createAppContainer} from "react-navigation";
+import {createBottomTabNavigator} from "react-navigation-tabs";
+import {createStackNavigator} from "react-navigation-stack";
 import SignUpScreen from "./containers/SignUp";
 import LogInScreen from "./containers/LogIn";
 import HomeScreen from "./containers/Home";

@@ -1,7 +1,8 @@
 import React from 'react';
-import { View, AsyncStorage, Image, Dimensions, NetInfo, Text } from 'react-native';
+import { View, AsyncStorage, Image, Dimensions, Text } from 'react-native';
+import NetInfo from "@react-native-community/netinfo";
 import styles from '../assets/styles';
-import { DefaultTheme, Provider as PaperProvider, TextInput, Button } from 'react-native-paper';
+import { DefaultTheme, TextInput, Button } from 'react-native-paper';
 import APIConnection from '../assets/data/APIConnection';
 
 const DIMENSION = Dimensions.get('window')
@@ -52,20 +53,22 @@ class LogIn extends React.Component {
       isPasswordValid: false,
       isConnected: true,
       loginStatus: true,
+      unsubscribeNetwork: null,
+
     };
   }
 
   async componentDidMount() {
-    NetInfo.isConnected.addEventListener('connectionChange', this.handleConnectivityChange);
+		this.setState({ 
+      unsubscribeNetwork: NetInfo.addEventListener( state => {
+      this.setState({isConnected: state.isConnected})
+    }
+  )});
   }
 
   async componentWillUnmount(){
-    NetInfo.isConnected.removeEventListener('connectionChange', this.handleConnectivityChange);
+    this.state.unsubscribeNetwork()
   }
-
-  handleConnectivityChange = isConnected => {
-    this.setState({ isConnected });
-  };
 
   handleEmailChange(text) {
     if (validateEmail(text.toLowerCase())) {

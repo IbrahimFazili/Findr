@@ -14,12 +14,13 @@ import {
 } from 'react-native';
 import Message from '../components/Message';
 import APIConnection from '../assets/data/APIConnection';
+import NetInfo from "@react-native-community/netinfo"
 
 
 class Messages extends React.Component {
   constructor(props) {
     super(props);
-    this.state = { API: new APIConnection(), chats: [], refreshing: false };
+    this.state = { API: new APIConnection(), chats: [], refreshing: false, unsubscribeNetwork: null,};
   }
 
   async loadData() {
@@ -43,6 +44,15 @@ class Messages extends React.Component {
   async componentDidMount() {
     this.loadData();
     APIConnection.attachMessagePageNotifier(this.loadData.bind(this));
+    this.setState({ 
+        unsubscribeNetwork: NetInfo.addEventListener( state => {
+        this.setState({isConnected: state.isConnected})
+      }
+    )});
+  }
+
+  async componentWillUnmount(){
+    this.state.unsubscribeNetwork()
   }
 
   FlatListItemSeparator = () => {

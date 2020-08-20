@@ -6,12 +6,12 @@ import {
   Dimensions,
   AsyncStorage,
   ImageBackground,
-  NetInfo,
   RefreshControl,
   Image,
   Alert,
   ScrollView as _NativeScrollView
 } from "react-native";
+import NetInfo from "@react-native-community/netinfo";
 import APIConnection from "../assets/data/APIConnection";
 import Settings from "../assets/icons/menu_icon.svg";
 import ProfilePicture from "../components/ProfilePageComponents/ProfilePicture";
@@ -36,8 +36,9 @@ class Profile extends React.Component {
 			profile: null,
       isConnected: true,
       placeholder: false,
-      refreshing: false
-		};
+      refreshing: false,
+      unsubscribeNetwork: null,
+    };
   }
   
   async loadData() {
@@ -50,24 +51,20 @@ class Profile extends React.Component {
 
 	async componentDidMount() {
 		this.loadData();
-		NetInfo.isConnected.addEventListener(
-			"connectionChange",
-			this.handleConnectivityChange
-    );
+		this.setState({ 
+        unsubscribeNetwork: NetInfo.addEventListener( state => {
+        this.setState({isConnected: state.isConnected})
+      }
+    )});
     
     APIConnection.attachProfilePageNotifier(this.loadData.bind(this));
 	}
 
 	async componentWillUnmount() {
-		NetInfo.isConnected.removeEventListener(
-			"connectionChange",
-			this.handleConnectivityChange
-		);
+			this.state.unsubscribeNetwork()
 	}
 
-	handleConnectivityChange = (isConnected) => {
-		this.setState({ isConnected });
-	};
+
 
   _getAge(age) {
     if (typeof age === "number"){ return age; }

@@ -1,5 +1,6 @@
 import React from 'react';
-import { Text, View, Image, ScrollView, NetInfo } from 'react-native';
+import { Text, View, Image, ScrollView } from 'react-native';
+import NetInfo from "@react-native-community/netinfo";
 import styles from '../assets/styles';
 import Unorderedlist from 'react-native-unordered-list';
 import {Button} from 'react-native-paper';
@@ -11,19 +12,20 @@ class Privacy extends React.Component{
         
         this.state={
             isConnected: true,
+            unsubscribeNetwork: null,
         }
     }
 
     async componentWillUnmount() {
-        NetInfo.isConnected.removeEventListener('connectionChange', this.handleConnectivityChange);
+        this.setState({ 
+            unsubscribeNetwork: NetInfo.addEventListener( state => {
+            this.setState({isConnected: state.isConnected})
+          }
+        )});
       }
-    
-      handleConnectivityChange = isConnected => {
-        this.setState({ isConnected });
-    };
 
     async componentDidMount(){
-        NetInfo.isConnected.addEventListener('connectionChange', this.handleConnectivityChange);
+        this.state.unsubscribeNetwork()
     }
     render(){
         if (!this.state.isConnected) {

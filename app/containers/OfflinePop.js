@@ -1,14 +1,15 @@
 import React, { PureComponent } from 'react';
-import { View, Text, Dimensions, StyleSheet, NetInfo, Image, ImageBackground} from 'react-native';
+import { View, Text, Dimensions, StyleSheet, Image, ImageBackground} from 'react-native';
 import styles from "../assets/styles/index";
 import Wifi_Icon from '../assets/icons/wifi.svg';
+import NetInfo from '@react-native-community/netinfo'
 
 function MiniOfflineSign() {
     return (
       <ImageBackground source={require('../assets/images/15.png')} style={styles.internetBG}>
         <View style={{flexDirection: 'column', alignItems: 'center', padding: 20}}>
           <Image style={styles.internetLogo} source={require('../assets/images/Findr_logo2x.png')} />
-          <View style={{marginTop: Dimensions.get('window').height * 0.1, padding: 20, flexDirection: 'column', alignItems: 'center'}}>
+          <View style={{marginTop: Dimensions.get('window').height * 0.03, padding: 20, flexDirection: 'column', alignItems: 'center'}}>
             <Wifi_Icon width={40} height={40}/>
             <Text style={styles.internetText}>Oops! Lost connection</Text>
           </View>
@@ -19,21 +20,22 @@ function MiniOfflineSign() {
   
   class OfflineNotice extends PureComponent {
     state = {
-      isConnected: false
+      isConnected: false,
+      unsubscribeNetwork: null,
     };
   
     componentDidMount() {
-      NetInfo.isConnected.addEventListener('connectionChange', this.handleConnectivityChange);
+      this.setState({ 
+          unsubscribeNetwork: NetInfo.addEventListener( state => {
+          this.setState({isConnected: state.isConnected})
+        }
+      )});
     }
   
     componentWillUnmount() {
-      NetInfo.isConnected.removeEventListener('connectionChange', this.handleConnectivityChange);
+      this.state.unsubscribeNetwork()
     }
-  
-    handleConnectivityChange = isConnected => {
-        this.setState({ isConnected });
-    };
-  
+
     render() {
       if (this.state.isConnected) {
         this.props.navigation.goBack();

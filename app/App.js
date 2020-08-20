@@ -1,4 +1,5 @@
-
+// * @format
+// * @flow strict-local
 import {
 	createAppContainer,
 	createSwitchNavigator
