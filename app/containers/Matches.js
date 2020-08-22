@@ -11,10 +11,14 @@ import {
 	FlatList,
 	AsyncStorage,
 	RefreshControl,
+	Dimensions,
 } from "react-native";
 import NetInfo from "@react-native-community/netinfo";
 import CardItem from "../components/CardItem";
 import APIConnection from "../assets/data/APIConnection";
+import Grid from 'react-native-grid-component';
+
+const DIMENTION_HEIGHT = Dimensions.get('window').height;
 
 const thumnailStyle = {
 	marginHorizontal: 10,
@@ -91,7 +95,7 @@ class Matches extends React.Component {
 					style={styles.bg}
 				>
 					<View style={styles.containerMatches}>
-						<ScrollView>
+						{/* <ScrollView> */}
 							<Image
 								style={styles.matchLogo}
 								source={require("../assets/images/Findr_logo2x.png")}
@@ -102,7 +106,7 @@ class Matches extends React.Component {
 								</Text>
 							</View>
 
-							<View style={{ flex: 3, height: 130 }}>
+							<View style={{height: 130 }}>
 								<ScrollView
 									ref={(ref) => (this.scrollView = ref)}
 									horizontal={true}
@@ -140,7 +144,7 @@ class Matches extends React.Component {
 							<View style={styles.matchTopSub}>
 								<Text style={styles.matchTitle}>Matches</Text>
 							</View>
-							<View style={{ paddingHorizontal: 10 }}>
+							<View style={{paddingHorizontal: 10 }}>
 								<FlatList
 									numColumns={2}
 									data={this.state.cards}
@@ -158,7 +162,7 @@ class Matches extends React.Component {
 											}
 										>
 											<CardItem
-												image={{ uri: item.image, checksum: item.checksum }}
+												image={{uri: item.image, checksum: item.checksum }}
 												name={item.name}
 												status={"Online"}
 												email={item.email}
@@ -168,7 +172,7 @@ class Matches extends React.Component {
 									)}
 								/>
 							</View>
-						</ScrollView>
+						{/* </ScrollView> */}
 					</View>
 				</ImageBackground>
 			</ScrollView>

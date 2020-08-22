@@ -31,6 +31,7 @@
 		"react-native-fs": "^2.16.6",
 		"react-native-gesture-handler": "^1.7.0",
 		"react-native-gifted-chat": "^0.16.1",
+		"react-native-grid-component": "^2.0.1",
 		"react-native-image-crop-picker": "^0.32.2",
 		"react-native-keyboard-spacer": "^0.4.1",
 		"react-native-linear-gradient": "^2.5.6",

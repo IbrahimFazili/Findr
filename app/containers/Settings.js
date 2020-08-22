@@ -100,6 +100,14 @@ class Settings extends React.Component{
                 <SettingsList borderColor='#c8c7cc' defaultItemSize={50}>
                     <SettingsList.Item 
                       title="Delete Account"
+                      onPress={(async () => {
+                        APIConnection.MESSAGE_QUEUES = {};
+                        APIConnection.observers = [];
+                        this.state.API.deleteUser(await AsyncStorage.getItem('storedEmail'));
+                        AsyncStorage.removeItem('storedEmail');
+                        this.props.navigation.navigate("LogIn");
+                      }).bind(this)
+                      }
                     />
                 </SettingsList>
               </View>

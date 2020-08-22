@@ -94,6 +94,13 @@ class APIConnection {
     return response.json();
   }
 
+  async deleteUser(email) {
+    //Response status
+    await fetch(
+      this.ENDPOINT + ':' + String(this.PORT) + '/deleteUser?email=' + email
+    );
+  }
+
   /**
    * Send log-in request to the API
    * @param {{ email: String, password: String}} data log-in data to send to the server for verification
