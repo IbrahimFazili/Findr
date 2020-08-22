@@ -217,10 +217,26 @@ class Profile extends React.Component {
               />),
               (<BasicInfo
               email={email}
-              bio={bio}
+              // bio={bio}
               gender={gender}
               major={major}
               uni={uni}
+              editable={this.state.basicInfoEditable}
+              />)
+            ]}
+            style={styles.infoContainerStyle}
+            setEditable={this.setBasicInfoEditable.bind(this)}
+          />
+
+          <InfoContainer
+            comp={[
+              (<Header
+                title={name}
+                editable={this.state.basicInfoEditable}
+                updateCallback={((newName) => this.updateName(email, newName)).bind(this)}
+              />),
+              (<BasicInfo
+              bio={bio}
               editable={this.state.basicInfoEditable}
               />)
             ]}
