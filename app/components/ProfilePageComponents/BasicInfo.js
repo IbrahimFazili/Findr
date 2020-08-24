@@ -78,25 +78,15 @@ class BasicInfo extends React.Component {
 
     render() {
       return(
-        <View style={{alignItems: 'center', paddingVertical: 25 }}>
+        <View style={{alignItems: 'center', paddingVertical: 65 }}>
             <KeyValue
                 _key="Email"
                 value={this.state.email}
                 spacing={12}
                 width={DIMENTIONS.height * 0.4}
-                keyStyle={{color: "#1a5d57", fontSize: 15 }}
-                valueStyle={{color: "black", marginTop: -DIMENTIONS.height * 0.015 }}
+                keyStyle={{color: "#1a5d57", fontSize: 15, marginTop: - DIMENTIONS.height * 0.02 }}
+                valueStyle={{color: "black", marginTop: -DIMENTIONS.height * 0.035 }}
                 editable={false}
-            />
-            <KeyValue
-                _key="University"
-                value={this.state.uni}
-                spacing={2}
-                width={DIMENTIONS.height * 0.4}
-                keyStyle={{color: "#1a5d57", fontSize: 15 }}
-                valueStyle={{color: "black", marginTop: -DIMENTIONS.height * 0.015 }}
-                editable={this.state.editable}
-                updateValue={((value) => this.updateHandler("uni", value)).bind(this)}
             />
             <KeyValue
                 _key="Major"
@@ -104,8 +94,8 @@ class BasicInfo extends React.Component {
                 spacing={12}
                 multiline={true}
                 width={DIMENTIONS.height * 0.4}
-                keyStyle={{color: "#1a5d57", fontSize: 15 }}
-                valueStyle={{color: "black", marginTop: -DIMENTIONS.height * 0.015 }}
+                keyStyle={{color: "#1a5d57", fontSize: 15, marginTop: - DIMENTIONS.height * 0.02 }}
+                valueStyle={{color: "black", marginTop: -DIMENTIONS.height * 0.035 }}
                 editable={this.state.editable}
                 updateValue={((value) => this.updateHandler("major", value)).bind(this)}
             />
@@ -114,8 +104,8 @@ class BasicInfo extends React.Component {
                 value={this._getFormattedGender(this.state.gender)}
                 spacing={8}
                 width={DIMENTIONS.height * 0.4}
-                keyStyle={{color: "#1a5d57", fontSize: 15, marginTop: DIMENTIONS.height * 0.01 }}
-                valueStyle={{color: "black", marginTop: -DIMENTIONS.height * 0.005 }}
+                keyStyle={{color: "#1a5d57", fontSize: 15, marginTop: - DIMENTIONS.height * 0.02 }}
+                valueStyle={{color: "black", marginTop: -DIMENTIONS.height * 0.035 }}
                 editable={this.state.editable}
                 updateValue={((value) => this.updateHandler("gender", value)).bind(this)}
             />
@@ -123,9 +113,11 @@ class BasicInfo extends React.Component {
                 _key="About me"
                 value={this.state.bio}
                 width={DIMENTIONS.height * 0.4}
-                spacing={1}
-                keyStyle={{color: "#1a5d57", fontSize: 15, marginTop: DIMENTIONS.height * 0.01 }}
-                valueStyle={{color: "black", marginTop: -DIMENTIONS.height * 0.01, marginLeft: -DIMENTIONS.width * 0.01}}
+                spacing={4}
+                keyStyle={{color: "#1a5d57", fontSize: 15, marginTop: -DIMENTIONS.height * 0.02 }}
+                valueStyle={{color: "black", marginTop: 
+                this.state.bio.length > 29 ? - DIMENTIONS.height * 0.005 : -DIMENTIONS.height * 0.035, 
+                marginLeft: -DIMENTIONS.width * 0.01}}
                 editable={this.state.editable}
                 multiline={true}
                 updateValue={((value) => this.updateHandler("about", value)).bind(this)}

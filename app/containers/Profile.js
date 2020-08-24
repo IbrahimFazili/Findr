@@ -20,6 +20,7 @@ import List from "../components/ProfilePageComponents/List";
 import BasicInfo from "../components/ProfilePageComponents/BasicInfo";
 import Header from "../components/ProfilePageComponents/Header";
 import Tag from "../components/ProfilePageComponents/Tag";
+import KeyValue from "../components/ProfilePageComponents/KeyValue"
 
 const DIMENSION_WIDTH = Dimensions.get("window").width;
 const DIMENSION_HEIGHT = Dimensions.get("window").height;
@@ -144,6 +145,7 @@ class Profile extends React.Component {
     }
   }
 
+
   render() {
     const checksum = this.state.profile ? this.state.profile.checksum : null;
     const image = this.state.profile ? { uri: this.state.profile.image } : null;
@@ -212,12 +214,14 @@ class Profile extends React.Component {
             comp={[
               (<Header
                 title={name}
+                uni={uni}
+                age={this._getAge(age)}
                 editable={this.state.basicInfoEditable}
                 updateCallback={((newName) => this.updateName(email, newName)).bind(this)}
               />),
               (<BasicInfo
               email={email}
-              // bio={bio}
+              bio={bio}
               gender={gender}
               major={major}
               uni={uni}
@@ -228,21 +232,6 @@ class Profile extends React.Component {
             setEditable={this.setBasicInfoEditable.bind(this)}
           />
 
-          <InfoContainer
-            comp={[
-              (<Header
-                title={name}
-                editable={this.state.basicInfoEditable}
-                updateCallback={((newName) => this.updateName(email, newName)).bind(this)}
-              />),
-              (<BasicInfo
-              bio={bio}
-              editable={this.state.basicInfoEditable}
-              />)
-            ]}
-            style={styles.infoContainerStyle}
-            setEditable={this.setBasicInfoEditable.bind(this)}
-          />
 
           {/* InfoContainer (Keywords) */}
           <InfoContainer

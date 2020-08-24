@@ -2,6 +2,8 @@ import React from "react"
 import { Text, View, Dimensions, TextInput } from "react-native";
 
 const DIMENSION_HEIGHT = Dimensions.get("window").height
+const DIMENSION_WIDTH = Dimensions.get("window").width
+
 
 class Header extends React.Component {
 
@@ -10,13 +12,17 @@ class Header extends React.Component {
         this.state = {
             title: props.title,
             editable: false,
-            underlineColor: "transparent"
+            underlineColor: "transparent",
+            uni: "",
+            age: 0
         };
     }
 
     componentWillReceiveProps(props) {
         const updatedProps = {};
         if (props.title !== this.state.title) updatedProps.title = props.title;
+        if (props.uni !== this.state.uni) this.state.uni = this.props.uni;
+        if (props.age !== this.state.age) this.state.age = this.props.age;
         if (props.editable !== this.state.editable) {
             this.state.editable && !props.editable ? 
             (this.props.updateCallback ? this.props.updateCallback(this.state.title) : null) 
@@ -44,7 +50,7 @@ class Header extends React.Component {
                 underlineColorAndroid={this.state.underlineColor}
                 editable={this.state.editable}
               />
-              
+              <Text style={{color: "#1a5d57", textAlign: 'center'}}>{this.state.age} - {this.state.uni}</Text>
           </View>
         );
     }
