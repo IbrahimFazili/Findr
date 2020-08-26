@@ -22,6 +22,8 @@ import SettingsScreen from "./containers/Settings";
 import ChatPopUpScreen from "./components/ChatPopup";
 import OtherProfileScreen2 from "./containers/OtherProfile2";
 
+import EditKeywordsScreen from "./components/EditKeywords";
+
 import HomeIcon_Grey from "./assets/icons/home.svg";
 import HomeIcon_Green from "./assets/icons/home_g.svg";
 import SearchIcon_Grey from "./assets/icons/search.svg";
@@ -210,6 +212,9 @@ const RootStack = createStackNavigator(
 		OtherProfile2: {
 			screen: OtherProfileScreen2,
 		},
+		EditKeywords: {
+			screen: EditKeywordsScreen,
+		}
 	},
 	{ mode: "modal", headerMode: "none" }
 );

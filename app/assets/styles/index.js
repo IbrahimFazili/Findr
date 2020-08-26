@@ -1342,4 +1342,13 @@ export default StyleSheet.create({
     marginTop: DIMENSION_HEIGHT * 0.015,
     marginLeft: DIMENSION_WIDTH * 0.14,
   },
+  searchBar: {
+    fontSize: 24,
+    margin: 10,
+    width: '80%',
+    borderRadius: 10,
+    alignSelf: "center",
+    height: 50,
+    backgroundColor: 'white',
+  },
 });

@@ -16,6 +16,7 @@ import APIConnection from "../assets/data/APIConnection";
 import Settings from "../assets/icons/menu_icon.svg";
 import ProfilePicture from "../components/ProfilePageComponents/ProfilePicture";
 import InfoContainer from "../components/ProfilePageComponents/InfoContainer";
+import InfoContainerKeyword from "../components/ProfilePageComponents/InfoContainerKeyword";
 import List from "../components/ProfilePageComponents/List";
 import BasicInfo from "../components/ProfilePageComponents/BasicInfo";
 import Header from "../components/ProfilePageComponents/Header";
@@ -229,19 +230,22 @@ class Profile extends React.Component {
           />
 
           {/* InfoContainer (Keywords) */}
-          <InfoContainer
-          comp={[
-            (<Header title={"Interests"} style={{ marginTop: "3%"}} editable={false}/>),
-            (<Tag
-            containerStyle={{ width: DIMENSION_WIDTH * 0.8}}
-            tags={keywords}
-            type={"interests"}
-            editable={this.state.keywordsEditable}
-            updateCallback={((newKeywords) => this.updateKeywords(email, newKeywords)).bind(this)}
-            />)
-          ]}
-          style={styles.infoContainerStyle}
-          setEditable={this.setKeywordsEditable.bind(this)}
+          <InfoContainerKeyword
+            comp={[
+              (<Header title={"Interests"} style={{ marginTop: "3%"}} editable={false}/>),
+              (<Tag
+                containerStyle={{ width: DIMENSION_WIDTH * 0.8}}
+                tags={keywords}
+                type={"interests"}
+                editable={this.state.keywordsEditable}
+                updateCallback={((newKeywords) => this.updateKeywords(email, newKeywords)).bind(this)}
+              />)
+            ]}
+            style={styles.infoContainerStyle}
+            setEditable={this.setKeywordsEditable.bind(this)}
+            navigation={this.props.navigation}
+            interests={keywords}
+            updateKey={((newKeywords) => this.updateKeywords(email, newKeywords)).bind(this)}
           />
 
           {/* InfoContainer (Experience, Projects, Courses) */}
