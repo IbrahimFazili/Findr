@@ -91,7 +91,7 @@ const CardItem = ({
       {keywords && (
         <Text style={CourseHeaderStyle}>
           {keywords.map((item, index) => (
-            <Text key={String(index)} style={{ fontFamily: "sans-serif" }}>
+            <Text key={String(index)}>
               {index === keywords.length - 1 ? " " + item.toUpperCase() : " " + item.toUpperCase() + ","}
             </Text>
           ))}

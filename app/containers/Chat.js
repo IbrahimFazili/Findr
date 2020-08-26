@@ -25,7 +25,6 @@ import BackButton from "../assets/icons/back_black.svg";
 
 const DIMENSION_WIDTH = Dimensions.get("window").width;
 const DIMENSION_HEIGHT = Dimensions.get("window").height;
-const ICON_FONT = "sans-serif";
 
 function convertTimestamptoTime(unixTimestamp) {
 	dateObj = new Date(unixTimestamp);
@@ -625,9 +624,8 @@ const styles = StyleSheet.create({
 		width: DIMENSION_WIDTH,
 		height: DIMENSION_HEIGHT,
 	},
-	iconButton: { fontFamily: ICON_FONT, fontSize: 20, color: "#ffff" },
+	iconButton: {fontSize: 20, color: "#ffff" },
 	iconButton2: {
-		fontFamily: ICON_FONT,
 		fontSize: 30,
 		color: "#000000",
 		marginBottom: 10,
