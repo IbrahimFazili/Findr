@@ -2,8 +2,12 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="1b5b9036-e81b-4ee5-bea7-506ca39f1050" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/app/App.js" beforeDir="false" afterPath="$PROJECT_DIR$/app/App.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/codeStyles/Projects.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/containers/Home.js" beforeDir="false" afterPath="$PROJECT_DIR$/app/containers/Home.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/ios/Findr/Info.plist" beforeDir="false" afterPath="$PROJECT_DIR$/app/ios/Findr/Info.plist" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/app/package-lock.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/app/package.json" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />

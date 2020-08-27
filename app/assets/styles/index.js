@@ -25,8 +25,6 @@ export default StyleSheet.create({
   // COMPONENT - CARD ITEM
   containerCardItem: {
     width: DIMENSION_WIDTH * 0.8,
-    marginTop: DIMENSION_HEIGHT * 0.11,
-    marginLeft: DIMENSION_WIDTH * 0.04,
     backgroundColor: WHITE,
     borderRadius: 40,
     shadowOpacity: 0.3,
@@ -689,6 +687,7 @@ export default StyleSheet.create({
     resizeMode: "cover",
     width: DIMENSION_WIDTH,
     height: DIMENSION_HEIGHT,
+    zIndex: 1
   },
 
   internetBG: {
@@ -739,7 +738,9 @@ export default StyleSheet.create({
   // CONTAINER - HOME
   containerHome: {
     alignSelf: "center",
-    marginTop: -80,
+    marginTop: DIMENSION_HEIGHT * - 0.05,
+    marginLeft: DIMENSION_WIDTH * 0.01,
+    backgroundColor: 'transparent',
   },
 
   homeCards: {

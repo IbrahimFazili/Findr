@@ -68,7 +68,7 @@ const CardItem = ({
 
   const theHeight = [
     {
-      height: variant ? fullHeight * 0.2 : fullHeight * 0.75,
+      height: variant ? fullHeight * 0.2 : fullHeight * 0.7,
     },
   ];
 
